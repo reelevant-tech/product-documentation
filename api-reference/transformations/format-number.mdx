@@ -1,0 +1,29 @@
+---
+title: 'Format Number'
+description: 'Format a number'
+---
+
+## Overview
+
+The `format-number` transformation formats a number according to specified formatting options.
+
+## Syntax
+
+```text
+format-number(<variable>, format="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | number | Yes | The number to format |
+| `format` | string | Yes | The format pattern (e.g., "0.00", "#,##0") |
+
+## Examples
+
+```text
+format-number(<variable>, format="0.00")
+format-number(<variable>, format="#,##0")
+```
+

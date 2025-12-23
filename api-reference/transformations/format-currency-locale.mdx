@@ -1,0 +1,32 @@
+---
+title: 'Format Currency (Locale)'
+description: 'Format currency with locale variable'
+---
+
+## Overview
+
+The `format-currency-locale` transformation formats a number as currency using a locale variable.
+
+## Syntax
+
+```text
+format-currency-locale(<variable>, locale=<locale-variable>)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | number | Yes | The number to format as currency |
+| `locale` | string | Yes | The locale variable (e.g., "en-US", "fr-FR") |
+
+## Examples
+
+```text
+format-currency-locale(<variable>, locale=<locale-variable>)
+```
+
+<Info>
+  For formatting with both locale and currency code, see [Format Currency with Locale and Currency](/api-reference/transformations/format-currency-locale-currency).
+</Info>
+

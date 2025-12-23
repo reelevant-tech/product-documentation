@@ -1,0 +1,30 @@
+---
+title: 'Difference Between Dates'
+description: 'Calculate difference between two dates'
+---
+
+## Overview
+
+The `difference-between-dates` transformation calculates the difference between two dates.
+
+## Syntax
+
+```text
+difference-between-dates(<variable 1>, <variable 2>, unit="days")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `variable 1` | date | Yes | - | First date |
+| `variable 2` | date | Yes | - | Second date |
+| `unit` | string | No | `"days"` | Unit of difference: `"days"`, `"hours"`, `"minutes"`, `"seconds"`, `"months"`, `"years"` |
+
+## Examples
+
+```text
+difference-between-dates(<variable 1>, <variable 2>, unit="days")
+difference-between-dates(<variable 1>, <variable 2>, unit="hours")
+```
+

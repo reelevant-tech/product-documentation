@@ -1,0 +1,32 @@
+---
+title: 'AES Decrypt'
+description: 'Decrypt AES encrypted data'
+---
+
+## Overview
+
+The `aes-decrypt` transformation decrypts AES encrypted data.
+
+## Syntax
+
+```text
+aes-decrypt(<variable>, password="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The encrypted data to decrypt |
+| `password` | string | Yes | The decryption password |
+
+## Examples
+
+```text
+aes-decrypt(<variable>, password="your-password")
+```
+
+<Warning>
+  Ensure that the password used for decryption matches the password used for encryption.
+</Warning>
+

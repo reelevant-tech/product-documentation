@@ -1,0 +1,32 @@
+---
+title: 'Template'
+description: 'Apply template transformation'
+---
+
+## Overview
+
+The `template` transformation applies a template string with variable substitution.
+
+## Syntax
+
+```text
+template(<variable>, template="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | any | Yes | The variable to use in template |
+| `template` | string | Yes | The template string with placeholders |
+
+## Examples
+
+```text
+template(<variable>, template="Hello {name}, you have {count} items")
+```
+
+<Note>
+  Template placeholders are typically defined using curly braces `{}` or similar syntax depending on the template format.
+</Note>
+

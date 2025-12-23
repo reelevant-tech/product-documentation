@@ -1,0 +1,30 @@
+---
+title: 'Subtract to Date'
+description: 'Subtract time from a date'
+---
+
+## Overview
+
+The `subtract-to-date` transformation subtracts a specified amount of time from a date.
+
+## Syntax
+
+```text
+subtract-to-date(<variable>, amount=0, unit="days")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `variable` | date | Yes | - | The date to subtract time from |
+| `amount` | number | No | `0` | The amount to subtract |
+| `unit` | string | No | `"days"` | Unit of time: `"days"`, `"hours"`, `"minutes"`, `"seconds"`, `"months"`, `"years"` |
+
+## Examples
+
+```text
+subtract-to-date(<variable>, amount=7, unit="days")
+subtract-to-date(<variable>, 30, "days")
+```
+

@@ -1,0 +1,34 @@
+---
+title: 'Truncate'
+description: 'Truncate text to a specific length'
+---
+
+## Overview
+
+The `truncate` transformation truncates the input to a specific size, with optional start position and ellipsis.
+
+## Syntax
+
+```text
+truncate(<variable>, start=0, end=10, elipsis=false)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `variable` | string | Yes | - | The text to truncate |
+| `start` | number | No | `0` | Start position for truncation |
+| `end` | number | No | `10` | Maximum character length |
+| `elipsis` | boolean | No | `false` | Whether to add ellipsis (...) at the end |
+
+## Examples
+
+```text
+truncate(<variable>, 0, 10, false)
+```
+
+```text
+truncate(<variable>, start=0, end=20, elipsis=true)
+```
+

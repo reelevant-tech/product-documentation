@@ -1,87 +1,100 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "maple",
+  "name": "Reelevant API Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#FEE117",
+    "light": "#FEE117",
+    "dark": "#42110D"
   },
   "favicon": "/favicon.svg",
-  "navigation": {
-    "tabs": [
+  "api": {
+    "baseUrl": "https://api.reelevant.com/v2"
+  },
+  "navigation": [
+    {
+      "group": "Getting started",
+      "pages": [
+        "api-reference/introduction",
+        "api-reference/authentication"
+      ]
+    },
+    {
+      "group": "Transformations",
+      "pages": [
+        "api-reference/transformations/introduction",
+        "api-reference/transformations/usage",
+        "api-reference/transformations/list",
+        "api-reference/transformations/truncate",
+        "api-reference/transformations/parse-number",
+        "api-reference/transformations/divide",
+        "api-reference/transformations/multiply",
+        "api-reference/transformations/subtract",
+        "api-reference/transformations/sum",
+        "api-reference/transformations/percentage",
+        "api-reference/transformations/absolute",
+        "api-reference/transformations/format-currency",
+        "api-reference/transformations/case",
+        "api-reference/transformations/replace",
+        "api-reference/transformations/split",
+        "api-reference/transformations/aes-decrypt",
+        "api-reference/transformations/array-get",
+        "api-reference/transformations/format-date",
+        "api-reference/transformations/parse-date",
+        "api-reference/transformations/difference-between-dates",
+        "api-reference/transformations/add-to-date",
+        "api-reference/transformations/subtract-to-date",
+        "api-reference/transformations/get-date-occurrence",
+        "api-reference/transformations/aggregate-numbers",
+        "api-reference/transformations/round",
+        "api-reference/transformations/lookup",
+        "api-reference/transformations/array-intersection",
+        "api-reference/transformations/array-unique-rank",
+        "api-reference/transformations/array-unique",
+        "api-reference/transformations/array-concat",
+        "api-reference/transformations/format-currency-locale",
+        "api-reference/transformations/format-currency-locale-currency",
+        "api-reference/transformations/replace-variable",
+        "api-reference/transformations/template",
+        "api-reference/transformations/extract",
+        "api-reference/transformations/create-hash",
+        "api-reference/transformations/format-number"
+      ]
+    },
+    {
+      "group": "Datasources API",
+      "openApi": "https://openapi.production.reelevant.io/v1/render/datasources-api"
+    },
+    {
+      "group": "Contents API",
+      "openApi": "https://openapi.production.reelevant.io/v1/render/contents-api"
+    },
+    {
+      "group": "Workflow API",
+      "openApi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
+    },
+    {
+      "group": "Loop API",
+      "openApi": "https://openapi.production.reelevant.io/v1/render/loop"
+    },
+    {
+      "group": "Datasources Collector",
+      "openApi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
+    }
+  ],
+  "global": {
+    "anchors": [
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
+        "anchor": "Documentation",
+        "href": "https://docs.reelevant.com",
+        "icon": "book-open-cover"
       },
       {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
-        ]
+        "anchor": "Blog",
+        "href": "https://blog.reelevant.com",
+        "icon": "newspaper"
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -91,13 +104,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:[support@reelevant.com]"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://app.reelevant.com"
     }
   },
   "contextual": {
@@ -114,9 +127,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "linkedin": "https://fr.linkedin.com/company/reelevant"
     }
   }
 }

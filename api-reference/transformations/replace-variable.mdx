@@ -1,0 +1,33 @@
+---
+title: 'Replace with Variable'
+description: 'Replace text using a variable'
+---
+
+## Overview
+
+The `replace-variable` transformation replaces text in a string using a variable value.
+
+## Syntax
+
+```text
+replace-variable(<variable>, search="", replace=<replace-variable>)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The string to search in |
+| `search` | string | Yes | The substring to find and replace |
+| `replace` | variable | Yes | The replacement variable |
+
+## Examples
+
+```text
+replace-variable(<variable>, search="placeholder", replace=<replace-variable>)
+```
+
+<Info>
+  This is similar to the [Replace](/api-reference/transformations/replace) transformation, but uses a variable for the replacement value instead of a static string.
+</Info>
+

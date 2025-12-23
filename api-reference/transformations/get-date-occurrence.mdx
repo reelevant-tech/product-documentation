@@ -1,0 +1,29 @@
+---
+title: 'Get Date Occurrence'
+description: 'Get specific occurrence in date'
+---
+
+## Overview
+
+The `get-date-occurrence` transformation extracts a specific occurrence or component from a date.
+
+## Syntax
+
+```text
+get-date-occurrence(<variable>, occurrence="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | date | Yes | The date value |
+| `occurrence` | string | Yes | The occurrence to get (e.g., "day", "month", "year", "dayOfWeek") |
+
+## Examples
+
+```text
+get-date-occurrence(<variable>, occurrence="day")
+get-date-occurrence(<variable>, occurrence="month")
+```
+

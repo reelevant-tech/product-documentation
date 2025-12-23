@@ -1,33 +1,55 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Welcome to the Reelevant API documentation'
 ---
-
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Welcome to the Reelevant API documentation. This documentation provides comprehensive information about all available endpoints for interacting with the Reelevant platform.
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+## API Overview
+
+The Reelevant API is organized into several main services:
+
+<CardGroup cols={2}>
+  <Card
+    title="Datasources API"
+    icon="database"
+    href="/api-reference/openapi/datasources-api"
+  >
+    Manage and query datasources
+  </Card>
+  <Card
+    title="Contents API"
+    icon="file-lines"
+    href="/api-reference/openapi/contents-api"
+  >
+    Create and manage content resources
+  </Card>
+  <Card
+    title="Workflow API"
+    icon="diagram-project"
+    href="/api-reference/openapi/workflow-api"
+  >
+    Build and orchestrate workflows
+  </Card>
+  <Card
+    title="Loop API"
+    icon="repeat"
+    href="/api-reference/openapi/loop"
+  >
+    Manage experience loops
+  </Card>
+</CardGroup>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using OAuth2. Please see the [Authentication](/api-reference/authentication) page for detailed information on how to obtain and use access tokens.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+<Card
+  title="Get Started with Authentication"
+  icon="key"
+  href="/api-reference/authentication"
+>
+  Learn how to authenticate your requests
+</Card>

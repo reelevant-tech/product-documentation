@@ -1,0 +1,29 @@
+---
+title: 'Format Date'
+description: 'Format a date value'
+---
+
+## Overview
+
+The `format-date` transformation formats a date value according to a specified format pattern.
+
+## Syntax
+
+```text
+format-date(<variable>, format="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | date | Yes | The date value to format |
+| `format` | string | Yes | The format pattern (e.g., "YYYY-MM-DD") |
+
+## Examples
+
+```text
+format-date(<variable>, format="YYYY-MM-DD")
+format-date(<variable>, format="DD/MM/YYYY")
+```
+

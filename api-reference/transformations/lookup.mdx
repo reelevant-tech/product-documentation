@@ -1,0 +1,30 @@
+---
+title: 'Lookup'
+description: 'Lookup value in a dataset'
+---
+
+## Overview
+
+The `lookup` transformation performs a lookup operation to find a value in a dataset based on a key.
+
+## Syntax
+
+```text
+lookup(<variable>, dataset="", key="", value="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | any | Yes | The value to lookup |
+| `dataset` | array/object | Yes | The dataset to search in |
+| `key` | string | Yes | The key field to match |
+| `value` | string | Yes | The value field to return |
+
+## Examples
+
+```text
+lookup(<variable>, dataset=<dataset>, key="id", value="name")
+```
+

@@ -1,0 +1,33 @@
+---
+title: 'Replace'
+description: 'Replace text in a string'
+---
+
+## Overview
+
+The `replace` transformation replaces occurrences of a substring within a string.
+
+## Syntax
+
+```text
+replace(<variable>, search="", replace="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The string to search in |
+| `search` | string | Yes | The substring to find and replace |
+| `replace` | string | Yes | The replacement string |
+
+## Examples
+
+```text
+replace(<variable>, search="old", replace="new")
+```
+
+<Info>
+  For replacing with a variable value, see [Replace with Variable](/api-reference/transformations/replace-variable).
+</Info>
+

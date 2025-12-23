@@ -1,0 +1,29 @@
+---
+title: 'Parse Date'
+description: 'Parse a date string'
+---
+
+## Overview
+
+The `parse-date` transformation parses a date string into a date object.
+
+## Syntax
+
+```text
+parse-date(<variable>, format="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The date string to parse |
+| `format` | string | Yes | The expected format of the date string |
+
+## Examples
+
+```text
+parse-date(<variable>, format="YYYY-MM-DD")
+parse-date(<variable>, format="DD/MM/YYYY")
+```
+

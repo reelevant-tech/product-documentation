@@ -1,0 +1,29 @@
+---
+title: 'Create Hash'
+description: 'Create hash from value'
+---
+
+## Overview
+
+The `create-hash` transformation creates a hash value from the input using a specified algorithm.
+
+## Syntax
+
+```text
+create-hash(<variable>, algorithm="sha256")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `variable` | any | Yes | - | The value to hash |
+| `algorithm` | string | No | `"sha256"` | Hash algorithm (e.g., "sha256", "md5") |
+
+## Examples
+
+```text
+create-hash(<variable>, algorithm="sha256")
+create-hash(<variable>, "md5")
+```
+

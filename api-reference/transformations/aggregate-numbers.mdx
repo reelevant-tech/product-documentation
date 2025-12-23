@@ -1,0 +1,29 @@
+---
+title: 'Aggregate Numbers'
+description: 'Aggregate array of numbers'
+---
+
+## Overview
+
+The `aggregate-numbers` transformation performs aggregation operations on an array of numbers.
+
+## Syntax
+
+```text
+aggregate-numbers(<variable>, operation="sum")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `variable` | array | Yes | - | Array of numbers to aggregate |
+| `operation` | string | No | `"sum"` | Aggregation operation: `"sum"`, `"avg"`, `"min"`, `"max"`, `"count"` |
+
+## Examples
+
+```text
+aggregate-numbers(<variable>, operation="sum")
+aggregate-numbers(<variable>, "avg")
+```
+

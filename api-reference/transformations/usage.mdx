@@ -1,0 +1,45 @@
+---
+title: 'Transformations Usage'
+description: 'How to use transformations in workflows and content editor'
+---
+
+## Overview
+
+In both case when doing transformations in the workflow or content editor, you'll have a code-like editor and our "variable" picker next to it. The following documentation on how to use it works for both since they use the same system under the hood.
+
+## Syntax
+
+Transformations are written in a specific "language" that looks like code, we tried to make it looks like the Microsoft Excel system with a little bit more information, note that whever you see `<variable>` going forward means any data coming from the variable picker (that you can introduce by clicking on a field). Here is example:
+
+```text
+parse-number(<variable>)
+```
+
+Here you can see the simple `parse-number` function that just take the variable you want and transform it into a number. But some other transformations can take additional informations:
+
+```text
+divide(<variable 1>, <variable 2>)
+```
+
+In the case above, we use two different variable to compute their division result. One more different kind of transformer:
+
+```text
+truncate(<variable>, start=0, end=10, elipsis=false)
+```
+
+The `truncate` transformation (which as its name imply, truncate the input to a specific size) take a variable, a start of truncatation, a maximum character and whenever or not to add the elipsis (...) at the end.
+
+When the parameters are not variable, you can also define them using their name:
+
+```text
+truncate(<variable>, 0, 10, false)
+```
+
+As you can see in the above example, it's possible to not define the option name (they aren't in the format name="value") however all the documentation and the platform will translate this back to named option for clarity sake.
+
+<Info>
+  **Important to note**
+  
+  You can "chain" transformations, for example if you want to parse as a number the result of a truncate transformation.
+</Info>
+

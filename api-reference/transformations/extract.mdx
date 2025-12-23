@@ -1,0 +1,29 @@
+---
+title: 'Extract'
+description: 'Extract data using pattern'
+---
+
+## Overview
+
+The `extract` transformation extracts data from a string using a pattern or regular expression.
+
+## Syntax
+
+```text
+extract(<variable>, pattern="")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The string to extract from |
+| `pattern` | string | Yes | The extraction pattern or regex |
+
+## Examples
+
+```text
+extract(<variable>, pattern="\\d+")
+extract(<variable>, pattern="[A-Z]+")
+```
+

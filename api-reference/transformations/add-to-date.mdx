@@ -1,0 +1,30 @@
+---
+title: 'Add to Date'
+description: 'Add time to a date'
+---
+
+## Overview
+
+The `add-to-date` transformation adds a specified amount of time to a date.
+
+## Syntax
+
+```text
+add-to-date(<variable>, amount=0, unit="days")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `variable` | date | Yes | - | The date to add time to |
+| `amount` | number | No | `0` | The amount to add |
+| `unit` | string | No | `"days"` | Unit of time: `"days"`, `"hours"`, `"minutes"`, `"seconds"`, `"months"`, `"years"` |
+
+## Examples
+
+```text
+add-to-date(<variable>, amount=7, unit="days")
+add-to-date(<variable>, 30, "days")
+```
+
