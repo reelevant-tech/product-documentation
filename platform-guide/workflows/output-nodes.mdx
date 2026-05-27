@@ -1,0 +1,61 @@
+---
+title: 'Output Nodes'
+description: 'Define what gets returned at the end of a workflow branch'
+---
+
+## What are Output Nodes?
+
+Output nodes are the **terminal nodes** of a workflow branch. Every branch that starts from a channel (entrypoint) must end with an output node that defines what content is returned to the user.
+
+## Output Node Types
+
+### Content Output
+
+The most common output type. A content output renders a **visual template** designed in the [Content Editor](/platform-guide/contents/overview).
+
+**Configuration:**
+1. Click on the content output node to open its configuration drawer.
+2. Select a content template from your content library.
+3. The system automatically maps data from upstream data nodes to the content's dynamic variables.
+
+<Info>
+  If upstream data nodes provide fields that match the content template's dynamic variables, they are automatically bound. If there are mismatches, the editor highlights them as errors during [publishing](/platform-guide/workflows/editor#publishing-a-workflow).
+</Info>
+
+### JSON Output
+
+Returns a raw **JSON payload** instead of a visual template. Useful for headless integrations where you want Reelevant to handle the personalization logic but render the content yourself.
+
+**Use cases:**
+- Mobile apps that render content natively.
+- Custom frontend frameworks that consume JSON data.
+- API-driven integrations with third-party tools.
+
+### Empty Output
+
+Returns an **empty response**. This is used for branches where you intentionally don't want to show any content.
+
+**Use cases:**
+- Control groups in A/B tests — show nothing to measure the impact of personalization.
+- Fallback branches where no relevant content is available.
+- Testing scenarios where you want to measure engagement without content.
+
+## Adding an Output Node
+
+<Steps>
+  <Step title="Open the output picker">
+    Click the **Output** button (content icon) in the bottom toolbar. The output picker drawer opens.
+  </Step>
+  <Step title="Select an output type">
+    Choose **Content**, **JSON**, or **Empty** from the available options.
+  </Step>
+  <Step title="Connect and configure">
+    Connect the output node to the end of a branch. If you chose Content, select the content template to use.
+  </Step>
+</Steps>
+
+## Tips
+
+- Every branch must end with an output node for the workflow to be valid and publishable.
+- A single workflow can mix different output types across its branches — for example, Content on the main branch and Empty on the control group.
+- When selecting a content template, make sure the data available in the branch matches the template's dynamic variables.

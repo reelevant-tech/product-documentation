@@ -1,0 +1,104 @@
+---
+title: 'Workflow Settings'
+description: 'Configure branch category nomenclature and variable profiles for your workflows'
+---
+
+## Accessing Workflow Settings
+
+Open the **Workflows** application from the sidebar, then navigate to the **Settings** page. The settings page has two tabs:
+- **Nomenclature** — Manage your branch category hierarchy.
+- **Variable Profiles** — Configure reusable URL parameter templates.
+
+---
+
+## Branch Category Nomenclature
+
+The nomenclature is a hierarchical tree of categories used to **qualify branches** across all your workflows. It provides a shared vocabulary for your team and powers analytics filtering by category.
+
+### Viewing the Nomenclature
+
+The nomenclature tab displays your category tree as an interactive, expandable hierarchy. Each category shows:
+- **Name** — The category label.
+- **Level** — Its depth in the tree.
+- **Children** — Sub-categories nested underneath.
+
+### Creating a Category
+
+<Steps>
+  <Step title="Open the form">
+    Click the **Add** button to open the category creation drawer.
+  </Step>
+  <Step title="Fill in the details">
+    - **Name** — A descriptive name for the category (e.g., "Product Recommendation").
+    - **Parent** — Optionally select a parent category to nest this one underneath.
+  </Step>
+  <Step title="Save">
+    Click **Save** to add the category to the tree.
+  </Step>
+</Steps>
+
+### Editing a Category
+
+Click on an existing category in the tree to open the edit drawer. You can update the name or move it under a different parent.
+
+### Deleting a Category
+
+<Warning>
+  Deleting a category removes it from all workflows where it is used. Branches that referenced the deleted category will lose their qualification.
+</Warning>
+
+1. Select the category in the tree.
+2. Click the **Delete** button.
+3. Confirm the deletion in the confirmation modal.
+
+### Best Practices
+
+- **Design for analytics** — Structure your nomenclature around the dimensions you want to analyze (e.g., by strategy type, by content category, by audience segment).
+- **Keep it flat enough** — A deep tree is harder to navigate. Aim for 2-3 levels at most.
+- **Name clearly** — Use descriptive names that any team member can understand without context.
+
+---
+
+## Variable Profiles
+
+Variable profiles are **reusable templates of URL parameters** that get applied during workflow [integration](/platform-guide/workflows/integration). They save time when you have a standard set of tracking parameters (UTM tags, user identifiers, etc.) used across multiple workflows.
+
+### Viewing Profiles
+
+The variable profiles tab displays a table of all configured profiles with their names and parameters.
+
+### Creating a Variable Profile
+
+<Steps>
+  <Step title="Open the form">
+    Click the **Add** button to open the variable profile creation drawer.
+  </Step>
+  <Step title="Configure the profile">
+    - **Name** — A descriptive name (e.g., "Standard Email Tracking", "Web Campaign UTM").
+    - **Parameters** — Define the URL parameters included in this profile:
+      - **Parameter name** — The URL query parameter key (e.g., `utm_source`, `user_id`).
+      - **Default value** — An optional default value for the parameter.
+  </Step>
+  <Step title="Save">
+    Click **Save** to create the profile. It will be available for selection during workflow integration.
+  </Step>
+</Steps>
+
+### Editing a Profile
+
+Click on a profile in the table to open the edit drawer. Update the name or parameters as needed.
+
+### Deleting a Profile
+
+1. Click the **Delete** action on the profile row.
+2. Confirm the deletion.
+
+<Info>
+  Deleting a variable profile does not affect already-deployed workflow integrations. However, future integrations will no longer be able to select this profile.
+</Info>
+
+### Tips
+
+- Create separate profiles for different channels (email vs. web) since they typically use different tracking parameters.
+- Standardize parameter names across your team to ensure consistent analytics data.
+- Variable profiles complement URL Parameter nodes in workflows — the profile provides the parameter structure, and the URL Parameter node reads the value at runtime.

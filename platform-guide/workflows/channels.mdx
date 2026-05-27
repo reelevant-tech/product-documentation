@@ -1,0 +1,99 @@
+---
+title: 'Channels (Entrypoints)'
+description: 'Define where your personalized content is displayed by adding channel nodes to your workflow'
+---
+
+## What are Channels?
+
+Channels (also called **entrypoints**) are the starting nodes of a workflow. They define **where** the personalized content will be displayed — in an email, on a website, in a mobile app, or on a landing page.
+
+Every workflow branch starts with a channel node and ends with an [output node](/platform-guide/workflows/output-nodes).
+
+<Tip>
+  You can have **multiple channels** in a single workflow. For example, if your email newsletter has three personalized visual zones, simply add three Email channel nodes — one for each zone.
+</Tip>
+
+## Available Channel Types
+
+### Email
+Renders a personalized visual for inclusion in email campaigns.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Email |
+| **Output format** | Email content |
+| **Use case** | Newsletter banners, product recommendations in emails, promotional slots |
+
+### Web Image
+Renders a personalized image for display on websites.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Web |
+| **Output format** | Website image |
+| **Use case** | Hero banners, sidebar recommendations, personalized widgets |
+
+### Web HTML
+Renders a responsive HTML partial for embedding in web pages.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Web |
+| **Output format** | Website HTML partial |
+| **Use case** | Interactive content blocks, responsive grids, embedded components |
+
+### Landing Page
+Generates a full landing page experience.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Landing |
+| **Output format** | Landing HTML page |
+| **Use case** | Campaign landing pages, personalized microsites |
+
+### Mobile Push Notification
+Renders a personalized image for push notifications.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Mobile |
+| **Output format** | Push notification image |
+| **Use case** | Rich push notification banners |
+
+### In-App Popup
+Renders a personalized image for in-app popup overlays.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Mobile |
+| **Output format** | In-app popup image |
+| **Use case** | Modal promotions, in-app announcements |
+
+### In-App Inbox
+Renders a personalized image for the in-app inbox/message center.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Mobile |
+| **Output format** | In-app inbox image |
+| **Use case** | Personalized inbox cards, notification center items |
+
+## Adding a Channel
+
+<Steps>
+  <Step title="Open the channel picker">
+    Click the **Channel** button (smartphone icon) in the bottom toolbar. The entry picker drawer opens on the side.
+  </Step>
+  <Step title="Select a channel type">
+    Choose the desired channel type from the list. You can either click to add it directly or drag and drop it onto the canvas.
+  </Step>
+  <Step title="Position and connect">
+    The channel node appears on the canvas. Connect it downstream to data nodes, logic nodes, and eventually to an output node to complete the branch.
+  </Step>
+</Steps>
+
+## Tips
+
+- Each channel node represents one **visual zone** in your final deployment. If you need three banners in an email, add three Email channels.
+- Channels can share downstream data and logic nodes — you don't need to duplicate the entire flow for each channel.
+- After publishing, each channel generates its own integration link in the [Integration modal](/platform-guide/workflows/integration).

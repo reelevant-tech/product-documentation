@@ -1,0 +1,70 @@
+---
+title: 'Logic Nodes'
+description: 'Control the flow of your workflow with conditions, splits, and real-time testing'
+---
+
+## What are Logic Nodes?
+
+Logic nodes control **which path** a user follows through the workflow. They create branches based on conditions, random splits, or real-time testing rules. This is how you deliver different experiences to different audience segments.
+
+## Logic Node Types
+
+### Conditions
+
+Condition nodes evaluate rules to decide which branch a user takes. They are the most common way to create personalized paths.
+
+**How it works:**
+- A condition node has **two or more output branches** — one for each possible outcome plus a default branch.
+- Each branch (except the default) has a set of **rules** that must be satisfied for a user to follow that path.
+- Rules can reference data from upstream data nodes, context variables, or URL parameters.
+- If no condition is met, the user follows the **default** branch.
+
+**Configuration:**
+1. Click on a condition node to open its configuration drawer.
+2. Define conditions for each branch — each condition consists of a field, operator, and value.
+3. The default branch catches all users who don't match any condition.
+
+<Tip>
+  You can use condition nodes to create audience segments — for example, routing VIP customers to a premium content branch while showing a generic offer to everyone else.
+</Tip>
+
+### Split (A/B Testing)
+
+Split nodes divide traffic into multiple branches based on **population share percentages**. This is used for A/B testing or multivariate testing.
+
+**Configuration:**
+- **Groups** — Define two or more groups, each with a name and a percentage of total traffic.
+- **Action** — Specify what happens for each group.
+- The total percentage across all groups must equal 100%.
+
+**Example:**
+| Group | Population Share |
+|-------|-----------------|
+| Variant A | 50% |
+| Variant B | 30% |
+| Control | 20% |
+
+### Real-time Testing (RTT)
+
+Real-time testing nodes enable automated traffic distribution that optimizes over time. Unlike a static A/B split, real-time testing can automatically adjust traffic allocation based on performance metrics.
+
+**Configuration:**
+Similar to Split, but with additional settings for:
+- **Testing duration** — How long the test should run.
+- **Optimization metric** — What metric to optimize for (clicks, conversions, etc.).
+- **Confidence level** — Statistical significance threshold.
+
+## Creating Branches
+
+When you add a logic node, it automatically creates output branches. You can:
+
+1. **Add more branches** by clicking "Add" in the condition or split configuration.
+2. **Qualify branches** by right-clicking on an edge and selecting "Qualify branch" to assign a [branch category](/platform-guide/workflows/branches).
+3. **Name branches** to make the workflow easier to understand.
+
+## Best Practices
+
+- **Keep conditions simple** — Complex nested conditions are harder to debug. Use multiple condition nodes in sequence instead.
+- **Always have a default branch** — Ensure every user gets a response, even if they don't match any condition.
+- **Use splits for testing** — Run A/B tests with split nodes before committing to a single personalization strategy.
+- **Document your logic** — Use the right-click context menu to add documentation notes to complex logic nodes.

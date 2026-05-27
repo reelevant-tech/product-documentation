@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Reelevant API Documentation",
+  "name": "Reelevant Documentation",
   "colors": {
     "primary": "#EEFF00",
     "light": "#F6F6F6",
@@ -37,6 +37,28 @@
       {
         "tab": "Documentation",
         "groups": [
+          {
+            "group": "Platform Guide",
+            "pages": [
+              "platform-guide/introduction",
+              {
+                "group": "Workflows",
+                "pages": [
+                  "platform-guide/workflows/overview",
+                  "platform-guide/workflows/creating-a-workflow",
+                  "platform-guide/workflows/editor",
+                  "platform-guide/workflows/channels",
+                  "platform-guide/workflows/data-nodes",
+                  "platform-guide/workflows/logic-nodes",
+                  "platform-guide/workflows/output-nodes",
+                  "platform-guide/workflows/branches",
+                  "platform-guide/workflows/versions",
+                  "platform-guide/workflows/integration",
+                  "platform-guide/workflows/settings"
+                ]
+              }
+            ]
+          },
           {
             "group": "Getting started",
             "pages": [
