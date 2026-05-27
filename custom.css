@@ -1,0 +1,115 @@
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/fonts/InstrumentSerif-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --reelevant-yellow: #eeff00;
+  --reelevant-blue: #5b5eff;
+  --reelevant-mint: #51ccaa;
+  --reelevant-black: #000000;
+  --reelevant-white: #f6f6f6;
+}
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--reelevant-blue);
+  color: var(--reelevant-mint);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+#content h1,
+#content h2,
+#content h3,
+[data-component="PageTitle"],
+[data-component="Heading"] {
+  color: var(--reelevant-black) !important;
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark #content h1,
+html.dark #content h2,
+html.dark #content h3,
+html.dark [data-component="PageTitle"],
+html.dark [data-component="Heading"] {
+  color: var(--reelevant-white) !important;
+}
+
+#navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+html.dark #navbar {
+  border-bottom-color: rgba(246, 246, 246, 0.12);
+}
+
+#navbar a[data-primary="true"],
+#navbar button[data-primary="true"] {
+  background-color: var(--reelevant-black) !important;
+  color: var(--reelevant-white) !important;
+  border-radius: 0 !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+#navbar a[data-primary="true"]:hover,
+#navbar button[data-primary="true"]:hover {
+  background-color: var(--reelevant-yellow) !important;
+  color: var(--reelevant-black) !important;
+}
+
+#sidebar a[data-active="true"] {
+  color: var(--reelevant-black);
+}
+
+html.dark #sidebar a[data-active="true"] {
+  color: var(--reelevant-yellow);
+}
+
+.card {
+  border-radius: 0;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+html.dark .card {
+  border-color: rgba(246, 246, 246, 0.12);
+}
+
+.card:hover {
+  border-color: var(--reelevant-yellow);
+}

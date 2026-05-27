@@ -3,11 +3,32 @@
   "theme": "maple",
   "name": "Reelevant API Documentation",
   "colors": {
-    "primary": "#FEE117",
-    "light": "#FEE117",
-    "dark": "#42110D"
+    "primary": "#EEFF00",
+    "light": "#F6F6F6",
+    "dark": "#000000"
   },
-  "favicon": "/favicon.svg",
+  "fonts": {
+    "family": "Switzer",
+    "weight": 400,
+    "source": "/fonts/Switzer-Regular.woff2",
+    "format": "woff2",
+    "heading": {
+      "family": "Instrument Serif",
+      "weight": 400,
+      "source": "/fonts/InstrumentSerif-Regular.woff2",
+      "format": "woff2"
+    }
+  },
+  "background": {
+    "color": {
+      "light": "#F6F6F6",
+      "dark": "#000000"
+    }
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "favicon": "/favicon.png",
   "api": {
     "baseUrl": "https://api.reelevant.com/v2"
   },
@@ -87,9 +108,9 @@
   "global": {
     "anchors": [
       {
-        "anchor": "Documentation",
-        "href": "https://docs.reelevant.com",
-        "icon": "book-open-cover"
+        "anchor": "Website",
+        "href": "https://reelevant.com",
+        "icon": "globe"
       },
       {
         "anchor": "Blog",
@@ -100,13 +121,18 @@
   },
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "https://reelevant.com"
   },
   "navbar": {
     "links": [
       {
+        "label": "Website",
+        "href": "https://reelevant.com"
+      },
+      {
         "label": "Support",
-        "href": "mailto:[support@reelevant.com]"
+        "href": "mailto:support@reelevant.com"
       }
     ],
     "primary": {
@@ -126,6 +152,14 @@
      "cursor",
      "vscode"
    ]
+  },
+  "styling": {
+    "codeblocks": {
+      "theme": {
+        "light": "github-light",
+        "dark": "github-dark"
+      }
+    }
   },
   "footer": {
     "socials": {
