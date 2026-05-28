@@ -33,109 +33,114 @@
     "baseUrl": "https://api.reelevant.com/v2"
   },
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting started",
-        "pages": [
-          "api-reference/introduction",
-          "api-reference/authentication"
-        ]
-      },
-      {
-        "group": "Transformations",
-        "pages": [
-          "api-reference/transformations/introduction",
-          "api-reference/transformations/usage",
-          "api-reference/transformations/list",
+        "tab": "Documentation",
+        "groups": [
           {
-            "group": "Strings",
+            "group": "Getting started",
             "pages": [
-              "api-reference/transformations/truncate",
-              "api-reference/transformations/case",
-              "api-reference/transformations/replace",
-              "api-reference/transformations/replace-variable",
-              "api-reference/transformations/split",
-              "api-reference/transformations/extract",
-              "api-reference/transformations/template",
-              "api-reference/transformations/length",
-              "api-reference/transformations/pad",
-              "api-reference/transformations/create-hash",
-              "api-reference/transformations/aes-decrypt"
+              "api-reference/introduction",
+              "api-reference/authentication"
             ]
           },
           {
-            "group": "Numbers",
+            "group": "Transformations",
             "pages": [
-              "api-reference/transformations/parse-number",
-              "api-reference/transformations/format-number",
-              "api-reference/transformations/format-currency",
-              "api-reference/transformations/format-currency-locale",
-              "api-reference/transformations/format-currency-locale-currency",
-              "api-reference/transformations/percentage",
-              "api-reference/transformations/absolute",
-              "api-reference/transformations/round"
-            ]
-          },
-          {
-            "group": "Maths",
-            "pages": [
-              "api-reference/transformations/divide",
-              "api-reference/transformations/multiply",
-              "api-reference/transformations/subtract",
-              "api-reference/transformations/sum",
-              "api-reference/transformations/aggregate-numbers"
-            ]
-          },
-          {
-            "group": "Dates",
-            "pages": [
-              "api-reference/transformations/format-date",
-              "api-reference/transformations/format-date-locale-var",
-              "api-reference/transformations/parse-date",
-              "api-reference/transformations/difference-between-dates",
-              "api-reference/transformations/add-to-date",
-              "api-reference/transformations/subtract-to-date",
-              "api-reference/transformations/get-date-occurrence"
-            ]
-          },
-          {
-            "group": "Arrays",
-            "pages": [
-              "api-reference/transformations/array-get",
-              "api-reference/transformations/array-get-var",
-              "api-reference/transformations/array-intersection",
-              "api-reference/transformations/array-unique-rank",
-              "api-reference/transformations/array-unique",
-              "api-reference/transformations/array-concat"
-            ]
-          },
-          {
-            "group": "Records",
-            "pages": [
-              "api-reference/transformations/lookup"
+              "api-reference/transformations/introduction",
+              "api-reference/transformations/usage",
+              "api-reference/transformations/list",
+              {
+                "group": "Strings",
+                "pages": [
+                  "api-reference/transformations/truncate",
+                  "api-reference/transformations/case",
+                  "api-reference/transformations/replace",
+                  "api-reference/transformations/replace-variable",
+                  "api-reference/transformations/split",
+                  "api-reference/transformations/extract",
+                  "api-reference/transformations/template",
+                  "api-reference/transformations/length",
+                  "api-reference/transformations/pad",
+                  "api-reference/transformations/create-hash",
+                  "api-reference/transformations/aes-decrypt"
+                ]
+              },
+              {
+                "group": "Numbers",
+                "pages": [
+                  "api-reference/transformations/parse-number",
+                  "api-reference/transformations/format-number",
+                  "api-reference/transformations/format-currency",
+                  "api-reference/transformations/format-currency-locale",
+                  "api-reference/transformations/format-currency-locale-currency",
+                  "api-reference/transformations/percentage",
+                  "api-reference/transformations/absolute",
+                  "api-reference/transformations/round"
+                ]
+              },
+              {
+                "group": "Maths",
+                "pages": [
+                  "api-reference/transformations/divide",
+                  "api-reference/transformations/multiply",
+                  "api-reference/transformations/subtract",
+                  "api-reference/transformations/sum",
+                  "api-reference/transformations/aggregate-numbers"
+                ]
+              },
+              {
+                "group": "Dates",
+                "pages": [
+                  "api-reference/transformations/format-date",
+                  "api-reference/transformations/format-date-locale-var",
+                  "api-reference/transformations/parse-date",
+                  "api-reference/transformations/difference-between-dates",
+                  "api-reference/transformations/add-to-date",
+                  "api-reference/transformations/subtract-to-date",
+                  "api-reference/transformations/get-date-occurrence"
+                ]
+              },
+              {
+                "group": "Arrays",
+                "pages": [
+                  "api-reference/transformations/array-get",
+                  "api-reference/transformations/array-get-var",
+                  "api-reference/transformations/array-intersection",
+                  "api-reference/transformations/array-unique-rank",
+                  "api-reference/transformations/array-unique",
+                  "api-reference/transformations/array-concat"
+                ]
+              },
+              {
+                "group": "Records",
+                "pages": [
+                  "api-reference/transformations/lookup"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "group": "Datasources API",
-        "openApi": "https://openapi.production.reelevant.io/v1/render/datasources-api"
+        "tab": "Datasources API",
+        "openapi": "api-reference/openapi/datasources-api.json"
       },
       {
-        "group": "Contents API",
-        "openApi": "https://openapi.production.reelevant.io/v1/render/contents-api"
+        "tab": "Contents API",
+        "openapi": "https://openapi.production.reelevant.io/v1/render/contents-api"
       },
       {
-        "group": "Workflow API",
-        "openApi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
+        "tab": "Workflow API",
+        "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
       },
       {
-        "group": "Loop API",
-        "openApi": "https://openapi.production.reelevant.io/v1/render/loop"
+        "tab": "Loop API",
+        "openapi": "https://openapi.production.reelevant.io/v1/render/loop"
       },
       {
-        "group": "Datasources Collector",
-        "openApi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
+        "tab": "Datasources Collector",
+        "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
       }
     ]
   },
