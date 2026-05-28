@@ -1,0 +1,30 @@
+---
+title: 'Snowflake Source'
+description: 'Synchronize tables from Snowflake data warehouses into Reelevant'
+---
+
+![Snowflake source configuration form](/images/datahub/source-snowflake-v2.png)
+
+## Overview
+
+The Snowflake source synchronizes data from a Snowflake table into Reelevant. Use it to bring warehouse data into your personalization workflows.
+
+## Configuration
+
+| Field | Description |
+|-------|-------------|
+| **Account** | Your Snowflake account identifier. |
+| **Username** | Snowflake login username. |
+| **Password** | Snowflake login password. |
+| **Warehouse** | The Snowflake warehouse to use for computation. |
+| **Database** | The database name. |
+| **Schema** | The schema name. |
+| **Table** | The table to synchronize. |
+| **Query (optional)** | An optional SQL query to filter or transform the data before import. |
+
+## How It Works
+
+1. Reelevant connects to Snowflake using the provided credentials.
+2. If a query is provided, it is executed. Otherwise, the entire table is read.
+3. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. On subsequent syncs, the data is re-read and updated.

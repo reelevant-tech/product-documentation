@@ -1,0 +1,81 @@
+---
+title: 'Roles'
+description: 'Create and configure roles with granular resource-level permissions'
+---
+
+![Roles listing page showing roles table with permissions](/images/account/roles-listing-v2.png)
+
+## Roles Listing
+
+The Roles page displays all roles configured for your company:
+
+| Column | Description |
+|--------|-------------|
+| **Name** | The role name. |
+| **Users** | Number of users assigned to this role. |
+| **Permissions** | Summary of the role's permissions. |
+
+## Permissions Matrix
+
+Each role defines a set of permissions that control what actions users with that role can perform. Permissions are organized by **resource** and **action**:
+
+### Resources
+
+| Resource | Description |
+|----------|-------------|
+| **Workflow** | [Workflow](/platform-guide/workflows/overview) access and management. |
+| **Workflow Settings** | Workflow configuration settings. |
+| **Content** | [Content template](/platform-guide/contents/overview) access and management. |
+| **Datasource** | [Datasource](/platform-guide/datahub/overview) access and management. |
+| **Statistics** | [Analytics](/platform-guide/analytics/overview) data access. |
+| **User** | User management. |
+| **Role** | Role management. |
+| **Teams** (Resource Group) | Team management. |
+| **Company** | Company-level settings. |
+| **Billing** | Billing and subscription access. |
+| **Invitation** | User invitation management. |
+| **Datagraph Schema** | Datagraph schema access. |
+| **Datagraph Entity** | Datagraph entity access. |
+
+### Actions
+
+| Action | Description |
+|--------|-------------|
+| **Access** | Permission to view the resource section. |
+| **Create** | Permission to create new resources. |
+| **Read** | Permission to view resource details. |
+| **Query** | Permission to query or search resources. |
+| **Update** | Permission to modify existing resources. |
+| **Delete** | Permission to delete resources. |
+| **Export** | Permission to export resource data. |
+
+## Creating a Role
+
+<Steps>
+  <Step title="Open the creation modal">
+    Click **Create role** in the top-right corner.
+  </Step>
+  <Step title="Configure the role">
+    | Field | Description |
+    |-------|-------------|
+    | **Role name** | A descriptive name for the role. |
+    | **Permissions** | Toggle individual permissions in the matrix. |
+  </Step>
+  <Step title="Create">
+    Click **Create** to save the new role.
+  </Step>
+</Steps>
+
+## Editing a Role
+
+Click the actions menu and select **Edit** to update the role name or permissions. Click **Save** to apply.
+
+## Deleting a Role
+
+1. Click the actions menu and select **Delete**.
+2. A confirmation dialog warns that the action is irreversible.
+3. Click **Delete** to remove the role.
+
+<Warning>
+  Deleting a role that is assigned to users will remove those permissions. Reassign affected users to another role before deleting.
+</Warning>

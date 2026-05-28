@@ -1,0 +1,27 @@
+---
+title: 'URL Source'
+description: 'Fetch data from a web URL — API endpoints, hosted files, or data feeds'
+---
+
+![URL source configuration form](/images/datahub/source-url-v2.png)
+
+## Overview
+
+The URL source type fetches data from a web address. Use it for API endpoints, hosted CSV/JSON files, or any data feed accessible via HTTP/HTTPS.
+
+## Configuration
+
+| Field | Description |
+|-------|-------------|
+| **URL** | The full URL to the data source. Paste your API endpoint or file URL. |
+
+<Tip>
+  Make sure your URL returns data in a supported format (CSV, JSON, XML, or Parquet). The platform auto-detects the format.
+</Tip>
+
+## How It Works
+
+1. Reelevant sends an HTTP GET request to the configured URL.
+2. The response is parsed based on the detected format.
+3. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. On subsequent syncs, the URL is re-fetched and the data is updated.

@@ -1,0 +1,22 @@
+---
+title: 'Datasource Reference'
+description: 'Use another existing datasource as a data source for a new datasource'
+---
+
+![Datasource reference configuration showing datasource picker](/images/datahub/source-datasource-v2.png)
+
+## Overview
+
+The Datasource Reference source type lets you create a new datasource that reads data from another existing datasource. This is useful for derived datasources like [Best Products](/platform-guide/datahub/special-configurations) or [Merged datasources](/platform-guide/datahub/special-configurations) that combine data from multiple sources.
+
+## Configuration
+
+| Field | Description |
+|-------|-------------|
+| **Datasource** | Select an existing datasource from the picker. Use the search field to find it. |
+
+## How It Works
+
+1. The new datasource reads data from the referenced datasource instead of an external source.
+2. Fields from the referenced datasource are available for [mapping](/platform-guide/datahub/field-mapping) in the new datasource.
+3. When the referenced datasource updates, the dependent datasource can also refresh.

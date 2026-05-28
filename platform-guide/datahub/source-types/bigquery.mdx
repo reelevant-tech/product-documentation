@@ -1,0 +1,32 @@
+---
+title: 'BigQuery Source'
+description: 'Synchronize data from Google BigQuery tables into Reelevant'
+---
+
+![BigQuery source configuration form](/images/datahub/source-bigquery-v2.png)
+
+## Overview
+
+The BigQuery source synchronizes data from a Google BigQuery table directly into Reelevant. This is ideal for teams that centralize their data in BigQuery and want to use it for personalization.
+
+## Configuration
+
+| Field | Description |
+|-------|-------------|
+| **Project id** | The Google Cloud project ID that contains your BigQuery dataset. |
+| **Dataset** | The BigQuery dataset name. |
+| **Table** | The table to synchronize. |
+| **Query (optional)** | An optional SQL query to filter or transform the data before import. |
+| **Client email** | The service account email for authentication. |
+| **Private key** | The service account private key. |
+
+## How It Works
+
+1. Reelevant authenticates using the provided service account credentials.
+2. If a query is provided, it is executed against the dataset. Otherwise, the entire table is read.
+3. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. On subsequent syncs, the query or table is re-read and data is updated.
+
+<Warning>
+  Ensure the service account has read access to the specified dataset and table. The minimum required role is `BigQuery Data Viewer`.
+</Warning>

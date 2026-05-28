@@ -1,0 +1,41 @@
+---
+title: 'FTP & SFTP Sources'
+description: 'Connect to FTP or SFTP servers to retrieve data files for your datasource'
+---
+
+![FTP source configuration form showing connection fields](/images/datahub/source-ftp-v2.png)
+
+## Overview
+
+The FTP and SFTP sources let you retrieve data files from remote file servers. This is useful for scheduled feeds from partners, legacy systems, or any infrastructure that publishes data via FTP.
+
+## FTP Configuration
+
+| Field | Description |
+|-------|-------------|
+| **Host** | The FTP server hostname or IP address. |
+| **Port** | The FTP port (default: 21). |
+| **Username** | FTP login username. |
+| **Password** | FTP login password. |
+| **Path** | The file path on the server. |
+
+## SFTP Configuration
+
+| Field | Description |
+|-------|-------------|
+| **Host** | The SFTP server hostname or IP address. |
+| **Port** | The SFTP port (default: 22). |
+| **Username** | SFTP login username. |
+| **Password** | SFTP login password. |
+| **Path** | The file path on the server. |
+
+## How It Works
+
+1. Reelevant connects to the FTP/SFTP server using the provided credentials.
+2. The file at the configured path is downloaded and parsed.
+3. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. On subsequent syncs, the file is re-fetched and data is updated.
+
+<Tip>
+  Use SFTP when security is a concern — it encrypts the connection and data transfer.
+</Tip>

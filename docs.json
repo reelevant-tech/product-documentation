@@ -95,6 +95,97 @@
                   "platform-guide/workflows/integration",
                   "platform-guide/workflows/settings"
                 ]
+              },
+              {
+                "group": "Content Editor",
+                "pages": [
+                  "platform-guide/contents/overview",
+                  "platform-guide/contents/listing",
+                  "platform-guide/contents/editor",
+                  {
+                    "group": "Components",
+                    "pages": [
+                      "platform-guide/contents/components",
+                      "platform-guide/contents/components/text",
+                      "platform-guide/contents/components/image",
+                      "platform-guide/contents/components/shape",
+                      "platform-guide/contents/components/barcode",
+                      "platform-guide/contents/components/countdown",
+                      "platform-guide/contents/components/map",
+                      "platform-guide/contents/components/progress"
+                    ]
+                  },
+                  "platform-guide/contents/layers",
+                  "platform-guide/contents/conditions",
+                  "platform-guide/contents/data-binding",
+                  "platform-guide/contents/frames",
+                  "platform-guide/contents/settings"
+                ]
+              },
+              {
+                "group": "DataHub",
+                "pages": [
+                  "platform-guide/datahub/overview",
+                  "platform-guide/datahub/catalog",
+                  "platform-guide/datahub/creating-a-datasource",
+                  "platform-guide/datahub/listing",
+                  {
+                    "group": "Source Types",
+                    "pages": [
+                      "platform-guide/datahub/source-types",
+                      "platform-guide/datahub/source-types/url",
+                      "platform-guide/datahub/source-types/file",
+                      "platform-guide/datahub/source-types/ftp-sftp",
+                      "platform-guide/datahub/source-types/bigquery",
+                      "platform-guide/datahub/source-types/snowflake",
+                      "platform-guide/datahub/source-types/gcs",
+                      "platform-guide/datahub/source-types/datasource-reference"
+                    ]
+                  },
+                  "platform-guide/datahub/field-mapping",
+                  "platform-guide/datahub/queries",
+                  "platform-guide/datahub/logs",
+                  "platform-guide/datahub/special-configurations"
+                ]
+              },
+              {
+                "group": "Analytics",
+                "pages": [
+                  "platform-guide/analytics/overview",
+                  {
+                    "group": "Dashboards",
+                    "pages": [
+                      "platform-guide/analytics/dashboards",
+                      "platform-guide/analytics/dashboards/performance",
+                      "platform-guide/analytics/dashboards/audience",
+                      "platform-guide/analytics/dashboards/individualization",
+                      "platform-guide/analytics/dashboards/conversions",
+                      "platform-guide/analytics/dashboards/uplift",
+                      "platform-guide/analytics/dashboards/usage"
+                    ]
+                  },
+                  "platform-guide/analytics/data-exploration",
+                  "platform-guide/analytics/saved-queries",
+                  "platform-guide/analytics/settings"
+                ]
+              },
+              {
+                "group": "Account",
+                "pages": [
+                  "platform-guide/account/overview",
+                  "platform-guide/account/users",
+                  "platform-guide/account/roles",
+                  "platform-guide/account/teams"
+                ]
+              },
+              {
+                "group": "Browser Extension",
+                "pages": [
+                  "platform-guide/browser-extension/overview",
+                  "platform-guide/browser-extension/workflows",
+                  "platform-guide/browser-extension/integration",
+                  "platform-guide/browser-extension/content-script"
+                ]
               }
             ]
           },
