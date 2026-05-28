@@ -9,9 +9,9 @@ Output nodes are the **terminal nodes** of a workflow branch. Every branch that 
 
 ## Output Node Types
 
-### Content Output
+### Visual Content
 
-The most common output type. A content output renders a **visual template** designed in the [Content Editor](/platform-guide/contents/overview).
+The most common output type. A visual content output renders a **visual template** designed in the [Content Editor](/platform-guide/contents/overview).
 
 **Configuration:**
 1. Click on the content output node to open its configuration drawer.
@@ -22,7 +22,7 @@ The most common output type. A content output renders a **visual template** desi
   If upstream data nodes provide fields that match the content template's dynamic variables, they are automatically bound. If there are mismatches, the editor highlights them as errors during [publishing](/platform-guide/workflows/editor#publishing-a-workflow).
 </Info>
 
-### JSON Output
+### JSON Format
 
 Returns a raw **JSON payload** instead of a visual template. Useful for headless integrations where you want Reelevant to handle the personalization logic but render the content yourself.
 
@@ -31,7 +31,7 @@ Returns a raw **JSON payload** instead of a visual template. Useful for headless
 - Custom frontend frameworks that consume JSON data.
 - API-driven integrations with third-party tools.
 
-### Empty Output
+### Empty
 
 Returns an **empty response**. This is used for branches where you intentionally don't want to show any content.
 
@@ -44,13 +44,13 @@ Returns an **empty response**. This is used for branches where you intentionally
 
 <Steps>
   <Step title="Open the output picker">
-    Click the **Output** button (content icon) in the bottom toolbar. The output picker drawer opens.
+    Click the **Output** button (content icon) in the bottom toolbar. The **Content types** drawer opens.
   </Step>
   <Step title="Select an output type">
-    Choose **Content**, **JSON**, or **Empty** from the available options.
+    Choose **Visual content**, **JSON format**, or **Empty** from the available options.
   </Step>
   <Step title="Connect and configure">
-    Connect the output node to the end of a branch. If you chose Content, select the content template to use.
+    Connect the output node to the end of a branch. If you chose Visual content, select the content template from the content library.
   </Step>
 </Steps>
 
