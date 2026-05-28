@@ -1,5 +1,5 @@
 ---
-title: 'GCS Source'
+title: 'Google Cloud Storage (GCS)'
 description: 'Retrieve data files from Google Cloud Storage buckets'
 ---
 
@@ -7,18 +7,71 @@ description: 'Retrieve data files from Google Cloud Storage buckets'
 
 ## Overview
 
-The GCS (Google Cloud Storage) source retrieves data files from a GCS bucket. Use it when your data is stored as files in Google Cloud.
+The GCS (Google Cloud Storage) source retrieves data files from a GCS bucket. Use it when your data is stored as files in Google Cloud and you want to import them into Reelevant for personalization.
 
 ## Configuration
 
+### Required Fields
+
 | Field | Description |
 |-------|-------------|
+| **Project ID** | The Google Cloud project ID. |
+| **Client email** | The service account email address (e.g. `my-sa@project.iam.gserviceaccount.com`). |
+| **Private key** | The service account private key (from the JSON key file). |
 | **Bucket** | The GCS bucket name. |
-| **Path** | The file path within the bucket. |
+| **Path** | The file path or pattern within the bucket (see [Wildcard Paths](#wildcard-paths) below). |
+
+<Tip>
+  The minimum required role is **Storage Object Viewer** (`roles/storage.objectViewer`) on the target bucket.
+</Tip>
+
+## Supported File Formats
+
+GCS automatically detects the file format. The following formats are supported:
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Comma-separated values. Delimiter is auto-detected (comma, semicolon, tab, pipe). |
+| **JSON** | Standard JSON files with a root array or object. |
+| **NDJSON** | Newline-delimited JSON (one JSON object per line). |
+| **XML** | XML files — the root element path is auto-detected. |
+| **Parquet** | Apache Parquet columnar format. |
+| **Avro** | Apache Avro serialization format. |
+| **XLSX** | Microsoft Excel files. |
+
+<Info>
+  Compressed files (`.gz`, `.zip`) are automatically decompressed before parsing.
+</Info>
+
+## Wildcard Paths
+
+You can use a wildcard (`*`) in the file path to match multiple files. This is useful when:
+
+- A new file is exported periodically with a different name (e.g. `exports/products_20240101.csv`, `exports/products_20240102.csv`)
+- Data is split across multiple files in the same directory
+
+**Example patterns:**
+- `exports/products_*.csv` — matches all CSV files starting with `products_` in the `exports/` folder
+- `data/*.json` — matches all JSON files in the `data/` folder
+
+## File Processing Modes
+
+When using wildcard paths, you can configure how files are selected:
+
+| Mode | Description |
+|------|-------------|
+| **Last unprocessed** *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
+| **All unprocessed** | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
+| **All** | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
 
 ## How It Works
 
-1. Reelevant accesses the specified GCS bucket and path.
-2. The file is downloaded and parsed (CSV, JSON, XML, or Parquet).
-3. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
-4. On subsequent syncs, the file is re-fetched and data is updated.
+1. Reelevant authenticates using the provided service account credentials.
+2. The specified bucket and path are accessed. If a wildcard is used, matching files are listed.
+3. Files are downloaded, decompressed if needed, and parsed based on the detected format.
+4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+5. On subsequent syncs, files are re-fetched according to the configured processing mode.
+
+<Warning>
+  Ensure the service account has read access to the specified bucket and objects. The minimum required role is **Storage Object Viewer**.
+</Warning>
