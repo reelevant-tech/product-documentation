@@ -173,6 +173,7 @@
                 "group": "Account",
                 "pages": [
                   "platform-guide/account/overview",
+                  "platform-guide/account/permissions",
                   "platform-guide/account/users",
                   "platform-guide/account/roles",
                   "platform-guide/account/teams"
