@@ -1,0 +1,97 @@
+---
+title: 'Teams'
+description: 'Organize users into hierarchical teams for resource access control'
+---
+
+![Teams page showing hierarchical graph visualization of teams](/images/account/teams-graph.png)
+
+## Overview
+
+Teams (also called Resource Groups) are organizational units that control which users can access which [workflows](/platform-guide/workflows/overview), [contents](/platform-guide/contents/overview), and [datasources](/platform-guide/datahub/overview). Teams can be organized into a hierarchy with parent-child relationships.
+
+## Teams Listing
+
+The Teams page displays all teams with a **hierarchical graph visualization** and a list view. You can switch between two graph rendering algorithms:
+
+| Algorithm | Description |
+|-----------|-------------|
+| **Hierarchical render** | Displays teams in a top-down tree layout. |
+| **Grouped render** | Displays teams in a clustered layout. |
+
+Use the search bar to find specific teams.
+
+### Team Information
+
+Each team node in the graph shows:
+
+| Field | Description |
+|-------|-------------|
+| **Team name** | The team's name. |
+| **Direct users** | Number of users directly assigned to this team. |
+| **Total users** | Total users including those in sub-teams. |
+
+## Creating a Team
+
+<Steps>
+  <Step title="Open the creation modal">
+    Click **Create team** to open the creation form.
+  </Step>
+  <Step title="Fill in the team details">
+    | Field | Description |
+    |-------|-------------|
+    | **Team name** | A descriptive name for the team. |
+    | **Users** | Search and select users to include in the team. |
+  </Step>
+  <Step title="Create">
+    Click **Create** to save the new team.
+  </Step>
+</Steps>
+
+### Creating a Sub-Team
+
+To create a team as a child of an existing team:
+
+1. Click the actions menu on a team and select **Create sub-team**.
+2. The form pre-fills the parent team.
+3. Enter the sub-team name and users.
+4. Click **Create**.
+
+## Editing a Team
+
+Click the actions menu and select **Edit** to update:
+
+| Field | Description |
+|-------|-------------|
+| **Team name** | Update the team name. |
+| **Exclude from ancestor inheritance** | Toggle to prevent this team from inheriting permissions from parent teams. |
+| **Parent teams** | Add or remove parent relationships. |
+| **Child teams** | Add or remove child relationships. |
+
+Click **Save** to apply.
+
+## Managing Team Members
+
+Click the actions menu and select **Members** to open the members drawer:
+
+| Action | Description |
+|--------|-------------|
+| **Add user** | Search and select a user to add to the team. |
+| **Remove** | Remove a user from the team. |
+
+## Team Hierarchy
+
+Teams support parent-child relationships. Child teams can inherit access from parent teams unless **Exclude from ancestor inheritance** is enabled.
+
+| Action | Description |
+|--------|-------------|
+| **Detach from parent team** | Remove the parent relationship while keeping the team. |
+
+## Deleting a Team
+
+1. Click the actions menu and select **Delete team**.
+2. A confirmation dialog asks you to confirm.
+3. Click **Delete** to remove the team.
+
+<Warning>
+  Deleting a team removes all resource group assignments. Users in the team will lose access to resources that were scoped to that team only.
+</Warning>

@@ -1,0 +1,26 @@
+---
+title: 'File Upload Source'
+description: 'Upload data files directly from your computer to create a datasource'
+---
+
+![File upload source configuration with drag-and-drop area](/images/datahub/source-file.png)
+
+## Overview
+
+The File upload source lets you import data by uploading a file directly from your computer. The platform parses the file and extracts fields for [mapping](/platform-guide/datahub/field-mapping).
+
+## Configuration
+
+| Field | Description |
+|-------|-------------|
+| **File upload** | Click or drag a file to the upload area. Supported formats: CSV, JSON, XML, Parquet. |
+
+## How It Works
+
+1. Upload your data file using the drag-and-drop area or file browser.
+2. The platform detects the file format and parses the contents.
+3. Fields are extracted and made available for mapping.
+
+<Info>
+  File upload creates a one-time import. To keep data updated automatically, consider using a [URL source](/platform-guide/datahub/source-types/url) or [FTP/SFTP source](/platform-guide/datahub/source-types/ftp-sftp) instead.
+</Info>

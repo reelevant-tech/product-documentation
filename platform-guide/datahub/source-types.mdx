@@ -1,0 +1,40 @@
+---
+title: 'Source Types'
+description: 'Learn about each data source connector available for importing data into the DataHub'
+---
+
+![Source type selection showing available connectors](/images/datahub/source-types.png)
+
+## Overview
+
+When [creating a datasource](/platform-guide/datahub/creating-a-datasource), you select a **source type** that defines how Reelevant retrieves the data. Each source type has its own configuration fields.
+
+<CardGroup cols={2}>
+  <Card title="URL" icon="link" href="/platform-guide/datahub/source-types/url">
+    Fetch data from a web URL (API endpoint or file URL).
+  </Card>
+  <Card title="File Upload" icon="file-arrow-up" href="/platform-guide/datahub/source-types/file">
+    Upload a data file directly from your computer.
+  </Card>
+  <Card title="FTP & SFTP" icon="server" href="/platform-guide/datahub/source-types/ftp-sftp">
+    Connect to FTP or SFTP servers to retrieve data files.
+  </Card>
+  <Card title="BigQuery" icon="database" href="/platform-guide/datahub/source-types/bigquery">
+    Synchronize data from Google BigQuery tables.
+  </Card>
+  <Card title="Snowflake" icon="snowflake" href="/platform-guide/datahub/source-types/snowflake">
+    Synchronize tables from Snowflake data warehouses.
+  </Card>
+  <Card title="GCS" icon="cloud" href="/platform-guide/datahub/source-types/gcs">
+    Retrieve files from Google Cloud Storage buckets.
+  </Card>
+  <Card title="Datasource Reference" icon="arrows-rotate" href="/platform-guide/datahub/source-types/datasource-reference">
+    Reference another existing datasource as a data source.
+  </Card>
+</CardGroup>
+
+## Multiple Sources
+
+Some datasource types support **multiple sources**. You can add several source configurations (e.g., multiple URLs or FTP paths) to a single datasource using the **Add a source** button. Each source is processed independently, and the results are combined.
+
+Use **Delete the source** to remove individual source configurations.

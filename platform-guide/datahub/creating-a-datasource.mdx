@@ -1,0 +1,69 @@
+---
+title: 'Creating a Datasource'
+description: 'Step-by-step guide to creating and configuring a new datasource'
+---
+
+![Datasource creation wizard showing configuration steps](/images/datahub/creation-wizard.png)
+
+## Creation Wizard
+
+When you click **Connect** on a [catalog](/platform-guide/datahub/catalog) card, the creation wizard guides you through the setup process. The steps vary depending on the datasource type, but follow this general flow:
+
+<Steps>
+  <Step title="Choose datasource name">
+    Enter a name for your datasource. The name appears in the [listing](/platform-guide/datahub/listing) and in the datasource picker when connecting to [workflows](/platform-guide/workflows/overview) or [content templates](/platform-guide/contents/data-binding).
+
+    <Tip>
+      Choose a descriptive name — it helps you and your team find the right datasource quickly.
+    </Tip>
+  </Step>
+  <Step title="Configure sources">
+    Select and configure the data source. The available options depend on the integration type. See [Source Types](/platform-guide/datahub/source-types) for details on each connector.
+  </Step>
+  <Step title="Fields mapping">
+    Map the raw fields from your data to standardized Reelevant field types. See [Field Mapping](/platform-guide/datahub/field-mapping) for details.
+  </Step>
+  <Step title="Configure fields">
+    Set additional field properties:
+    - **Locale** — The locale for the data source (if applicable).
+    - **Located in** — For location datasources, select the country or "specified for each entry" for multi-country data.
+  </Step>
+  <Step title="Assign to a team">
+    Select the resource group (team) that owns this datasource. Your team is assigned by default.
+  </Step>
+  <Step title="Configure folder">
+    Optionally place the datasource within a folder hierarchy for organization.
+  </Step>
+  <Step title="Validate">
+    Review the configuration and click **Validate** to create the datasource. The platform will begin importing and processing the data.
+  </Step>
+</Steps>
+
+## Additional Configuration Steps
+
+Depending on the datasource type, you may encounter additional steps:
+
+| Step | When it appears |
+|------|-----------------|
+| **Configure an API Key** | For integrations requiring API key authentication (e.g., Partoo). |
+| **Authorize Reelevant access** | For OAuth-based integrations (e.g., Shopify, Google My Business, Instagram). |
+| **Setup Google Tag Manager** | For the GTM integration — provides the snippet and IDs to configure in GTM. |
+| **Configure Reelevant Script** | For the website events integration — provides the tracking snippet. |
+| **Configure product datasource** | For Best Products and Top attributes — select the source product datasource. |
+| **Configure tracking datasource** | For Best Products — select the analytics datasource for tracking events. |
+| **Configure merge mapping** | For merged datasources — define which fields match between the main and dependency datasources. |
+| **Configure cross sell** | For bought-together datasources — configure the product reference field and purchase event. |
+| **Define Best Product field** | Select the field where the computed count should be stored. |
+
+## Editing a Datasource
+
+After creation, you can edit any step of the configuration:
+
+1. Open the datasource from the [listing page](/platform-guide/datahub/listing).
+2. Click **Edit** to open the step selector.
+3. Select the step you want to change.
+4. Make your modifications and click **Validate** to save.
+
+<Warning>
+  If the datasource was recently updated, saving your changes will overwrite the latest data. You can choose to **Cancel my changes** or **Save anyway**.
+</Warning>

@@ -1,0 +1,24 @@
+---
+title: 'GCS Source'
+description: 'Retrieve data files from Google Cloud Storage buckets'
+---
+
+![GCS source configuration form](/images/datahub/source-gcs.png)
+
+## Overview
+
+The GCS (Google Cloud Storage) source retrieves data files from a GCS bucket. Use it when your data is stored as files in Google Cloud.
+
+## Configuration
+
+| Field | Description |
+|-------|-------------|
+| **Bucket** | The GCS bucket name. |
+| **Path** | The file path within the bucket. |
+
+## How It Works
+
+1. Reelevant accesses the specified GCS bucket and path.
+2. The file is downloaded and parsed (CSV, JSON, XML, or Parquet).
+3. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. On subsequent syncs, the file is re-fetched and data is updated.

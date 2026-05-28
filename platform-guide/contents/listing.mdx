@@ -1,0 +1,64 @@
+---
+title: 'Content Listing'
+description: 'Browse, search, and manage all your content templates from the listing page'
+---
+
+![Content listing page showing a table of content templates](/images/contents/listing-page.png)
+
+## Content Listing
+
+When you open the **Content Editor** application from the sidebar, you land on the content listing page. This table displays all your content templates with the following columns:
+
+| Column | Description |
+|--------|-------------|
+| **Content** | The content name. Click to open it in the editor. |
+| **Status** | Current lifecycle status — Draft, Published, Publishing, or Error. |
+| **Teams** | The resource groups (teams) the content belongs to. |
+| **Last modification** | When the content was last updated. |
+
+Use the search bar to find contents by name. You can filter the listing by:
+- **Status** — Draft, Published, Inactive, Publishing, Error.
+- **Teams** — Filter by resource group.
+
+The hierarchy breadcrumbs let you navigate through folders for organized content management.
+
+## Creating a Content
+
+<Steps>
+  <Step title="Open the creation modal">
+    Click the **Create content** button in the top-right corner of the listing page. A modal dialog opens.
+  </Step>
+  <Step title="Fill in the content details">
+    The creation form has the following fields:
+
+    - **Content name** — A descriptive name for your content template.
+    - **Description** — An optional short description (max 50 characters).
+    - **Teams** — Select one or more resource groups that should have access.
+    - **Folder configuration** — Optionally place the content within a folder hierarchy.
+    - **Import design** — Optionally import a Figma JSON export or PSD file to start from an existing design.
+  </Step>
+  <Step title="Confirm creation">
+    Click **Create content** to create the template. You will be redirected to the editor.
+  </Step>
+</Steps>
+
+## Editing Content Properties
+
+To update a content's properties after creation:
+
+1. Open the content's **actions menu** (three dots) in the listing table.
+2. Select **Settings**.
+3. Update the name, description, teams, or folder as needed.
+4. Click **Save changes** to apply.
+
+## Archiving a Content
+
+To archive a content that is no longer needed:
+
+1. Open the content's **actions menu** in the listing table.
+2. Select **Archive**.
+3. A confirmation dialog asks you to type a validation word to confirm.
+
+<Warning>
+  If the content is used by one or more [workflows](/platform-guide/workflows/overview), the archive dialog will show which workflows reference it. You must remove the content from those workflows before archiving.
+</Warning>

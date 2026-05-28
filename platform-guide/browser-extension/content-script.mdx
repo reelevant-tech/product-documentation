@@ -1,0 +1,49 @@
+---
+title: 'Content Script & DOM Selector'
+description: 'Use the visual DOM selector to pick HTML elements on your website for integration targeting'
+---
+
+![DOM selector toolbox overlaid on a website](/images/browser-extension/dom-selector.png)
+
+## Overview
+
+The Content Script is the part of the browser extension that runs on your website pages. It provides a **DOM Selector Toolbox** — a visual overlay that lets you point-and-click to select HTML elements for [integration targeting](/platform-guide/browser-extension/integration).
+
+## Activating the DOM Selector
+
+To activate the DOM selector:
+
+1. Open the [integration page](/platform-guide/browser-extension/integration) for a workflow channel.
+2. Click the **Select element** button next to a link field.
+3. The DOM selector toolbox activates on the current page.
+
+## Using the DOM Selector
+
+When the toolbox is active:
+
+| Action | Description |
+|--------|-------------|
+| **Hover** | Hovering over elements highlights them with a colored outline. |
+| **Click** | Clicking an element selects it and generates a CSS selector. |
+| **Confirm** | The generated selector is inserted into the link field in the integration configuration. |
+| **Cancel** | Click the cancel button in the toolbox to deactivate without selecting. |
+
+## Toolbox Controls
+
+The DOM selector toolbox appears as an overlay bar on the page:
+
+| Control | Description |
+|---------|-------------|
+| **Element info** | Shows the tag name and classes of the currently highlighted element. |
+| **Select** | Confirm the highlighted element as the target. |
+| **Cancel** | Exit the selector without making a selection. |
+
+<Info>
+  The DOM selector works on any website you navigate to while the extension is active. Make sure you are on the correct page where you want the Reelevant content to appear.
+</Info>
+
+## Best Practices
+
+- **Select specific containers** — Choose a `<div>` or element that clearly defines the area where content should render.
+- **Avoid highly dynamic selectors** — If the page structure changes frequently (e.g., A/B testing tools modifying the DOM), select a parent element that remains stable.
+- **Test on multiple pages** — If the integration targets multiple pages with the same layout, verify the selector works consistently across all of them.
