@@ -48,7 +48,7 @@
                   "platform-guide/workflows/creating-a-workflow",
                   "platform-guide/workflows/editor",
                   {
-                    "group": "Channels (Entrypoints)",
+                    "group": "Channels",
                     "pages": [
                       "platform-guide/workflows/channels",
                       "platform-guide/workflows/channels/email",

@@ -10,9 +10,9 @@ description: 'Understand what workflows are and how they power personalized cont
 A workflow is the core building block of every Reelevant campaign. It is a **visual, node-based graph** (a directed acyclic graph, or DAG) that defines the logic for delivering personalized content to your audience.
 
 Each workflow answers three questions:
-1. **Where** does the content appear? (Channel / Entrypoint)
-2. **What data** drives the personalization? (Data nodes)
-3. **What logic** determines the experience? (Logic nodes, conditions, splits)
+1. **Where** does the content appear? ([Channels](/platform-guide/workflows/channels))
+2. **What data** drives the personalization? ([Data nodes](/platform-guide/workflows/data-nodes))
+3. **What logic** determines the experience? ([Logic nodes](/platform-guide/workflows/logic-nodes), [conditions](/platform-guide/workflows/logic-nodes/conditions), [splits](/platform-guide/workflows/logic-nodes/split))
 
 When a user visits a page, opens an email, or triggers a mobile event, Reelevant evaluates the workflow in real time and returns the most relevant content.
 
@@ -21,21 +21,21 @@ When a user visits a page, opens an email, or triggers a mobile event, Reelevant
 A workflow is composed of connected **nodes** organized into four categories:
 
 <CardGroup cols={2}>
-  <Card title="Channels (Entrypoints)" icon="right-to-bracket">
+  <Card title="Channels" icon="right-to-bracket" href="/platform-guide/workflows/channels">
     Define where content is displayed — Email, Web (image or HTML), Landing Page, or Mobile (push, in-app, inbox).
   </Card>
-  <Card title="Data Nodes" icon="database">
+  <Card title="Data Nodes" icon="database" href="/platform-guide/workflows/data-nodes">
     Fetch and transform data — product catalogs, geolocation, weather, URL parameters, website events, and more.
   </Card>
-  <Card title="Logic Nodes" icon="code-branch">
+  <Card title="Logic Nodes" icon="code-branch" href="/platform-guide/workflows/logic-nodes">
     Control the flow — conditions, A/B splits, and real-time testing decide which branch a user follows.
   </Card>
-  <Card title="Output Nodes" icon="square-check">
+  <Card title="Output Nodes" icon="square-check" href="/platform-guide/workflows/output-nodes">
     Define what gets returned — a visual content template, a JSON format payload, or an empty response.
   </Card>
 </CardGroup>
 
-Nodes are connected by **edges** that define the flow of execution from entrypoints through data and logic nodes down to outputs.
+Nodes are connected by **edges** that define the flow of execution from [channels](/platform-guide/workflows/channels) through [data](/platform-guide/workflows/data-nodes) and [logic](/platform-guide/workflows/logic-nodes) nodes down to [outputs](/platform-guide/workflows/output-nodes).
 
 ## Workflow Lifecycle
 
@@ -55,7 +55,7 @@ Every workflow goes through a series of states:
 
 ## Branches
 
-A **branch** is a unique path through the workflow from an entrypoint to an output node. Branches are the fundamental unit of personalization — each branch can deliver a different experience based on the user's context.
+A **branch** is a unique path through the workflow from a [channel](/platform-guide/workflows/channels) to an [output node](/platform-guide/workflows/output-nodes). Branches are the fundamental unit of personalization — each branch can deliver a different experience based on the user's context.
 
 Branches can be:
 - **Qualified** with a category (e.g., "Promotion", "New Arrivals") using the branch categories defined in [Workflow Settings](/platform-guide/workflows/settings).
