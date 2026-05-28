@@ -10,21 +10,20 @@ The `create-hash` transformation creates a hash value from the input using a spe
 ## Syntax
 
 ```text
-create-hash(<variable>, algorithm="sha256")
+create-hash(<variable>, type="sha256")
 ```
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `variable` | any | Yes | - | The value to hash |
-| `algorithm` | string | No | `"sha256"` | Hash algorithm (e.g., "sha256", "md5") |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The value to hash |
+| `type` | string | Yes | Hash algorithm: `"sha256"`, `"sha512"`, `"sha1"`, `"md5"`, or `"sha224"` |
+| `encoding` | string | No | Output encoding: `"hex"` (default) or `"base64"` |
 
 ## Examples
 
 ```text
-create-hash(<variable>, algorithm="sha256")
-create-hash(<variable>, "md5")
+create-hash(<variable>, type="sha256")
+create-hash(<variable>, type="md5", encoding="base64")
 ```
-
-

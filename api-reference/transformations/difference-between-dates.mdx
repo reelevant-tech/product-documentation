@@ -5,27 +5,27 @@ description: 'Calculate difference between two dates'
 
 ## Overview
 
-The `difference-between-dates` transformation calculates the difference between two dates.
+The `diff-dates` transformation calculates the difference between two dates.
 
 ## Syntax
 
 ```text
-difference-between-dates(<variable 1>, <variable 2>, unit="days")
+diff-dates(<variable 1>, <variable 2>, unit="days")
 ```
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `variable 1` | date | Yes | - | First date |
-| `variable 2` | date | Yes | - | Second date |
-| `unit` | string | No | `"days"` | Unit of difference: `"days"`, `"hours"`, `"minutes"`, `"seconds"`, `"months"`, `"years"` |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable 1` | date | Yes | First date |
+| `variable 2` | date | Yes | Second date |
+| `unit` | string | No | Unit of difference: `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, `"days"`, `"months"`, or `"years"` |
+| `inputLocale` | string | No | Locale used to parse the input dates: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
 
 ## Examples
 
 ```text
-difference-between-dates(<variable 1>, <variable 2>, unit="days")
-difference-between-dates(<variable 1>, <variable 2>, unit="hours")
+diff-dates(<variable 1>, <variable 2>, unit="days")
+diff-dates(<variable 1>, <variable 2>, unit="hours")
+diff-dates(<variable 1>, <variable 2>, unit="seconds", inputLocale="fr")
 ```
-
-

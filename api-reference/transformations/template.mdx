@@ -1,11 +1,11 @@
 ---
 title: 'Template'
-description: 'Apply template transformation'
+description: 'Apply template transformation using sprintf format'
 ---
 
 ## Overview
 
-The `template` transformation applies a template string with variable substitution.
+The `template` transformation applies a template string with variable substitution using [sprintf](https://github.com/alexei/sprintf.js) format.
 
 ## Syntax
 
@@ -17,17 +17,12 @@ template(<variable>, template="")
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `variable` | any | Yes | The variable to use in template |
-| `template` | string | Yes | The template string with placeholders |
+| `variable` | any | Yes | The variable to use in the template |
+| `template` | string | Yes | The template string using sprintf format (e.g., `%s` for strings, `%d` for integers) |
 
 ## Examples
 
 ```text
-template(<variable>, template="Hello {name}, you have {count} items")
+template(<variable>, template="Hello %s!")
+template(<variable>, template="Value: %d items")
 ```
-
-<Note>
-  Template placeholders are typically defined using curly braces `{}` or similar syntax depending on the template format.
-</Note>
-
-

@@ -1,30 +1,30 @@
 ---
 title: 'Get Date Occurrence'
-description: 'Get specific occurrence in date'
+description: 'Get the next or nearest yearly occurrence of a date'
 ---
 
 ## Overview
 
-The `get-date-occurrence` transformation extracts a specific occurrence or component from a date.
+The `get-date-occurence` transformation finds the next (or nearest) occurrence of a date in the current or next year. This is useful for recurring events like birthdays or anniversaries.
 
 ## Syntax
 
 ```text
-get-date-occurrence(<variable>, occurrence="")
+get-date-occurence(<variable>)
 ```
 
 ## Parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `variable` | date | Yes | The date value |
-| `occurrence` | string | Yes | The occurrence to get (e.g., "day", "month", "year", "dayOfWeek") |
+| `variable` | date | Yes | The reference date |
+| `inputLocale` | string | No | Locale used to parse the input date: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
+| `useNearest` | boolean | No | When true, returns the nearest occurrence (past or future) instead of always the next one |
 
 ## Examples
 
 ```text
-get-date-occurrence(<variable>, occurrence="day")
-get-date-occurrence(<variable>, occurrence="month")
+get-date-occurence(<variable>)
+get-date-occurence(<variable>, useNearest=true)
+get-date-occurence(<variable>, inputLocale="fr")
 ```
-
-

@@ -1,0 +1,27 @@
+---
+title: 'Array Get (Variable Index)'
+description: 'Get element from array using a variable index'
+---
+
+## Overview
+
+The `array-get-var` transformation retrieves an element from an array using an index provided as a variable. This is similar to [Array Get](/api-reference/transformations/array-get), but the index comes from a variable instead of a static option.
+
+## Syntax
+
+```text
+array-get-var(<variable>, <index-variable>)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | array | Yes | The array to get element from |
+| `index-variable` | variable | Yes | The variable containing the index of the element to retrieve |
+
+## Examples
+
+```text
+array-get-var(<variable>, <index-variable>)
+```

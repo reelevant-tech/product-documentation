@@ -10,7 +10,7 @@ The `truncate` transformation truncates the input to a specific size, with optio
 ## Syntax
 
 ```text
-truncate(<variable>, start=0, end=10, elipsis=false)
+truncate(<variable>, start=0, end=10, ellipsis=false, smart=false)
 ```
 
 ## Parameters
@@ -18,18 +18,15 @@ truncate(<variable>, start=0, end=10, elipsis=false)
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `variable` | string | Yes | - | The text to truncate |
-| `start` | number | No | `0` | Start position for truncation |
-| `end` | number | No | `10` | Maximum character length |
-| `elipsis` | boolean | No | `false` | Whether to add ellipsis (...) at the end |
+| `start` | number | Yes | - | Start position for truncation |
+| `end` | number | No | - | Maximum character length |
+| `ellipsis` | boolean | Yes | - | Whether to add ellipsis (...) at the end |
+| `smart` | boolean | No | - | When true, truncates at the last space before the end position |
 
 ## Examples
 
 ```text
-truncate(<variable>, 0, 10, false)
+truncate(<variable>, start=0, end=10, ellipsis=false)
+truncate(<variable>, 0, 20, true)
+truncate(<variable>, start=0, end=50, ellipsis=true, smart=true)
 ```
-
-```text
-truncate(<variable>, start=0, end=20, elipsis=true)
-```
-
-

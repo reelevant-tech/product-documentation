@@ -5,26 +5,26 @@ description: 'Round a number'
 
 ## Overview
 
-The `round` transformation rounds a number to a specified number of decimal places.
+The `round` transformation rounds a number to a specified number of decimal places using a given rounding mode.
 
 ## Syntax
 
 ```text
-round(<variable>, decimals=0)
+round(<variable>, mode="round", decimal=0)
 ```
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `variable` | number | Yes | - | The number to round |
-| `decimals` | number | No | `0` | Number of decimal places |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | number | Yes | The number to round |
+| `mode` | string | Yes | Rounding mode: `"round"`, `"up"` (ceil), or `"down"` (floor) |
+| `decimal` | number | Yes | Number of decimal places |
 
 ## Examples
 
 ```text
-round(<variable>, decimals=2)
-round(<variable>, 0)
+round(<variable>, mode="round", decimal=2)
+round(<variable>, mode="up", decimal=0)
+round(<variable>, mode="down", decimal=1)
 ```
-
-

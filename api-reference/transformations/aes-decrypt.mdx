@@ -5,12 +5,12 @@ description: 'Decrypt AES encrypted data'
 
 ## Overview
 
-The `aes-decrypt` transformation decrypts AES encrypted data.
+The `aes-decrypt` transformation decrypts AES encrypted data using a Base64-encoded key.
 
 ## Syntax
 
 ```text
-aes-decrypt(<variable>, password="")
+aes-decrypt(<variable>, key="")
 ```
 
 ## Parameters
@@ -18,16 +18,14 @@ aes-decrypt(<variable>, password="")
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `variable` | string | Yes | The encrypted data to decrypt |
-| `password` | string | Yes | The decryption password |
+| `key` | string | Yes | The Base64-encoded decryption key |
 
 ## Examples
 
 ```text
-aes-decrypt(<variable>, password="your-password")
+aes-decrypt(<variable>, key="your-base64-key")
 ```
 
 <Warning>
-  Ensure that the password used for decryption matches the password used for encryption.
+  Ensure that the key used for decryption matches the key used for encryption.
 </Warning>
-
-

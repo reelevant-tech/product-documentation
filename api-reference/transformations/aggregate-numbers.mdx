@@ -10,21 +10,20 @@ The `aggregate-numbers` transformation performs aggregation operations on an arr
 ## Syntax
 
 ```text
-aggregate-numbers(<variable>, operation="sum")
+aggregate-numbers(<variable>, type="sum")
 ```
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `variable` | array | Yes | - | Array of numbers to aggregate |
-| `operation` | string | No | `"sum"` | Aggregation operation: `"sum"`, `"avg"`, `"min"`, `"max"`, `"count"` |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | array | Yes | Array of numbers to aggregate |
+| `type` | string | Yes | Aggregation type: `"sum"`, `"average"`, or `"median"` |
 
 ## Examples
 
 ```text
-aggregate-numbers(<variable>, operation="sum")
-aggregate-numbers(<variable>, "avg")
+aggregate-numbers(<variable>, type="sum")
+aggregate-numbers(<variable>, type="average")
+aggregate-numbers(<variable>, type="median")
 ```
-
-
