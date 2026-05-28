@@ -1,11 +1,11 @@
 ---
 title: 'Case'
-description: 'Change text case (upper, lower, title)'
+description: 'Change text case (upper, lower, capitalize)'
 ---
 
 ## Overview
 
-The `case` transformation changes the case of text (uppercase, lowercase, or title case).
+The `case` transformation changes the case of text (uppercase, lowercase, or capitalize).
 
 ## Syntax
 
@@ -15,17 +15,15 @@ case(<variable>, type="upper")
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `variable` | string | Yes | - | The text to transform |
-| `type` | string | No | `"upper"` | Case type: `"upper"`, `"lower"`, or `"title"` |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The text to transform |
+| `type` | string | Yes | Case type: `"upper"`, `"lower"`, or `"capitalize"` |
 
 ## Examples
 
 ```text
 case(<variable>, type="upper")
 case(<variable>, type="lower")
-case(<variable>, type="title")
+case(<variable>, type="capitalize")
 ```
-
-

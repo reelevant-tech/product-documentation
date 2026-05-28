@@ -1,31 +1,28 @@
 ---
 title: 'Percentage'
-description: 'Calculate percentage'
+description: 'Format a value as a percentage'
 ---
 
 ## Overview
 
-The `percentage` transformation calculates the percentage of one number relative to another.
+The `percentage` transformation multiplies a decimal value by 100 and formats it as a percentage string with the specified number of decimal places.
 
 ## Syntax
 
 ```text
-percentage(<variable 1>, <variable 2>)
+percentage(<variable>, decimal=2)
 ```
 
 ## Parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `variable 1` | number | Yes | The part (numerator) |
-| `variable 2` | number | Yes | The whole (denominator) |
+| `variable` | number | Yes | The decimal value to convert to percentage (e.g., 0.75 becomes 75%) |
+| `decimal` | number | Yes | Number of decimal places in the output |
 
 ## Examples
 
 ```text
-percentage(<variable 1>, <variable 2>)
+percentage(<variable>, decimal=2)
+percentage(<variable>, decimal=0)
 ```
-
-This calculates `(variable 1 / variable 2) * 100`.
-
-

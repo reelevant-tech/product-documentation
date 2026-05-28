@@ -1,16 +1,16 @@
 ---
 title: 'Extract'
-description: 'Extract data using pattern'
+description: 'Extract data using a regex pattern'
 ---
 
 ## Overview
 
-The `extract` transformation extracts data from a string using a pattern or regular expression.
+The `extract` transformation extracts data from a string using a regular expression. It returns the first capture group match.
 
 ## Syntax
 
 ```text
-extract(<variable>, pattern="")
+extract(<variable>, search="")
 ```
 
 ## Parameters
@@ -18,13 +18,11 @@ extract(<variable>, pattern="")
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `variable` | string | Yes | The string to extract from |
-| `pattern` | string | Yes | The extraction pattern or regex |
+| `search` | string | Yes | The regular expression pattern (returns the first capture group) |
 
 ## Examples
 
 ```text
-extract(<variable>, pattern="\\d+")
-extract(<variable>, pattern="[A-Z]+")
+extract(<variable>, search="(\\d+)")
+extract(<variable>, search="([A-Z]+)")
 ```
-
-

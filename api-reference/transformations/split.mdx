@@ -5,12 +5,12 @@ description: 'Split a string into an array'
 
 ## Overview
 
-The `split` transformation splits a string into an array based on a separator.
+The `split` transformation splits a string into an array based on a delimiter.
 
 ## Syntax
 
 ```text
-split(<variable>, separator="")
+split(<variable>, delimiter=",")
 ```
 
 ## Parameters
@@ -18,13 +18,11 @@ split(<variable>, separator="")
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `variable` | string | Yes | The string to split |
-| `separator` | string | Yes | The separator character or string |
+| `delimiter` | string | Yes | The delimiter character or string |
 
 ## Examples
 
 ```text
-split(<variable>, separator=",")
-split(<variable>, separator=" ")
+split(<variable>, delimiter=",")
+split(<variable>, delimiter=" ")
 ```
-
-

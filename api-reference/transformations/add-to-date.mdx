@@ -10,22 +10,21 @@ The `add-to-date` transformation adds a specified amount of time to a date.
 ## Syntax
 
 ```text
-add-to-date(<variable>, amount=0, unit="days")
+add-to-date(<date-variable>, <amount-variable>, unit="days")
 ```
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `variable` | date | Yes | - | The date to add time to |
-| `amount` | number | No | `0` | The amount to add |
-| `unit` | string | No | `"days"` | Unit of time: `"days"`, `"hours"`, `"minutes"`, `"seconds"`, `"months"`, `"years"` |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `date-variable` | date | Yes | The date to add time to |
+| `amount-variable` | number | Yes | The amount of time to add |
+| `unit` | string | No | Unit of time: `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, `"days"`, `"months"`, or `"years"` |
+| `inputLocale` | string | No | Locale used to parse the input date: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
 
 ## Examples
 
 ```text
-add-to-date(<variable>, amount=7, unit="days")
-add-to-date(<variable>, 30, "days")
+add-to-date(<date-variable>, <amount-variable>, unit="days")
+add-to-date(<date-variable>, <amount-variable>, unit="hours", inputLocale="fr")
 ```
-
-
