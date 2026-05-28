@@ -1,0 +1,62 @@
+---
+title: 'Channels'
+description: 'Define where your personalized content is displayed by adding channel nodes to your workflow'
+---
+
+![Channel picker drawer showing all available channel types](/images/workflows/channel-picker.png)
+
+## What are Channels?
+
+Channels are the starting nodes of a workflow. They define **where** the personalized content will be displayed — in an email, on a website, in a mobile app, or on a landing page.
+
+Every workflow branch starts with a channel node and ends with an [output node](/platform-guide/workflows/output-nodes).
+
+<Tip>
+  You can have **multiple channels** in a single workflow. For example, if your email newsletter has three personalized visual zones, simply add three Email channel nodes — one for each zone.
+</Tip>
+
+## Available Channel Types
+
+<CardGroup cols={2}>
+  <Card title="Email" icon="envelope" href="/platform-guide/workflows/channels/email">
+    Renders a personalized visual for inclusion in email campaigns.
+  </Card>
+  <Card title="Web Image" icon="image" href="/platform-guide/workflows/channels/web-image">
+    Renders a personalized image for display on websites.
+  </Card>
+  <Card title="Web HTML" icon="code" href="/platform-guide/workflows/channels/web-html">
+    Renders a responsive HTML partial for embedding in web pages.
+  </Card>
+  <Card title="Landing Page" icon="browser" href="/platform-guide/workflows/channels/landing-page">
+    Generates a full landing page experience.
+  </Card>
+  <Card title="Push Notification Image" icon="bell" href="/platform-guide/workflows/channels/push-notification">
+    Renders a personalized image for push notifications.
+  </Card>
+  <Card title="In-App Popup" icon="window-maximize" href="/platform-guide/workflows/channels/in-app-popup">
+    Renders a personalized image for in-app popup overlays.
+  </Card>
+  <Card title="In-App Inbox" icon="inbox" href="/platform-guide/workflows/channels/in-app-inbox">
+    Renders a personalized image for the in-app inbox/message center.
+  </Card>
+</CardGroup>
+
+## Adding a Channel
+
+<Steps>
+  <Step title="Open the channel picker">
+    Click the **Channel** button (smartphone icon) in the bottom toolbar. The entry picker drawer opens on the side.
+  </Step>
+  <Step title="Select a channel type">
+    Choose the desired channel type from the list. You can either click to add it directly or drag and drop it onto the canvas.
+  </Step>
+  <Step title="Position and connect">
+    The channel node appears on the canvas. Connect it downstream to [data nodes](/platform-guide/workflows/data-nodes), [logic nodes](/platform-guide/workflows/logic-nodes), and eventually to an [output node](/platform-guide/workflows/output-nodes) to complete the branch.
+  </Step>
+</Steps>
+
+## Tips
+
+- Each channel node represents one **visual zone** in your final deployment. If you need three banners in an email, add three Email channels.
+- Channels can share downstream data and logic nodes — you don't need to duplicate the entire flow for each channel.
+- After publishing, each channel generates its own integration link in the [Integration modal](/platform-guide/workflows/integration).

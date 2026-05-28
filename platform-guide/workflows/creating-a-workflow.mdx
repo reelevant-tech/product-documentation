@@ -1,0 +1,64 @@
+---
+title: 'Creating a Workflow'
+description: 'How to create, configure, and manage workflows in the Reelevant platform'
+---
+
+![Workflow listing page showing the Reelevant platform sidebar](/images/workflows/workflow-sidebar.png)
+
+## Workflow Listing
+
+When you open the **Workflows** application from the sidebar, you land on the **workflow listing page**. This table displays all your workflows with the following columns:
+
+| Column | Description |
+|--------|-------------|
+| **Name** | The workflow name. Click to open it in the editor. |
+| **Teams** | The resource groups (teams) the workflow belongs to. |
+| **Last modification** | When the workflow was last updated. |
+| **Status** | Current lifecycle status (Draft, Published, Inactive, etc.). |
+
+Use the search bar to find workflows by name, and the hierarchy breadcrumbs to navigate through folders.
+
+## Creating a New Workflow
+
+<Steps>
+  <Step title="Open the creation modal">
+    Click the **Create** button in the top-right corner of the listing page. A modal dialog opens.
+  </Step>
+  <Step title="Fill in the workflow details">
+    The creation form has the following fields:
+
+    - **Name** — A descriptive name for your workflow (e.g., "Summer Sale Email Campaign").
+    - **Description** — An optional description explaining the purpose of the workflow.
+    - **Teams** — Select one or more resource groups (teams) that should have access to this workflow. You can search and select multiple teams.
+    - **Folder** — Optionally place the workflow within a folder hierarchy for organization.
+  </Step>
+  <Step title="Confirm creation">
+    Click **Create** to create the workflow. You will be redirected to the workflow editor where you can start building your automation logic.
+  </Step>
+</Steps>
+
+## Editing Workflow Properties
+
+Once a workflow is created, you can update its properties at any time from the editor:
+
+1. Click the **Settings** (gear icon) button in the editor header.
+2. The **Edit workflow** modal opens with the same fields as the creation form.
+3. Update the name, description, teams, or folder as needed.
+4. Click **Save** to apply changes.
+
+## Archiving a Workflow
+
+To archive a workflow that is no longer needed:
+
+1. Open the workflow's **actions menu** (three dots) in the listing table.
+2. Select **Archive**.
+3. A confirmation dialog asks you to type a validation word to confirm the action.
+4. Once archived, the workflow status changes to **Inactive** and it stops serving content.
+
+<Warning>
+  Archiving a published workflow will immediately stop it from serving content. Make sure you have an alternative in place before archiving.
+</Warning>
+
+## What's Next?
+
+Once your workflow is created, head to the [Workflow Editor](/platform-guide/workflows/editor) to start adding [channels](/platform-guide/workflows/channels), [data nodes](/platform-guide/workflows/data-nodes), and [logic](/platform-guide/workflows/logic-nodes).

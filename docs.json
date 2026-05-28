@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Reelevant API Documentation",
+  "name": "Reelevant Documentation",
   "colors": {
     "primary": "#EEFF00",
     "light": "#F6F6F6",
@@ -37,6 +37,67 @@
       {
         "tab": "Documentation",
         "groups": [
+          {
+            "group": "Platform Guide",
+            "pages": [
+              "platform-guide/introduction",
+              {
+                "group": "Workflows",
+                "pages": [
+                  "platform-guide/workflows/overview",
+                  "platform-guide/workflows/creating-a-workflow",
+                  "platform-guide/workflows/editor",
+                  {
+                    "group": "Channels",
+                    "pages": [
+                      "platform-guide/workflows/channels",
+                      "platform-guide/workflows/channels/email",
+                      "platform-guide/workflows/channels/web-image",
+                      "platform-guide/workflows/channels/web-html",
+                      "platform-guide/workflows/channels/landing-page",
+                      "platform-guide/workflows/channels/push-notification",
+                      "platform-guide/workflows/channels/in-app-popup",
+                      "platform-guide/workflows/channels/in-app-inbox"
+                    ]
+                  },
+                  {
+                    "group": "Data Nodes",
+                    "pages": [
+                      "platform-guide/workflows/data-nodes",
+                      "platform-guide/workflows/data-nodes/datasources",
+                      "platform-guide/workflows/data-nodes/url-parameter",
+                      "platform-guide/workflows/data-nodes/geolocation",
+                      "platform-guide/workflows/data-nodes/weather",
+                      "platform-guide/workflows/data-nodes/website-events",
+                      "platform-guide/workflows/data-nodes/transform"
+                    ]
+                  },
+                  {
+                    "group": "Logic Nodes",
+                    "pages": [
+                      "platform-guide/workflows/logic-nodes",
+                      "platform-guide/workflows/logic-nodes/conditions",
+                      "platform-guide/workflows/logic-nodes/split",
+                      "platform-guide/workflows/logic-nodes/real-time-testing"
+                    ]
+                  },
+                  {
+                    "group": "Output Nodes",
+                    "pages": [
+                      "platform-guide/workflows/output-nodes",
+                      "platform-guide/workflows/output-nodes/visual-content",
+                      "platform-guide/workflows/output-nodes/json-format",
+                      "platform-guide/workflows/output-nodes/empty"
+                    ]
+                  },
+                  "platform-guide/workflows/branches",
+                  "platform-guide/workflows/versions",
+                  "platform-guide/workflows/integration",
+                  "platform-guide/workflows/settings"
+                ]
+              }
+            ]
+          },
           {
             "group": "Getting started",
             "pages": [
