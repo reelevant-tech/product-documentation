@@ -3,6 +3,8 @@ title: 'Channels (Entrypoints)'
 description: 'Define where your personalized content is displayed by adding channel nodes to your workflow'
 ---
 
+![Channel picker drawer showing all available channel types](https://app.devin.ai/attachments/38e7b20b-4ac4-4052-bc0a-fd75be7f4648/screenshot_d4ee46e579a046e9890a161998ae6169.png)
+
 ## What are Channels?
 
 Channels (also called **entrypoints**) are the starting nodes of a workflow. They define **where** the personalized content will be displayed — in an email, on a website, in a mobile app, or on a landing page.
@@ -15,68 +17,29 @@ Every workflow branch starts with a channel node and ends with an [output node](
 
 ## Available Channel Types
 
-### Email
-Renders a personalized visual for inclusion in email campaigns.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Email |
-| **Output format** | Email content |
-| **Use case** | Newsletter banners, product recommendations in emails, promotional slots |
-
-### Web Image
-Renders a personalized image for display on websites.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Web |
-| **Output format** | Website image |
-| **Use case** | Hero banners, sidebar recommendations, personalized widgets |
-
-### Web HTML
-Renders a responsive HTML partial for embedding in web pages.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Web |
-| **Output format** | Website HTML partial |
-| **Use case** | Interactive content blocks, responsive grids, embedded components |
-
-### Landing Page
-Generates a full landing page experience.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Landing |
-| **Output format** | Landing HTML page |
-| **Use case** | Campaign landing pages, personalized microsites |
-
-### Push Notification Image
-Renders a personalized image for push notifications.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Mobile |
-| **Output format** | Push notification image |
-| **Use case** | Rich push notification banners |
-
-### In-App Popup
-Renders a personalized image for in-app popup overlays.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Mobile |
-| **Output format** | In-app popup image |
-| **Use case** | Modal promotions, in-app announcements |
-
-### In-App Inbox
-Renders a personalized image for the in-app inbox/message center.
-
-| Property | Value |
-|----------|-------|
-| **Channel type** | Mobile |
-| **Output format** | In-app inbox image |
-| **Use case** | Personalized inbox cards, notification center items |
+<CardGroup cols={2}>
+  <Card title="Email" icon="envelope" href="/platform-guide/workflows/channels/email">
+    Renders a personalized visual for inclusion in email campaigns.
+  </Card>
+  <Card title="Web Image" icon="image" href="/platform-guide/workflows/channels/web-image">
+    Renders a personalized image for display on websites.
+  </Card>
+  <Card title="Web HTML" icon="code" href="/platform-guide/workflows/channels/web-html">
+    Renders a responsive HTML partial for embedding in web pages.
+  </Card>
+  <Card title="Landing Page" icon="browser" href="/platform-guide/workflows/channels/landing-page">
+    Generates a full landing page experience.
+  </Card>
+  <Card title="Push Notification Image" icon="bell" href="/platform-guide/workflows/channels/push-notification">
+    Renders a personalized image for push notifications.
+  </Card>
+  <Card title="In-App Popup" icon="window-maximize" href="/platform-guide/workflows/channels/in-app-popup">
+    Renders a personalized image for in-app popup overlays.
+  </Card>
+  <Card title="In-App Inbox" icon="inbox" href="/platform-guide/workflows/channels/in-app-inbox">
+    Renders a personalized image for the in-app inbox/message center.
+  </Card>
+</CardGroup>
 
 ## Adding a Channel
 

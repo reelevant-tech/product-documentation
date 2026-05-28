@@ -3,6 +3,8 @@ title: 'Data Nodes'
 description: 'Import and use external data in your workflows with data nodes'
 ---
 
+![Workflow editor showing data nodes connected in a workflow graph](https://app.devin.ai/attachments/cc43b992-ada2-4585-a549-4568fceea89d/screenshot_329fb945cec9405190c31b1238919c78.png)
+
 ## What are Data Nodes?
 
 Data nodes bring external data into your workflow. They fetch, filter, and transform information from your datasources, URL parameters, geolocation services, weather APIs, and more. This data is then available to downstream logic and output nodes for personalization.
@@ -17,71 +19,26 @@ Alternatively, right-click on an existing node and select **Use data** to add a 
 
 ## Data Node Types
 
-### Datasource Nodes
-
-Datasource nodes connect to data you've imported in [DataHub](/platform-guide/datahub/overview). There are three specialized types:
-
-#### Generic Datasource
-For data that doesn't fit product or location categories — reviews, promotions, API feeds, CRM data, etc.
-
-**Configuration:**
-- **Select a datasource** — Search and pick from your imported datasources.
-- **Filters** — Apply rules to narrow down results. Filters can use static values or reference data from other nodes in the workflow.
-- **Ordering** — Customize result order: keep default, change every 10 seconds for everyone, or change for each person.
-- **Location data** — Optionally include location data if your datasource contains geographic information.
-
-#### Product Datasource
-Designed specifically for product catalog data. Includes additional features for product-specific use cases.
-
-**Configuration:**
-- All the same options as Generic Datasource, plus:
-- **Combinatorial products** — Enable to create product combinations.
-- **Group results by** — Group products by a field (e.g., brand, category) with output modes:
-  - Aggregated data
-  - First product of every group
-  - All products of the first group
-  - All products of all groups
-
-#### Location Datasource
-For store locator and location-based personalization. Finds locations near a given point.
-
-**Configuration:**
-- **Address** — The reference address to search from (can be static or dynamic from another node).
-- **Distance (km)** — Maximum radius to search within.
-- **Filters** — Additional filtering rules.
-
-### URL Parameter
-Captures a value passed via the URL when the workflow is executed. Useful for passing context from your ESP (email service provider) or website.
-
-**Configuration:**
-- **Parameter name** — The URL query parameter to read (e.g., `product_id`, `campaign_date`).
-- **Date format** — If the parameter contains a date, specify the expected format for proper parsing.
-
-<Tip>
-  URL parameters are commonly used to pass user IDs, campaign identifiers, or contextual data from your marketing tools into Reelevant workflows. Learn more about configuring them during [Integration](/platform-guide/workflows/integration).
-</Tip>
-
-### Geolocation
-Resolves the user's geographic location (city, country, coordinates) based on their IP address or other signals.
-
-This node doesn't require manual configuration — it automatically provides location data that can be used by downstream nodes (e.g., to find nearby stores with a Location Datasource).
-
-### Weather
-Fetches current weather data for the user's location. Can be used to personalize content based on weather conditions (e.g., showing umbrellas when it's rainy).
-
-### Website Events
-Retrieves user behavior data from your website tracking (pages visited, products viewed, etc.).
-
-**Configuration:**
-- **User identifier** — The field used to identify users, with client ID as fallback.
-- **Events** — Select which website events to include (page views, product views, purchases, etc.).
-- **Exclude events** — Optionally exclude specific events.
-- **Period** — The timeframe to look back for events.
-
-### Transform
-Applies data transformations to values from other nodes. Transforms let you manipulate, combine, or reformat data within the workflow.
-
-Refer to the [Transformations](/api-reference/transformations/introduction) section of the API reference for the full list of available transformations.
+<CardGroup cols={2}>
+  <Card title="Datasource Nodes" icon="database" href="/platform-guide/workflows/data-nodes/datasources">
+    Connect to data imported in DataHub — generic, product, and location datasources.
+  </Card>
+  <Card title="URL Parameter" icon="link" href="/platform-guide/workflows/data-nodes/url-parameter">
+    Capture values passed via the URL when the workflow is executed.
+  </Card>
+  <Card title="Geolocation" icon="location-dot" href="/platform-guide/workflows/data-nodes/geolocation">
+    Resolve the user's geographic location based on their IP address.
+  </Card>
+  <Card title="Weather" icon="cloud-sun" href="/platform-guide/workflows/data-nodes/weather">
+    Fetch current weather data for the user's location.
+  </Card>
+  <Card title="Website Events" icon="chart-line" href="/platform-guide/workflows/data-nodes/website-events">
+    Retrieve user behavior data from your website tracking.
+  </Card>
+  <Card title="Transform" icon="wand-magic-sparkles" href="/platform-guide/workflows/data-nodes/transform">
+    Apply data transformations to values from other nodes.
+  </Card>
+</CardGroup>
 
 ## Filtering and Ordering
 

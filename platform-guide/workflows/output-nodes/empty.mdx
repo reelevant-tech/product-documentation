@@ -1,0 +1,26 @@
+---
+title: 'Empty'
+description: 'Return an empty response for control groups or fallback branches'
+---
+
+![Output types drawer showing the Empty output option](https://app.devin.ai/attachments/b8c208cc-c1cb-4966-82ed-324cbc9bba0d/screenshot_80d5f5af8a6044edb390fa271838125f.png)
+
+## Overview
+
+The Empty output returns an **empty response**. This is used for branches where you intentionally don't want to show any content.
+
+## Use Cases
+
+- **Control groups in A/B tests** — Show nothing to measure the impact of personalization.
+- **Fallback branches** where no relevant content is available.
+- **Testing scenarios** where you want to measure engagement without content.
+
+## How It Works
+
+When the workflow executes and reaches an Empty output node, no content is returned. The visual zone either remains blank or displays the default content defined in your integration (e.g., a static fallback image in the email template).
+
+## Best Practices
+
+- Use Empty outputs in [Split](/platform-guide/workflows/logic-nodes/split) nodes to create control groups for measuring the lift of personalization.
+- Ensure your integration handles empty responses gracefully — for example, by showing a fallback image or hiding the zone entirely.
+- Track the performance of Empty branches in analytics to compare against personalized branches.

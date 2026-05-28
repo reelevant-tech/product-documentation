@@ -1,0 +1,32 @@
+---
+title: 'Push Notification Image'
+description: 'Render personalized images for push notifications'
+---
+
+![Channel picker showing the Push Notification Image channel type](https://app.devin.ai/attachments/38e7b20b-4ac4-4052-bc0a-fd75be7f4648/screenshot_d4ee46e579a046e9890a161998ae6169.png)
+
+## Overview
+
+The Push Notification Image channel renders a personalized image for rich push notifications on mobile devices.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Mobile |
+| **Output format** | Push notification image |
+| **Use case** | Rich push notification banners |
+
+## How It Works
+
+When your app sends a push notification that includes a Reelevant visual zone, the workflow executes and returns a personalized image. This image is displayed as the rich media attachment in the push notification.
+
+## Configuration
+
+1. Add a Push Notification Image channel node to your workflow canvas.
+2. Connect it downstream to your personalization logic.
+3. After publishing, use the [Integration modal](/platform-guide/workflows/integration) to get the image URL for your push notification service.
+
+## Best Practices
+
+- Keep push notification images concise and impactful — they are viewed at small sizes on mobile screens.
+- Use URL parameters to pass user identifiers from your push notification service into the workflow.
+- Test the image rendering on both iOS and Android devices, as display sizes may vary.

@@ -1,0 +1,35 @@
+---
+title: 'Split (A/B Testing)'
+description: 'Divide traffic into multiple branches based on population share percentages'
+---
+
+![Workflow editor showing Split nodes for A/B testing](https://app.devin.ai/attachments/cc43b992-ada2-4585-a549-4568fceea89d/screenshot_329fb945cec9405190c31b1238919c78.png)
+
+## Overview
+
+Split nodes divide traffic into multiple branches based on **population share percentages**. This is used for A/B testing or multivariate testing.
+
+## Configuration
+
+- **Groups** — Define two or more groups, each with a name and a percentage of total traffic.
+- **Action** — Specify what happens for each group.
+- The total percentage across all groups must equal 100%.
+
+## Example
+
+| Group | Population Share |
+|-------|-----------------|
+| Variant A | 50% |
+| Variant B | 30% |
+| Control | 20% |
+
+## How It Works
+
+When a user triggers the workflow, the split node randomly assigns them to one of the groups based on the configured percentages. The assignment is deterministic per user — the same user will always follow the same branch.
+
+## Best Practices
+
+- Always include a **control group** (e.g., 10-20%) to measure the impact of personalization.
+- Name your groups descriptively (e.g., "Product Recommendations" vs "Best Sellers" rather than "Variant A" vs "Variant B").
+- Run tests for a sufficient duration to achieve statistical significance before drawing conclusions.
+- Use [branch categories](/platform-guide/workflows/branches) to tag split branches for analytics.

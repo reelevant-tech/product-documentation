@@ -1,0 +1,33 @@
+---
+title: 'Transform'
+description: 'Apply data transformations to values from other nodes'
+---
+
+![Workflow editor showing a workflow with data transformation nodes](https://app.devin.ai/attachments/cc43b992-ada2-4585-a549-4568fceea89d/screenshot_329fb945cec9405190c31b1238919c78.png)
+
+## Overview
+
+The Transform node applies data transformations to values from other nodes. Transforms let you manipulate, combine, or reformat data within the workflow.
+
+## How It Works
+
+1. Add a Transform node downstream of the data you want to manipulate.
+2. Select a transformation from the available list.
+3. Configure the transformation parameters — choose the input field and any options.
+4. The transformed value becomes available to downstream nodes through the Variable Picker.
+
+## Available Transformations
+
+Refer to the [Transformations](/api-reference/transformations/introduction) section of the API reference for the full list of available transformations, including:
+
+- **Text** — Case conversion, replace, split, template
+- **Numbers** — Math operations, formatting, rounding
+- **Dates** — Format, parse, difference, add/subtract
+- **Arrays** — Get, intersection, unique, concat
+- **Encryption** — AES decrypt, hash creation
+
+## Best Practices
+
+- Chain multiple Transform nodes for complex data manipulations.
+- Use transforms to format data before it reaches output nodes — for example, formatting prices or dates.
+- Check the [Transformations reference](/api-reference/transformations/list) for the full list of available operations.

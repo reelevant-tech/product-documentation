@@ -1,0 +1,32 @@
+---
+title: 'In-App Popup'
+description: 'Render personalized images for in-app popup overlays'
+---
+
+![Channel picker showing the In-App Popup channel type](https://app.devin.ai/attachments/38e7b20b-4ac4-4052-bc0a-fd75be7f4648/screenshot_d4ee46e579a046e9890a161998ae6169.png)
+
+## Overview
+
+The In-App Popup channel renders a personalized image for in-app popup overlays. The image is displayed as a modal overlay within your mobile application.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Mobile |
+| **Output format** | In-app popup image |
+| **Use case** | Modal promotions, in-app announcements |
+
+## How It Works
+
+When your app triggers an in-app popup event, the workflow executes and returns a personalized image. This image is displayed as a popup overlay within the app.
+
+## Configuration
+
+1. Add an In-App Popup channel node to your workflow canvas.
+2. Connect it downstream to your personalization logic.
+3. After publishing, use the [Integration modal](/platform-guide/workflows/integration) to get the integration URL for your mobile SDK.
+
+## Best Practices
+
+- Use popups sparingly to avoid disrupting the user experience.
+- Target popups based on user behavior or context (e.g., after a purchase, on first app launch).
+- Design popup content to be immediately actionable with a clear call-to-action.

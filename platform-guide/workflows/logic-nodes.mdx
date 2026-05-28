@@ -3,56 +3,25 @@ title: 'Logic Nodes'
 description: 'Control the flow of your workflow with conditions, splits, and real-time testing'
 ---
 
+![Workflow editor showing logic nodes including conditions and splits](https://app.devin.ai/attachments/cc43b992-ada2-4585-a549-4568fceea89d/screenshot_329fb945cec9405190c31b1238919c78.png)
+
 ## What are Logic Nodes?
 
 Logic nodes control **which path** a user follows through the workflow. They create branches based on conditions, random splits, or real-time testing rules. This is how you deliver different experiences to different audience segments.
 
 ## Logic Node Types
 
-### Conditions
-
-Condition nodes evaluate rules to decide which branch a user takes. They are the most common way to create personalized paths.
-
-**How it works:**
-- A condition node has **two or more output branches** — one for each possible outcome plus a default branch.
-- Each branch (except the default) has a set of **rules** that must be satisfied for a user to follow that path.
-- Rules can reference data from upstream data nodes, context variables, or URL parameters.
-- If no condition is met, the user follows the **default** branch.
-
-**Configuration:**
-1. Click on a condition node to open its configuration drawer.
-2. Define conditions for each branch — each condition consists of a field, operator, and value.
-3. The default branch catches all users who don't match any condition.
-
-<Tip>
-  You can use condition nodes to create audience segments — for example, routing VIP customers to a premium content branch while showing a generic offer to everyone else.
-</Tip>
-
-### Split (A/B Testing)
-
-Split nodes divide traffic into multiple branches based on **population share percentages**. This is used for A/B testing or multivariate testing.
-
-**Configuration:**
-- **Groups** — Define two or more groups, each with a name and a percentage of total traffic.
-- **Action** — Specify what happens for each group.
-- The total percentage across all groups must equal 100%.
-
-**Example:**
-| Group | Population Share |
-|-------|-----------------|
-| Variant A | 50% |
-| Variant B | 30% |
-| Control | 20% |
-
-### Real-time Testing (RTT)
-
-Real-time testing nodes enable automated traffic distribution that optimizes over time. Unlike a static A/B split, real-time testing can automatically adjust traffic allocation based on performance metrics.
-
-**Configuration:**
-Similar to Split, but with additional settings for:
-- **Testing duration** — How long the test should run.
-- **Optimization metric** — What metric to optimize for (clicks, conversions, etc.).
-- **Confidence level** — Statistical significance threshold.
+<CardGroup cols={3}>
+  <Card title="Conditions" icon="code-branch" href="/platform-guide/workflows/logic-nodes/conditions">
+    Evaluate rules to decide which branch a user takes.
+  </Card>
+  <Card title="Split (A/B Testing)" icon="chart-pie" href="/platform-guide/workflows/logic-nodes/split">
+    Divide traffic into branches based on population share percentages.
+  </Card>
+  <Card title="Real-Time Testing" icon="flask" href="/platform-guide/workflows/logic-nodes/real-time-testing">
+    Automated traffic distribution that optimizes over time.
+  </Card>
+</CardGroup>
 
 ## Creating Branches
 
