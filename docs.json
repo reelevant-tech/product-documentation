@@ -101,6 +101,7 @@
                 "pages": [
                   "platform-guide/contents/overview",
                   "platform-guide/contents/listing",
+                  "platform-guide/contents/design-import",
                   "platform-guide/contents/editor",
                   {
                     "group": "Components",
