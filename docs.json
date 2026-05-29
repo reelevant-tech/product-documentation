@@ -140,6 +140,8 @@
                       "platform-guide/datahub/source-types/bigquery",
                       "platform-guide/datahub/source-types/snowflake",
                       "platform-guide/datahub/source-types/gcs",
+                      "platform-guide/datahub/source-types/s3",
+                      "platform-guide/datahub/source-types/kafka",
                       "platform-guide/datahub/source-types/datasource-reference"
                     ]
                   },
