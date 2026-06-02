@@ -41,6 +41,7 @@
             "group": "Platform Guide",
             "pages": [
               "platform-guide/introduction",
+              "platform-guide/new-interface",
               {
                 "group": "Workflows",
                 "pages": [
