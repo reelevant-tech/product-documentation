@@ -3,24 +3,32 @@ title: 'New Interface Overview'
 description: 'Summary of all new features and improvements introduced with the redesigned Reelevant platform interface'
 ---
 
-The Reelevant platform has undergone a comprehensive UI redesign, rolling out application by application. This page summarizes every major feature introduced as part of the new interface, from the initial Workflows release to the latest Content Editor updates.
+The Reelevant platform has undergone a comprehensive UI redesign, rolling out application by application. The new interface (`next.reelevant.com`) was built with a modern React stack using Tailwind CSS, base-ui for accessible primitives, and a custom design system (`@ui`). Each app was migrated independently — Workflows first, followed by Contents, DataHub, Analytics, and Account — ensuring stability at every step.
+
+This page summarizes every major feature introduced as part of the new interface, with technical context drawn from the underlying codebase.
 
 ## Workflows App
 
 ### Redesigned Workflow Editor
 
-The Workflows application was the first to receive the new interface (September 2025). The editor features a modernized layout with an updated sidebar, improved node configuration panels, and a cleaner visual hierarchy for building automation graphs.
+*September 2025*
 
-Key UX changes in the redesigned editor:
-- Refreshed node picker and configuration panels
-- Improved workflow listing with search and filters
-- New pop-in notifications for interface changes
+The Workflows application was the first to receive the new interface. The editor is built on [React Flow](https://reactflow.dev/) (`@xyflow/react`) for the graph canvas, with a Zustand store (`WorkflowsSDKContext`) managing real-time workflow state. Nodes and edges are rendered via custom React Flow components (`CustomEdge`, `LogicNode`, etc.), giving full control over interaction and styling.
+
+Key changes in the redesigned editor:
+- **Modernized node picker and configuration panels** — node types, conditions, and split logic are configured via slide-out drawers using the `@ui/drawer` component
+- **Improved workflow listing** — the listing table supports search, sorting by last update, and integrates with the new folder hierarchy (see [Folders in Lists](#folders-in-lists))
+- **URL-driven state** — listing filters and editor parameters are stored in the URL via `nuqs` (URL search params), making views shareable and bookmarkable
 
 ### Branch Qualification from Connections
 
 *March 2026*
 
 You can now qualify a branch directly by hovering over a connection (edge) in the workflow editor — no need to open the logic node menu.
+
+Under the hood, when you hover an edge, the `CustomEdge` component resolves the branch's vertex ID by walking the workflow graph (`resolveBranchVertexId`) from the edge source to the nearest branch boundary (upstream logic path or downstream logic/output node). The `BranchDrawer` side panel then lets you assign a custom name, an individualized score, and a **branch category** from a configurable nomenclature tree (`BranchCategoryTree`).
+
+Branch categories are defined per-account in the workflow settings backend (`workflow-settings.ts`) and support up to 5 levels of depth (`MAX_BRANCH_NOMENCLATURE_DEPTH = 5`). This enables structured analytics reporting: once branches are qualified, the Analytics app can break down performance by category.
 
 - On hover, a menu appears with the **"Qualify branch"** option, opening a side panel with the qualification form
 - When the panel is open, all connections belonging to that branch are highlighted for easy visualization
@@ -38,7 +46,7 @@ You can now qualify a branch directly by hovering over a connection (edge) in th
 
 *April 2026*
 
-The workflow and content editors now support **Ctrl+Z** (undo) and **Ctrl+Shift+Z** (redo) for reverting changes within an editing session.
+The workflow and content editors now support **Ctrl+Z** (undo) and **Ctrl+Shift+Z** (redo) for reverting changes within an editing session. In the content editor, the underlying Content SDK tracks state versions via a Zustand store (`s.version`), and all mutations (layout guide changes, component moves, text edits) participate in the undo/redo history. This means even complex operations like adding a layout guide or changing a canvas background can be undone in a single keystroke.
 
 ## Content Editor
 
@@ -46,13 +54,18 @@ The workflow and content editors now support **Ctrl+Z** (undo) and **Ctrl+Shift+
 
 *April 2026*
 
-The Content Editor received a full redesign deployed on the new interface. The revamped editor features updated UI/UX with resizable configuration panels and a modernized toolbar.
+The Content Editor received a full redesign deployed on the new interface. The revamped editor is powered by the `@rlvt/content-sdk` — a dedicated SDK (`contents` repo) that manages templates, pages, component groups, and rendering. The frontend interacts with the SDK through a React context (`ContentSDKContext`) backed by a Zustand store, ensuring all changes are reactive and participate in undo/redo.
+
+Key architectural improvements:
+- **Resizable configuration panels** — the right-side configuration panel and left-side layers tree use `ResizablePanel` from the design system, so users can adjust their workspace
+- **Component-based architecture** — each content element (text, image, barcode, map, gauge, etc.) has its own configuration component, keeping the editor modular and extensible
+- **Real-time preview** — the SDK's browser implementation renders content on a `<canvas>` element with WebGL support, providing instant visual feedback
 
 ### Content Preview in Listing
 
 *January 2026*
 
-Content previews have been restored in the content listing page, allowing you to see a thumbnail of each content directly from the list view.
+Content previews have been restored in the content listing page, allowing you to see a thumbnail of each content directly from the list view. This is particularly useful when managing large content libraries, as it eliminates the need to open each content individually to identify it visually.
 
 <Frame>
   <img src="/images/new-ui/content-preview-listing.png" alt="Content preview in listing page" />
@@ -62,7 +75,9 @@ Content previews have been restored in the content listing page, allowing you to
 
 *May 2026*
 
-You can now configure a background color for the content editor canvas. This setting is per-content and does not affect other contents.
+You can now configure a background color for the content editor canvas. This configuration is stored in the template's `EditorSettings` (defined in the Content SDK as `editorSettings.canvasBackground`), is purely cosmetic — it does not affect the generated content output — and is scoped per-content.
+
+The implementation uses the `colord` library for color parsing and detects theme changes via a `MutationObserver` on the document root, ensuring the default background color adapts to light/dark mode.
 
 <Frame>
   <img src="/images/new-ui/content-canvas-background.png" alt="Canvas background color configuration" />
@@ -72,11 +87,13 @@ You can now configure a background color for the content editor canvas. This set
 
 *May 2026*
 
-Layout guides let you overlay visual grids on your content to align elements precisely.
+Layout guides let you overlay visual grids on your content to align elements precisely. Guides are defined as typed objects in the Content SDK (`LayoutGuide` type, with variants `GridGuide`, `ColumnsGuide`, and `RowsGuide`), stored in the template's `editorSettings.layoutGuides`, and rendered as SVG overlays on the canvas.
 
-- Add one or more guides (grid, columns, rows) and customize: count, spacing, margins, color, alignment
-- Each guide can be shown/hidden, renamed, or deleted individually
-- Content size (width/height) is now accessible in the editor settings, alongside the canvas background color
+The `useLayoutGuides` hook provides CRUD operations (`addGuide`, `removeGuide`, `updateGuide`, `toggleGuide`) that write through the Content SDK so all changes participate in undo/redo and are persisted automatically. Each guide type has sensible defaults (e.g., 5 columns, 10px gutter, stretch alignment) and supports customization of count, spacing, margins, color (RGBA), and alignment.
+
+- **Grid guides** — uniform square grid with configurable cell size
+- **Column guides** — vertical columns with count, gutter, margin, alignment, and optional fixed width
+- **Row guides** — horizontal rows with count, gutter, margin, alignment, and optional fixed height
 
 **Where to find it:** Click the grid icon in the toolbar at the bottom of the canvas to toggle guides. Configure them in the editor settings panel on the right.
 
@@ -88,19 +105,25 @@ Layout guides let you overlay visual grids on your content to align elements pre
 
 *May 2026*
 
-When using the same datasource field multiple times in a content, you can now choose which element (index) to display for each occurrence — for example, product name #1, #2, etc.
+When using the same datasource field multiple times in a content, you can now choose which element (index) to display for each occurrence — for example, product name #1, #2, etc. This is powered by the `dependencyIndex` system in the Content SDK, which tracks which element from a datasource array each variable reference points to.
 
 - When inserting a field already in use, a dialog lets you reuse the existing element or pick a different one (elements #1 through #20)
 - The selected element is visible on variable badges (e.g. "element #2")
 - You can change the element later from the variable settings
 
+This feature is essential for product recommendation templates where the same field (e.g. product name, price, image URL) needs to display data from different positions in a ranked list.
+
 <Frame>
   <img src="/images/new-ui/content-datasource-element.png" alt="Datasource element picker in content editor" />
 </Frame>
 
-### Design Import
+### Design Import (Figma & Photoshop)
 
-The Content Editor supports importing designs from external tools like **Figma** and **Photoshop (PSD)**, converting them into native platform components for further editing and data-binding.
+The Content Editor supports importing designs from **Figma** (via exported JSON) and **Photoshop** (via `.psd` files), converting them into native platform components for further editing and data-binding.
+
+The import pipeline in the `contents` backend (`design-import` service) supports three sources: `figma-json`, `psd`, and `html`. For Figma, the JSON structure is parsed and mapped to the platform's component model (text layers → text components, images → image components, etc.). For Photoshop, the PSD binary is decoded and each layer is converted similarly. Both pipelines run a font family resolver (`createFontFamilyResolver`) to map design fonts to the account's configured fonts, and the final template is validated against the Content SDK schema before being saved.
+
+This eliminates the need to manually recreate designs in the editor — designers can export directly from their tools, and the platform handles the conversion.
 
 <Frame>
   <img src="/images/new-ui/design-import-discovery.png" alt="Design import feature" />
@@ -112,13 +135,15 @@ The Content Editor supports importing designs from external tools like **Figma**
 
 *February 2026*
 
-The DataHub application received its new interface with several UX improvements:
+The DataHub application received its new interface with several UX improvements. The frontend uses the `@rlvt/datasources-openapi-client` for all API interactions, with React Query hooks (`useGet*` pattern) for data fetching and cache management.
 
-- Removed "missing fields" from the logs page (moved to configure fields)
-- Added **last update column** to the datasource listing table
-- Loading indicators next to each datasource name show when an update is in progress
-- Simplified catalog view
-- Clicking on a warning/error log line now expands to show more details
+Key changes:
+- **Removed "missing fields" from logs** — field configuration is now handled in a dedicated `configure_fields` step, reducing noise in the logs view
+- **Last update column** — the datasource listing table now shows when each datasource was last updated, making it easy to spot stale data
+- **Inline loading indicators** — a spinner appears next to each datasource name when an update is in progress, replacing the previous global loading state
+- **Simplified catalog** — the datasource template catalog was streamlined to reduce cognitive load when creating new datasources
+- **Expandable log lines** — clicking on a warning/error log line expands it to show full details, making debugging faster
+- **Folder hierarchy** — datasources now support the same folder organization system as workflows and contents, backed by a `HierarchyController` in the datasources API that queries distinct hierarchy values at each depth level via MongoDB `distinct` queries
 
 <Frame>
   <img src="/images/new-ui/datahub-new-ui.png" alt="Redesigned DataHub interface" />
@@ -130,7 +155,9 @@ The DataHub application received its new interface with several UX improvements:
 
 *December 2025*
 
-The data exploration page was added to the new interface, with a redesigned query builder featuring a reorganized field column on the left for constructing analytics queries.
+The data exploration page (`DataExplorationPage`) provides a full-featured query builder for ad-hoc analytics queries. The page is split into two panels: a `QueryBuilder` on the left where you construct your query (selecting workflows, campaigns, measures, dimensions, and time period), and a `QueryResults` panel on the right displaying the results.
+
+The query state is fully URL-driven using `nuqs` (`useQueryStates`), so queries are shareable and bookmarkable. Under the hood, form values are parsed into a `Query` object (from `@rlvt/statistics-openapi-client`) and executed via `useGetQueryResults`, which calls the statistics API. The query builder supports branch category filtering when category nomenclatures are configured.
 
 <Frame>
   <img src="/images/new-ui/stats-exploration.png" alt="Statistics exploration page" />
@@ -140,11 +167,12 @@ The data exploration page was added to the new interface, with a redesigned quer
 
 *January 2026*
 
-All Analytics dashboards were redesigned with new capabilities:
+All Analytics dashboards were redesigned with new capabilities. The dashboard filters panel (`DashboardFilters`) is implemented as a `ResizablePanel` on the right side, providing:
 
-- **Comparison period** — compare metrics against a previous time range
-- **Temporal granularity** — choose between day, week, or month for your analysis
-- **Data export** — export data from KPI cards, charts, and tables
+- **Comparison period** — toggle a comparison period to see metrics side-by-side against a previous time range. The comparison period is auto-computed based on the selected analysis period (`computeComparisonPeriod`), allowing you to instantly spot trends and changes
+- **Temporal granularity** — choose between day, week, or month for your analysis. This maps to `TEMPORAL_DIMENSIONS` in the statistics query, changing the time bucketing of all charts and tables
+- **Data export** — export data from KPI cards, charts, and tables. Each `DashboardMetricCard` component supports exporting its underlying query results
+- **Branch category filtering** — filter dashboards by branch category nomenclature (when configured), useful for analyzing performance by business segment
 
 <Frame>
   <img src="/images/new-ui/analytics-dashboards-revamp.png" alt="Redesigned analytics dashboards" />
@@ -154,11 +182,13 @@ All Analytics dashboards were redesigned with new capabilities:
 
 *January 2026*
 
-The usage/consumption dashboard was migrated from the Account app into Analytics, providing a dedicated view of account consumption against contractual quotas.
+The usage/consumption dashboard (`UsageDashboardPage`) was migrated from the Account app into Analytics. It provides a dedicated view of account consumption against contractual quotas, built with three main components:
 
-- A summary card showing account consumption relative to the plan
-- Two detailed tables breaking down consumption by team and by channel (email, web, mobile, landing)
-- Accessible via **Analytics → Consumption** or **Account → Consumption**
+- **ConsumptionCard** — a summary card that queries the statistics API for total openings or unique openers (depending on the plan type) over the subscription period. It compares actual consumption against the contractual quota and displays a color-coded banner: green (under quota), yellow (over quota), or red (over 2× quota)
+- **UsageTable by team** — breaks down consumption by team using the `TEAM` dimension
+- **UsageTable by channel** — breaks down consumption by entrypoint (email, web, mobile, landing) using the `ENTRYPOINT` dimension
+
+Accessible via **Analytics → Consumption** or **Account → Consumption**.
 
 <Frame>
   <img src="/images/new-ui/analytics-usage-dashboard-1.png" alt="Usage dashboard overview" />
@@ -172,7 +202,7 @@ The usage/consumption dashboard was migrated from the Account app into Analytics
 
 *May 2026*
 
-A new **"Workflow ID"** dimension was added to the Analytics app to differentiate between workflows that share the same name.
+A new **"Workflow ID"** dimension was added to the Analytics app to differentiate between workflows that share the same name. Previously, the only way to distinguish workflows in analytics was by their display name, which caused confusion when multiple workflows shared the same name (common for A/B test variants or client duplications). The workflow ID provides a unique, stable identifier for accurate reporting.
 
 <Frame>
   <img src="/images/new-ui/workflow-id-dimension.png" alt="Workflow ID dimension in analytics" />
@@ -184,13 +214,13 @@ A new **"Workflow ID"** dimension was added to the Analytics app to differentiat
 
 *December 2025*
 
-You can now switch between three color themes directly from the platform:
+You can now switch between three color themes directly from the platform. The theme system is implemented via a `ThemeProvider` React context that wraps the entire application. It supports three modes:
 
 - **Light** mode
-- **Dark** mode
-- **System** — follows your operating system's color preference
+- **Dark** mode — applies Tailwind's `dark:` variant classes across the entire UI
+- **System** — listens to `prefers-color-scheme: dark` media query and automatically follows the OS preference, with live updates via `MediaQueryList.addEventListener`
 
-Change the theme from your user profile settings, or click your initials at the bottom of the sidebar to access the quick menu.
+The theme preference is persisted on the user profile (via `updateProfile({ profile: { theme } })`) and synced across tabs through `localStorage` events. The sidebar footer provides a quick sub-menu (`MenuSubMenu`) to switch themes without navigating to settings.
 
 <Frame>
   <img src="/images/new-ui/theme-color-picker.png" alt="Theme color mode selector" />
@@ -200,7 +230,11 @@ Change the theme from your user profile settings, or click your initials at the 
 
 *March 2026*
 
-All listing pages (Workflows, Contents, Datasources) now support **folder organization**. You can create folders to group and organize your items — this feature is exclusive to the new interface.
+All listing pages (Workflows, Contents, Datasources) now support **folder organization** through a shared hierarchy system. This feature is exclusive to the new interface.
+
+The hierarchy is implemented as an array of strings (`hierarchy: string[]`) stored on each entity (workflow, content, datasource). A shared `HierarchyNavigation` component renders breadcrumbs with hover dropdowns for navigating between sibling folders and sub-levels. Each backend service exposes a `/hierarchy/values` endpoint (`HierarchyController`) that uses MongoDB `distinct` queries to efficiently list available folder names at any depth.
+
+The frontend's `HierarchyPicker` component allows users to assign items to folders during creation or editing, with lazy-loaded sub-level discovery and the ability to create new folders on the fly.
 
 <Frame>
   <img src="/images/new-ui/folders-in-lists.png" alt="Folders in listing pages" />
@@ -210,11 +244,13 @@ All listing pages (Workflows, Contents, Datasources) now support **folder organi
 
 *March 2026*
 
-Three new settings pages were added to the platform, replacing the previous Retool-based configuration:
+Three new settings pages were added to the platform, replacing the previous Retool-based configuration tools. These settings are now native to the platform, with proper permission checks (`ability.can('create'|'update'|'delete', ...)`) and real-time validation.
 
-- **Workflows → Settings**: Variable profiles configuration
-- **Contents → Settings**: Custom fonts management per account
-- **Analytics → Settings**: Attribution settings
+- **Workflows → Settings: Variable Profiles** — `VariableProfilesSettings` lets you create, edit, and delete named variable profiles. Each profile defines a set of key-value pairs that are applied to workflow URL parameters during integration. Profiles are stored via the workflows API and associated with specific resource groups (teams/scopes). This replaces the manual URL parameter configuration and is especially useful for clients with many URL parameters (e.g. multi-brand setups)
+
+- **Contents → Settings: Custom Fonts** — `FontsSettings` manages custom font families per account. Uploaded fonts are used by the Content Editor's font picker and are resolved during design imports (Figma/PSD) to match the account's font library
+
+- **Analytics → Settings: Attribution Period** — `AttributionPeriodSettings` lets you configure the attribution window (in days) for the account's analytics plan. This value is stored on the company plan (`company.plan.attributionPeriod`) and affects how conversions are attributed to workflows in reporting
 
 <Frame>
   <img src="/images/new-ui/settings-pages-1.png" alt="Workflow settings - variable profiles" />
@@ -232,7 +268,7 @@ Three new settings pages were added to the platform, replacing the previous Reto
 
 *January 2026*
 
-A toggle in the sidebar lets you switch between the legacy (`app.reelevant.com`) and new (`next.reelevant.com`) interfaces. Selecting **"Next"** as your environment automatically redirects you to the new interface.
+A toggle in the sidebar lets you switch between the legacy (`app.reelevant.com`) and new (`next.reelevant.com`) interfaces. The implementation uses a `setEnvironment` utility that sets a cookie/URL parameter to control which frontend build is served. Selecting **"Next"** as your environment automatically redirects you to the new interface. The sidebar footer (`SidebarFooter`) renders the toggle as a `MenuSubMenu` with two options (`Environment.PROD` and `Environment.TEST`), with product analytics tracking on each switch.
 
 <Frame>
   <img src="/images/new-ui/nav-toggle.png" alt="Environment toggle in sidebar" />
