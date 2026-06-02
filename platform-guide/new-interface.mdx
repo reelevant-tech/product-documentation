@@ -1,0 +1,249 @@
+---
+title: 'New Interface Overview'
+description: 'Summary of all new features and improvements introduced with the redesigned Reelevant platform interface'
+---
+
+The Reelevant platform has undergone a comprehensive UI redesign, rolling out application by application. This page summarizes every major feature introduced as part of the new interface, from the initial Workflows release to the latest Content Editor updates.
+
+## Workflows App
+
+### Redesigned Workflow Editor
+
+The Workflows application was the first to receive the new interface (September 2025). The editor features a modernized layout with an updated sidebar, improved node configuration panels, and a cleaner visual hierarchy for building automation graphs.
+
+Key UX changes in the redesigned editor:
+- Refreshed node picker and configuration panels
+- Improved workflow listing with search and filters
+- New pop-in notifications for interface changes
+
+### Branch Qualification from Connections
+
+*March 2026*
+
+You can now qualify a branch directly by hovering over a connection (edge) in the workflow editor — no need to open the logic node menu.
+
+- On hover, a menu appears with the **"Qualify branch"** option, opening a side panel with the qualification form
+- When the panel is open, all connections belonging to that branch are highlighted for easy visualization
+- The canvas remains navigable (zoom, pan) while the panel is open
+
+<Frame>
+  <img src="/images/new-ui/branch-qualification-1.png" alt="Branch qualification hover menu" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/branch-qualification-2.png" alt="Branch qualification side panel with highlighted path" />
+</Frame>
+
+### Undo / Redo Support
+
+*April 2026*
+
+The workflow and content editors now support **Ctrl+Z** (undo) and **Ctrl+Shift+Z** (redo) for reverting changes within an editing session.
+
+## Content Editor
+
+### Content Editor Revamp
+
+*April 2026*
+
+The Content Editor received a full redesign deployed on the new interface. The revamped editor features updated UI/UX with resizable configuration panels and a modernized toolbar.
+
+### Content Preview in Listing
+
+*January 2026*
+
+Content previews have been restored in the content listing page, allowing you to see a thumbnail of each content directly from the list view.
+
+<Frame>
+  <img src="/images/new-ui/content-preview-listing.png" alt="Content preview in listing page" />
+</Frame>
+
+### Canvas Background Color
+
+*May 2026*
+
+You can now configure a background color for the content editor canvas. This setting is per-content and does not affect other contents.
+
+<Frame>
+  <img src="/images/new-ui/content-canvas-background.png" alt="Canvas background color configuration" />
+</Frame>
+
+### Layout Guides
+
+*May 2026*
+
+Layout guides let you overlay visual grids on your content to align elements precisely.
+
+- Add one or more guides (grid, columns, rows) and customize: count, spacing, margins, color, alignment
+- Each guide can be shown/hidden, renamed, or deleted individually
+- Content size (width/height) is now accessible in the editor settings, alongside the canvas background color
+
+**Where to find it:** Click the grid icon in the toolbar at the bottom of the canvas to toggle guides. Configure them in the editor settings panel on the right.
+
+<Frame>
+  <img src="/images/new-ui/content-layout-guides.png" alt="Layout guides in the content editor" />
+</Frame>
+
+### Datasource Element Picker
+
+*May 2026*
+
+When using the same datasource field multiple times in a content, you can now choose which element (index) to display for each occurrence — for example, product name #1, #2, etc.
+
+- When inserting a field already in use, a dialog lets you reuse the existing element or pick a different one (elements #1 through #20)
+- The selected element is visible on variable badges (e.g. "element #2")
+- You can change the element later from the variable settings
+
+<Frame>
+  <img src="/images/new-ui/content-datasource-element.png" alt="Datasource element picker in content editor" />
+</Frame>
+
+### Design Import
+
+The Content Editor supports importing designs from external tools like **Figma** and **Photoshop (PSD)**, converting them into native platform components for further editing and data-binding.
+
+<Frame>
+  <img src="/images/new-ui/design-import-discovery.png" alt="Design import feature" />
+</Frame>
+
+## DataHub
+
+### Redesigned DataHub Interface
+
+*February 2026*
+
+The DataHub application received its new interface with several UX improvements:
+
+- Removed "missing fields" from the logs page (moved to configure fields)
+- Added **last update column** to the datasource listing table
+- Loading indicators next to each datasource name show when an update is in progress
+- Simplified catalog view
+- Clicking on a warning/error log line now expands to show more details
+
+<Frame>
+  <img src="/images/new-ui/datahub-new-ui.png" alt="Redesigned DataHub interface" />
+</Frame>
+
+## Analytics
+
+### Statistics Exploration Page
+
+*December 2025*
+
+The data exploration page was added to the new interface, with a redesigned query builder featuring a reorganized field column on the left for constructing analytics queries.
+
+<Frame>
+  <img src="/images/new-ui/stats-exploration.png" alt="Statistics exploration page" />
+</Frame>
+
+### Analytics Dashboards Revamp
+
+*January 2026*
+
+All Analytics dashboards were redesigned with new capabilities:
+
+- **Comparison period** — compare metrics against a previous time range
+- **Temporal granularity** — choose between day, week, or month for your analysis
+- **Data export** — export data from KPI cards, charts, and tables
+
+<Frame>
+  <img src="/images/new-ui/analytics-dashboards-revamp.png" alt="Redesigned analytics dashboards" />
+</Frame>
+
+### Usage Dashboard (Consumption)
+
+*January 2026*
+
+The usage/consumption dashboard was migrated from the Account app into Analytics, providing a dedicated view of account consumption against contractual quotas.
+
+- A summary card showing account consumption relative to the plan
+- Two detailed tables breaking down consumption by team and by channel (email, web, mobile, landing)
+- Accessible via **Analytics → Consumption** or **Account → Consumption**
+
+<Frame>
+  <img src="/images/new-ui/analytics-usage-dashboard-1.png" alt="Usage dashboard overview" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/analytics-usage-dashboard-2.png" alt="Usage dashboard detail tables" />
+</Frame>
+
+### Workflow ID Dimension
+
+*May 2026*
+
+A new **"Workflow ID"** dimension was added to the Analytics app to differentiate between workflows that share the same name.
+
+<Frame>
+  <img src="/images/new-ui/workflow-id-dimension.png" alt="Workflow ID dimension in analytics" />
+</Frame>
+
+## Platform-Wide Features
+
+### Theme / Color Mode
+
+*December 2025*
+
+You can now switch between three color themes directly from the platform:
+
+- **Light** mode
+- **Dark** mode
+- **System** — follows your operating system's color preference
+
+Change the theme from your user profile settings, or click your initials at the bottom of the sidebar to access the quick menu.
+
+<Frame>
+  <img src="/images/new-ui/theme-color-picker.png" alt="Theme color mode selector" />
+</Frame>
+
+### Folders in Lists
+
+*March 2026*
+
+All listing pages (Workflows, Contents, Datasources) now support **folder organization**. You can create folders to group and organize your items — this feature is exclusive to the new interface.
+
+<Frame>
+  <img src="/images/new-ui/folders-in-lists.png" alt="Folders in listing pages" />
+</Frame>
+
+### Settings Pages
+
+*March 2026*
+
+Three new settings pages were added to the platform, replacing the previous Retool-based configuration:
+
+- **Workflows → Settings**: Variable profiles configuration
+- **Contents → Settings**: Custom fonts management per account
+- **Analytics → Settings**: Attribution settings
+
+<Frame>
+  <img src="/images/new-ui/settings-pages-1.png" alt="Workflow settings - variable profiles" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/settings-pages-2.png" alt="Content settings - custom fonts" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/settings-pages-3.png" alt="Analytics settings - attribution" />
+</Frame>
+
+### Environment Toggle
+
+*January 2026*
+
+A toggle in the sidebar lets you switch between the legacy (`app.reelevant.com`) and new (`next.reelevant.com`) interfaces. Selecting **"Next"** as your environment automatically redirects you to the new interface.
+
+<Frame>
+  <img src="/images/new-ui/nav-toggle.png" alt="Environment toggle in sidebar" />
+</Frame>
+
+### Automatic Redirect to Next
+
+*May 2026*
+
+Internal users (CSM + Tech) are automatically redirected from `app.reelevant.com` to `next.reelevant.com`. To temporarily revert to the legacy app, use the link in the sidebar or add `?env=prod` to the URL (disables the redirect for ~12 hours).
+
+<Frame>
+  <img src="/images/new-ui/auto-redirect-next.png" alt="Auto redirect to next environment" />
+</Frame>
