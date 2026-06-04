@@ -146,6 +146,7 @@
                       "platform-guide/datahub/source-types/datasource-reference"
                     ]
                   },
+                  "platform-guide/datahub/pgp-decryption",
                   "platform-guide/datahub/field-mapping",
                   "platform-guide/datahub/queries",
                   "platform-guide/datahub/logs",
@@ -339,15 +340,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "styling": {
     "codeblocks": {

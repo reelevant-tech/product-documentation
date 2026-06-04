@@ -33,6 +33,10 @@ The platform automatically detects the file format. The following formats are su
   Compressed files (`.gz`, `.zip`) are automatically decompressed before parsing.
 </Info>
 
+<Note>
+  **PGP-encrypted files** cannot be uploaded directly via the File Upload source because format detection runs at upload time, before a decryption key can be provided. To import PGP-encrypted files, use [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), [S3](/platform-guide/datahub/source-types/s3), or [GCS](/platform-guide/datahub/source-types/gcs) instead. See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details.
+</Note>
+
 ## How It Works
 
 1. Upload your data file using the drag-and-drop area or file browser.
