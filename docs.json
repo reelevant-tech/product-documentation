@@ -294,7 +294,8 @@
       },
       {
         "tab": "Loop API",
-        "openapi": "https://openapi.production.reelevant.io/v1/render/loop"
+        "openapi": "https://openapi.production.reelevant.io/v1/render/loop",
+        "hidden": true
       },
       {
         "tab": "Datasources Collector",
