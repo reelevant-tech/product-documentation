@@ -59,6 +59,10 @@ File-based connectors (URL, File Upload, FTP/SFTP, GCS, S3) automatically detect
   Compressed files (`.gz`, `.zip`) are automatically decompressed before parsing for all file-based sources.
 </Info>
 
+<Info>
+  File-based connectors (URL, FTP/SFTP, GCS, S3) also support [PGP decryption](/platform-guide/datahub/pgp-decryption) — encrypted files (`.asc`, `.pgp`, `.gpg`) are decrypted transparently during import when a PGP private key is configured.
+</Info>
+
 ## Multiple Sources
 
 Some datasource types support **multiple sources**. You can add several source configurations (e.g., multiple URLs or FTP paths) to a single datasource using the **Add a source** button. Each source is processed independently, and the results are combined.
@@ -77,3 +81,4 @@ Use **Delete the source** to remove individual source configurations.
 | OAuth support | Yes | — | — | Yes | — | — | — | — | — |
 | Key-pair auth | — | — | Yes | — | Yes | — | — | — | — |
 | Multiple sources | Yes | — | Yes | — | — | Yes | Yes | — | — |
+| [PGP decryption](/platform-guide/datahub/pgp-decryption) | Yes | — | Yes | — | — | Yes | Yes | — | — |

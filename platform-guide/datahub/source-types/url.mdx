@@ -64,6 +64,21 @@ The URL source automatically detects the response format. The following formats 
   Compressed responses (`.gz`, `.zip`) are automatically decompressed before parsing.
 </Info>
 
+## PGP Decryption
+
+The URL source supports fetching **PGP-encrypted files**. When a PGP private key is configured, the response is decrypted before decompression and parsing.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **PGP Private Key** | Yes | The PGP/GPG private key in armored (ASCII) format. |
+| **PGP Passphrase** | No | The passphrase for the private key, if encrypted. |
+
+Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
+
+<Info>
+  See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
+</Info>
+
 ## Pagination
 
 For APIs that paginate their responses, the URL source supports several pagination strategies:
