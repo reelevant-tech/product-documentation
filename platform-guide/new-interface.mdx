@@ -170,6 +170,20 @@ Each guide can be shown/hidden, renamed, recolored, and customized individually.
   <img src="/images/new-ui/content-layout-guides.png" alt="Layout guides in the content editor" />
 </Frame>
 
+### Copy / Paste
+
+*June 2026*
+
+You can now **copy and paste** components, groups, and conditions in the Content Editor using standard keyboard shortcuts (**Ctrl+C** / **Ctrl+V**, or **⌘+C** / **⌘+V** on Mac).
+
+This works:
+- Within the same content — quickly duplicate complex element trees without manually recreating them
+- **Across different contents** — copy a fully configured component (with all its data bindings and datasource dependencies) from one content and paste it into another
+
+When pasting, all elements receive new identifiers and their data dependencies are automatically resolved. If a dependency cannot be added (e.g. a datasource that doesn't exist in the target account), an error notification is shown and the rest of the elements are still pasted.
+
+A success notification confirms the number of elements copied or pasted.
+
 ### Datasource Element Picker
 
 *May 2026*
