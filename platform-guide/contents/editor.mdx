@@ -66,6 +66,40 @@ When no component is selected, the configuration panel shows the content-level s
 | **Animated content** | Toggle to enable [frames](/platform-guide/contents/frames) for animated or multi-page templates. |
 | **Content title** | A title displayed only on landing pages. |
 
+## Keyboard Shortcuts
+
+The content editor supports keyboard shortcuts for common actions:
+
+| Shortcut | Action |
+|----------|--------|
+| **Ctrl+C** / **⌘+C** | Copy selected components, groups, or conditions to the clipboard. |
+| **Ctrl+V** / **⌘+V** | Paste previously copied elements into the current content. |
+| **Ctrl+Z** / **⌘+Z** | Undo the last action. |
+| **Ctrl+Shift+Z** / **⌘+Shift+Z** | Redo the last undone action. |
+| **Delete** / **Backspace** | Delete the selected components. |
+
+### Copy / Paste
+
+You can copy and paste components, component groups, and condition groups within the same content or across different contents.
+
+**Copying:**
+1. Select one or more elements in the [layers panel](/platform-guide/contents/layers) or directly on the canvas.
+2. Press **Ctrl+C** (or **⌘+C** on Mac).
+3. A success notification confirms how many elements were copied.
+
+**Pasting:**
+1. Press **Ctrl+V** (or **⌘+V** on Mac) in the target content editor.
+2. All copied elements are recreated with new identifiers, including their nested children, data bindings, and datasource dependencies.
+3. A success notification confirms how many elements were pasted.
+
+<Info>
+  Copy/paste works across different contents within the same account. If a pasted element references a datasource that doesn't exist in the target account, an error notification is shown and the remaining elements are still pasted.
+</Info>
+
+<Tip>
+  Pasted components keep their original position on the canvas, making it easy to replicate layouts across contents.
+</Tip>
+
 ## Working with Components
 
 ### Adding Components
