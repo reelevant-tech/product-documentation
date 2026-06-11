@@ -1,0 +1,61 @@
+---
+title: 'Reelevant Server Side SDK'
+description: 'Fetch personalised content during server render for zero layout shift, instant display, and full SEO visibility'
+---
+
+## What is the Server Side SDK?
+
+The Reelevant Server Side SDK (`@rlvt/web-sdk`) lets you fetch personalised content **on the server** — during page render — so it arrives in the initial HTML payload. Visitors see the right content immediately, search engines index it, and there is no visible layout shift.
+
+<CardGroup cols={2}>
+  <Card title="Zero CLS" icon="gauge-high">
+    Content is embedded in the first HTML response. No client-side fetch, no flash of generic content.
+  </Card>
+  <Card title="SEO-Visible" icon="magnifying-glass">
+    Personalised HTML is in the page source. Search engines and social previews see the real content.
+  </Card>
+  <Card title="Framework-Native" icon="code">
+    First-class adapters for Next.js, Nuxt, Remix, and SvelteKit — or use the core SDK with any Node.js server.
+  </Card>
+  <Card title="Edge-Ready" icon="bolt">
+    Built on the Web Fetch API. Works in Node.js 18+, Cloudflare Workers, Vercel Edge Functions, and Deno.
+  </Card>
+</CardGroup>
+
+## How it works
+
+<Steps>
+  <Step title="Install the SDK">
+    Add the `@rlvt/web-sdk` package to your project.
+  </Step>
+  <Step title="Create a client">
+    Initialise a `ReelevantClient` — no configuration is required (the SDK uses the production runner by default).
+  </Step>
+  <Step title="Call the runner">
+    In your server route or component, call `client.run()` with the workflow ID and entrypoint. The SDK calls the Reelevant runner and returns typed content (HTML, JSON, or image).
+  </Step>
+  <Step title="Render the content">
+    Inject the returned content into your page template. The SDK marks output with `data-rlvt-ssr` so the existing client-side tracker knows to skip those zones.
+  </Step>
+</Steps>
+
+## Choose your integration
+
+<CardGroup cols={2}>
+  <Card title="Next.js" icon="react" href="/platform-guide/omni-channels/websites/server-side-sdk/nextjs">
+    React Server Components, App Router middleware, and the ReelevantZone component.
+  </Card>
+  <Card title="Nuxt" icon="vuejs" href="/platform-guide/omni-channels/websites/server-side-sdk/nuxt">
+    H3 event helpers, server middleware, and the useReelevant composable.
+  </Card>
+  <Card title="Remix" icon="r" href="/platform-guide/omni-channels/websites/server-side-sdk/remix">
+    Loader helpers, cookie management, and request context extraction.
+  </Card>
+  <Card title="SvelteKit" icon="s" href="/platform-guide/omni-channels/websites/server-side-sdk/sveltekit">
+    Server load functions, hooks, and event context helpers.
+  </Card>
+</CardGroup>
+
+<Card title="Core SDK (any Node.js server)" icon="server" href="/platform-guide/omni-channels/websites/server-side-sdk/core">
+  Use the core SDK directly with Express, Fastify, Hono, or any server runtime.
+</Card>

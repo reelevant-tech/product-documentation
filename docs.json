@@ -194,15 +194,31 @@
                 ]
               },
               {
-                "group": "Web SDK",
+                "group": "Omni Channels Personalization",
                 "pages": [
-                  "platform-guide/web-sdk/overview",
-                  "platform-guide/web-sdk/client-side",
-                  "platform-guide/web-sdk/core",
-                  "platform-guide/web-sdk/nextjs",
-                  "platform-guide/web-sdk/nuxt",
-                  "platform-guide/web-sdk/remix",
-                  "platform-guide/web-sdk/sveltekit"
+                  {
+                    "group": "Websites",
+                    "pages": [
+                      "platform-guide/omni-channels/websites/overview",
+                      {
+                        "group": "Reelevant Client Side Script",
+                        "pages": [
+                          "platform-guide/omni-channels/websites/client-side-script/overview"
+                        ]
+                      },
+                      {
+                        "group": "Reelevant Server Side SDK",
+                        "pages": [
+                          "platform-guide/omni-channels/websites/server-side-sdk/overview",
+                          "platform-guide/omni-channels/websites/server-side-sdk/core",
+                          "platform-guide/omni-channels/websites/server-side-sdk/nextjs",
+                          "platform-guide/omni-channels/websites/server-side-sdk/nuxt",
+                          "platform-guide/omni-channels/websites/server-side-sdk/remix",
+                          "platform-guide/omni-channels/websites/server-side-sdk/sveltekit"
+                        ]
+                      }
+                    ]
+                  }
                 ]
               }
             ]
