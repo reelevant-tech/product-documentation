@@ -176,7 +176,7 @@ export default function Page() {
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Use `redirectionUrl` as a redirect link or track clicks via `trackClick` from `createLoader`:
+Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Use it as a redirect link or track clicks via `trackClick` from `createLoader`:
 
 ```tsx
 // Redirect link — use redirectionUrl as <a href>

@@ -174,7 +174,7 @@ export async function handle({ event, resolve }) {
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Use `redirectionUrl` as a redirect link or track clicks via `trackClick` from `createLoad`:
+Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Use it as a redirect link or track clicks via `trackClick` from `createLoad`:
 
 ```svelte
 <!-- Redirect link -->

@@ -216,7 +216,7 @@ Each `ReelevantZone` is an independent async component that fetches in parallel 
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Two patterns:
+Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Two patterns:
 
 ### Redirect link
 
@@ -244,7 +244,7 @@ export default async function Page() {
 
 ### Server-side fire-and-forget
 
-Track the click from a Server Action, then navigate to the final destination yourself:
+Track the click from a Server Action — the runner records the click and the response is discarded:
 
 ```tsx
 // app/actions.ts

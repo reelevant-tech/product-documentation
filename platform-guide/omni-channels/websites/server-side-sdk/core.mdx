@@ -119,14 +119,10 @@ switch (result.body.type) {
 | `runId` | `string \| null` | Workflow run ID for tracking |
 | `executionPath` | `string[]` | Branch IDs taken during execution |
 | `redirectionUrl` | `string` | Pre-built click-through URL (runner with `mode=click`) |
-| `clickUrl` | `string \| null` | Final destination URL from `x-rlvt-click-url` header |
 
 ## Click tracking
 
-Every `RunResult` includes two URLs for click tracking:
-
-- **`redirectionUrl`** — a pre-built runner URL with `mode=click`. When visited, the runner records the click and 302-redirects the user to the final destination.
-- **`clickUrl`** — the final destination URL extracted from the `x-rlvt-click-url` response header. Use this when you handle navigation yourself.
+Every `RunResult` includes a `redirectionUrl` — a pre-built runner URL with `mode=click`. When visited, the runner records the click and 302-redirects the user to the final destination. This ensures click tracking is always recorded. You must use either the redirect link pattern or the `trackClick()` callback.
 
 ### Option 1: Redirect link (recommended for CTAs)
 
@@ -141,14 +137,11 @@ const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userI
 
 ### Option 2: Server-side fire-and-forget
 
-Use `client.trackClick()` when you control navigation and want to track the click in the background, then redirect the user to `result.clickUrl` yourself.
+Use `client.trackClick()` when you want to track the click server-side without redirecting through the runner. The runner records the click and the response is discarded.
 
 ```typescript
 // User clicked a CTA — track it server-side
 await rlvt.trackClick({ redirectionUrl: result.redirectionUrl })
-
-// Then redirect the user to the final destination
-res.redirect(result.clickUrl)
 ```
 
 `trackClick()` calls the runner click endpoint with `redirect: manual` (no redirect followed) and swallows all errors — it never throws.
