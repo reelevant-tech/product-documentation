@@ -172,6 +172,36 @@ export async function handle({ event, resolve }) {
 </div>
 ```
 
+## Click tracking
+
+Every `RunResult` includes a `clickUrl`. Use it as a redirect link or track clicks server-side:
+
+```svelte
+<!-- Redirect link -->
+{#if data.hero.body.type === 'html'}
+  <div data-rlvt-ssr="true">
+    {@html data.hero.body.content}
+    <a href={data.hero.clickUrl}>Shop now</a>
+  </div>
+{/if}
+```
+
+```typescript
+// Server-side fire-and-forget (in a form action)
+// src/routes/+page.server.ts
+import { rlvt } from '$lib/server/reelevant'
+
+export const actions = {
+  trackClick: async ({ request }) => {
+    const formData = await request.formData()
+    const clickUrl = formData.get('clickUrl') as string
+    await rlvt.trackClick({ clickUrl })
+  }
+}
+```
+
+See [Core SDK — Click tracking](/platform-guide/omni-channels/websites/server-side-sdk/core#click-tracking) for full details.
+
 ## Compatibility with the client tracker
 
 Add `data-rlvt-ssr="true"` to your wrapper element. The client-side tracker automatically skips server-rendered zones.
