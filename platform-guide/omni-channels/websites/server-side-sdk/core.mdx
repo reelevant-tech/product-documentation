@@ -44,7 +44,7 @@ const userId = extractUserId(req.headers.cookie ?? '')
 
 const result = await rlvt.run({
   workflowId: 'your-workflow-id',
-  entrypoint: 'hero',
+  entrypoint: '43a490a0',
   userId,
   userAgent: req.headers['user-agent'],
   ip: req.headers['x-forwarded-for']?.split(',')[0],
@@ -56,9 +56,9 @@ const result = await rlvt.run({
 
 ```typescript
 const [hero, sidebar, footer] = await rlvt.runAll([
-  { workflowId: 'wf-hero', entrypoint: 'hero', userId },
-  { workflowId: 'wf-sidebar', entrypoint: 'sidebar', userId },
-  { workflowId: 'wf-footer', entrypoint: 'footer', userId },
+  { workflowId: 'wf-hero', entrypoint: '43a490a0', userId },
+  { workflowId: 'wf-sidebar', entrypoint: 'b7e21f3c', userId },
+  { workflowId: 'wf-footer', entrypoint: 'd9c84e1a', userId },
 ])
 ```
 
@@ -67,7 +67,7 @@ const [hero, sidebar, footer] = await rlvt.runAll([
 | Option | Type | Description |
 |--------|------|-------------|
 | `workflowId` | `string` | Workflow ID from the Reelevant dashboard |
-| `entrypoint` | `string` | Entrypoint shortId within the workflow |
+| `entrypoint` | `string` | Entrypoint shortId (8-char alphanumeric, e.g. `43a490a0`) |
 | `userId` | `string?` | Visitor identity from cookies |
 | `params` | `Record<string, string>?` | URL parameters forwarded to the runner |
 | `locale` | `string?` | Locale for content resolution |
@@ -123,6 +123,10 @@ switch (result.body.type) {
 
 ## Click tracking
 
+<Warning>
+**Click tracking must always be set up after display.** The flow is: fetch content → display it to the user → track clicks when they interact. Every content display should have a corresponding click tracking mechanism, otherwise you lose attribution data.
+</Warning>
+
 Every `RunResult` includes a `redirectionUrl` and a `trackClick()` callback. This ensures click tracking is always recorded — devs must use one of the two patterns below.
 
 ### Option 1: Redirect link (recommended for CTAs)
@@ -130,9 +134,9 @@ Every `RunResult` includes a `redirectionUrl` and a `trackClick()` callback. Thi
 Use `redirectionUrl` as the `href` on your call-to-action links. The browser handles everything — the runner tracks the click and 302-redirects to the final destination.
 
 ```typescript
-const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userId })
+const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: '43a490a0', userId })
 
-// In your template
+// In your template — always pair display with click tracking
 // <a href="${result.redirectionUrl}">Shop now</a>
 ```
 
@@ -141,9 +145,9 @@ const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userI
 Call `result.trackClick()` when you control navigation and want to track the click in the background. It calls the runner click endpoint with `redirect: manual` and swallows all errors — it never throws.
 
 ```typescript
-const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userId })
+const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: '43a490a0', userId })
 
-// User clicked a CTA — track it server-side
+// User clicked a CTA (must be called after display) — track it server-side
 await result.trackClick()
 ```
 
@@ -182,14 +186,13 @@ Configure how the SDK handles timeouts and errors:
 
 ```typescript
 // 'empty' (default) — returns an empty result, your page renders normally
-const rlvt = new ReelevantClient({ companyId: '...', fallback: 'empty' })
+const rlvt = new ReelevantClient({ fallback: 'empty' })
 
 // 'error' — throws the original error, you handle it in your catch block
-const rlvt = new ReelevantClient({ companyId: '...', fallback: 'error' })
+const rlvt = new ReelevantClient({ fallback: 'error' })
 
 // Custom function — return your own fallback content
 const rlvt = new ReelevantClient({
-  companyId: '...',
   fallback: (options, error) => ({
     status: 0,
     source: 'fallback',
@@ -242,7 +245,7 @@ app.get('/page', async (req, res) => {
 
   const result = await rlvt.run({
     workflowId: 'wf-hero',
-    entrypoint: 'hero',
+    entrypoint: '43a490a0',
     userId,
     userAgent: req.headers['user-agent'],
     ip: req.ip,

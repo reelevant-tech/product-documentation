@@ -37,6 +37,9 @@ The Reelevant Server Side SDK (`@rlvt/web-sdk`) lets you fetch personalised cont
   <Step title="Render the content">
     Inject the returned content into your page template. The SDK marks output with `data-rlvt-ssr` so the existing client-side tracker knows to skip those zones.
   </Step>
+  <Step title="Track clicks">
+    After displaying content, always set up click tracking — either use `redirectionUrl` as an `<a href>` or call `result.trackClick()` server-side. This ensures attribution data is captured for every interaction.
+  </Step>
 </Steps>
 
 ## Choose your integration

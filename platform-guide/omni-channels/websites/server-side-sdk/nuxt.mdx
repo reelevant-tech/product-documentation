@@ -76,7 +76,7 @@ import { rlvt } from '~/server/utils/reelevant'
 export default defineEventHandler(async (event) => {
   const { run, runAll } = useReelevant({ client: rlvt, event })
 
-  const hero = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  const hero = await run({ workflowId: 'wf-hero', entrypoint: '43a490a0' })
   return { hero }
 })
 ```
@@ -88,9 +88,9 @@ export default defineEventHandler(async (event) => {
   const { runAll } = useReelevant({ client: rlvt, event })
 
   const [hero, sidebar, footer] = await runAll([
-    { workflowId: 'wf-hero', entrypoint: 'hero' },
-    { workflowId: 'wf-sidebar', entrypoint: 'sidebar' },
-    { workflowId: 'wf-footer', entrypoint: 'footer' },
+    { workflowId: 'wf-hero', entrypoint: '43a490a0' },
+    { workflowId: 'wf-sidebar', entrypoint: 'b7e21f3c' },
+    { workflowId: 'wf-footer', entrypoint: 'd9c84e1a' },
   ])
 
   return { hero, sidebar, footer }
@@ -145,7 +145,7 @@ export default defineEventHandler(async (event) => {
   const context = runOptionsFromEvent(event)
   const result = await rlvt.run({
     workflowId: 'wf-hero',
-    entrypoint: 'hero',
+    entrypoint: '43a490a0',
     ...context,
   })
   return result
@@ -176,7 +176,11 @@ const products = computed(() => {
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Use it as a redirect link or track clicks server-side via `trackClick`:
+<Warning>
+**Click tracking must always be set up after display.** Every content display should have a corresponding click tracking mechanism — either a redirect link or a `trackClick()` call.
+</Warning>
+
+Every `RunResult` includes `redirectionUrl` and `trackClick()`. Use one of the two patterns:
 
 ```vue
 <!-- Redirect link -->
@@ -192,9 +196,9 @@ Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` t
 // Server-side fire-and-forget (in an API route)
 export default defineEventHandler(async (event) => {
   const { run } = useReelevant({ client: rlvt, event })
-  const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  const result = await run({ workflowId: 'wf-hero', entrypoint: '43a490a0' })
 
-  // Later, when the user clicks:
+  // Later, when the user clicks (must be after display):
   await result.trackClick()
 })
 ```

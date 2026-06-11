@@ -79,7 +79,7 @@ import { rlvt } from '$lib/server/reelevant'
 export async function load(event) {
   const { run, runAll } = createLoad({ client: rlvt, event })
 
-  const hero = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  const hero = await run({ workflowId: 'wf-hero', entrypoint: '43a490a0' })
   return { hero }
 }
 ```
@@ -108,8 +108,8 @@ export async function load(event) {
   const { runAll } = createLoad({ client: rlvt, event })
 
   const [hero, sidebar] = await runAll([
-    { workflowId: 'wf-hero', entrypoint: 'hero' },
-    { workflowId: 'wf-sidebar', entrypoint: 'sidebar' },
+    { workflowId: 'wf-hero', entrypoint: '43a490a0' },
+    { workflowId: 'wf-sidebar', entrypoint: 'b7e21f3c' },
   ])
 
   return { hero, sidebar }
@@ -131,7 +131,7 @@ export async function load(event) {
 
   const result = await rlvt.run({
     workflowId: 'wf-hero',
-    entrypoint: 'hero',
+    entrypoint: '43a490a0',
     ...context,
   })
 
@@ -174,7 +174,11 @@ export async function handle({ event, resolve }) {
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Use it as a redirect link or track clicks via `trackClick` from `createLoad`:
+<Warning>
+**Click tracking must always be set up after display.** Every content display should have a corresponding click tracking mechanism — either a redirect link or a `trackClick()` call.
+</Warning>
+
+Every `RunResult` includes `redirectionUrl` and `trackClick()`. Two patterns:
 
 ```svelte
 <!-- Redirect link -->
@@ -195,7 +199,7 @@ import { rlvt } from '$lib/server/reelevant'
 export const actions = {
   trackClick: async (event) => {
     const { run } = createLoad({ client: rlvt, event })
-    const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+    const result = await run({ workflowId: 'wf-hero', entrypoint: '43a490a0' })
     await result.trackClick()
   }
 }

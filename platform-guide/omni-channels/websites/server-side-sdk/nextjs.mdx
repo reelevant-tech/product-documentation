@@ -97,7 +97,7 @@ export default async function Page() {
       <ReelevantZone
         client={rlvt}
         workflowId="wf-hero-banner"
-        entrypoint="hero"
+        entrypoint="43a490a0"
         userId={userId}
         className="hero-section"
         fallback={<DefaultHero />}
@@ -117,7 +117,7 @@ function DefaultHero() {
 |------|------|-------------|
 | `client` | `ReelevantClient` | Pre-configured client instance |
 | `workflowId` | `string` | Workflow ID |
-| `entrypoint` | `string` | Entrypoint shortId |
+| `entrypoint` | `string` | Entrypoint shortId (8-char alphanumeric, e.g. `43a490a0`) |
 | `userId` | `string?` | Visitor identity |
 | `params` | `Record<string, string>?` | URL parameters |
 | `locale` | `string?` | Locale |
@@ -136,7 +136,7 @@ For headless personalisation where you want to build your own UI:
 <ReelevantZone
   client={rlvt}
   workflowId="wf-products"
-  entrypoint="recommendations"
+  entrypoint="f6a83d09"
   userId={userId}
   render={(result) => {
     if (result.body.type !== 'json') return null
@@ -167,7 +167,7 @@ export default async function Page() {
 
   const result = await rlvt.run({
     workflowId: 'wf-hero',
-    entrypoint: 'hero',
+    entrypoint: '43a490a0',
     userId,
     userAgent: headersList.get('user-agent') ?? undefined,
   })
@@ -195,15 +195,15 @@ export default async function Page() {
   const userId = extractUserId(cookieStore.toString())
 
   const [hero, sidebar] = await rlvt.runAll([
-    { workflowId: 'wf-hero', entrypoint: 'hero', userId },
-    { workflowId: 'wf-sidebar', entrypoint: 'reco', userId },
+    { workflowId: 'wf-hero', entrypoint: '43a490a0', userId },
+    { workflowId: 'wf-sidebar', entrypoint: 'e5f302b8', userId },
   ])
 
   return (
     <main>
-      <ReelevantZone client={rlvt} workflowId="wf-hero" entrypoint="hero" userId={userId} />
+      <ReelevantZone client={rlvt} workflowId="wf-hero" entrypoint="43a490a0" userId={userId} />
       <aside>
-        <ReelevantZone client={rlvt} workflowId="wf-sidebar" entrypoint="reco" userId={userId} />
+        <ReelevantZone client={rlvt} workflowId="wf-sidebar" entrypoint="e5f302b8" userId={userId} />
       </aside>
     </main>
   )
@@ -216,7 +216,11 @@ Each `ReelevantZone` is an independent async component that fetches in parallel 
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Two patterns:
+<Warning>
+**Click tracking must always be set up after display.** Every content display should have a corresponding click tracking mechanism — either a redirect link or a `trackClick()` call.
+</Warning>
+
+Every `RunResult` includes `redirectionUrl` and `trackClick()`. Two patterns:
 
 ### Redirect link
 
@@ -227,7 +231,7 @@ export default async function Page() {
   const cookieStore = await cookies()
   const userId = extractUserId(cookieStore.toString())
 
-  const result = await rlvt.run({ workflowId: 'wf-promo', entrypoint: 'cta', userId })
+  const result = await rlvt.run({ workflowId: 'wf-promo', entrypoint: '1a7bc4d2', userId })
 
   return (
     <div data-rlvt-ssr="true">

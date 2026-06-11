@@ -80,7 +80,7 @@ import { rlvt } from '~/lib/reelevant.server'
 export async function loader({ request }: LoaderFunctionArgs) {
   const { run, runAll } = createLoader({ client: rlvt, request })
 
-  const hero = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  const hero = await run({ workflowId: 'wf-hero', entrypoint: '43a490a0' })
   return json({ hero })
 }
 
@@ -107,8 +107,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { runAll } = createLoader({ client: rlvt, request })
 
   const [hero, sidebar] = await runAll([
-    { workflowId: 'wf-hero', entrypoint: 'hero' },
-    { workflowId: 'wf-sidebar', entrypoint: 'sidebar' },
+    { workflowId: 'wf-hero', entrypoint: '43a490a0' },
+    { workflowId: 'wf-sidebar', entrypoint: 'b7e21f3c' },
   ])
 
   return json({ hero, sidebar })
@@ -130,7 +130,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const result = await rlvt.run({
     workflowId: 'wf-hero',
-    entrypoint: 'hero',
+    entrypoint: '43a490a0',
     ...context,
   })
 
@@ -176,7 +176,11 @@ export default function Page() {
 
 ## Click tracking
 
-Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` that ensures clicks are always tracked. Use it as a redirect link or track clicks via `trackClick` from `createLoader`:
+<Warning>
+**Click tracking must always be set up after display.** Every content display should have a corresponding click tracking mechanism — either a redirect link or a `trackClick()` call.
+</Warning>
+
+Every `RunResult` includes `redirectionUrl` and `trackClick()`. Two patterns:
 
 ```tsx
 // Redirect link — use redirectionUrl as <a href>
@@ -200,7 +204,7 @@ export default function Page() {
 // Server-side fire-and-forget (in an action)
 export async function action({ request }: ActionFunctionArgs) {
   const { run } = createLoader({ client: rlvt, request })
-  const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  const result = await run({ workflowId: 'wf-hero', entrypoint: '43a490a0' })
   await result.trackClick()
   return json({ ok: true })
 }
