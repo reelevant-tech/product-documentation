@@ -22,10 +22,15 @@ PGP decryption is available on the following source types:
 
 To enable PGP decryption, add the following fields in your source configuration:
 
+```typescript
+pgpPrivateKey?: string
+pgpPassphrase?: string
+```
+
 | Field | Required | Description |
 |-------|----------|-------------|
-| **PGP Private Key** | Yes | The PGP/GPG private key used to decrypt the file. Must be in armored (ASCII) format. |
-| **PGP Passphrase** | No | The passphrase for the private key, if the key is passphrase-protected. |
+| `pgpPrivateKey` | Yes | The PGP/GPG private key used to decrypt the file. Must be in armored (ASCII) format. |
+| `pgpPassphrase` | No | The passphrase for the private key, if the key is passphrase-protected. |
 
 <Warning>
   These fields are treated as **sensitive** — they are encrypted at rest and never exposed in API responses or logs.
@@ -43,7 +48,7 @@ Source → PGP Decrypt → Decompress (gzip/zip) → Parse (CSV, JSON, XML…) �
 ```
 
 <Info>
-  Decryption only runs when a **PGP Private Key** is configured. If no key is provided, the file is processed normally without any decryption overhead.
+  Decryption only runs when `pgpPrivateKey` is configured. If no key is provided, the file is processed normally without any decryption overhead.
 </Info>
 
 ## Supported Encryption Formats
@@ -88,7 +93,7 @@ gpg --full-generate-key
 # Export the public key (send this to your data provider)
 gpg --armor --export your-email@example.com > public-key.asc
 
-# Export the private key (configure this in Reelevant)
+# Export the private key (configure as pgpPrivateKey in Reelevant)
 gpg --armor --export-secret-keys your-email@example.com > private-key.asc
 ```
 

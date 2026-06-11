@@ -45,12 +45,12 @@ GCS automatically detects the file format. The following formats are supported:
 
 ## PGP Decryption
 
-The GCS source supports **PGP-encrypted files**. When a PGP private key is configured, files are decrypted transparently before decompression and parsing.
+The GCS source supports **PGP-encrypted files**. When `pgpPrivateKey` is configured, files are decrypted transparently before decompression and parsing.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| **PGP Private Key** | Yes | The PGP/GPG private key in armored (ASCII) format. |
-| **PGP Passphrase** | No | The passphrase for the private key, if encrypted. |
+| `pgpPrivateKey` | Yes | The PGP/GPG private key in armored (ASCII) format. |
+| `pgpPassphrase` | No | The passphrase for the private key, if encrypted. |
 
 Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
 

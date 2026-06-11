@@ -66,12 +66,12 @@ The URL source automatically detects the response format. The following formats 
 
 ## PGP Decryption
 
-The URL source supports fetching **PGP-encrypted files**. When a PGP private key is configured, the response is decrypted before decompression and parsing.
+The URL source supports fetching **PGP-encrypted files**. When `pgpPrivateKey` is configured, the response is decrypted before decompression and parsing.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| **PGP Private Key** | Yes | The PGP/GPG private key in armored (ASCII) format. |
-| **PGP Passphrase** | No | The passphrase for the private key, if encrypted. |
+| `pgpPrivateKey` | Yes | The PGP/GPG private key in armored (ASCII) format. |
+| `pgpPassphrase` | No | The passphrase for the private key, if encrypted. |
 
 Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
 
