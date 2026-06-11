@@ -192,6 +192,34 @@
                   "platform-guide/browser-extension/integration",
                   "platform-guide/browser-extension/content-script"
                 ]
+              },
+              {
+                "group": "Omni Channels Personalization",
+                "pages": [
+                  {
+                    "group": "Websites",
+                    "pages": [
+                      "platform-guide/omni-channels/websites/overview",
+                      {
+                        "group": "Reelevant Client Side Script",
+                        "pages": [
+                          "platform-guide/omni-channels/websites/client-side-script/overview"
+                        ]
+                      },
+                      {
+                        "group": "Reelevant Server Side SDK",
+                        "pages": [
+                          "platform-guide/omni-channels/websites/server-side-sdk/overview",
+                          "platform-guide/omni-channels/websites/server-side-sdk/core",
+                          "platform-guide/omni-channels/websites/server-side-sdk/nextjs",
+                          "platform-guide/omni-channels/websites/server-side-sdk/nuxt",
+                          "platform-guide/omni-channels/websites/server-side-sdk/remix",
+                          "platform-guide/omni-channels/websites/server-side-sdk/sveltekit"
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
