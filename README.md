@@ -1,43 +1,45 @@
-# Mintlify Starter Kit
+# Reelevant API Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
-
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
-
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
-
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+Mintlify documentation site for the Reelevant API, including authentication, transformations, and OpenAPI references.
 
 ## Development
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview changes locally:
 
-```
+```bash
 npm i -g mint
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+Run the dev server from the repository root (where `docs.json` is located):
 
-```
+```bash
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+View the local preview at `http://localhost:3000`.
+
+## Project structure
+
+- `docs.json` - Site configuration, navigation, branding, and API settings
+- `custom.css` - Reelevant brand styling overrides
+- `api-reference/` - MDX documentation pages
+- `logo/` - Light and dark mode logos
+- `fonts/` - Switzer and Instrument Serif font files
+
+## Branding
+
+The site uses Reelevant brand colors and typography aligned with [reelevant.com](https://reelevant.com):
+
+- Light mode links and accents use blue (`#5B5EFF`)
+- Dark mode accents use yellow (`#EEFF00`)
+- Default appearance is dark mode
 
 ## Publishing changes
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+Changes deploy automatically after pushing to the default branch when the Mintlify GitHub app is connected to this repository.
 
-## Need help?
+## Resources
 
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
 - [Mintlify documentation](https://mintlify.com/docs)
+- [Reelevant website](https://reelevant.com)
+- [Reelevant dashboard](https://app.reelevant.com)

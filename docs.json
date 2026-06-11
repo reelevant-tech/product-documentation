@@ -3,8 +3,8 @@
   "theme": "maple",
   "name": "Reelevant Documentation",
   "colors": {
-    "primary": "#EEFF00",
-    "light": "#F6F6F6",
+    "primary": "#5B5EFF",
+    "light": "#EEFF00",
     "dark": "#000000"
   },
   "fonts": {

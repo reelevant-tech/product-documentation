@@ -113,3 +113,12 @@ html.dark .card {
 .card:hover {
   border-color: var(--reelevant-yellow);
 }
+
+html:not(.dark) #content a.link,
+html:not(.dark) a.text-primary:not([data-primary="true"]) {
+  color: var(--reelevant-blue) !important;
+}
+
+html:not(.dark) a.text-primary.border-primary {
+  border-color: var(--reelevant-blue) !important;
+}
