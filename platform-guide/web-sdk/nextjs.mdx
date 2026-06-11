@@ -1,0 +1,197 @@
+---
+title: 'Next.js Integration'
+description: 'Integrate server-side personalisation with Next.js App Router using React Server Components'
+---
+
+## Installation
+
+```bash
+npm install @rlvt/web-sdk react
+```
+
+## Setup
+
+### 1. Create the client instance
+
+Create a shared client instance in a server-only module:
+
+```typescript
+// lib/reelevant.ts
+import { ReelevantClient } from '@rlvt/web-sdk'
+
+export const rlvt = new ReelevantClient({
+  companyId: process.env.RLVT_COMPANY_ID!,
+  timeout: 50,  // tight timeout for SSR — falls back gracefully
+})
+```
+
+### 2. Add identity middleware
+
+Create `middleware.ts` at the root of your project:
+
+```typescript
+// middleware.ts
+import { createMiddleware } from '@rlvt/web-sdk/next'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+const ensureIdentity = createMiddleware()
+
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  ensureIdentity(request, response)
+  return response
+}
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
+```
+
+This ensures every visitor has an `rlvt_tmpId` cookie before any personalised content is requested.
+
+## Using ReelevantZone (recommended)
+
+The `ReelevantZone` is an async React Server Component that fetches and renders personalised content:
+
+```tsx
+// app/page.tsx
+import { ReelevantZone } from '@rlvt/web-sdk/next'
+import { extractUserId } from '@rlvt/web-sdk'
+import { cookies } from 'next/headers'
+import { rlvt } from '@/lib/reelevant'
+
+export default async function Page() {
+  const cookieStore = await cookies()
+  const userId = extractUserId(cookieStore.toString())
+
+  return (
+    <main>
+      <ReelevantZone
+        client={rlvt}
+        workflowId="wf-hero-banner"
+        entrypoint="hero"
+        userId={userId}
+        className="hero-section"
+        fallback={<DefaultHero />}
+      />
+    </main>
+  )
+}
+
+function DefaultHero() {
+  return <div className="hero-section">Welcome to our store</div>
+}
+```
+
+### ZoneProps
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `client` | `ReelevantClient` | Pre-configured client instance |
+| `workflowId` | `string` | Workflow ID |
+| `entrypoint` | `string` | Entrypoint shortId |
+| `userId` | `string?` | Visitor identity |
+| `params` | `Record<string, string>?` | URL parameters |
+| `locale` | `string?` | Locale |
+| `userAgent` | `string?` | User-Agent |
+| `ip` | `string?` | Client IP |
+| `referer` | `string?` | Page URL |
+| `className` | `string?` | CSS class on wrapper |
+| `fallback` | `ReactNode?` | Shown when content is empty |
+| `render` | `(result: RunResult) => ReactNode` | Custom render for JSON |
+
+### Custom rendering with JSON
+
+For headless personalisation where you want to build your own UI:
+
+```tsx
+<ReelevantZone
+  client={rlvt}
+  workflowId="wf-products"
+  entrypoint="recommendations"
+  userId={userId}
+  render={(result) => {
+    if (result.body.type !== 'json') return null
+    const { products } = result.body.content as { products: Product[] }
+    return (
+      <div className="grid grid-cols-3 gap-4">
+        {products.map(p => <ProductCard key={p.id} product={p} />)}
+      </div>
+    )
+  }}
+/>
+```
+
+## Manual usage (without ReelevantZone)
+
+If you prefer direct control:
+
+```tsx
+// app/page.tsx
+import { rlvt } from '@/lib/reelevant'
+import { extractUserId } from '@rlvt/web-sdk'
+import { cookies, headers } from 'next/headers'
+
+export default async function Page() {
+  const cookieStore = await cookies()
+  const headersList = await headers()
+  const userId = extractUserId(cookieStore.toString())
+
+  const result = await rlvt.run({
+    workflowId: 'wf-hero',
+    entrypoint: 'hero',
+    userId,
+    userAgent: headersList.get('user-agent') ?? undefined,
+  })
+
+  if (result.body.type === 'html') {
+    return (
+      <div
+        data-rlvt-ssr="true"
+        dangerouslySetInnerHTML={{ __html: result.body.content }}
+      />
+    )
+  }
+
+  return <DefaultContent />
+}
+```
+
+## Multiple zones on a page
+
+Fetch multiple zones in parallel for optimal performance:
+
+```tsx
+export default async function Page() {
+  const cookieStore = await cookies()
+  const userId = extractUserId(cookieStore.toString())
+
+  const [hero, sidebar] = await rlvt.runAll([
+    { workflowId: 'wf-hero', entrypoint: 'hero', userId },
+    { workflowId: 'wf-sidebar', entrypoint: 'reco', userId },
+  ])
+
+  return (
+    <main>
+      <ReelevantZone client={rlvt} workflowId="wf-hero" entrypoint="hero" userId={userId} />
+      <aside>
+        <ReelevantZone client={rlvt} workflowId="wf-sidebar" entrypoint="reco" userId={userId} />
+      </aside>
+    </main>
+  )
+}
+```
+
+<Note>
+Each `ReelevantZone` is an independent async component that fetches in parallel when rendered at the same level. You don't need to use `runAll` explicitly with components — Next.js handles the parallel fetching automatically.
+</Note>
+
+## Compatibility with the client tracker
+
+The SDK adds `data-rlvt-ssr="true"` to rendered elements. The client-side Reelevant tracker automatically skips zones with this attribute, so there is no double-loading or flickering.
+
+You can still use the client tracker on the same page for:
+- Event tracking (clicks, impressions, conversions)
+- Client-only zones (consent-dependent content, overlays)
+- On-site integrations (datalayer triggers, URL rules)

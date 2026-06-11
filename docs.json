@@ -192,6 +192,17 @@
                   "platform-guide/browser-extension/integration",
                   "platform-guide/browser-extension/content-script"
                 ]
+              },
+              {
+                "group": "Web SDK",
+                "pages": [
+                  "platform-guide/web-sdk/overview",
+                  "platform-guide/web-sdk/core",
+                  "platform-guide/web-sdk/nextjs",
+                  "platform-guide/web-sdk/nuxt",
+                  "platform-guide/web-sdk/remix",
+                  "platform-guide/web-sdk/sveltekit"
+                ]
               }
             ]
           },

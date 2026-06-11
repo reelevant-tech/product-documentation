@@ -1,0 +1,153 @@
+---
+title: 'Nuxt Integration'
+description: 'Integrate server-side personalisation with Nuxt 3 using H3 event helpers and server middleware'
+---
+
+## Installation
+
+```bash
+npm install @rlvt/web-sdk
+```
+
+No additional dependencies are needed. The Nuxt adapter uses structural typing — it does not import from the `nuxt` or `h3` packages.
+
+## Setup
+
+### 1. Create the client instance
+
+```typescript
+// server/utils/reelevant.ts
+import { ReelevantClient } from '@rlvt/web-sdk'
+
+export const rlvt = new ReelevantClient({
+  companyId: process.env.RLVT_COMPANY_ID!,
+  timeout: 50,
+})
+```
+
+### 2. Add identity middleware
+
+Create a server middleware that ensures every visitor has an identity cookie:
+
+```typescript
+// server/middleware/reelevant-identity.ts
+import { ensureIdentity } from '@rlvt/web-sdk/nuxt'
+
+export default defineEventHandler((event) => {
+  ensureIdentity(event, useCookies(event))
+})
+```
+
+## Using useReelevant
+
+The `useReelevant` helper auto-extracts visitor identity, user-agent, IP, and referer from the H3 event:
+
+```typescript
+// server/api/personalise.ts
+import { useReelevant } from '@rlvt/web-sdk/nuxt'
+import { rlvt } from '~/server/utils/reelevant'
+
+export default defineEventHandler(async (event) => {
+  const { run, runAll } = useReelevant({ client: rlvt, event })
+
+  const hero = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  return { hero }
+})
+```
+
+### Fetching multiple zones
+
+```typescript
+export default defineEventHandler(async (event) => {
+  const { runAll } = useReelevant({ client: rlvt, event })
+
+  const [hero, sidebar, footer] = await runAll([
+    { workflowId: 'wf-hero', entrypoint: 'hero' },
+    { workflowId: 'wf-sidebar', entrypoint: 'sidebar' },
+    { workflowId: 'wf-footer', entrypoint: 'footer' },
+  ])
+
+  return { hero, sidebar, footer }
+})
+```
+
+## In a Nuxt page (SSR)
+
+Fetch personalised content in a server route or plugin, then use it in your page:
+
+```vue
+<!-- pages/index.vue -->
+<script setup lang="ts">
+const { data } = await useFetch('/api/personalise')
+</script>
+
+<template>
+  <main>
+    <div
+      v-if="data?.hero?.body?.type === 'html'"
+      data-rlvt-ssr="true"
+      v-html="data.hero.body.content"
+    />
+    <DefaultHero v-else />
+  </main>
+</template>
+```
+
+## Lower-level helpers
+
+### `extractUserIdFromEvent(event)`
+
+Extract the user ID directly from an H3 event's cookie header:
+
+```typescript
+import { extractUserIdFromEvent } from '@rlvt/web-sdk/nuxt'
+
+export default defineEventHandler((event) => {
+  const userId = extractUserIdFromEvent(event)
+  // ...
+})
+```
+
+### `runOptionsFromEvent(event)`
+
+Get all context fields (userId, userAgent, ip, referer) from an event:
+
+```typescript
+import { runOptionsFromEvent } from '@rlvt/web-sdk/nuxt'
+
+export default defineEventHandler(async (event) => {
+  const context = runOptionsFromEvent(event)
+  const result = await rlvt.run({
+    workflowId: 'wf-hero',
+    entrypoint: 'hero',
+    ...context,
+  })
+  return result
+})
+```
+
+## Handling JSON responses
+
+For headless personalisation where the workflow returns JSON:
+
+```vue
+<script setup lang="ts">
+const { data } = await useFetch('/api/personalise')
+const products = computed(() => {
+  if (data.value?.hero?.body?.type === 'json') {
+    return (data.value.hero.body.content as { products: Product[] }).products
+  }
+  return []
+})
+</script>
+
+<template>
+  <div class="grid grid-cols-3 gap-4">
+    <ProductCard v-for="p in products" :key="p.id" :product="p" />
+  </div>
+</template>
+```
+
+## Compatibility with the client tracker
+
+Server-rendered zones should include `data-rlvt-ssr="true"` in the wrapper element. The client-side tracker automatically skips these zones.
