@@ -118,43 +118,47 @@ switch (result.body.type) {
 | `properties` | `Record<string, unknown>` | Output properties |
 | `runId` | `string \| null` | Workflow run ID for tracking |
 | `executionPath` | `string[]` | Branch IDs taken during execution |
-| `clickUrl` | `string` | Pre-built click-through URL for tracking clicks |
+| `redirectionUrl` | `string` | Pre-built click-through URL (runner with `mode=click`) |
+| `clickUrl` | `string \| null` | Final destination URL from `x-rlvt-click-url` header |
 
 ## Click tracking
 
-Every `RunResult` includes a `clickUrl` — a pre-built URL that, when visited, tells the runner to record a click and redirect the user to the final destination. There are two ways to use it:
+Every `RunResult` includes two URLs for click tracking:
+
+- **`redirectionUrl`** — a pre-built runner URL with `mode=click`. When visited, the runner records the click and 302-redirects the user to the final destination.
+- **`clickUrl`** — the final destination URL extracted from the `x-rlvt-click-url` response header. Use this when you handle navigation yourself.
 
 ### Option 1: Redirect link (recommended for CTAs)
 
-Use `clickUrl` as the `href` on your call-to-action links. When the user clicks, they are redirected through the runner (which records the click) to the final destination.
+Use `redirectionUrl` as the `href` on your call-to-action links. The browser handles everything.
 
 ```typescript
 const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userId })
 
 // In your template
-// <a href="${result.clickUrl}">Shop now</a>
+// <a href="${result.redirectionUrl}">Shop now</a>
 ```
-
-This is the simplest approach — the browser handles everything. The runner tracks the click and issues a 302 redirect to the target URL.
 
 ### Option 2: Server-side fire-and-forget
 
-Use `client.trackClick()` when you control navigation and want to track the click in the background without redirecting through the runner.
+Use `client.trackClick()` when you control navigation and want to track the click in the background, then redirect the user to `result.clickUrl` yourself.
 
 ```typescript
 // User clicked a CTA — track it server-side
-await rlvt.trackClick({ clickUrl: result.clickUrl })
+await rlvt.trackClick({ redirectionUrl: result.redirectionUrl })
 
-// Then redirect the user yourself
-res.redirect(destinationUrl)
+// Then redirect the user to the final destination
+res.redirect(result.clickUrl)
 ```
 
 `trackClick()` calls the runner click endpoint with `redirect: manual` (no redirect followed) and swallows all errors — it never throws.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `clickUrl` | `string` | *required* | The `clickUrl` from a `RunResult` |
+| `redirectionUrl` | `string` | *required* | The `redirectionUrl` from a `RunResult` |
 | `timeout` | `number` | Client default | Per-call timeout override in ms |
+
+`trackClick` is also available from framework helpers — `useReelevant()` (Nuxt), `createLoader()` (Remix), `createLoad()` (SvelteKit) all expose it alongside `run` and `runAll`.
 
 ## Identity helpers
 

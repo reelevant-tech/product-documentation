@@ -176,24 +176,28 @@ const products = computed(() => {
 
 ## Click tracking
 
-Every `RunResult` includes a `clickUrl`. Use it as a redirect link or track clicks server-side:
+Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Use `redirectionUrl` as a redirect link or track clicks server-side via `trackClick`:
 
 ```vue
 <!-- Redirect link -->
 <template>
   <div v-if="data?.hero?.body?.type === 'html'" data-rlvt-ssr="true">
     <div v-html="data.hero.body.content" />
-    <a :href="data.hero.clickUrl">Shop now</a>
+    <a :href="data.hero.redirectionUrl">Shop now</a>
   </div>
 </template>
 ```
 
 ```typescript
 // Server-side fire-and-forget (in an API route)
+// trackClick is available from useReelevant()
 export default defineEventHandler(async (event) => {
-  const { clickUrl } = await readBody(event)
-  await rlvt.trackClick({ clickUrl })
-  return { ok: true }
+  const { run, trackClick } = useReelevant({ client: rlvt, event })
+  const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+
+  // Later, when the user clicks:
+  await trackClick({ redirectionUrl: result.redirectionUrl })
+  // Navigate user to result.clickUrl yourself
 })
 ```
 

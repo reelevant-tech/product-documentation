@@ -176,10 +176,10 @@ export default function Page() {
 
 ## Click tracking
 
-Every `RunResult` includes a `clickUrl`. Use it as a redirect link or track clicks server-side:
+Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Use `redirectionUrl` as a redirect link or track clicks via `trackClick` from `createLoader`:
 
 ```tsx
-// Redirect link — use clickUrl as <a href>
+// Redirect link — use redirectionUrl as <a href>
 export default function Page() {
   const { hero } = useLoaderData<typeof loader>()
 
@@ -188,7 +188,7 @@ export default function Page() {
       {hero.body.type === 'html' && (
         <>
           <div dangerouslySetInnerHTML={{ __html: hero.body.content }} />
-          <a href={hero.clickUrl}>Shop now</a>
+          <a href={hero.redirectionUrl}>Shop now</a>
         </>
       )}
     </div>
@@ -198,9 +198,11 @@ export default function Page() {
 
 ```typescript
 // Server-side fire-and-forget (in an action)
+// trackClick is available from createLoader()
 export async function action({ request }: ActionFunctionArgs) {
-  const { clickUrl } = await request.json()
-  await rlvt.trackClick({ clickUrl })
+  const { trackClick } = createLoader({ client: rlvt, request })
+  const { redirectionUrl } = await request.json()
+  await trackClick({ redirectionUrl })
   return json({ ok: true })
 }
 ```

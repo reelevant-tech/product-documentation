@@ -216,11 +216,11 @@ Each `ReelevantZone` is an independent async component that fetches in parallel 
 
 ## Click tracking
 
-Every `RunResult` includes a `clickUrl` for tracking CTA clicks. Two patterns:
+Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Two patterns:
 
 ### Redirect link
 
-Use the `clickUrl` directly as an `<a href>`:
+Use `redirectionUrl` directly as an `<a href>`:
 
 ```tsx
 export default async function Page() {
@@ -234,7 +234,7 @@ export default async function Page() {
       {result.body.type === 'html' && (
         <>
           <div dangerouslySetInnerHTML={{ __html: result.body.content }} />
-          <a href={result.clickUrl}>Shop now</a>
+          <a href={result.redirectionUrl}>Shop now</a>
         </>
       )}
     </div>
@@ -244,15 +244,15 @@ export default async function Page() {
 
 ### Server-side fire-and-forget
 
-Track the click from a Server Action or API route without redirecting through the runner:
+Track the click from a Server Action, then navigate to the final destination yourself:
 
 ```tsx
 // app/actions.ts
 'use server'
 import { rlvt } from '@/lib/reelevant'
 
-export async function trackClick(clickUrl: string) {
-  await rlvt.trackClick({ clickUrl })
+export async function trackClick(redirectionUrl: string) {
+  await rlvt.trackClick({ redirectionUrl })
 }
 ```
 

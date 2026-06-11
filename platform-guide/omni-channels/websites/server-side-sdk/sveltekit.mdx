@@ -174,14 +174,14 @@ export async function handle({ event, resolve }) {
 
 ## Click tracking
 
-Every `RunResult` includes a `clickUrl`. Use it as a redirect link or track clicks server-side:
+Every `RunResult` includes `redirectionUrl` (runner URL with `mode=click`) and `clickUrl` (final destination). Use `redirectionUrl` as a redirect link or track clicks via `trackClick` from `createLoad`:
 
 ```svelte
 <!-- Redirect link -->
 {#if data.hero.body.type === 'html'}
   <div data-rlvt-ssr="true">
     {@html data.hero.body.content}
-    <a href={data.hero.clickUrl}>Shop now</a>
+    <a href={data.hero.redirectionUrl}>Shop now</a>
   </div>
 {/if}
 ```
@@ -189,13 +189,15 @@ Every `RunResult` includes a `clickUrl`. Use it as a redirect link or track clic
 ```typescript
 // Server-side fire-and-forget (in a form action)
 // src/routes/+page.server.ts
+import { createLoad } from '@rlvt/web-sdk/sveltekit'
 import { rlvt } from '$lib/server/reelevant'
 
 export const actions = {
-  trackClick: async ({ request }) => {
-    const formData = await request.formData()
-    const clickUrl = formData.get('clickUrl') as string
-    await rlvt.trackClick({ clickUrl })
+  trackClick: async (event) => {
+    const { trackClick } = createLoad({ client: rlvt, event })
+    const formData = await event.request.formData()
+    const redirectionUrl = formData.get('redirectionUrl') as string
+    await trackClick({ redirectionUrl })
   }
 }
 ```
