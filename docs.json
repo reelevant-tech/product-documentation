@@ -216,6 +216,13 @@
                           "platform-guide/omni-channels/websites/server-side-sdk/remix",
                           "platform-guide/omni-channels/websites/server-side-sdk/sveltekit"
                         ]
+                      },
+                      {
+                        "group": "Reelevant as API (JSON)",
+                        "pages": [
+                          "platform-guide/omni-channels/websites/api-json/overview",
+                          "platform-guide/omni-channels/websites/api-json/integration"
+                        ]
                       }
                     ]
                   }
