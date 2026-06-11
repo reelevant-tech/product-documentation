@@ -20,7 +20,6 @@ No additional dependencies are needed. The Nuxt adapter uses structural typing â
 import { ReelevantClient } from '@rlvt/web-sdk'
 
 export const rlvt = new ReelevantClient({
-  companyId: process.env.RLVT_COMPANY_ID!,
   timeout: 50,
 })
 ```
@@ -36,6 +35,33 @@ import { ensureIdentity } from '@rlvt/web-sdk/nuxt'
 export default defineEventHandler((event) => {
   ensureIdentity(event, useCookies(event))
 })
+```
+
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client as Browser
+    participant Nuxt as Nuxt Server (Nitro)
+    participant MW as Server Middleware
+    participant Handler as Event Handler
+    participant SDK as @rlvt/web-sdk
+    participant Runner as Reelevant Runner
+
+    Client->>Nuxt: GET /page
+    Nuxt->>MW: reelevant-identity.ts
+    MW->>MW: Check rlvt_tmpId cookie
+    alt No identity cookie
+        MW->>MW: Generate rlvt_tmpId, Set-Cookie
+    end
+    Nuxt->>Handler: server/api/personalise.ts
+    Handler->>SDK: useReelevant({ client, event })
+    SDK->>SDK: Extract userId, userAgent, IP from event
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: HTML / JSON / Image
+    SDK-->>Handler: RunResult
+    Handler-->>Nuxt: JSON response
+    Nuxt-->>Client: SSR page with personalised content
 ```
 
 ## Using useReelevant

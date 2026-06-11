@@ -20,7 +20,6 @@ No additional dependencies. The adapter uses structural typing — it does not i
 import { ReelevantClient } from '@rlvt/web-sdk'
 
 export const rlvt = new ReelevantClient({
-  companyId: process.env.RLVT_COMPANY_ID!,
   timeout: 50,
 })
 ```
@@ -39,6 +38,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
     headers: identityCookie ? { 'Set-Cookie': identityCookie } : {},
   })
 }
+```
+
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client as Browser
+    participant Remix as Remix Server
+    participant Loader as Route Loader
+    participant SDK as @rlvt/web-sdk
+    participant Runner as Reelevant Runner
+
+    Client->>Remix: GET /page
+    Remix->>Loader: loader({ request })
+    Loader->>SDK: ensureIdentityCookie(request)
+    alt No identity cookie
+        SDK-->>Loader: Set-Cookie header string
+    end
+    Loader->>SDK: createLoader({ client, request })
+    SDK->>SDK: Extract userId, userAgent, IP from request
+    Loader->>SDK: run({ workflowId, entrypoint })
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: HTML / JSON / Image
+    SDK-->>Loader: RunResult
+    Loader-->>Remix: json({ hero })
+    Remix-->>Client: SSR page with personalised content
 ```
 
 ## Using createLoader

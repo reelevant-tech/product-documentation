@@ -17,17 +17,17 @@ The core SDK has zero dependencies and works with any runtime that supports the 
 import { ReelevantClient } from '@rlvt/web-sdk'
 
 const rlvt = new ReelevantClient({
-  companyId: process.env.RLVT_COMPANY_ID!,
   // timeout: 5000,        // default: 5000ms
   // fallback: 'empty',    // default: 'empty' — returns empty result on error
 })
 ```
 
+No configuration is required — the SDK defaults to the production runner.
+
 ### Configuration options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `companyId` | `string` | *required* | Your Reelevant company ID |
 | `runnerUrl` | `string` | `https://reelevant.run` | Runner endpoint URL |
 | `timeout` | `number` | `5000` | Global timeout in milliseconds |
 | `fallback` | `'empty' \| 'error' \| Function` | `'empty'` | What happens when a call fails |
@@ -172,6 +172,26 @@ const rlvt = new ReelevantClient({
 })
 ```
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client as Browser
+    participant Server as Your Server
+    participant SDK as @rlvt/web-sdk
+    participant Runner as Reelevant Runner
+
+    Client->>Server: GET /page
+    Server->>SDK: extractUserId(cookies)
+    SDK-->>Server: userId (or undefined)
+    Server->>SDK: rlvt.run({ workflowId, entrypoint, userId })
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: HTML / JSON / Image + headers
+    SDK-->>Server: RunResult { body, metadata, runId }
+    Server->>Server: Inject content into page template
+    Server-->>Client: Full HTML with personalised content
+```
+
 ## Express example
 
 ```typescript
@@ -179,7 +199,7 @@ import express from 'express'
 import { ReelevantClient, extractUserId, generateTmpId } from '@rlvt/web-sdk'
 
 const app = express()
-const rlvt = new ReelevantClient({ companyId: process.env.RLVT_COMPANY_ID! })
+const rlvt = new ReelevantClient()
 
 app.get('/page', async (req, res) => {
   // Ensure identity cookie

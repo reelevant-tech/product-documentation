@@ -20,7 +20,6 @@ No additional dependencies. The adapter uses structural typing — it does not i
 import { ReelevantClient } from '@rlvt/web-sdk'
 
 export const rlvt = new ReelevantClient({
-  companyId: import.meta.env.RLVT_COMPANY_ID,
   timeout: 50,
 })
 ```
@@ -37,6 +36,35 @@ export async function handle({ event, resolve }) {
   ensureIdentity(event)
   return resolve(event)
 }
+```
+
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client as Browser
+    participant SK as SvelteKit Server
+    participant Hook as hooks.server.ts
+    participant Load as +page.server.ts
+    participant SDK as @rlvt/web-sdk
+    participant Runner as Reelevant Runner
+
+    Client->>SK: GET /page
+    SK->>Hook: handle({ event, resolve })
+    Hook->>SDK: ensureIdentity(event)
+    alt No identity cookie
+        SDK->>SDK: Generate rlvt_tmpId
+        SDK->>Hook: event.cookies.set('rlvt_tmpId', ...)
+    end
+    SK->>Load: load(event)
+    Load->>SDK: createLoad({ client, event })
+    SDK->>SDK: Extract userId, userAgent, IP from event
+    Load->>SDK: run({ workflowId, entrypoint })
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: HTML / JSON / Image
+    SDK-->>Load: RunResult
+    Load-->>SK: { hero }
+    SK-->>Client: SSR page with personalised content
 ```
 
 ## Using createLoad

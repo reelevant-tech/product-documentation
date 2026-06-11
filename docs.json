@@ -197,6 +197,7 @@
                 "group": "Web SDK",
                 "pages": [
                   "platform-guide/web-sdk/overview",
+                  "platform-guide/web-sdk/client-side",
                   "platform-guide/web-sdk/core",
                   "platform-guide/web-sdk/nextjs",
                   "platform-guide/web-sdk/nuxt",
