@@ -194,10 +194,9 @@ import { rlvt } from '$lib/server/reelevant'
 
 export const actions = {
   trackClick: async (event) => {
-    const { trackClick } = createLoad({ client: rlvt, event })
-    const formData = await event.request.formData()
-    const redirectionUrl = formData.get('redirectionUrl') as string
-    await trackClick({ redirectionUrl })
+    const { run } = createLoad({ client: rlvt, event })
+    const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+    await result.trackClick()
   }
 }
 ```

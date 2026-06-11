@@ -119,14 +119,15 @@ switch (result.body.type) {
 | `runId` | `string \| null` | Workflow run ID for tracking |
 | `executionPath` | `string[]` | Branch IDs taken during execution |
 | `redirectionUrl` | `string` | Pre-built click-through URL (runner with `mode=click`) |
+| `trackClick` | `() => Promise<void>` | Fire-and-forget callback to track the click server-side |
 
 ## Click tracking
 
-Every `RunResult` includes a `redirectionUrl` — a pre-built runner URL with `mode=click`. When visited, the runner records the click and 302-redirects the user to the final destination. This ensures click tracking is always recorded. You must use either the redirect link pattern or the `trackClick()` callback.
+Every `RunResult` includes a `redirectionUrl` and a `trackClick()` callback. This ensures click tracking is always recorded — devs must use one of the two patterns below.
 
 ### Option 1: Redirect link (recommended for CTAs)
 
-Use `redirectionUrl` as the `href` on your call-to-action links. The browser handles everything.
+Use `redirectionUrl` as the `href` on your call-to-action links. The browser handles everything — the runner tracks the click and 302-redirects to the final destination.
 
 ```typescript
 const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userId })
@@ -137,21 +138,16 @@ const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userI
 
 ### Option 2: Server-side fire-and-forget
 
-Use `client.trackClick()` when you want to track the click server-side without redirecting through the runner. The runner records the click and the response is discarded.
+Call `result.trackClick()` when you control navigation and want to track the click in the background. It calls the runner click endpoint with `redirect: manual` and swallows all errors — it never throws.
 
 ```typescript
+const result = await rlvt.run({ workflowId: 'wf-hero', entrypoint: 'hero', userId })
+
 // User clicked a CTA — track it server-side
-await rlvt.trackClick({ redirectionUrl: result.redirectionUrl })
+await result.trackClick()
 ```
 
-`trackClick()` calls the runner click endpoint with `redirect: manual` (no redirect followed) and swallows all errors — it never throws.
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `redirectionUrl` | `string` | *required* | The `redirectionUrl` from a `RunResult` |
-| `timeout` | `number` | Client default | Per-call timeout override in ms |
-
-`trackClick` is also available from framework helpers — `useReelevant()` (Nuxt), `createLoader()` (Remix), `createLoad()` (SvelteKit) all expose it alongside `run` and `runAll`.
+No arguments needed — the callback is pre-bound to the result's `redirectionUrl`.
 
 ## Identity helpers
 

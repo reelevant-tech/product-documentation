@@ -190,13 +190,12 @@ Every `RunResult` includes `redirectionUrl` — a runner URL with `mode=click` t
 
 ```typescript
 // Server-side fire-and-forget (in an API route)
-// trackClick is available from useReelevant()
 export default defineEventHandler(async (event) => {
-  const { run, trackClick } = useReelevant({ client: rlvt, event })
+  const { run } = useReelevant({ client: rlvt, event })
   const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
 
   // Later, when the user clicks:
-  await trackClick({ redirectionUrl: result.redirectionUrl })
+  await result.trackClick()
 })
 ```
 

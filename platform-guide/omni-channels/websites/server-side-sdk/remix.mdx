@@ -198,11 +198,10 @@ export default function Page() {
 
 ```typescript
 // Server-side fire-and-forget (in an action)
-// trackClick is available from createLoader()
 export async function action({ request }: ActionFunctionArgs) {
-  const { trackClick } = createLoader({ client: rlvt, request })
-  const { redirectionUrl } = await request.json()
-  await trackClick({ redirectionUrl })
+  const { run } = createLoader({ client: rlvt, request })
+  const result = await run({ workflowId: 'wf-hero', entrypoint: 'hero' })
+  await result.trackClick()
   return json({ ok: true })
 }
 ```

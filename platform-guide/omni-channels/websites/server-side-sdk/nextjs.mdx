@@ -244,15 +244,16 @@ export default async function Page() {
 
 ### Server-side fire-and-forget
 
-Track the click from a Server Action — the runner records the click and the response is discarded:
+Call `result.trackClick()` from a Server Action — it records the click and swallows all errors:
 
 ```tsx
 // app/actions.ts
 'use server'
 import { rlvt } from '@/lib/reelevant'
 
-export async function trackClick(redirectionUrl: string) {
-  await rlvt.trackClick({ redirectionUrl })
+export async function handleClick(workflowId: string, entrypoint: string, userId: string) {
+  const result = await rlvt.run({ workflowId, entrypoint, userId })
+  await result.trackClick()
 }
 ```
 
