@@ -25,13 +25,13 @@ Mobile apps render content with **native UI components** — there's no HTML inj
 ## Runner endpoint
 
 ```
-GET https://reelevant.run/workflows/run/{workflowId}/{entrypointIndex}?rlvt-u={userId}
+GET https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}
 ```
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `workflowId` | path | The workflow ID (visible in the workflow editor URL or integration modal) |
-| `entrypointIndex` | path | Zero-based index of the entrypoint (usually `0`) |
+| `entrypointId` | path | The entrypoint ID within the workflow |
 | `rlvt-u` | query | User identifier for personalisation — email, internal user ID, or device ID |
 
 ## Response format
@@ -72,7 +72,7 @@ struct Recommendation: Codable {
 }
 
 func fetchRecommendation(workflowId: String, userId: String) async throws -> Recommendation? {
-    let url = URL(string: "https://reelevant.run/workflows/run/\(workflowId)/0?rlvt-u=\(userId)")!
+    let url = URL(string: "https://reelevant.run/\(workflowId)/0?rlvt-u=\(userId)")!
     let (data, response) = try await URLSession.shared.data(from: url)
     
     guard let httpResponse = response as? HTTPURLResponse else { return nil }
@@ -101,7 +101,7 @@ data class Recommendation(
 
 suspend fun fetchRecommendation(workflowId: String, userId: String): Recommendation? {
     val client = HttpClient()
-    val response = client.get("https://reelevant.run/workflows/run/$workflowId/0") {
+    val response = client.get("https://reelevant.run/$workflowId/0") {
         parameter("rlvt-u", userId)
     }
     return if (response.status.value == 200) response.body() else null
@@ -131,7 +131,7 @@ class Recommendation {
 
 Future<Recommendation?> fetchRecommendation(String workflowId, String userId) async {
   final uri = Uri.parse(
-    'https://reelevant.run/workflows/run/$workflowId/0?rlvt-u=$userId',
+    'https://reelevant.run/$workflowId/0?rlvt-u=$userId',
   );
   final response = await http.get(uri);
 
@@ -160,7 +160,7 @@ function RecommendationCard({ workflowId, userId }: { workflowId: string; userId
   const [data, setData] = useState<Recommendation | null>(null)
 
   useEffect(() => {
-    fetch(`https://reelevant.run/workflows/run/${workflowId}/0?rlvt-u=${userId}`)
+    fetch(`https://reelevant.run/${workflowId}/0?rlvt-u=${userId}`)
       .then(res => res.ok ? res.json() : null)
       .then(setData)
   }, [workflowId, userId])
