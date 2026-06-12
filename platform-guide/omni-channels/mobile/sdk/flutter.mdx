@@ -3,6 +3,29 @@ title: 'Flutter SDK'
 description: 'Reelevant analytics and personalization SDK for Flutter (Dart)'
 ---
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant App as Flutter App
+    participant SDK as ReelevantAnalytics
+    participant Runner as Reelevant Runner
+
+    App->>SDK: ReelevantAnalytics(companyId, datasourceId)
+    App->>SDK: await rlvt.setUser("user@example.com")
+    SDK->>SDK: Store userId in SharedPreferences
+
+    App->>SDK: await rlvt.run(RunOptions(...))
+    SDK->>SDK: Resolve userId (explicit → stored → tmpId)
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: JSON / HTML / Image + headers
+    SDK-->>App: RunResult { body, metadata, redirectionUrl }
+    App->>App: Render content with Flutter Widgets
+
+    App->>SDK: await result.trackClick()
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?mode=click (no redirect follow)
+```
+
 ## Installation
 
 Add the dependency to your `pubspec.yaml`:

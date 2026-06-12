@@ -3,6 +3,29 @@ title: 'iOS SDK'
 description: 'Reelevant analytics and personalization SDK for iOS (Swift)'
 ---
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant App as iOS App
+    participant SDK as ReelevantAnalytics.SDK
+    participant Runner as Reelevant Runner
+
+    App->>SDK: SDK(configuration: config)
+    App->>SDK: setUser(userId: "user@example.com")
+    SDK->>SDK: Store userId in UserDefaults
+
+    App->>SDK: try await sdk.run(RunOptions(...))
+    SDK->>SDK: Resolve userId (explicit → stored → tmpId)
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: JSON / HTML / Image + headers
+    SDK-->>App: RunResult { body, metadata, redirectionUrl }
+    App->>App: Render content with SwiftUI / UIKit
+
+    App->>SDK: sdk.trackClick(result:)
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?mode=click (no redirect follow)
+```
+
 ## Installation
 
 Add the package via Swift Package Manager:

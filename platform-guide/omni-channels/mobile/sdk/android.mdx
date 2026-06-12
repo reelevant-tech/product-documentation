@@ -3,6 +3,29 @@ title: 'Android SDK'
 description: 'Reelevant analytics and personalization SDK for Android (Kotlin)'
 ---
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant App as Android App
+    participant SDK as ReelevantSDK
+    participant Runner as Reelevant Runner
+
+    App->>SDK: ReelevantSDK(context, companyId, datasourceId)
+    App->>SDK: setUser("user@example.com")
+    SDK->>SDK: Store userId in SharedPreferences
+
+    App->>SDK: run(RunOptions(workflowId, entrypoint))
+    SDK->>SDK: Resolve userId (explicit → stored → tmpId)
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?rlvt-u={userId}
+    Runner-->>SDK: JSON / HTML / Image + headers
+    SDK-->>App: RunResult { body, metadata, redirectionUrl }
+    App->>App: Render content with Compose / Views
+
+    App->>SDK: result.trackClick()
+    SDK->>Runner: GET /{workflowId}/{entrypoint}?mode=click (no redirect follow)
+```
+
 ## Installation
 
 Add the GitHub Packages repository and dependency to your `build.gradle.kts`:
