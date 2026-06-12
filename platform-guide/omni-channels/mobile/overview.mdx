@@ -1,0 +1,48 @@
+---
+title: 'Mobile Personalisation'
+description: 'Deliver personalised content in your mobile apps using Reelevant as a headless personalisation API'
+---
+
+## Overview
+
+Reelevant brings the same personalisation engine that powers web experiences to your **native mobile apps**. Since mobile apps render their own UI with native components, the integration model is headless — Reelevant provides the personalised **data**, and your app handles the **rendering**.
+
+<CardGroup cols={2}>
+  <Card title="Reelevant as API (JSON)" icon="mobile" href="/platform-guide/omni-channels/mobile/api-json/overview">
+    Call the Reelevant runner from your mobile app and receive structured JSON data. Render it with your native iOS, Android, or cross-platform components.
+  </Card>
+</CardGroup>
+
+## Why personalise mobile?
+
+| Benefit | Description |
+|---------|-------------|
+| **Higher engagement** | Personalised content drives more taps, scrolls, and conversions than generic content |
+| **Consistent cross-channel experience** | Same personalisation logic across web, email, push, and in-app — powered by the same workflows |
+| **Real-time decisions** | Reelevant evaluates conditions, datasources, and splits at request time — content is always fresh |
+| **No app release required** | Change personalisation logic in the workflow editor without shipping a new app version |
+
+## How it works
+
+Your mobile app integrates with Reelevant the same way a headless web frontend does:
+
+<Steps>
+  <Step title="Create a JSON Template">
+    Define the schema and variables in the Reelevant platform. The schema describes the fields your app expects (product names, prices, image URLs, etc.).
+  </Step>
+  <Step title="Build a workflow">
+    Connect datasources, add conditions and splits, and use a **JSON Template** output node. Bind each variable to a datasource field.
+  </Step>
+  <Step title="Call the runner from your app">
+    Make a simple HTTP GET request from your iOS/Android/Flutter app. Pass the user identity for personalisation.
+  </Step>
+  <Step title="Render natively">
+    Parse the JSON response and render it with your native UI components — SwiftUI views, Jetpack Compose composables, Flutter widgets, or React Native components.
+  </Step>
+</Steps>
+
+## Next steps
+
+<Card title="Technical Integration" icon="code" href="/platform-guide/omni-channels/mobile/api-json/overview">
+  API endpoints, response format, and mobile-specific code examples (Swift, Kotlin, Flutter, React Native).
+</Card>

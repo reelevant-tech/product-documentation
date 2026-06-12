@@ -225,6 +225,18 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "group": "Mobile",
+                    "pages": [
+                      "platform-guide/omni-channels/mobile/overview",
+                      {
+                        "group": "Reelevant as API (JSON)",
+                        "pages": [
+                          "platform-guide/omni-channels/mobile/api-json/overview"
+                        ]
+                      }
+                    ]
                   }
                 ]
               }
