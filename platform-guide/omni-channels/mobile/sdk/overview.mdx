@@ -1,0 +1,232 @@
+---
+title: 'Mobile SDK'
+description: 'Use the official Reelevant SDKs for iOS, Android, and Flutter to fetch personalised content with a single method call'
+---
+
+## Overview
+
+The Reelevant mobile SDKs combine **analytics tracking** and **real-time personalisation** in a single package. Identity is shared between both — call `setUser()` once and the SDK uses it for events _and_ personalisation calls automatically.
+
+<CardGroup cols={3}>
+  <Card title="Android" icon="android" href="https://github.com/reelevant-tech/reelevant-sdk-android">
+    Kotlin · `suspend fun run()` · Coroutines
+  </Card>
+  <Card title="iOS" icon="apple" href="https://github.com/reelevant-tech/reelevant-sdk-ios">
+    Swift · `async func run()` · Swift Package Manager
+  </Card>
+  <Card title="Flutter" icon="flutter" href="https://github.com/reelevant-tech/reelevant-sdk-flutter">
+    Dart · `Future<RunResult> run()` · pub.dev
+  </Card>
+</CardGroup>
+
+## Installation
+
+<Tabs>
+  <Tab title="Android">
+    Add the dependency to your `build.gradle.kts`:
+    ```kotlin
+    implementation("com.reelevant.analytics:analytics-android:0.1.0")
+    ```
+  </Tab>
+  <Tab title="iOS">
+    Add the package via Swift Package Manager:
+    ```
+    https://github.com/reelevant-tech/reelevant-sdk-ios
+    ```
+  </Tab>
+  <Tab title="Flutter">
+    ```bash
+    flutter pub add reelevant_analytics
+    ```
+  </Tab>
+</Tabs>
+
+## Initialisation
+
+<Tabs>
+  <Tab title="Android (Kotlin)">
+    ```kotlin
+    val sdk = ReelevantSDK(
+        context = this,
+        companyId = "<company id>",
+        datasourceId = "<datasource id>"
+    )
+
+    // Identity — shared across analytics & personalisation
+    sdk.setUser("user@example.com")
+    ```
+  </Tab>
+  <Tab title="iOS (Swift)">
+    ```swift
+    let config = ReelevantAnalytics.Configuration(
+        companyId: "<company id>",
+        datasourceId: "<datasource id>"
+    )
+    let sdk = ReelevantAnalytics.SDK(configuration: config)
+
+    sdk.setUser(userId: "user@example.com")
+    ```
+  </Tab>
+  <Tab title="Flutter (Dart)">
+    ```dart
+    final rlvt = ReelevantAnalytics(
+        companyId: '<company id>',
+        datasourceId: '<datasource id>',
+    );
+
+    await rlvt.setUser('user@example.com');
+    ```
+  </Tab>
+</Tabs>
+
+## Fetching personalised content
+
+Call `run()` with a workflow ID and entrypoint. The SDK automatically attaches the stored user identity.
+
+<Tabs>
+  <Tab title="Android (Kotlin)">
+    ```kotlin
+    val result = sdk.run(RunOptions(
+        workflowId = "wf-hero",
+        entrypoint = "43a490a0"
+    ))
+
+    when (result.body) {
+        is RunContent.Json  -> renderCard((result.body as RunContent.Json).content)
+        is RunContent.Html  -> loadHtml((result.body as RunContent.Html).content)
+        is RunContent.Image -> displayImage((result.body as RunContent.Image).content)
+        is RunContent.Empty -> showDefault()
+    }
+    ```
+  </Tab>
+  <Tab title="iOS (Swift)">
+    ```swift
+    let result = try await sdk.run(ReelevantAnalytics.RunOptions(
+        workflowId: "wf-hero",
+        entrypoint: "43a490a0"
+    ))
+
+    switch result.body {
+    case .json(let data):  renderCard(data)
+    case .html(let html):  loadHtml(html)
+    case .image(let bytes): displayImage(bytes)
+    case .empty:           showDefault()
+    }
+    ```
+  </Tab>
+  <Tab title="Flutter (Dart)">
+    ```dart
+    final result = await rlvt.run(RunOptions(
+        workflowId: 'wf-hero',
+        entrypoint: '43a490a0',
+    ));
+
+    if (result.body is JsonRunContent) {
+        renderCard((result.body as JsonRunContent).content);
+    } else {
+        showDefault();
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Multiple workflows in parallel
+
+Fetch several workflows at once with `runAll()`:
+
+<Tabs>
+  <Tab title="Android (Kotlin)">
+    ```kotlin
+    val results = sdk.runAll(listOf(
+        RunOptions(workflowId = "wf-hero", entrypoint = "43a490a0"),
+        RunOptions(workflowId = "wf-sidebar", entrypoint = "b7e21f3c"),
+    ))
+    ```
+  </Tab>
+  <Tab title="iOS (Swift)">
+    ```swift
+    let results = await sdk.runAll([
+        ReelevantAnalytics.RunOptions(workflowId: "wf-hero", entrypoint: "43a490a0"),
+        ReelevantAnalytics.RunOptions(workflowId: "wf-sidebar", entrypoint: "b7e21f3c"),
+    ])
+    ```
+  </Tab>
+  <Tab title="Flutter (Dart)">
+    ```dart
+    final results = await rlvt.runAll([
+        RunOptions(workflowId: 'wf-hero', entrypoint: '43a490a0'),
+        RunOptions(workflowId: 'wf-sidebar', entrypoint: 'b7e21f3c'),
+    ]);
+    ```
+  </Tab>
+</Tabs>
+
+## Click tracking
+
+Every `RunResult` includes a `redirectionUrl` (for opening in a browser) and a `trackClick()` method for fire-and-forget click tracking:
+
+<Tabs>
+  <Tab title="Android (Kotlin)">
+    ```kotlin
+    // Use as a link
+    openUrl(result.redirectionUrl)
+
+    // Or track programmatically
+    result.trackClick()
+    ```
+  </Tab>
+  <Tab title="iOS (Swift)">
+    ```swift
+    sdk.trackClick(result: result)
+    ```
+  </Tab>
+  <Tab title="Flutter (Dart)">
+    ```dart
+    await result.trackClick();
+    ```
+  </Tab>
+</Tabs>
+
+## RunResult
+
+| Field | Description |
+|-------|-------------|
+| `status` | HTTP status code (0 for fallback) |
+| `source` | `runner` or `fallback` |
+| `body` | Typed content — `json`, `html`, `image`, or `empty` |
+| `metadata` | Metadata from the output node |
+| `properties` | Output properties |
+| `runId` | Workflow run ID for tracking correlation |
+| `executionPath` | Branch IDs taken during execution |
+| `redirectionUrl` | Pre-built click-through URL |
+
+## Run options
+
+| Option | Description |
+|--------|-------------|
+| `workflowId` | Workflow ID (required) |
+| `entrypoint` | Entrypoint shortId (required) |
+| `userId` | Override identity — `null` uses stored identity |
+| `params` | URL parameters forwarded to the runner |
+| `locale` | Locale for content resolution |
+| `timeout` | Per-call timeout override |
+
+## Fallback strategies
+
+Control what happens when a runner call fails or times out:
+
+| Strategy | Behaviour |
+|----------|-----------|
+| **empty** (default) | Returns an empty result — your UI shows its default state |
+| **error** | Throws / re-throws the underlying error |
+| **custom** | Your own handler produces a fallback result |
+
+## Identity resolution
+
+The SDK resolves the user identity automatically in this order:
+
+1. **Explicit** — `userId` passed in `RunOptions`
+2. **Stored** — user ID set via `setUser()`
+3. **Device** — anonymous device ID (`tmpId`)
+
+This is a key DX improvement over the raw API — no need to manage identity yourself.
