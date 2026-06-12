@@ -1,0 +1,135 @@
+---
+title: 'iOS SDK'
+description: 'Reelevant analytics and personalization SDK for iOS (Swift)'
+---
+
+## Installation
+
+Add the package via Swift Package Manager:
+
+```
+https://github.com/reelevant-tech/reelevant-sdk-ios.git
+```
+
+In Xcode: **File → Add Package Dependencies** → paste the URL above.
+
+## Initialization
+
+```swift
+import ReelevantAnalytics
+
+let config = ReelevantAnalytics.Configuration(
+    companyId: "your-company-id",
+    datasourceId: "your-datasource-id"
+)
+// Optional personalization config
+config.runnerUrl = "https://reelevant.run"   // default
+config.personalizationTimeout = 5.0           // seconds, default
+config.fallback = .empty                      // default
+
+let sdk = ReelevantAnalytics.SDK(configuration: config)
+
+// Set user identity (shared between analytics and personalization)
+sdk.setUser(userId: "user@example.com")
+```
+
+## Analytics (event tracking)
+
+```swift
+// Page view
+sdk.send(event: ReelevantAnalytics.EventBuilder.page_view(labels: ["lang": "en"]))
+
+// Product page
+sdk.send(event: ReelevantAnalytics.EventBuilder.product_page(
+    productId: "product-123",
+    labels: ["category": "shoes"]
+))
+
+// Purchase
+sdk.send(event: ReelevantAnalytics.EventBuilder.purchase(
+    ids: ["p1", "p2"],
+    totalAmount: 99.99,
+    labels: [:],
+    transId: "order-456"
+))
+```
+
+## Personalization
+
+### Single workflow run
+
+```swift
+let result = try await sdk.run(RunOptions(
+    workflowId: "wf-hero",
+    entrypoint: "43a490a0"
+))
+
+switch result.body {
+case .json(let data):  renderCard(data)
+case .html(let html):  renderWebView(html)
+case .image(let data): renderImage(data)
+case .empty:           showDefault()
+}
+```
+
+### Multiple workflows in parallel
+
+```swift
+let results = try await sdk.runAll([
+    RunOptions(workflowId: "wf-hero", entrypoint: "entry1"),
+    RunOptions(workflowId: "wf-reco", entrypoint: "entry2")
+])
+// results[0] corresponds to wf-hero, results[1] to wf-reco
+```
+
+### Click tracking
+
+```swift
+// Fire-and-forget — registers the click without following redirects
+sdk.trackClick(result: result)
+// or
+result._trackClick()
+```
+
+### RunOptions
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `workflowId` | `String` | Yes | Workflow ID from the platform |
+| `entrypoint` | `String` | Yes | Entrypoint ID within the workflow |
+| `userId` | `String?` | No | Override identity (default: auto-resolved from `setUser()` / device ID) |
+| `params` | `[String: String]?` | No | Additional URL parameters forwarded to the runner |
+| `locale` | `String?` | No | Locale for content resolution |
+| `timeout` | `TimeInterval?` | No | Per-call timeout override in seconds |
+
+### RunResult
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | `Int` | HTTP status code (0 for fallback) |
+| `source` | `RunSource` | `.runner` or `.fallback` |
+| `body` | `RunContent` | Discriminated content: `.json`, `.html`, `.image`, or `.empty` |
+| `metadata` | `[String: Any]` | Metadata from `x-rlvt-output-node-metadata` header |
+| `properties` | `[String: Any]` | Properties from `x-rlvt-output-properties` header |
+| `runId` | `String?` | Workflow run ID for tracking correlation |
+| `executionPath` | `[String]` | Branch IDs taken during execution |
+| `redirectionUrl` | `String` | Pre-built click-through URL |
+
+### Fallback strategies
+
+```swift
+// Return empty result on error (default)
+config.fallback = .empty
+
+// Re-throw the error
+config.fallback = .error
+
+// Custom handler
+config.fallback = .custom { options, error in
+    return RunResult(/* your fallback result */)
+}
+```
+
+<Note>
+Personalization requires **iOS 13+** / **macOS 10.15+** for `async`/`await` support. Analytics works on iOS 10+.
+</Note>

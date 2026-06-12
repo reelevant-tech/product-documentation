@@ -233,7 +233,10 @@
                       {
                         "group": "Reelevant Mobile SDK",
                         "pages": [
-                          "platform-guide/omni-channels/mobile/sdk/overview"
+                          "platform-guide/omni-channels/mobile/sdk/overview",
+                          "platform-guide/omni-channels/mobile/sdk/android",
+                          "platform-guide/omni-channels/mobile/sdk/ios",
+                          "platform-guide/omni-channels/mobile/sdk/flutter"
                         ]
                       },
                       {
