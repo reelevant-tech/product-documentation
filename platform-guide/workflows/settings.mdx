@@ -1,15 +1,16 @@
 ---
 title: 'Workflow Settings'
-description: 'Configure branch category nomenclature and variable profiles for your workflows'
+description: 'Configure branch categories, variable profiles, and JSON templates for your workflows'
 ---
 
 ![Workflow settings modal for configuring workflow properties](/images/workflows/settings-modal.png)
 
 ## Accessing Workflow Settings
 
-Open the **Workflows** application from the sidebar, then navigate to the **Settings** page. The settings page has two tabs:
+Open the **Workflows** application from the sidebar, then navigate to the **Settings** page. The settings page has three tabs:
 - **Branch categories** — Manage your branch category hierarchy.
 - **Variable profiles** — Configure reusable URL parameter templates.
+- **JSON Templates** — Define and manage JSON output templates for headless integrations.
 
 ---
 
@@ -104,3 +105,108 @@ Click on a profile in the table to open the edit drawer. Update the name or para
 - Create separate profiles for different channels (email vs. web) since they typically use different tracking parameters.
 - Standardize parameter names across your team to ensure consistent analytics data.
 - Variable profiles complement URL Parameter nodes in workflows — the profile provides the parameter structure, and the URL Parameter node reads the value at runtime.
+
+---
+
+## JSON Templates
+
+![JSON Templates settings tab showing template list](/images/workflows/json-templates-settings.png)
+
+JSON Templates define the **structure and contract** of JSON payloads returned by [JSON Template output nodes](/platform-guide/workflows/output-nodes/json-template). They are the single source of truth for what your API consumers (mobile apps, frontends, third-party integrations) will receive.
+
+<Note>
+  This section is intended for **engineering and contract teams** who define the API schema. Marketing teams use the resulting templates in the workflow editor — see [JSON Template output node](/platform-guide/workflows/output-nodes/json-template) for usage instructions.
+</Note>
+
+### Why Use JSON Templates?
+
+JSON Templates separate **schema definition** from **data binding**:
+
+- **Engineering** defines the shape (what fields exist, which are static, which are dynamic variables).
+- **Marketing** decides what data fills each variable by connecting datasource fields in the workflow.
+
+This separation means your frontend can rely on a stable contract — fields never change unexpectedly — while marketing retains full control over which personalised data is surfaced.
+
+### Viewing Templates
+
+The **JSON Templates** tab displays all configured templates with their name and variable count. Click a template to open its edit drawer.
+
+### Creating a Template
+
+<Steps>
+  <Step title="Open the creation form">
+    Click the **Create** button in the top-right corner of the JSON Templates tab. A drawer opens on the right.
+  </Step>
+  <Step title="Name the template">
+    Enter a descriptive name (e.g., "Product Recommendations", "Loyalty Dashboard").
+  </Step>
+  <Step title="Assign resource groups">
+    Select one or more **resource groups** (teams) that should have access to this template. This controls visibility — only workflows belonging to matching teams will see this template in their node configuration.
+  </Step>
+  <Step title="Define the JSON schema">
+    Use the **JSON editor** to write the template definition. This is the shape of the final JSON payload:
+    - **Static values** — Hardcoded fields that never change (e.g., `"headline": "Recommended for you"`).
+    - **Variable placeholders** — Fields whose values will be resolved at runtime from datasources.
+
+    ```json
+    {
+      "headline": "Recommended for you",
+      "loyaltyPoints": 0,
+      "recommendations": []
+    }
+    ```
+  </Step>
+  <Step title="Configure variables">
+    For each dynamic field, add a **variable** entry:
+    - **Name** — Must match a key in your JSON definition (e.g., `loyaltyPoints`).
+    - **Description** — Optional; helps marketing understand what the variable represents.
+    - **Is Array** — Toggle on if this variable should retrieve all values from the datasource (e.g., a list of products). Leave off for scalar values (e.g., a single loyalty score).
+  </Step>
+  <Step title="Save">
+    Click **Save** to create the template. It becomes immediately available for selection in JSON Template output nodes across your workflows.
+  </Step>
+</Steps>
+
+### Editing a Template
+
+Click on a template in the list to open its edit drawer. You can update the name, JSON definition, and variables. Changes take effect on the **next publish** of any workflow using this template.
+
+<Warning>
+  Changing the schema (adding/removing fields or renaming variables) may break existing integrations. Coordinate with consuming frontends before making structural changes.
+</Warning>
+
+### Deleting a Template
+
+1. Open the template's edit drawer.
+2. Click the **Delete** button.
+3. Confirm the deletion in the modal.
+
+<Warning>
+  Deleting a template will cause any workflow referencing it to fail publish validation. Make sure no active workflows depend on the template before deleting.
+</Warning>
+
+### JSON Definition Best Practices
+
+- **Keep it flat when possible.** Nested objects are supported but flat schemas are easier for frontend teams to consume.
+- **Use meaningful key names.** Keys like `productName`, `loyaltyScore`, `recommendedItems` are self-documenting.
+- **Provide realistic defaults.** Static values and initial placeholder values (e.g., `0` for numbers, `[]` for arrays) serve as documentation for what the field type should be.
+- **Document the contract externally.** Share the JSON definition with your frontend/mobile team so they can build typed clients against it.
+
+### Variable Configuration
+
+Each variable represents a **dynamic slot** in the JSON payload:
+
+| Property | Description |
+|----------|-------------|
+| **Name** | Must exactly match a key in the JSON definition. Case-sensitive. |
+| **Description** | Human-readable explanation shown to marketing in the workflow editor. |
+| **Is Array** | When enabled, the engine uses automatic mapping to iterate over all datasource rows. When disabled, it retrieves a single value. |
+
+### Publish Validation
+
+When a workflow with JSON Template output nodes is published, the system validates:
+
+1. **Template exists** — The referenced template ID must point to an existing template.
+2. **Cross-branch consistency** — All JSON Template nodes across all branches must reference the **same template**. This ensures every branch produces the same JSON shape.
+
+If validation fails, the publish is blocked with a clear error message indicating which node or branch has a mismatch.
