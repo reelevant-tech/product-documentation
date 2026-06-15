@@ -87,6 +87,7 @@
                     "pages": [
                       "platform-guide/workflows/output-nodes",
                       "platform-guide/workflows/output-nodes/visual-content",
+                      "platform-guide/workflows/output-nodes/json-template",
                       "platform-guide/workflows/output-nodes/json-format",
                       "platform-guide/workflows/output-nodes/empty"
                     ]
