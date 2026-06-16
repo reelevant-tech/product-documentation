@@ -21,16 +21,15 @@ The response is a JSON object whose shape matches the template schema defined in
 
 ## Response format
 
+The response body is the resolved template data directly — no wrapper envelope. Static fields are returned as-is and dependency fields are replaced with real values from datasources:
+
 ```json
 {
   "headline": "Recommended for you",
   "productName": "Running Shoes Pro",
-  "productPrice": 129.99,
-  "productUrl": "https://shop.example.com/products/running-shoes-pro"
+  "productPrice": 129.99
 }
 ```
-
-There is no wrapper envelope — the response body is the template data directly.
 
 ### Content-Type header
 
@@ -117,8 +116,8 @@ curl -s "https://reelevant.run/{workflowId}/0?rlvt-u=user@example.com"
 
 A JSON Template is a reusable schema definition created in the Reelevant platform. It describes:
 
-- **Schema** — the fields your JSON payload will contain, with their types (string, number, boolean, date, string[], number[])
-- **Variables** — named slots that map to datasource values at runtime
+- **Definition** — the JSON structure where each field is either `{ "type": "static", "value": ... }` (fixed) or `{ "type": "dependency", "variable": "..." }` (resolved at runtime)
+- **Variables** — named slots that map to datasource values, matching the `variable` names in the definition
 
 Each variable is declared as either **scalar** (a single value) or **array** (a list of values from a datasource). This tells the engine how to resolve dependencies:
 

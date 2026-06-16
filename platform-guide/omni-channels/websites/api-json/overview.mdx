@@ -53,18 +53,27 @@ But sometimes you want Reelevant to handle the **personalisation decisions** whi
 
 ## Example
 
-Suppose you want to personalise a product recommendation card. Your JSON Template schema might look like:
+Suppose you want to personalise a product recommendation card. Your JSON Template definition might look like:
+
+```json
+{
+  "headline": { "type": "static", "value": "Recommended for you" },
+  "productName": { "type": "dependency", "variable": "productName" },
+  "productPrice": { "type": "dependency", "variable": "productPrice" }
+}
+```
+
+Each field is either a **static** value (fixed at design time) or a **dependency** (a named variable resolved from your datasources at runtime). At runtime, the Reelevant engine resolves each dependency — so each visitor sees the product most relevant to them. The response is a flat JSON object:
 
 ```json
 {
   "headline": "Recommended for you",
   "productName": "Running Shoes Pro",
-  "productPrice": 129.99,
-  "productUrl": "https://shop.example.com/products/running-shoes-pro"
+  "productPrice": 129.99
 }
 ```
 
-At runtime, the Reelevant engine resolves each variable from your datasources — so each visitor sees the product most relevant to them. Your frontend simply renders the JSON fields using its own components.
+Your frontend simply renders the JSON fields using its own components.
 
 ## Next steps
 
