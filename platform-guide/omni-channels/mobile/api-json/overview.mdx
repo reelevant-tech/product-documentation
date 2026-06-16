@@ -36,15 +36,14 @@ GET https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}
 
 ## Response format
 
-The response body is a JSON object matching your template schema — no wrapper envelope:
+The response body is the resolved template data directly — no wrapper envelope. Static fields are returned as-is and dependency fields are replaced with real values from datasources:
 
 ```json
 {
   "headline": "Recommended for you",
   "productName": "Running Shoes Pro",
   "productPrice": 129.99,
-  "productImageUrl": "https://cdn.example.com/shoes-pro.jpg",
-  "productUrl": "https://shop.example.com/products/running-shoes-pro"
+  "productImageUrl": "https://cdn.example.com/shoes-pro.jpg"
 }
 ```
 

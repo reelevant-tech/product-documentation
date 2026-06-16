@@ -71,27 +71,35 @@ The response is a `200 OK` with `Content-Type: application/json` when data is av
 
 ## Example
 
-Given a template with this definition:
-```json
-{
-  "headline": "Recommended for you",
-  "loyaltyPoints": 0,
-  "recommendedProducts": []
-}
-```
-
-And variables `loyaltyPoints` (scalar) and `recommendedProducts` (array) bound to datasource fields, the runtime response might look like:
+Suppose you want to personalise a product recommendation card. Your engineering team creates a JSON Template with this definition:
 
 ```json
 {
-  "headline": "Recommended for you",
-  "loyaltyPoints": 4250,
-  "recommendedProducts": [
-    { "name": "Running Shoes", "price": 89.99 },
-    { "name": "Sports Watch", "price": 199.00 }
-  ]
+  "headline": { "type": "static", "value": "Recommended for you" },
+  "productName": { "type": "dependency", "variable": "productName" },
+  "loyaltyPoints": { "type": "dependency", "variable": "loyaltyPoints" }
 }
 ```
+
+Each field is either:
+- `"type": "static"` — a fixed value that never changes at runtime.
+- `"type": "dependency"` — a named variable that the marketing team binds to a datasource field.
+
+The template declares two variables:
+- `productName` — **isArray: true** → retrieves all matching rows from the datasource
+- `loyaltyPoints` — **isArray: false** → retrieves a single value
+
+At runtime, the engine resolves each variable from the bound datasource and returns a flat JSON response:
+
+```json
+{
+  "headline": "Recommended for you",
+  "productName": ["Running Shoes", "Sports Watch"],
+  "loyaltyPoints": 4250
+}
+```
+
+Your frontend simply consumes these fields using its own components — the shape is always the same.
 
 ## Best Practices
 

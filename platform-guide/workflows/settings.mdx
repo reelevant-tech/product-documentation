@@ -144,21 +144,24 @@ The **JSON Templates** tab displays all configured templates with their name and
     Select one or more **resource groups** (teams) that should have access to this template. This controls visibility — only workflows belonging to matching teams will see this template in their node configuration.
   </Step>
   <Step title="Define the JSON schema">
-    Use the **JSON editor** to write the template definition. This is the shape of the final JSON payload:
-    - **Static values** — Hardcoded fields that never change (e.g., `"headline": "Recommended for you"`).
-    - **Variable placeholders** — Fields whose values will be resolved at runtime from datasources.
+    Use the **JSON editor** to write the template definition. Each field is a key-value pair where the value describes how it will be resolved:
+
+    - **Static fields** — `{ "type": "static", "value": <default> }` — Hardcoded values that never change at runtime.
+    - **Dependency fields** — `{ "type": "dependency", "variable": "<variableName>" }` — Dynamic slots bound to datasource fields by the marketing team.
 
     ```json
     {
-      "headline": "Recommended for you",
-      "loyaltyPoints": 0,
-      "recommendations": []
+      "headline": { "type": "static", "value": "Recommended for you" },
+      "productName": { "type": "dependency", "variable": "productName" },
+      "loyaltyPoints": { "type": "dependency", "variable": "loyaltyPoints" }
     }
     ```
+
+    At runtime, static values are returned as-is and dependency values are replaced with real data from the bound datasource.
   </Step>
   <Step title="Configure variables">
-    For each dynamic field, add a **variable** entry:
-    - **Name** — Must match a key in your JSON definition (e.g., `loyaltyPoints`).
+    For each dependency field in the definition, add a **variable** entry:
+    - **Name** — Must exactly match the `variable` value in the definition (e.g., `productName`).
     - **Description** — Optional; helps marketing understand what the variable represents.
     - **Is Array** — Toggle on if this variable should retrieve all values from the datasource (e.g., a list of products). Leave off for scalar values (e.g., a single loyalty score).
   </Step>
@@ -189,8 +192,8 @@ Click on a template in the list to open its edit drawer. You can update the name
 
 - **Keep it flat when possible.** Nested objects are supported but flat schemas are easier for frontend teams to consume.
 - **Use meaningful key names.** Keys like `productName`, `loyaltyScore`, `recommendedItems` are self-documenting.
-- **Provide realistic defaults.** Static values and initial placeholder values (e.g., `0` for numbers, `[]` for arrays) serve as documentation for what the field type should be.
-- **Document the contract externally.** Share the JSON definition with your frontend/mobile team so they can build typed clients against it.
+- **Provide realistic static defaults.** Use values that reflect the expected type (e.g., `{ "type": "static", "value": "default text" }` for strings, `{ "type": "static", "value": 0 }` for numbers).
+- **Document the contract externally.** Share the runtime output shape (with variables resolved) with your frontend/mobile team so they can build typed clients against it.
 
 ### Variable Configuration
 
