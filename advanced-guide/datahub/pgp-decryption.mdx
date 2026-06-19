@@ -1,0 +1,108 @@
+---
+title: 'PGP Decryption'
+description: 'Decrypt PGP/GPG-encrypted files during import across all file-based sources'
+---
+
+## Overview
+
+Reelevant supports **PGP (Pretty Good Privacy)** decryption for file-based data sources. If your data provider delivers encrypted files, you can configure your datasource with a PGP private key so that files are decrypted transparently during import — no manual decryption step required.
+
+PGP decryption is available on the following source types:
+
+- [URL](/platform-guide/datahub/source-types/url)
+- [FTP & SFTP](/platform-guide/datahub/source-types/ftp-sftp)
+- [Amazon S3](/platform-guide/datahub/source-types/s3)
+- [Google Cloud Storage](/platform-guide/datahub/source-types/gcs)
+
+<Info>
+  PGP decryption works with both **armored** (`.asc`) and **binary** (`.pgp`, `.gpg`) encrypted files. The format is detected automatically.
+</Info>
+
+## Configuration
+
+To enable PGP decryption, add the following fields in your source configuration:
+
+```typescript
+pgpPrivateKey?: string
+pgpPassphrase?: string
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Yes | The PGP/GPG private key used to decrypt the file. Must be in armored (ASCII) format. |
+| `pgpPassphrase` | No | The passphrase for the private key, if the key is passphrase-protected. |
+
+<Warning>
+  These fields are treated as **sensitive** — they are encrypted at rest and never exposed in API responses or logs.
+</Warning>
+
+## How It Works
+
+1. Reelevant fetches the encrypted file from the configured source (URL, FTP, S3, etc.).
+2. The file is **streamed** through the PGP decryption layer — the entire file is never buffered in memory.
+3. The decrypted stream is then decompressed (if `.gz` or `.zip`) and parsed as usual.
+4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+
+```
+Source → PGP Decrypt → Decompress (gzip/zip) → Parse (CSV, JSON, XML…) → Field Mapping
+```
+
+<Info>
+  Decryption only runs when `pgpPrivateKey` is configured. If no key is provided, the file is processed normally without any decryption overhead.
+</Info>
+
+## Supported Encryption Formats
+
+| Format | Extension(s) | Description |
+|--------|-------------|-------------|
+| **Armored PGP** | `.asc` | ASCII-armored PGP files (text-based, starts with `-----BEGIN PGP MESSAGE-----`). |
+| **Binary PGP** | `.pgp`, `.gpg` | Binary OpenPGP format. More compact than armored. |
+
+Both formats are detected automatically — no additional configuration is needed.
+
+## Combining with Compression
+
+PGP decryption is applied **before** decompression. This means you can have files that are both encrypted and compressed:
+
+| File | Processing Pipeline |
+|------|-------------------|
+| `data.csv.pgp` | Decrypt → Parse CSV |
+| `data.csv.gz.pgp` | Decrypt → Decompress gzip → Parse CSV |
+| `data.json.asc` | Decrypt → Parse JSON |
+| `data.xml.gz.asc` | Decrypt → Decompress gzip → Parse XML |
+
+## Error Handling
+
+If decryption fails, the datasource job reports a clear error. Common failure scenarios:
+
+| Error | Cause | Resolution |
+|-------|-------|------------|
+| **Wrong key** | The private key does not match the public key used to encrypt the file. | Verify you are using the correct private key. Contact your data provider to confirm which public key was used for encryption. |
+| **Invalid passphrase** | The passphrase provided does not unlock the private key. | Double-check the passphrase. |
+| **Corrupted file** | The encrypted file is damaged or incomplete. | Ask your data provider to re-send the file. |
+| **Invalid key format** | The private key is not in a valid PGP format. | Ensure the key is in armored (ASCII) format, starting with `-----BEGIN PGP PRIVATE KEY BLOCK-----`. |
+
+## Generating a PGP Key Pair
+
+If your data provider needs a public key to encrypt files for you, you can generate a key pair using GPG:
+
+```bash
+# Generate a new key pair
+gpg --full-generate-key
+
+# Export the public key (send this to your data provider)
+gpg --armor --export your-email@example.com > public-key.asc
+
+# Export the private key (configure as pgpPrivateKey in Reelevant)
+gpg --armor --export-secret-keys your-email@example.com > private-key.asc
+```
+
+<Warning>
+  Keep your private key secure. Never share it with anyone. Only the **public key** should be sent to your data provider.
+</Warning>
+
+## Limitations
+
+- **Single key only** — each source configuration supports one private key. If files are encrypted to multiple recipients, provide the matching private key.
+- **Decryption only** — Reelevant decrypts incoming files but does not encrypt outgoing data.
+- **File Upload source** — PGP decryption is not supported for files uploaded directly via the platform UI. Use [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), [S3](/platform-guide/datahub/source-types/s3), or [GCS](/platform-guide/datahub/source-types/gcs) for encrypted files instead.

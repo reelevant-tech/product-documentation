@@ -1,0 +1,42 @@
+---
+title: 'Conditions'
+description: 'Evaluate rules to decide which branch a user takes in the workflow'
+---
+
+![Conditions node configuration panel showing rule builder with field, operator, and value selectors](/images/workflows/node-conditions.png)
+
+## Overview
+
+Condition nodes evaluate rules to decide which branch a user takes. They are the most common way to create personalized paths in a workflow.
+
+## How It Works
+
+- A condition node has **two or more output branches** — one for each possible outcome plus a default branch.
+- Each branch (except the default) has a set of **rules** that must be satisfied for a user to follow that path.
+- Rules can reference data from upstream data nodes, context variables, or URL parameters.
+- If no condition is met, the user follows the **default** branch.
+
+## Configuration
+
+1. Click on a condition node to open its configuration drawer.
+2. Define conditions for each branch — each condition consists of a field, operator, and value.
+3. The default branch catches all users who don't match any condition.
+
+<Tip>
+  You can use condition nodes to create audience segments — for example, routing VIP customers to a premium content branch while showing a generic offer to everyone else.
+</Tip>
+
+## Operators
+
+Conditions support various operators depending on the field type:
+- **Text** — equals, not equals, contains, starts with, ends with
+- **Numbers** — equals, greater than, less than, between
+- **Dates** — before, after, between
+- **Arrays** — includes, excludes
+
+## Best Practices
+
+- Keep each condition node focused on a single decision point.
+- Use descriptive names for branches so the workflow is self-documenting.
+- Place the most specific conditions first — they are evaluated in order.
+- Always verify that the default branch provides a meaningful fallback experience.

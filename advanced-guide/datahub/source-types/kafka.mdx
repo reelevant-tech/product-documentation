@@ -1,0 +1,92 @@
+---
+title: 'Kafka'
+description: 'Stream data from Apache Kafka topics into Reelevant'
+---
+
+## Overview
+
+The Kafka source streams data from an Apache Kafka topic into Reelevant. Use it for real-time or near-real-time data ingestion from event-driven architectures, streaming platforms, or message brokers that expose a Kafka-compatible interface.
+
+## Configuration
+
+### Required Fields
+
+| Field | Description |
+|-------|-------------|
+| `brokers` | A list of Kafka broker addresses (e.g. `broker1:9092`, `broker2:9092`). |
+| `topic` | The Kafka topic to consume from. |
+
+### Authentication
+
+<Tabs>
+  <Tab title="No Authentication">
+    For Kafka clusters without authentication (development environments), no additional fields are needed.
+  </Tab>
+  <Tab title="SASL">
+    For Kafka clusters using SASL authentication:
+
+    | Field | Description |
+    |-------|-------------|
+    | `username` | SASL username. |
+    | `password` | SASL password. |
+    | `ssl` | Enable SSL/TLS for the connection. |
+  </Tab>
+</Tabs>
+
+### Optional Fields
+
+| Field | Description |
+|-------|-------------|
+| `groupPrefix` | A prefix for the consumer group name. Use this if your Kafka cluster enforces naming conventions for consumer groups. |
+
+### Schema Registry
+
+If your Kafka messages use Avro serialization with a Confluent Schema Registry, configure the `registry` object:
+
+| Field | Description |
+|-------|-------------|
+| `registry.url` | The Schema Registry endpoint URL. |
+| `registry.username` | Schema Registry authentication username. |
+| `registry.password` | Schema Registry authentication password. |
+
+When configured, messages are automatically deserialized using the schema from the registry.
+
+## Supported Message Formats
+
+| Format | Description |
+|--------|-------------|
+| **JSON** | Messages are parsed as JSON objects. |
+| **Avro** | Messages are deserialized using the Confluent Schema Registry. Requires registry configuration. |
+
+## Consumer Behavior
+
+### Worker Mode (Batch)
+
+When used with a **worker-mode** datasource (periodic batch sync), the Kafka source:
+
+1. Connects to the topic and reads all available messages up to the current latest offset.
+2. Disconnects once all messages have been consumed.
+3. On subsequent syncs, reading resumes from where it left off (consumer group offsets are preserved).
+
+### Ingester Mode (Continuous)
+
+When used with an **ingester-mode** datasource (continuous streaming), the Kafka source:
+
+1. Connects to the topic and continuously consumes new messages as they arrive.
+2. Messages are processed and stored in real-time.
+
+## How It Works
+
+1. Reelevant connects to the Kafka cluster using the provided broker addresses.
+2. A consumer group is created (or resumed) for the datasource.
+3. Messages are consumed from the configured topic.
+4. If a Schema Registry is configured, messages are deserialized using the Avro schema.
+5. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+
+<Warning>
+  Ensure the Kafka user (if authentication is configured) has read access to the specified topic and permission to create/manage consumer groups.
+</Warning>
+
+<Info>
+  The Kafka source supports LZ4-compressed messages natively.
+</Info>

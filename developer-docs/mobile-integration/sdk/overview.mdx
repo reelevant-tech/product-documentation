@@ -1,0 +1,31 @@
+---
+title: 'Reelevant Mobile SDK'
+description: 'Native SDKs for analytics and personalization in your mobile apps'
+---
+
+## Overview
+
+The Reelevant Mobile SDKs provide a unified API for both **analytics** (event tracking) and **personalization** (content retrieval) in your native mobile apps. A single SDK instance handles identity management, event collection, and real-time personalized content — no separate clients needed.
+
+<CardGroup cols={3}>
+  <Card title="Android" icon="android" href="/platform-guide/omni-channels/mobile/sdk/android">
+    Kotlin SDK for Android apps. Uses coroutines for async operations.
+  </Card>
+  <Card title="iOS" icon="apple" href="/platform-guide/omni-channels/mobile/sdk/ios">
+    Swift SDK for iOS apps. Uses async/await (iOS 13+).
+  </Card>
+  <Card title="Flutter" icon="flutter" href="/platform-guide/omni-channels/mobile/sdk/flutter">
+    Dart SDK for Flutter apps. Uses Futures for async operations.
+  </Card>
+</CardGroup>
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| **Unified identity** | `setUser()` shares identity between analytics events and personalization calls |
+| **Auto-resolved userId** | `run()` automatically resolves from stored identity — no need to pass it manually |
+| **Typed responses** | Discriminated content types (JSON, HTML, Image, Empty) with typed metadata |
+| **Fallback strategies** | Choose between empty results, error propagation, or custom handlers on failure |
+| **Click tracking** | Built-in `trackClick()` on every result for attribution |
+| **Concurrent runs** | `runAll()` executes multiple workflows in parallel |

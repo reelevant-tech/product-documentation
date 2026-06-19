@@ -1,0 +1,109 @@
+---
+title: 'Amazon S3'
+description: 'Retrieve data files from Amazon S3 or S3-compatible storage buckets'
+---
+
+## Overview
+
+The S3 source retrieves data files from an Amazon S3 bucket or any S3-compatible storage service (e.g. MinIO, DigitalOcean Spaces, OVH Object Storage). Use it when your data is stored as files in S3 and you want to import them into Reelevant for personalization.
+
+## Configuration
+
+### Required Fields
+
+| Field | Description |
+|-------|-------------|
+| `accessKey` | The AWS access key ID (or equivalent for S3-compatible services). |
+| `secretKey` | The AWS secret access key (or equivalent for S3-compatible services). |
+| `bucket` | The S3 bucket name. |
+| `path` | The file path or pattern within the bucket (see [Wildcard Paths](#wildcard-paths) below). |
+
+### Optional Fields
+
+| Field | Description |
+|-------|-------------|
+| `endpoint` | Custom endpoint URL for S3-compatible services. Defaults to `https://s3.amazonaws.com` for standard AWS S3. |
+| `region` | The AWS region where the bucket is located (e.g. `eu-west-1`, `us-east-1`). |
+| `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
+
+<Tip>
+  For standard AWS S3, the `accessKey` must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket.
+</Tip>
+
+### S3-Compatible Services
+
+The S3 source works with any service that implements the S3 API. Set `endpoint` to your provider's URL:
+
+| Provider | Example Endpoint |
+|----------|-----------------|
+| **AWS S3** | `https://s3.amazonaws.com` *(default)* |
+| **MinIO** | `https://minio.example.com` |
+| **DigitalOcean Spaces** | `https://nyc3.digitaloceanspaces.com` |
+| **OVH Object Storage** | `https://s3.gra.io.cloud.ovh.net` |
+| **Scaleway** | `https://s3.fr-par.scw.cloud` |
+
+## Supported File Formats
+
+S3 automatically detects the file format. The following formats are supported:
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Comma-separated values. Delimiter is auto-detected (comma, semicolon, tab, pipe). |
+| **JSON** | Standard JSON files with a root array or object. |
+| **NDJSON** | Newline-delimited JSON (one JSON object per line). |
+| **XML** | XML files — the root element path is auto-detected. |
+| **Parquet** | Apache Parquet columnar format. |
+| **Avro** | Apache Avro serialization format. |
+| **XLSX** | Microsoft Excel files. |
+
+<Info>
+  Compressed files (`.gz`, `.zip`) are automatically decompressed before parsing.
+</Info>
+
+## PGP Decryption
+
+The S3 source supports **PGP-encrypted files**. When `pgpPrivateKey` is configured, files are decrypted transparently before decompression and parsing.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Yes | The PGP/GPG private key in armored (ASCII) format. |
+| `pgpPassphrase` | No | The passphrase for the private key, if encrypted. |
+
+Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
+
+<Info>
+  See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
+</Info>
+
+## Wildcard Paths
+
+You can use a wildcard (`*`) in the file path to match multiple files. This is useful when:
+
+- A new file is exported periodically with a different name (e.g. `exports/products_20240101.csv`, `exports/products_20240102.csv`)
+- Data is split across multiple files in the same directory
+
+**Example patterns:**
+- `exports/products_*.csv` — matches all CSV files starting with `products_` in the `exports/` prefix
+- `data/*.json` — matches all JSON files under the `data/` prefix
+
+## File Processing Modes
+
+When using wildcard paths, you can configure how files are selected via the `processType` field:
+
+| `processType` value | Description |
+|------|-------------|
+| `last_unprocess` *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
+| `all_unprocess` | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
+| `all` | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
+
+## How It Works
+
+1. Reelevant authenticates with S3 using the provided access key and secret key.
+2. The specified bucket and path are accessed. If a wildcard is used, matching objects are listed.
+3. Files are downloaded, decompressed if needed, and parsed based on the detected format.
+4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+5. On subsequent syncs, files are re-fetched according to the configured processing mode.
+
+<Warning>
+  Ensure the IAM user or role has `s3:GetObject` and `s3:ListBucket` permissions on the target bucket. For S3-compatible services, ensure the equivalent read permissions are granted.
+</Warning>

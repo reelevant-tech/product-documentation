@@ -1,0 +1,37 @@
+---
+title: 'Glossary'
+description: 'Canonical terminology used across all Reelevant documentation'
+---
+
+## Platform Concepts
+
+| Term | Definition |
+|------|-----------|
+| **Workflow** | A directed graph of Nodes that defines personalisation logic — what content to show, to whom, and when. |
+| **Datasource** | A connection to an external data feed that Reelevant fetches, parses, and stores for use in personalisation. |
+| **Content** | A visual template (banner, email section, landing page) designed in the Content Editor. |
+| **Node** | A single processing unit in a Workflow graph. Types: Channel Node, Data Node, Logic Node, Output Node. |
+| **Channel** | The entry Node of a Workflow that defines the delivery medium (Email, Web, Mobile, Landing Page). |
+| **Branch** | A unique execution path through a Workflow, from a Channel to an Output Node. |
+| **Output Node** | A terminal Workflow Node that produces the final response (Visual Content, JSON Template, Empty). |
+| **Data Node** | A Workflow Node that fetches or provides data (Datasource query, URL Parameter, Geolocation, Weather, Transform). |
+| **Logic Node** | A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing). |
+| **DataHub** | The platform's data management center for importing and configuring external data. |
+| **Content Editor** | The visual drag-and-drop editor for designing Content templates with dynamic data bindings. |
+| **Team** | An organisational unit (Resource Group) for controlling access to Workflows, Contents, and Datasources. |
+| **Runner** | The backend service that executes a Workflow and returns personalised content. |
+| **Field Mapping** | The configuration that maps raw data fields to standardised Reelevant types. |
+| **Variable Profile** | A reusable set of URL parameters (UTM, tracking) applied when integrating a Workflow. |
+| **Real-Time Testing** | A Logic Node that splits traffic between multiple Branches for A/B or multivariate testing. |
+| **Transform** | A Data Node that applies transformations (string, number, date, array operations) to data within a Workflow. |
+
+## Measurement & Adoption Concepts
+
+| Term | Definition |
+|------|-----------|
+| **Incremental Value** | The measurable difference in behaviour between the Exposed Population and the Non-Exposed Population. It represents value that would NOT have existed without personalisation. |
+| **Exposed Population** | The group of users (typically 90%) who see personalised Reelevant content during a campaign. |
+| **Non-Exposed Population** | The group (typically 10%) who see default content without Reelevant personalisation, used as baseline for measuring Incremental Value. |
+| **Uplift** | The incremental performance gain from personalised content compared to default content. |
+| **Key Challenge** | A business or marketing problem that personalisation can solve (e.g., one-timer to recurrent buyer, churn reduction). |
+| **Use Case** | A specific personalisation strategy and execution pattern that addresses one or more Key Challenges. |

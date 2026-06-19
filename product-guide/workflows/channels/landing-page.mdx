@@ -1,0 +1,34 @@
+---
+title: 'Landing Page'
+description: 'Generate full personalized landing page experiences'
+---
+
+![Channel picker showing the Landing Page channel type](/images/workflows/channel-picker.png)
+
+## Overview
+
+The Landing Page channel generates a full landing page experience. The output is a complete HTML page served on a dedicated URL.
+
+| Property | Value |
+|----------|-------|
+| **Channel type** | Landing |
+| **Output format** | Landing HTML page |
+| **Use case** | Campaign landing pages, personalized microsites |
+
+## How It Works
+
+When a user visits the landing page URL, the workflow executes and returns a fully rendered HTML page. The page content is personalized based on the user's context and any URL parameters passed.
+
+Each landing page gets its own unique URL that can be shared in campaigns, emails, or social media.
+
+## Configuration
+
+1. Add a Landing Page channel node to your workflow canvas.
+2. Connect it downstream to your personalization logic.
+3. After publishing, use the [Integration modal](/platform-guide/workflows/integration) to get the landing page URL.
+
+## Best Practices
+
+- Use [URL parameters](/platform-guide/workflows/data-nodes/url-parameter) to pass campaign context (e.g., UTM tags, user identifiers) into the workflow.
+- Landing pages support full-page content templates designed in the Content Editor.
+- Consider using [Variable profiles](/platform-guide/workflows/settings) to pre-configure URL parameter templates for different campaigns.

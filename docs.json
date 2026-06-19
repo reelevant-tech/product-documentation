@@ -35,304 +35,430 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "Product Guide",
         "groups": [
           {
-            "group": "Platform Guide",
+            "group": "Getting Started",
             "pages": [
-              "platform-guide/introduction",
-              "platform-guide/new-interface",
-              {
-                "group": "Workflows",
-                "pages": [
-                  "platform-guide/workflows/overview",
-                  "platform-guide/workflows/creating-a-workflow",
-                  "platform-guide/workflows/editor",
-                  {
-                    "group": "Channels",
-                    "pages": [
-                      "platform-guide/workflows/channels",
-                      "platform-guide/workflows/channels/email",
-                      "platform-guide/workflows/channels/web-image",
-                      "platform-guide/workflows/channels/web-html",
-                      "platform-guide/workflows/channels/landing-page",
-                      "platform-guide/workflows/channels/push-notification",
-                      "platform-guide/workflows/channels/in-app-popup",
-                      "platform-guide/workflows/channels/in-app-inbox"
-                    ]
-                  },
-                  {
-                    "group": "Data Nodes",
-                    "pages": [
-                      "platform-guide/workflows/data-nodes",
-                      "platform-guide/workflows/data-nodes/datasources",
-                      "platform-guide/workflows/data-nodes/url-parameter",
-                      "platform-guide/workflows/data-nodes/geolocation",
-                      "platform-guide/workflows/data-nodes/weather",
-                      "platform-guide/workflows/data-nodes/website-events",
-                      "platform-guide/workflows/data-nodes/transform"
-                    ]
-                  },
-                  {
-                    "group": "Logic Nodes",
-                    "pages": [
-                      "platform-guide/workflows/logic-nodes",
-                      "platform-guide/workflows/logic-nodes/conditions",
-                      "platform-guide/workflows/logic-nodes/split",
-                      "platform-guide/workflows/logic-nodes/real-time-testing"
-                    ]
-                  },
-                  {
-                    "group": "Output Nodes",
-                    "pages": [
-                      "platform-guide/workflows/output-nodes",
-                      "platform-guide/workflows/output-nodes/visual-content",
-                      "platform-guide/workflows/output-nodes/json-template",
-                      "platform-guide/workflows/output-nodes/json-format",
-                      "platform-guide/workflows/output-nodes/empty"
-                    ]
-                  },
-                  "platform-guide/workflows/branches",
-                  "platform-guide/workflows/versions",
-                  "platform-guide/workflows/integration",
-                  "platform-guide/workflows/settings"
-                ]
-              },
-              {
-                "group": "Content Editor",
-                "pages": [
-                  "platform-guide/contents/overview",
-                  "platform-guide/contents/listing",
-                  "platform-guide/contents/design-import",
-                  "platform-guide/contents/editor",
-                  {
-                    "group": "Components",
-                    "pages": [
-                      "platform-guide/contents/components",
-                      "platform-guide/contents/components/text",
-                      "platform-guide/contents/components/image",
-                      "platform-guide/contents/components/shape",
-                      "platform-guide/contents/components/barcode",
-                      "platform-guide/contents/components/countdown",
-                      "platform-guide/contents/components/map",
-                      "platform-guide/contents/components/progress"
-                    ]
-                  },
-                  "platform-guide/contents/layers",
-                  "platform-guide/contents/conditions",
-                  "platform-guide/contents/data-binding",
-                  "platform-guide/contents/frames",
-                  "platform-guide/contents/settings"
-                ]
-              },
-              {
-                "group": "DataHub",
-                "pages": [
-                  "platform-guide/datahub/overview",
-                  "platform-guide/datahub/catalog",
-                  "platform-guide/datahub/creating-a-datasource",
-                  "platform-guide/datahub/listing",
-                  {
-                    "group": "Source Types",
-                    "pages": [
-                      "platform-guide/datahub/source-types",
-                      "platform-guide/datahub/source-types/url",
-                      "platform-guide/datahub/source-types/file",
-                      "platform-guide/datahub/source-types/ftp-sftp",
-                      "platform-guide/datahub/source-types/bigquery",
-                      "platform-guide/datahub/source-types/snowflake",
-                      "platform-guide/datahub/source-types/gcs",
-                      "platform-guide/datahub/source-types/s3",
-                      "platform-guide/datahub/source-types/kafka",
-                      "platform-guide/datahub/source-types/datasource-reference"
-                    ]
-                  },
-                  "platform-guide/datahub/pgp-decryption",
-                  "platform-guide/datahub/field-mapping",
-                  "platform-guide/datahub/queries",
-                  "platform-guide/datahub/logs",
-                  "platform-guide/datahub/special-configurations"
-                ]
-              },
-              {
-                "group": "Analytics",
-                "pages": [
-                  "platform-guide/analytics/overview",
-                  {
-                    "group": "Dashboards",
-                    "pages": [
-                      "platform-guide/analytics/dashboards",
-                      "platform-guide/analytics/dashboards/performance",
-                      "platform-guide/analytics/dashboards/audience",
-                      "platform-guide/analytics/dashboards/individualization",
-                      "platform-guide/analytics/dashboards/conversions",
-                      "platform-guide/analytics/dashboards/uplift",
-                      "platform-guide/analytics/dashboards/usage"
-                    ]
-                  },
-                  "platform-guide/analytics/data-exploration",
-                  "platform-guide/analytics/saved-queries",
-                  "platform-guide/analytics/settings"
-                ]
-              },
-              {
-                "group": "Account",
-                "pages": [
-                  "platform-guide/account/overview",
-                  "platform-guide/account/permissions",
-                  "platform-guide/account/users",
-                  "platform-guide/account/roles",
-                  "platform-guide/account/teams"
-                ]
-              },
-              {
-                "group": "Browser Extension",
-                "pages": [
-                  "platform-guide/browser-extension/overview",
-                  "platform-guide/browser-extension/workflows",
-                  "platform-guide/browser-extension/integration",
-                  "platform-guide/browser-extension/content-script"
-                ]
-              },
-              {
-                "group": "Omni Channels Personalization",
-                "pages": [
-                  {
-                    "group": "Websites",
-                    "pages": [
-                      "platform-guide/omni-channels/websites/overview",
-                      {
-                        "group": "Reelevant Client Side Script",
-                        "pages": [
-                          "platform-guide/omni-channels/websites/client-side-script/overview"
-                        ]
-                      },
-                      {
-                        "group": "Reelevant Server Side SDK",
-                        "pages": [
-                          "platform-guide/omni-channels/websites/server-side-sdk/overview",
-                          "platform-guide/omni-channels/websites/server-side-sdk/core",
-                          "platform-guide/omni-channels/websites/server-side-sdk/nextjs",
-                          "platform-guide/omni-channels/websites/server-side-sdk/nuxt",
-                          "platform-guide/omni-channels/websites/server-side-sdk/remix",
-                          "platform-guide/omni-channels/websites/server-side-sdk/sveltekit"
-                        ]
-                      },
-                      {
-                        "group": "Reelevant as API (JSON)",
-                        "pages": [
-                          "platform-guide/omni-channels/websites/api-json/overview",
-                          "platform-guide/omni-channels/websites/api-json/integration"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Mobile",
-                    "pages": [
-                      "platform-guide/omni-channels/mobile/overview",
-                      {
-                        "group": "Reelevant Mobile SDK",
-                        "pages": [
-                          "platform-guide/omni-channels/mobile/sdk/overview",
-                          "platform-guide/omni-channels/mobile/sdk/android",
-                          "platform-guide/omni-channels/mobile/sdk/ios",
-                          "platform-guide/omni-channels/mobile/sdk/flutter"
-                        ]
-                      },
-                      {
-                        "group": "Reelevant as API (JSON)",
-                        "pages": [
-                          "platform-guide/omni-channels/mobile/api-json/overview"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "product-guide/introduction",
+              "glossary"
             ]
           },
           {
-            "group": "Getting started",
+            "group": "Workflows",
             "pages": [
-              "api-reference/introduction",
-              "api-reference/authentication"
+              "product-guide/workflows/overview",
+              "product-guide/workflows/creating-a-workflow",
+              "product-guide/workflows/editor",
+              {
+                "group": "Channels",
+                "pages": [
+                  "product-guide/workflows/channels",
+                  "product-guide/workflows/channels/email",
+                  "product-guide/workflows/channels/web-image",
+                  "product-guide/workflows/channels/web-html",
+                  "product-guide/workflows/channels/landing-page",
+                  "product-guide/workflows/channels/push-notification",
+                  "product-guide/workflows/channels/in-app-popup",
+                  "product-guide/workflows/channels/in-app-inbox"
+                ]
+              },
+              {
+                "group": "Data Nodes",
+                "pages": [
+                  "product-guide/workflows/data-nodes",
+                  "product-guide/workflows/data-nodes/datasources",
+                  "product-guide/workflows/data-nodes/url-parameter",
+                  "product-guide/workflows/data-nodes/geolocation",
+                  "product-guide/workflows/data-nodes/weather",
+                  "product-guide/workflows/data-nodes/website-events",
+                  "product-guide/workflows/data-nodes/transform"
+                ]
+              },
+              {
+                "group": "Logic Nodes",
+                "pages": [
+                  "product-guide/workflows/logic-nodes",
+                  "product-guide/workflows/logic-nodes/conditions",
+                  "product-guide/workflows/logic-nodes/split",
+                  "product-guide/workflows/logic-nodes/real-time-testing"
+                ]
+              },
+              {
+                "group": "Output Nodes",
+                "pages": [
+                  "product-guide/workflows/output-nodes",
+                  "product-guide/workflows/output-nodes/visual-content",
+                  "product-guide/workflows/output-nodes/json-template",
+                  "product-guide/workflows/output-nodes/json-format",
+                  "product-guide/workflows/output-nodes/empty"
+                ]
+              },
+              "product-guide/workflows/branches",
+              "product-guide/workflows/versions",
+              "product-guide/workflows/integration",
+              "product-guide/workflows/settings"
+            ]
+          },
+          {
+            "group": "Content Editor",
+            "pages": [
+              "product-guide/contents/overview",
+              "product-guide/contents/listing",
+              "product-guide/contents/design-import",
+              "product-guide/contents/editor",
+              {
+                "group": "Components",
+                "pages": [
+                  "product-guide/contents/components",
+                  "product-guide/contents/components/text",
+                  "product-guide/contents/components/image",
+                  "product-guide/contents/components/shape",
+                  "product-guide/contents/components/barcode",
+                  "product-guide/contents/components/countdown",
+                  "product-guide/contents/components/map",
+                  "product-guide/contents/components/progress"
+                ]
+              },
+              "product-guide/contents/layers",
+              "product-guide/contents/conditions",
+              "product-guide/contents/data-binding",
+              "product-guide/contents/frames",
+              "product-guide/contents/settings"
+            ]
+          },
+          {
+            "group": "DataHub",
+            "pages": [
+              "product-guide/datahub/overview",
+              "product-guide/datahub/catalog",
+              "product-guide/datahub/creating-a-datasource",
+              "product-guide/datahub/listing"
+            ]
+          },
+          {
+            "group": "Analytics",
+            "pages": [
+              "product-guide/analytics/overview",
+              {
+                "group": "Dashboards",
+                "pages": [
+                  "product-guide/analytics/dashboards",
+                  "product-guide/analytics/dashboards/performance",
+                  "product-guide/analytics/dashboards/audience",
+                  "product-guide/analytics/dashboards/individualization",
+                  "product-guide/analytics/dashboards/conversions",
+                  "product-guide/analytics/dashboards/uplift",
+                  "product-guide/analytics/dashboards/usage"
+                ]
+              },
+              "product-guide/analytics/data-exploration",
+              "product-guide/analytics/saved-queries",
+              "product-guide/analytics/settings"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "product-guide/account/overview",
+              "product-guide/account/permissions",
+              "product-guide/account/users",
+              "product-guide/account/roles",
+              "product-guide/account/teams"
+            ]
+          },
+          {
+            "group": "Browser Extension",
+            "pages": [
+              "product-guide/browser-extension/overview",
+              "product-guide/browser-extension/workflows"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Advanced Guide",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "advanced-guide/introduction"
+            ]
+          },
+          {
+            "group": "DataHub Deep Dive",
+            "pages": [
+              {
+                "group": "Source Types",
+                "pages": [
+                  "advanced-guide/datahub/source-types",
+                  "advanced-guide/datahub/source-types/url",
+                  "advanced-guide/datahub/source-types/file",
+                  "advanced-guide/datahub/source-types/ftp-sftp",
+                  "advanced-guide/datahub/source-types/bigquery",
+                  "advanced-guide/datahub/source-types/snowflake",
+                  "advanced-guide/datahub/source-types/gcs",
+                  "advanced-guide/datahub/source-types/s3",
+                  "advanced-guide/datahub/source-types/kafka",
+                  "advanced-guide/datahub/source-types/datasource-reference"
+                ]
+              },
+              "advanced-guide/datahub/field-mapping",
+              "advanced-guide/datahub/pgp-decryption",
+              "advanced-guide/datahub/queries",
+              "advanced-guide/datahub/logs",
+              "advanced-guide/datahub/special-configurations"
+            ]
+          },
+          {
+            "group": "Advanced Workflows",
+            "pages": [
+              {
+                "group": "Data Nodes",
+                "pages": [
+                  "advanced-guide/workflows/data-nodes",
+                  "advanced-guide/workflows/data-nodes/datasources",
+                  "advanced-guide/workflows/data-nodes/url-parameter",
+                  "advanced-guide/workflows/data-nodes/geolocation",
+                  "advanced-guide/workflows/data-nodes/weather",
+                  "advanced-guide/workflows/data-nodes/website-events",
+                  "advanced-guide/workflows/data-nodes/transform"
+                ]
+              },
+              {
+                "group": "Logic Nodes",
+                "pages": [
+                  "advanced-guide/workflows/logic-nodes",
+                  "advanced-guide/workflows/logic-nodes/conditions",
+                  "advanced-guide/workflows/logic-nodes/split",
+                  "advanced-guide/workflows/logic-nodes/real-time-testing"
+                ]
+              },
+              "advanced-guide/workflows/settings"
             ]
           },
           {
             "group": "Transformations",
             "pages": [
-              "api-reference/transformations/introduction",
-              "api-reference/transformations/usage",
-              "api-reference/transformations/list",
+              "advanced-guide/transformations/introduction",
+              "advanced-guide/transformations/usage",
+              "advanced-guide/transformations/list",
               {
                 "group": "Strings",
                 "pages": [
-                  "api-reference/transformations/truncate",
-                  "api-reference/transformations/case",
-                  "api-reference/transformations/replace",
-                  "api-reference/transformations/replace-variable",
-                  "api-reference/transformations/split",
-                  "api-reference/transformations/extract",
-                  "api-reference/transformations/template",
-                  "api-reference/transformations/length",
-                  "api-reference/transformations/pad",
-                  "api-reference/transformations/create-hash",
-                  "api-reference/transformations/aes-decrypt"
+                  "advanced-guide/transformations/truncate",
+                  "advanced-guide/transformations/case",
+                  "advanced-guide/transformations/replace",
+                  "advanced-guide/transformations/replace-variable",
+                  "advanced-guide/transformations/split",
+                  "advanced-guide/transformations/extract",
+                  "advanced-guide/transformations/template",
+                  "advanced-guide/transformations/length",
+                  "advanced-guide/transformations/pad",
+                  "advanced-guide/transformations/create-hash",
+                  "advanced-guide/transformations/aes-decrypt"
                 ]
               },
               {
                 "group": "Numbers",
                 "pages": [
-                  "api-reference/transformations/parse-number",
-                  "api-reference/transformations/format-number",
-                  "api-reference/transformations/format-currency",
-                  "api-reference/transformations/format-currency-locale",
-                  "api-reference/transformations/format-currency-locale-currency",
-                  "api-reference/transformations/percentage",
-                  "api-reference/transformations/absolute",
-                  "api-reference/transformations/round"
+                  "advanced-guide/transformations/parse-number",
+                  "advanced-guide/transformations/format-number",
+                  "advanced-guide/transformations/format-currency",
+                  "advanced-guide/transformations/format-currency-locale",
+                  "advanced-guide/transformations/format-currency-locale-currency",
+                  "advanced-guide/transformations/percentage",
+                  "advanced-guide/transformations/absolute",
+                  "advanced-guide/transformations/round"
                 ]
               },
               {
                 "group": "Maths",
                 "pages": [
-                  "api-reference/transformations/divide",
-                  "api-reference/transformations/multiply",
-                  "api-reference/transformations/subtract",
-                  "api-reference/transformations/sum",
-                  "api-reference/transformations/aggregate-numbers"
+                  "advanced-guide/transformations/divide",
+                  "advanced-guide/transformations/multiply",
+                  "advanced-guide/transformations/subtract",
+                  "advanced-guide/transformations/sum",
+                  "advanced-guide/transformations/aggregate-numbers"
                 ]
               },
               {
                 "group": "Dates",
                 "pages": [
-                  "api-reference/transformations/format-date",
-                  "api-reference/transformations/format-date-locale-var",
-                  "api-reference/transformations/parse-date",
-                  "api-reference/transformations/difference-between-dates",
-                  "api-reference/transformations/add-to-date",
-                  "api-reference/transformations/subtract-to-date",
-                  "api-reference/transformations/get-date-occurrence"
+                  "advanced-guide/transformations/format-date",
+                  "advanced-guide/transformations/format-date-locale-var",
+                  "advanced-guide/transformations/parse-date",
+                  "advanced-guide/transformations/difference-between-dates",
+                  "advanced-guide/transformations/add-to-date",
+                  "advanced-guide/transformations/subtract-to-date",
+                  "advanced-guide/transformations/get-date-occurrence"
                 ]
               },
               {
                 "group": "Arrays",
                 "pages": [
-                  "api-reference/transformations/array-get",
-                  "api-reference/transformations/array-get-var",
-                  "api-reference/transformations/array-intersection",
-                  "api-reference/transformations/array-unique-rank",
-                  "api-reference/transformations/array-unique",
-                  "api-reference/transformations/array-concat"
+                  "advanced-guide/transformations/array-get",
+                  "advanced-guide/transformations/array-get-var",
+                  "advanced-guide/transformations/array-intersection",
+                  "advanced-guide/transformations/array-unique-rank",
+                  "advanced-guide/transformations/array-unique",
+                  "advanced-guide/transformations/array-concat"
                 ]
               },
               {
                 "group": "Records",
                 "pages": [
-                  "api-reference/transformations/lookup"
+                  "advanced-guide/transformations/lookup"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Advanced Analytics",
+            "pages": [
+              "product-guide/analytics/data-exploration",
+              "product-guide/analytics/dashboards/individualization",
+              "product-guide/analytics/dashboards/uplift",
+              "product-guide/analytics/settings"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer Docs",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "developer-docs/introduction",
+              "developer-docs/api-reference/introduction",
+              "developer-docs/api-reference/authentication"
+            ]
+          },
+          {
+            "group": "Web Integration",
+            "pages": [
+              "developer-docs/web-integration/overview",
+              {
+                "group": "Server Side SDK",
+                "pages": [
+                  "developer-docs/web-integration/server-side-sdk/overview",
+                  "developer-docs/web-integration/server-side-sdk/core",
+                  "developer-docs/web-integration/server-side-sdk/nextjs",
+                  "developer-docs/web-integration/server-side-sdk/nuxt",
+                  "developer-docs/web-integration/server-side-sdk/remix",
+                  "developer-docs/web-integration/server-side-sdk/sveltekit"
+                ]
+              },
+              {
+                "group": "Client Side Script",
+                "pages": [
+                  "developer-docs/web-integration/client-side-script/overview"
+                ]
+              },
+              {
+                "group": "JSON API",
+                "pages": [
+                  "developer-docs/web-integration/api-json/overview",
+                  "developer-docs/web-integration/api-json/integration"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Mobile Integration",
+            "pages": [
+              "developer-docs/mobile-integration/overview",
+              {
+                "group": "Mobile SDK",
+                "pages": [
+                  "developer-docs/mobile-integration/sdk/overview",
+                  "developer-docs/mobile-integration/sdk/android",
+                  "developer-docs/mobile-integration/sdk/ios",
+                  "developer-docs/mobile-integration/sdk/flutter"
+                ]
+              },
+              {
+                "group": "JSON API",
+                "pages": [
+                  "developer-docs/mobile-integration/api-json/overview"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "developer-docs/guides/browser-extension-integration",
+              "developer-docs/guides/browser-extension-content-script"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Product Adoption",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "product-adoption/introduction"
+            ]
+          },
+          {
+            "group": "Incremental Value",
+            "pages": [
+              "product-adoption/incremental-value/overview",
+              "product-adoption/incremental-value/methodology",
+              "product-adoption/incremental-value/statistical-model",
+              "product-adoption/incremental-value/key-challenges",
+              "product-adoption/incremental-value/dashboard",
+              "product-adoption/incremental-value/common-mistakes"
+            ]
+          },
+          {
+            "group": "Use Case Explorer",
+            "pages": [
+              "product-adoption/use-case-explorer/overview",
+              {
+                "group": "Key Challenges",
+                "pages": [
+                  "product-adoption/use-case-explorer/key-challenges/customer-lifecycle",
+                  "product-adoption/use-case-explorer/key-challenges/loyalty-program",
+                  "product-adoption/use-case-explorer/key-challenges/base-engagement",
+                  "product-adoption/use-case-explorer/key-challenges/marketing-pressure",
+                  "product-adoption/use-case-explorer/key-challenges/new-data-usage",
+                  "product-adoption/use-case-explorer/key-challenges/language-management",
+                  "product-adoption/use-case-explorer/key-challenges/omnichannel-experience",
+                  "product-adoption/use-case-explorer/key-challenges/data-qualification",
+                  "product-adoption/use-case-explorer/key-challenges/app-download"
+                ]
+              },
+              "product-adoption/use-case-explorer/use-cases/enriched-product-recommendation",
+              "product-adoption/use-case-explorer/datasources/crm-360",
+              "product-adoption/use-case-explorer/capabilities"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Why Reelevant",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "why-reelevant/introduction"
+            ]
+          },
+          {
+            "group": "For Decision Makers",
+            "pages": [
+              "why-reelevant/decision-makers/capabilities"
+            ]
+          },
+          {
+            "group": "For Technical Evaluators",
+            "pages": [
+              "why-reelevant/technical-evaluators/architecture-overview"
             ]
           }
         ]
@@ -348,11 +474,6 @@
       {
         "tab": "Workflow API",
         "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
-      },
-      {
-        "tab": "Loop API",
-        "openapi": "https://openapi.production.reelevant.io/v1/render/loop",
-        "hidden": true
       },
       {
         "tab": "Datasources Collector",

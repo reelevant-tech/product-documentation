@@ -1,0 +1,39 @@
+---
+title: 'Logic Nodes'
+description: 'Control the flow of your workflow with conditions, splits, and real-time testing'
+---
+
+![Branch types picker showing Conditions, Split, and Real-time testing options](/images/workflows/node-picker-branches.png)
+
+## What are Logic Nodes?
+
+Logic nodes control **which path** a user follows through the workflow. They create branches based on conditions, random splits, or real-time testing rules. This is how you deliver different experiences to different audience segments.
+
+## Logic Node Types
+
+<CardGroup cols={3}>
+  <Card title="Conditions" icon="code-branch" href="/platform-guide/workflows/logic-nodes/conditions">
+    Evaluate rules to decide which branch a user takes.
+  </Card>
+  <Card title="Split (A/B Testing)" icon="chart-pie" href="/platform-guide/workflows/logic-nodes/split">
+    Divide traffic into branches based on population share percentages.
+  </Card>
+  <Card title="Real-Time Testing" icon="flask" href="/platform-guide/workflows/logic-nodes/real-time-testing">
+    Automated traffic distribution that optimizes over time.
+  </Card>
+</CardGroup>
+
+## Creating Branches
+
+When you add a logic node, it automatically creates output branches. You can:
+
+1. **Add more branches** by clicking "Add" in the condition or split configuration.
+2. **Qualify branches** by right-clicking on an edge and selecting "Qualify branch" to assign a [branch category](/platform-guide/workflows/branches).
+3. **Name branches** to make the workflow easier to understand.
+
+## Best Practices
+
+- **Keep conditions simple** — Complex nested conditions are harder to debug. Use multiple condition nodes in sequence instead.
+- **Always have a default branch** — Ensure every user gets a response, even if they don't match any condition.
+- **Use splits for testing** — Run A/B tests with split nodes before committing to a single personalization strategy.
+- **Document your logic** — Use the right-click context menu to add documentation notes to complex logic nodes.

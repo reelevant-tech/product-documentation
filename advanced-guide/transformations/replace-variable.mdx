@@ -1,0 +1,34 @@
+---
+title: 'Replace with Variable'
+description: 'Replace text using a variable value'
+---
+
+## Overview
+
+The `replace-var` transformation replaces text in a string using a variable value as the replacement.
+
+## Syntax
+
+```text
+replace-var(<variable>, <replace-variable>, search="", isRegex=false)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The string to search in |
+| `replace-variable` | variable | Yes | The variable whose value is used as the replacement |
+| `search` | string | Yes | The substring or regex pattern to find |
+| `isRegex` | boolean | Yes | Whether the search string is a regular expression |
+
+## Examples
+
+```text
+replace-var(<variable>, <replace-variable>, search="placeholder", isRegex=false)
+replace-var(<variable>, <replace-variable>, search="[0-9]+", isRegex=true)
+```
+
+<Info>
+  This is similar to the [Replace](/api-reference/transformations/replace) transformation, but uses a variable for the replacement value instead of a static string.
+</Info>

@@ -1,0 +1,54 @@
+---
+title: 'Website Personalisation'
+description: 'Deliver personalised content on your website — server-side for zero CLS or client-side for dynamic overlays and event tracking'
+---
+
+## Overview
+
+Reelevant offers three complementary approaches for website personalisation. Choose one or combine them depending on your requirements:
+
+<CardGroup cols={3}>
+  <Card title="Reelevant Client Side Script" icon="browser" href="/platform-guide/omni-channels/websites/client-side-script/overview">
+    A JavaScript tracking script that loads in the browser, fetches personalised content, and injects it into your page. Ideal for event tracking, consent-dependent content, overlays, and no-code integrations via the browser extension.
+  </Card>
+  <Card title="Reelevant Server Side SDK" icon="server" href="/platform-guide/omni-channels/websites/server-side-sdk/overview">
+    A Node.js / Edge SDK that fetches personalised content during server render. Content arrives in the initial HTML — zero layout shift, full SEO visibility, instant display.
+  </Card>
+  <Card title="Reelevant as API (JSON)" icon="code" href="/platform-guide/omni-channels/websites/api-json/overview">
+    A headless personalisation API that returns structured JSON. You control the rendering — use your own components, design system, or native mobile UI with personalised data from Reelevant.
+  </Card>
+</CardGroup>
+
+## When to use which
+
+| | Client-Side Script | Server-Side SDK | API (JSON) |
+|---|---|---|---|
+| **How it works** | JavaScript loads after page render, fetches content, injects into DOM | Content fetched during server render, included in HTML response | Your app calls the runner and receives structured JSON data |
+| **Layout shift (CLS)** | Content appears after load — visible shift | Zero — content is in the initial HTML | You control rendering — no CLS if data is fetched server-side |
+| **SEO** | Not indexed (injected after page load) | Fully indexed by search engines | Depends on your rendering strategy |
+| **Time to content** | Depends on client network + runner latency | Included in first paint | Depends on when you call the API |
+| **Best for** | Event tracking, consent, dynamic overlays, SPAs, no-code setup | Hero banners, product recommendations, landing pages, SEO-critical zones | Custom UI components, mobile apps, headless architectures, design systems |
+| **Setup effort** | Paste a script tag or use the browser extension | Install an npm package and add server-side code | Create a JSON Template, call a single endpoint |
+
+All three approaches work together. Server-rendered zones are marked with `data-rlvt-ssr="true"` — the client script automatically skips them. JSON API calls can be made from either client or server depending on your architecture.
+
+## Content types
+
+The Reelevant runner can return three content formats. Your workflow's [output node](/platform-guide/workflows/output-nodes) determines which format is used:
+
+| Type | Description | Use case |
+|------|-------------|----------|
+| **HTML** | Responsive HTML partial | Banners, product cards, rich content blocks |
+| **JSON** | Structured data object | Headless personalisation — build your own UI with personalised data |
+| **Image** | Binary image (PNG, etc.) | Static visual banners, email-style images on web |
+
+## Identity management
+
+All three approaches share the same identity cookies:
+
+| Cookie | Purpose |
+|--------|---------|
+| `rlvt_clientId` | Known user identity (set by your application or the client tracker) |
+| `rlvt_tmpId` | Anonymous visitor ID (set automatically by the script or SDK middleware) |
+
+Priority: `rlvt_clientId` > `rlvt_tmpId`. If neither exists, the script or SDK middleware generates a new `rlvt_tmpId` automatically.

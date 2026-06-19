@@ -1,0 +1,58 @@
+---
+title: 'Format Date'
+description: 'Format a date value'
+---
+
+## Overview
+
+The `format-date` transformation formats a date value according to a predefined format pattern.
+
+## Syntax
+
+```text
+format-date(<variable>, format="DATE_SHORT")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | date | Yes | The date value to format |
+| `format` | string | Yes | The predefined format key (see available formats below) |
+| `locale` | string | No | The locale for formatting (e.g., `"en-US"`, `"fr-FR"`). Defaults to `"fr-FR"` |
+| `timezone` | string | No | The timezone to use (e.g., `"UTC"`, `"Europe/Paris"`). Defaults to `"UTC"` |
+| `inputLocale` | string | No | Locale used to parse the input date value: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
+
+## Available Formats
+
+| Format Key | Description |
+|------------|-------------|
+| `DATE_SHORT` | Short date (e.g., 01/31/2024) |
+| `DATE_MEDIUM` | Medium date (e.g., January 31, 2024) |
+| `DATE_LONG` | Long date with weekday (e.g., Wednesday, January 31, 2024) |
+| `TIME` | Time with seconds (e.g., 14:30:00) |
+| `TIME_WITHOUT_SECONDS` | Time without seconds (e.g., 14:30) |
+| `HOUR` | Hour with padding (e.g., 02) |
+| `HOUR_WITHOUT_PADDING` | Hour without padding (e.g., 2) |
+| `MINUTES_AND_SECONDS` | Minutes and seconds (e.g., 30:00) |
+| `DAY` | Day of month (e.g., 31) |
+| `MONTH` | Month number (e.g., 01) |
+| `DAY_MONTH` | Day and month (e.g., 31/01) |
+| `MONTH_NAME` | Month name (e.g., January) |
+| `YEAR` | Year (e.g., 2024) |
+| `WEEKDAY` | Weekday name (e.g., Wednesday) |
+| `DATETIME` | Date and time (e.g., January 31, 2024, 14:30) |
+| `DATETIME_MEDIUM` | Medium datetime (e.g., Wed, Jan 31, 14:30) |
+| `DATETIME_LONG` | Long datetime with weekday (e.g., Wednesday, January 31, 2024, 14:30) |
+| `ISO` | ISO 8601 format (e.g., 2024-01-31T14:30:00.000Z) |
+| `TIMESTAMP` | Unix timestamp in milliseconds |
+| `TIMESTAMP_SECONDS` | Unix timestamp in seconds |
+| `TIMESTAMP_MILISECONDS` | Unix timestamp in milliseconds (alias of TIMESTAMP) |
+
+## Examples
+
+```text
+format-date(<variable>, format="DATE_SHORT")
+format-date(<variable>, format="DATETIME", locale="fr-FR", timezone="Europe/Paris")
+format-date(<variable>, format="ISO")
+```

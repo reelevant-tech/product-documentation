@@ -1,0 +1,73 @@
+---
+title: 'Authentication'
+description: 'OAuth2 authentication system for the Reelevant API'
+---
+
+## OAuth2
+
+We currently implement a system similar to OAuth2 with the following `grant_type`:
+
+- **`password`**: Requires a `username` (which is generally the user's email) and a `password`.
+- **`refresh_token`**: Requires a valid `refresh_token`
+
+We currently require providing a `client_id` for each grant. If you don't have one, please contact us at `[email protected]` to obtain one.
+
+<Warning>
+  We currently don't have a way to find/create/delete refresh tokens from the UI, but you can find/use the one inside the cookies of `https://app.reelevant.com` under the key `refresh_token`.
+</Warning>
+
+## Getting Tokens
+
+The endpoint used to retrieve tokens is `POST https://api.reelevant.com/v2/auth/token` with a `application/json` `Content-Type`.
+
+### Using Username and Password
+
+Here is an example to get tokens based on a `username`/`password`:
+
+<CodeGroup>
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "myemail",
+    "password": "mypassword",
+    "grant_type": "password",
+    "client_id": "<client_id>"
+  }'
+```
+
+</CodeGroup>
+
+### Using Refresh Token
+
+And here is if you already have a `refresh_token`:
+
+<CodeGroup>
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "myrefreshtoken",
+    "grant_type": "refresh_token",
+    "client_id": "<client_id>"
+  }'
+```
+
+</CodeGroup>
+
+## Using Access Tokens
+
+After getting a valid `access_token`, you'll need to add it for every call to the gateway within the `Authorization` header like so:
+
+```
+Authorization: Bearer ${access_token}
+```
+
+<Info>
+  **Token expirations**
+  
+  Access tokens are valid for 1h after creation whereas refresh tokens are valid for 30 days starting from the last access token generation (so if you refresh it once a month, it doesn't expire).
+</Info>
+

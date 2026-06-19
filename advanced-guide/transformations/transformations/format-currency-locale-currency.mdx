@@ -1,0 +1,31 @@
+---
+title: 'Format Currency (Locale & Currency Variables)'
+description: 'Format currency with locale and currency from variables'
+---
+
+## Overview
+
+The `format-currency-locale-currency-var` transformation formats a number as currency using both locale and currency code provided as variables.
+
+## Syntax
+
+```text
+format-currency-locale-currency-var(<variable>, <locale-variable>, <currency-variable>)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | number | Yes | The number to format as currency |
+| `locale-variable` | variable | Yes | The locale variable (e.g., `"en-US"`, `"fr-FR"`) |
+| `currency-variable` | variable | Yes | The currency code variable (e.g., `"USD"`, `"EUR"`) |
+| `minDecimal` | number | No | Minimum number of decimal places |
+| `maxDecimal` | number | No | Maximum number of decimal places |
+
+## Examples
+
+```text
+format-currency-locale-currency-var(<variable>, <locale-variable>, <currency-variable>)
+format-currency-locale-currency-var(<variable>, <locale-variable>, <currency-variable>, minDecimal=2, maxDecimal=2)
+```
