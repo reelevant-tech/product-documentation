@@ -1,8 +1,55 @@
 ---
-title: 'App Download'
-description: '2 Key Challenges related to driving app downloads through personalised CRM communications'
+title: "App Download"
+description: "2 Key Challenges focused on driving app downloads and converting downloaders into active app users."
 ---
 
-## App Download
+The App Download category covers challenges around encouraging customers to download the mobile app and ensuring they become active users — leveraging the app as the richest personalisation channel.
 
-_This page will contain the 2 app download Key Challenges translated from source material. Content to be completed by CS + TAM teams._
+## Key Challenges in this Category
+
+<CardGroup cols={2}>
+
+<Card title="Drive App Downloads" icon="download">
+Encouraging customers who do not yet have the app to download it by demonstrating personalised value available only via the app channel — price advantages, exclusive Content, faster experience.
+
+**Connected Use Cases:** 2
+</Card>
+
+<Card title="Convert Downloaders to Active Users" icon="mobile-screen-button">
+Converting app downloaders into regular active users. The gap between download and activation is significant — many users download but never return. Personalised onboarding and continued value reminders are key.
+
+**Connected Use Cases:** 2
+</Card>
+
+</CardGroup>
+
+## How It Works with Reelevant
+
+Reelevant drives app adoption through personalised Content within existing email communications:
+
+1. The Workflow detects whether the individual has the app installed (via [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) data)
+2. If not installed: show personalised app download incentive (app-exclusive price, preview of app features)
+3. If installed but inactive: show Content that creates a reason to open the app (exclusive offers, new features, saved items)
+4. The app price recalculation feature shows the **real app price** vs standard price to motivate download
+
+## Connected Use Cases
+
+| Use Case | Role in app challenges |
+|----------|------------------------|
+| [Drive to Store / Web / App](/product-adoption/use-case-explorer/use-cases/drive-to-channel) | Directs towards the app with personalised incentives |
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Shows app-exclusive pricing to motivate download |
+
+## Required Datasources
+
+| Datasource | Usage |
+|------------|-------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | App installation status, last app open date |
+| [Product Catalogue](/product-adoption/use-case-explorer/datasources/product) | App-specific pricing, product availability |
+| [Navigation](/product-adoption/use-case-explorer/datasources/navigation) | In-app behavioural data for active users |
+
+## Connected Capabilities
+
+| Capability | Role |
+|------------|------|
+| Drive to Store (extended to Drive to App) | Contextual redirection to app with personalised incentives |
+| Recommendation Engine | Shows personalised products with app-exclusive pricing |

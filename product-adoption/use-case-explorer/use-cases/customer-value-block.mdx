@@ -1,0 +1,71 @@
+---
+title: "Customer Value Relational Block"
+description: "A personalised relational block that shows each customer their individual value metrics — spend, status, progression — to reinforce brand attachment."
+---
+
+## What It Is
+
+The Customer Value Relational Block is a Content block that displays each individual's relationship with the brand through concrete, personalised metrics: total spend, purchase count, loyalty status, progression, and value trajectory. It transforms abstract loyalty into tangible, personal proof of value.
+
+Unlike promotional blocks that push products, this block **acknowledges the relationship** — creating emotional engagement and reinforcing the perception of being a valued customer.
+
+## Key Challenges Addressed
+
+This Use Case addresses **8 Key Challenges** across 3 categories:
+
+| Category | Challenges addressed |
+|----------|---------------------|
+| [Customer Lifecycle & Value](/product-adoption/use-case-explorer/key-challenges/customer-lifecycle) | Frequency increase, churn reduction, status downgrade prevention, VIP conversion, reduce promo dependence |
+| [Loyalty Programme](/product-adoption/use-case-explorer/key-challenges/loyalty-program) | Status progression, points utilisation |
+| [New Data Usage](/product-adoption/use-case-explorer/key-challenges/new-data-usage) | Proprietary scoring |
+
+## Required Datasources
+
+| Datasource | Fields used | Role |
+|------------|------------|------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Total spend, purchase count, first purchase date, value segment | Individual relationship metrics |
+| [Loyalty Programme](/product-adoption/use-case-explorer/datasources/loyalty-programme) | Status, points, tier benefits, progression | Loyalty context |
+| [Purchases](/product-adoption/use-case-explorer/datasources/purchases) | Transaction history, frequency, recency | Purchase behaviour |
+
+## Required Capabilities
+
+| Capability | Role in this Use Case |
+|------------|----------------------|
+| Lifecycle Offer Engine | Contextual offer based on value trajectory |
+| Churn Prevention | Detects declining engagement and adapts messaging |
+
+## Example Implementation
+
+### Workflow Logic
+
+```
+Data Node: CRM 360 → retrieve total_spend, purchase_count, first_purchase_date, segment
+Data Node: Loyalty Programme → retrieve status, points, next_tier_threshold
+
+Logic Node (Branch):
+  IF segment = "VIP"
+    → Output Node: "Your VIP journey — [total_spend] spent, [purchase_count] orders since [date]"
+  ELSE IF segment = "repeat" AND points_to_next_tier ≤ 300
+    → Output Node: "Almost there — [X] points to [next tier]. Your [purchase_count] orders earned you [benefits]"
+  ELSE IF segment = "one-timer"
+    → Output Node: "Your story with us begins — [first purchase details]. Your next order unlocks [benefit]"
+  ELSE
+    → Output Node: "Your relationship — [purchase_count] orders, [X] months together, [points] points"
+```
+
+### What the Customer Sees
+
+- **VIP:** "3 years together. 47 orders. €4,230 invested in your style. Thank you for your loyalty — here's your exclusive VIP benefit this month."
+- **Close to upgrade:** "You're 180 points from Gold status. Your 12 orders this year show your commitment — one more unlocks free delivery for life."
+- **One-timer:** "Your first order was on March 15. Welcome to the family — your second purchase unlocks 15% off + loyalty points."
+
+## Measuring Incremental Value
+
+| Metric | How to measure |
+|--------|----------------|
+| Retention rate | Exposed vs Non-Exposed over 90 days |
+| Repeat purchase rate | Second-purchase rate for one-timers Exposed vs Non-Exposed |
+| Status upgrade rate | Tier progression for near-threshold members |
+| Unsubscribe rate | Should decrease with value-based relational messaging |
+
+See [Key Challenges — Retention](/product-adoption/incremental-value/key-challenges#challenge-4--retention-rate-increase) for valorisation formulas.

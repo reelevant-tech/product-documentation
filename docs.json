@@ -433,8 +433,35 @@
                   "product-adoption/use-case-explorer/key-challenges/app-download"
                 ]
               },
-              "product-adoption/use-case-explorer/use-cases/enriched-product-recommendation",
-              "product-adoption/use-case-explorer/datasources/crm-360",
+              {
+                "group": "Use Cases",
+                "pages": [
+                  "product-adoption/use-case-explorer/use-cases/enriched-product-recommendation",
+                  "product-adoption/use-case-explorer/use-cases/lifecycle-banner",
+                  "product-adoption/use-case-explorer/use-cases/loyalty-programme-banner",
+                  "product-adoption/use-case-explorer/use-cases/customer-value-block",
+                  "product-adoption/use-case-explorer/use-cases/live-polling",
+                  "product-adoption/use-case-explorer/use-cases/personalised-digest",
+                  "product-adoption/use-case-explorer/use-cases/drive-to-channel",
+                  "product-adoption/use-case-explorer/use-cases/optin-banner"
+                ]
+              },
+              {
+                "group": "Datasources",
+                "pages": [
+                  "product-adoption/use-case-explorer/datasources/crm-360",
+                  "product-adoption/use-case-explorer/datasources/offers",
+                  "product-adoption/use-case-explorer/datasources/workflow-events",
+                  "product-adoption/use-case-explorer/datasources/product-reviews",
+                  "product-adoption/use-case-explorer/datasources/nps",
+                  "product-adoption/use-case-explorer/datasources/loyalty-programme",
+                  "product-adoption/use-case-explorer/datasources/product",
+                  "product-adoption/use-case-explorer/datasources/store",
+                  "product-adoption/use-case-explorer/datasources/purchases",
+                  "product-adoption/use-case-explorer/datasources/navigation",
+                  "product-adoption/use-case-explorer/datasources/stock-availability"
+                ]
+              },
               "product-adoption/use-case-explorer/capabilities"
             ]
           }

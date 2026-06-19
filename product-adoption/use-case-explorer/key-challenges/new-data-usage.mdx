@@ -1,8 +1,51 @@
 ---
-title: 'New Data Usage'
-description: '3 Key Challenges related to leveraging scoring algorithms, intent detection, and preference collection'
+title: "New Data Usage"
+description: "3 Key Challenges around leveraging proprietary scoring algorithms, declared preferences, and fresh contextual data for personalisation."
 ---
 
-## New Data Usage
+The New Data Usage category addresses how to leverage non-traditional data sources — proprietary scores, live-collected preferences, and declared interests — to enhance personalisation beyond static segmentation.
 
-_This page will contain the 3 new data usage Key Challenges translated from source material. Content to be completed by CS + TAM teams._
+## Key Challenges in this Category
+
+<CardGroup cols={2}>
+
+<Card title="Proprietary Scoring Data Usage" icon="chart-mixed">
+Common to all Use Cases. Leverage scoring data from in-house algorithms — for example, integrating a proprietary anti-churn score to prioritise high-risk customers on reactivation communications, displaying their score vs another profile to decide the level of promotional aggressiveness. Fresh contextual data outperforms static segmentation.
+
+**Connected Use Cases:** 3
+</Card>
+
+<Card title="Intent & Preference Qualification" icon="bullseye">
+Dynamically identifying purchase intent and individual preferences to refine personalisation. Declarative data collected via Live Polling enriches customer knowledge and improves relevance.
+
+**Connected Use Cases:** 3
+</Card>
+
+<Card title="Preference & Interest Collection" icon="clipboard-list">
+Encouraging preference sharing through interactive mechanics to enrich the customer profile and improve personalisation. The richer the customer data, the more relevant and effective the personalisation.
+
+**Connected Use Cases:** 3
+</Card>
+
+</CardGroup>
+
+## Connected Use Cases
+
+| Use Case | Role in new data challenges |
+|----------|----------------------------|
+| [Live Polling](/product-adoption/use-case-explorer/use-cases/live-polling) | Collects declared preferences and qualifies audiences in real time |
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Leverages preference data for more relevant recommendations |
+| [1:1 Personalised Digest](/product-adoption/use-case-explorer/use-cases/personalised-digest) | Combines multiple data sources into a fully personalised email |
+
+## Required Datasources
+
+| Datasource | Primary usage |
+|------------|--------------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Proprietary scores, customer attributes |
+| [Workflow Events](/product-adoption/use-case-explorer/datasources/workflow-events) | Live Polling responses, interaction history |
+| [Navigation](/product-adoption/use-case-explorer/datasources/navigation) | Browsing behaviour, viewed categories |
+| [Product Reviews](/product-adoption/use-case-explorer/datasources/product-reviews) | Product affinities from review patterns |
+
+## Key Principle
+
+Static segmentation creates a snapshot that decays over time. By integrating **fresh, contextual data** — scores computed daily, preferences declared last week, navigation from this morning — personalisation stays relevant and responsive to individual evolution.

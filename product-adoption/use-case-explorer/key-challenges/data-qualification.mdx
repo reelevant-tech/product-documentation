@@ -1,8 +1,52 @@
 ---
-title: 'Data Qualification'
-description: 'Leveraging Workflow Events to qualify your database and enrich customer profiles'
+title: "Data Qualification"
+description: "Key Challenge focused on qualifying customer databases through interactive data collection and progressive profiling."
 ---
 
-## Data Qualification via Workflow Events
+The Data Qualification category addresses the challenge of enriching customer profiles with declared data — preferences, interests, intent — to improve personalisation accuracy over time.
 
-_This page will contain the data qualification Key Challenge translated from source material. Content to be completed by CS + TAM teams._
+## The Challenge
+
+<Card title="Database Qualification" icon="database">
+Qualifying the customer base through interactive data collection mechanics. Progressive profiling allows building richer customer profiles without requiring a single large form. Each interaction is an opportunity to learn something new about the customer.
+
+**Connected Use Cases:** 1
+</Card>
+
+## Why Data Qualification Matters
+
+Most CRM databases contain transactional data (what people bought) but lack **declarative data** (what people want, prefer, or intend). This gap limits personalisation to historical behaviour rather than current intent.
+
+Data qualification through personalised Content:
+- Collects preferences organically within existing communications
+- Enriches profiles progressively (no lengthy forms)
+- Feeds all other Use Cases with richer targeting data
+- Improves recommendation accuracy and lifecycle relevance
+
+## Connected Use Cases
+
+| Use Case | Role in data qualification |
+|----------|---------------------------|
+| [Live Polling](/product-adoption/use-case-explorer/use-cases/live-polling) | Primary mechanic for interactive data collection within emails |
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Benefits from enriched preference data for better targeting |
+
+## Required Datasources
+
+| Datasource | Usage |
+|------------|-------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Existing customer attributes, data completeness status |
+| [Workflow Events](/product-adoption/use-case-explorer/datasources/workflow-events) | Live Polling responses stored as events |
+
+## Connected Capabilities
+
+| Capability | Role |
+|------------|------|
+| Live Polling | Interactive surveys adapted to profile gaps |
+| Feedback Collection | Systematic review and NPS collection |
+
+## Measuring Impact
+
+Data qualification is measured through:
+- **Profile completeness rate:** % of profiles with key attributes filled
+- **Downstream impact:** Improvement in recommendation click-through after profile enrichment
+- **Response rate:** % of contacts who interact with qualification mechanics

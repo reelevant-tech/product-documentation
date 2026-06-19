@@ -1,0 +1,43 @@
+---
+title: "Store"
+description: "The Datasource containing physical store information — locations, hours, services, and events for drive-to-store personalisation."
+---
+
+## Overview
+
+The Store Datasource contains information about the brand's physical retail locations: addresses, opening hours, available services, current events, and contact details. This powers drive-to-store personalisation by showing each customer their nearest or preferred store with contextual details.
+
+## Key Fields
+
+| Field | Type | Description | Example values |
+|-------|------|-------------|----------------|
+| `store_id` | String | Unique store identifier | `"STR-PARIS-MARAIS"` |
+| `name` | String | Store display name | `"Paris Marais"` |
+| `address` | String | Full street address | `"15 Rue des Francs-Bourgeois, 75004 Paris"` |
+| `city` | String | City | `"Paris"` |
+| `latitude` | Float | GPS latitude | `48.8566` |
+| `longitude` | Float | GPS longitude | `2.3522` |
+| `opening_hours` | Object | Weekly schedule | `{monday: "10:00-20:00", sunday: "closed"}` |
+| `services` | Array | Available services | `["click_and_collect", "alteration", "personal_shopping"]` |
+| `current_events` | Array | Active in-store events | `["VIP evening Dec 12", "New collection preview"]` |
+| `phone` | String | Store phone number | `"+33 1 42 78 12 34"` |
+
+## Connected Use Cases
+
+| Use Case | How Store is used |
+|----------|-------------------|
+| [Drive to Store / Web / App](/product-adoption/use-case-explorer/use-cases/drive-to-channel) | Nearest store info, hours, services |
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | "Available at your store" messaging |
+
+## Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Update frequency | Weekly (or on hours/events changes) |
+| Minimum fields | `store_id`, `name`, `address`, `latitude`, `longitude`, `opening_hours` |
+| Format | JSON via Datasources API |
+| Volume | One record per store location |
+
+## Integration Notes
+
+Store data is typically static with occasional updates for events or seasonal hours. GPS coordinates enable distance-based matching with the customer's location from CRM 360.

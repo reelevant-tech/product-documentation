@@ -1,8 +1,85 @@
 ---
-title: 'Enriched Product Recommendation'
-description: 'A single content block displaying personalised products based on profile, lifecycle, and affinities'
+title: "Enriched Product Recommendation"
+description: "Personalised product recommendations based on individual purchase history, browsing, and preferences — served in real time within email communications."
 ---
 
-## Enriched Product Recommendation
+## What It Is
 
-_This page will contain the full Use Case details translated from source material. Content to be completed by CS + TAM teams._
+The Enriched Product Recommendation Use Case delivers individually-selected product suggestions within email communications. Unlike static batch recommendations, these are computed **at the moment of open** using the freshest available data — last browsing session, recent purchases, current stock levels, and individual preferences.
+
+The "enriched" aspect means going beyond collaborative filtering: recommendations incorporate multiple data dimensions (affinity, seasonality, stock, offers, lifecycle stage) to select the most relevant products for each individual at that exact moment.
+
+## Key Challenges Addressed
+
+This Use Case addresses the broadest range of challenges — **21 Key Challenges** across 7 categories:
+
+| Category | Challenges addressed |
+|----------|---------------------|
+| [Customer Lifecycle & Value](/product-adoption/use-case-explorer/key-challenges/customer-lifecycle) | First purchase, one-timer conversion, frequency, basket increase, category expansion, churn reduction, winback, low-spender, VIP conversion, reduce promo dependence |
+| [Loyalty Programme](/product-adoption/use-case-explorer/key-challenges/loyalty-program) | Programme recruitment, status progression, points utilisation |
+| [New Data Usage](/product-adoption/use-case-explorer/key-challenges/new-data-usage) | Proprietary scoring, intent qualification, preference collection |
+| [Language Management](/product-adoption/use-case-explorer/key-challenges/language-management) | Language adaptation, real-time personalisation |
+| [Marketing Pressure](/product-adoption/use-case-explorer/key-challenges/marketing-pressure) | Automatic rotation after non-conversion |
+| [App Download](/product-adoption/use-case-explorer/key-challenges/app-download) | App-exclusive pricing display |
+| [Omnichannel](/product-adoption/use-case-explorer/key-challenges/omnichannel-experience) | Coherent product suggestion across channels |
+
+## Required Datasources
+
+| Datasource | Fields used | Role |
+|------------|------------|------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Customer ID, purchase history, preferences, segment | Individual targeting |
+| [Product Catalogue](/product-adoption/use-case-explorer/datasources/product) | SKU, name, price, image, category, attributes | Product selection pool |
+| [Navigation](/product-adoption/use-case-explorer/datasources/navigation) | Viewed products, categories, time spent | Real-time intent signals |
+| [Purchase History](/product-adoption/use-case-explorer/datasources/purchases) | Transaction date, products, amounts | Affinity and exclusion logic |
+| [Stock & Availability](/product-adoption/use-case-explorer/datasources/stock-availability) | Stock level, availability by location | Never recommend out-of-stock |
+| [Offers](/product-adoption/use-case-explorer/datasources/offers) | Current promotions, eligibility | Price display with offers applied |
+
+## Required Capabilities
+
+| Capability | Role in this Use Case |
+|------------|----------------------|
+| Recommendation Engine | Selects products using collaborative filtering + individual signals |
+| Lifecycle Offer Engine | Applies the right offer to the recommended product based on lifecycle stage |
+| Category Affinity | Identifies preferred categories for cross-sell / category expansion |
+| Language Scaling | Renders product details in the individual's locale |
+| Currency Adaptation | Shows correct pricing for the individual's market |
+
+## Example Implementation
+
+### Workflow Logic
+
+```
+Data Node: CRM 360 → retrieve customer segment, preferences, locale
+Data Node: Product Catalogue → retrieve eligible products
+Data Node: Navigation → recent browsing (last 7 days)
+Data Node: Stock → filter in-stock only
+
+Logic Node (Branch):
+  IF customer.segment = "one-timer"
+    → Output Node: "Complete your look" — recommendations from same category as first purchase
+  ELSE IF customer.last_purchase_days > 60
+    → Output Node: "We miss you" — top-affinity products with exclusive offer
+  ELSE IF customer.segment = "VIP"
+    → Output Node: "Selected for you" — new arrivals in preferred categories
+  ELSE
+    → Output Node: "You might like" — general recommendations weighted by affinity
+```
+
+### What the Customer Sees
+
+A personalised product block within the email showing 3–6 products selected specifically for them, with:
+- Product image, name, and price (in their currency and language)
+- Any applicable offer (loyalty points, promotion) shown
+- Products they already purchased excluded
+- Products currently in stock at their preferred store/region
+
+## Measuring Incremental Value
+
+| Metric | How to measure |
+|--------|----------------|
+| Click-through rate | Exposed vs Non-Exposed on recommendation block |
+| Conversion rate | Purchases from recommended products within 7 days |
+| Average basket | Compare basket size for buyers who clicked recommendations |
+| Revenue per email | Total revenue attributed to recommendation clicks |
+
+See [Key Challenges — Frequency](/product-adoption/incremental-value/key-challenges#challenge-7--purchase-frequency-increase) and [AOV](/product-adoption/incremental-value/key-challenges#challenge-8--average-basket-aov-and-annual-spend) for valorisation formulas.

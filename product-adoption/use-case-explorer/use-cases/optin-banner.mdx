@@ -1,0 +1,66 @@
+---
+title: "Opt-in Banner"
+description: "A personalised consent collection block that proposes the most relevant channel opt-in based on the individual's current subscription status."
+---
+
+## What It Is
+
+The Opt-in Banner is a Content block that encourages customers to extend their communication preferences by proposing additional channel opt-ins (Push, SMS, WhatsApp, App notifications) based on what they are currently missing. The block adapts to each individual — only showing channels they have not yet opted into.
+
+A multi-channel customer generates significantly more value than a mono-channel one. This Use Case systematically extends CRM reach without intrusive full-page forms.
+
+## Key Challenges Addressed
+
+This Use Case addresses **4 Key Challenges** across 2 categories:
+
+| Category | Challenges addressed |
+|----------|---------------------|
+| [Base Engagement](/product-adoption/use-case-explorer/key-challenges/base-engagement) | Extend CRM consents, app adoption |
+| [App Download](/product-adoption/use-case-explorer/key-challenges/app-download) | Drive app downloads, convert downloaders to active users |
+
+## Required Datasources
+
+| Datasource | Fields used | Role |
+|------------|------------|------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Current opt-in status per channel, email/push/sms/app flags | Identify missing consents |
+| [Workflow Events](/product-adoption/use-case-explorer/datasources/workflow-events) | Previous opt-in banner exposure, response history | Avoid re-showing dismissed banners |
+
+## Required Capabilities
+
+| Capability | Role in this Use Case |
+|------------|----------------------|
+| Multi-Channel Opt-in | Consent collection across channels |
+
+## Example Implementation
+
+### Workflow Logic
+
+```
+Data Node: CRM 360 → retrieve opt_in_email, opt_in_push, opt_in_sms, opt_in_app, app_installed
+
+Logic Node (Branch):
+  IF app_installed = false
+    → Output Node: "Download the app — exclusive prices + instant notifications"
+  ELSE IF opt_in_push = false AND app_installed = true
+    → Output Node: "Enable push notifications — never miss a flash sale"
+  ELSE IF opt_in_sms = false
+    → Output Node: "Get SMS alerts for delivery and exclusive offers"
+  ELSE
+    → Output Node: null (all channels already opted in — show nothing)
+```
+
+### What the Customer Sees
+
+- **No app:** "Download the app — get app-exclusive prices and real-time stock alerts"
+- **App but no push:** "Enable notifications — be the first to know about restocks and flash sales"
+- **No SMS:** "Get delivery updates and exclusive offers by SMS"
+- **All opted in:** Block is not displayed — no unnecessary solicitation
+
+## Measuring Incremental Value
+
+| Metric | How to measure |
+|--------|----------------|
+| Opt-in conversion | % of Exposed who grant new consent vs Non-Exposed natural opt-in rate |
+| Channel extension rate | Multi-channel progression over time |
+| Downstream value | Revenue from newly activated channels (push, app, SMS) |
+| CRM reach | Total addressable audience growth per channel |
