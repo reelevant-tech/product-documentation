@@ -1,73 +1,216 @@
 ---
 title: 'Authentication'
-description: 'OAuth2 authentication system for the Reelevant API'
+description: 'OAuth 2.0 authentication with Authorization Code + PKCE flow, password grant, and refresh tokens'
 ---
 
-## OAuth2
+## Overview
 
-We currently implement a system similar to OAuth2 with the following `grant_type`:
+The Reelevant API uses OAuth 2.0 for authentication. Three grant types are supported:
 
-- **`password`**: Requires a `username` (which is generally the user's email) and a `password`.
-- **`refresh_token`**: Requires a valid `refresh_token`
+| Grant Type | Use Case |
+|------------|----------|
+| `authorization_code` | Browser-based login with PKCE (recommended for web apps) |
+| `password` | Direct username/password exchange (service accounts, scripts) |
+| `refresh_token` | Renew an expired access token without re-authenticating |
 
-We currently require providing a `client_id` for each grant. If you don't have one, please contact us at `[email protected]` to obtain one.
+All token operations use the endpoint `POST https://api.reelevant.com/v2/auth/token`.
+
+A `client_id` is required for every grant. Contact `[email protected]` to obtain one.
+
+## Authorization Code Flow (PKCE)
+
+This is the recommended flow for web applications. It uses a browser redirect to authenticate the user, then exchanges an authorization code for tokens.
+
+### Step 1: Generate PKCE Challenge
+
+Generate a random `code_verifier` and derive the `code_challenge`:
+
+```typescript
+import { randomBytes, createHash } from 'crypto'
+
+const codeVerifier = randomBytes(32).toString('base64url')
+const codeChallenge = createHash('sha256')
+  .update(codeVerifier)
+  .digest('base64url')
+```
+
+### Step 2: Redirect to Authorize
+
+Redirect the user's browser to the authorization endpoint:
+
+```
+GET https://api.reelevant.com/v2/oauth/authorize
+  ?client_id=<client_id>
+  &redirect_uri=<redirect_uri>
+  &response_type=code
+  &code_challenge=<code_challenge>
+  &code_challenge_method=S256
+  &state=<random_state>
+  &lang=en
+```
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `client_id` | Yes | Your OAuth client identifier |
+| `redirect_uri` | Yes | Must match a registered redirect URI for the client |
+| `response_type` | Yes | Must be `code` for the authorization code flow |
+| `code_challenge` | Yes | Base64url-encoded SHA-256 hash of the `code_verifier` |
+| `code_challenge_method` | No | Only `S256` is supported (default) |
+| `state` | Recommended | Opaque value to prevent CSRF — returned unchanged in the callback |
+| `lang` | No | Login page language (`en` or `fr`) |
+
+The user sees a login page. After successful authentication, a consent screen is shown. Upon approval, the browser is redirected to your `redirect_uri` with an authorization code:
+
+```
+https://your-app.com/callback?code=<authorization_code>&state=<state>
+```
 
 <Warning>
-  We currently don't have a way to find/create/delete refresh tokens from the UI, but you can find/use the one inside the cookies of `https://app.reelevant.com` under the key `refresh_token`.
+Authorization codes are single-use and expire after **60 seconds**. Exchange them immediately.
 </Warning>
 
-## Getting Tokens
-
-The endpoint used to retrieve tokens is `POST https://api.reelevant.com/v2/auth/token` with a `application/json` `Content-Type`.
-
-### Using Username and Password
-
-Here is an example to get tokens based on a `username`/`password`:
-
-<CodeGroup>
+### Step 3: Exchange Code for Tokens
 
 ```bash
 curl -XPOST https://api.reelevant.com/v2/auth/token \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "myemail",
-    "password": "mypassword",
+    "client_id": "<client_id>",
+    "grant_type": "authorization_code",
+    "code": "<authorization_code>",
+    "redirect_uri": "<redirect_uri>",
+    "code_verifier": "<code_verifier>"
+  }'
+```
+
+The `code_verifier` must match the `code_challenge` sent in Step 2 (the server verifies `SHA256(code_verifier) == code_challenge`).
+
+**Response:**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+<Info>
+Some OAuth clients are configured with `requireAuthorizationCodeFlow: true`. For these clients, PKCE parameters are mandatory — the implicit flow is disabled entirely.
+</Info>
+
+## Password Grant
+
+For service accounts and automation scripts where browser-based login is not practical.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "[email protected]",
+    "password": "your-password",
     "grant_type": "password",
     "client_id": "<client_id>"
   }'
 ```
 
-</CodeGroup>
+**Response:**
 
-### Using Refresh Token
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
 
-And here is if you already have a `refresh_token`:
+### Two-Factor Authentication (OTP)
 
-<CodeGroup>
+If the user has OTP enabled, include the `x-otp-code` field:
 
 ```bash
 curl -XPOST https://api.reelevant.com/v2/auth/token \
   -H "Content-Type: application/json" \
   -d '{
-    "refresh_token": "myrefreshtoken",
+    "username": "[email protected]",
+    "password": "your-password",
+    "grant_type": "password",
+    "client_id": "<client_id>",
+    "x-otp-code": "123456"
+  }'
+```
+
+## Refresh Token Grant
+
+Exchange a valid refresh token for a new access token without re-authenticating:
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
     "grant_type": "refresh_token",
     "client_id": "<client_id>"
   }'
 ```
 
-</CodeGroup>
+**Response:**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
 
 ## Using Access Tokens
 
-After getting a valid `access_token`, you'll need to add it for every call to the gateway within the `Authorization` header like so:
+Include the access token in every API request via the `Authorization` header:
 
 ```
-Authorization: Bearer ${access_token}
+Authorization: Bearer <access_token>
 ```
+
+## Token Lifecycle
+
+| Token Type | Lifetime | Renewal |
+|------------|----------|---------|
+| Access token | 1 hour | Use `refresh_token` grant to obtain a new one |
+| Refresh token | 30 days (rolling) | Refreshed automatically each time it is used to generate a new access token |
+| Authorization code | 60 seconds | Single-use — exchange immediately after receiving |
 
 <Info>
-  **Token expirations**
-  
-  Access tokens are valid for 1h after creation whereas refresh tokens are valid for 30 days starting from the last access token generation (so if you refresh it once a month, it doesn't expire).
+Refresh tokens use a rolling expiry: the 30-day window resets each time you use the refresh token. If you refresh at least once a month, the token never expires.
 </Info>
 
+## Revoking Tokens
+
+Revoke an access token or refresh token:
+
+```bash
+curl -XDELETE https://api.reelevant.com/v2/auth/token/<token_id>
+```
+
+Revoking a refresh token also revokes all access tokens derived from it.
+
+## SSO Authentication
+
+Companies with SSO configured are automatically redirected to their identity provider during the OAuth authorize flow. If SSO is mandatory for the company, password-based login is disabled (except for service accounts).
+
+## Error Handling
+
+| Error | HTTP Status | Cause |
+|-------|-------------|-------|
+| `invalid_client` | 400 | Unknown or inactive `client_id` |
+| `invalid_redirect_uri` | 400 | `redirect_uri` not in the client's allowed list |
+| `invalid_request` | 400 | Missing required parameters (e.g., `code_challenge` for PKCE) |
+| `invalid_credentials` | 401 | Wrong username or password |
+| `too_many_attempts` | 429 | Login attempts exceeded — wait before retrying |
+| `password_expired` | 401 | Password must be changed before logging in |
+| `otp_required` | 401 | OTP code required but not provided |
+| `invalid_code` | 400 | Authorization code is invalid, expired, or already used |
+| `pkce_mismatch` | 400 | `code_verifier` does not match the original `code_challenge` |

@@ -1,31 +1,34 @@
 ---
 title: 'Real-Time Testing (RTT)'
-description: 'Automated traffic distribution that optimizes over time'
+description: 'Automatically optimise traffic distribution across content variants using multi-armed bandit logic'
 ---
 
 ![Real-time testing node configuration panel showing content variant settings](/images/workflows/node-real-time-testing.png)
 
 ## Overview
 
-Real-time testing nodes enable automated traffic distribution that optimizes over time. Unlike a static A/B split, real-time testing can automatically adjust traffic allocation based on performance metrics.
+Real-time testing automatically distributes traffic across content variants and optimises allocation over time. Unlike a static [Split](/product-guide/workflows/logic-nodes/split), real-time testing uses a multi-armed bandit algorithm to shift traffic toward the best-performing variant.
 
 ## Configuration
 
-Similar to [Split](/platform-guide/workflows/logic-nodes/split), but with additional settings for:
-- **Testing duration** — How long the test should run.
-- **Optimization metric** — What metric to optimize for (clicks, conversions, etc.).
-- **Confidence level** — Statistical significance threshold.
+The only setting is the **number of variants** (2 to 10). Select how many content paths you want to test using the dropdown. Each variant becomes a separate branch in the Workflow.
+
+There are no additional parameters to configure. The optimisation runs automatically once the Workflow is live.
 
 ## How It Works
 
-1. Initially, traffic is distributed evenly across all variants.
-2. As data is collected, the system analyzes which variant performs best.
-3. Traffic is gradually shifted toward the winning variant.
-4. Once the confidence level is reached, the test concludes and the winner receives all traffic.
+1. Traffic is initially distributed evenly across all variants.
+2. As users interact with each variant, the system collects performance data.
+3. The multi-armed bandit algorithm gradually shifts traffic toward higher-performing variants.
+4. Over time, the best variant receives the majority of traffic.
+
+<Info>
+  Unlike a fixed A/B test, real-time testing continuously adapts. There is no manual "end date" or "confidence threshold" to set — the algorithm balances exploration (testing underexposed variants) with exploitation (favouring winners) automatically.
+</Info>
 
 ## Best Practices
 
-- Use RTT when you want the system to automatically find the best-performing variant.
-- Set realistic testing durations — too short may not produce statistically significant results.
-- Choose the right optimization metric that aligns with your campaign goals.
-- Monitor the test progress through the workflow's statistics mode.
+- Use real-time testing when you want the system to find and favour the best-performing variant without manual intervention.
+- Start with 2–3 variants for faster convergence. More variants require more traffic to identify a winner.
+- Monitor results in the Workflow's statistics mode to see how traffic is being distributed.
+- Combine with [branch categories](/product-guide/workflows/branches) to track variant performance in Analytics.

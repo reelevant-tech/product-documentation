@@ -1,0 +1,160 @@
+---
+title: "Technical Overview"
+description: "How Reelevant works under the hood — content-first personalisation engine architecture, data flow, rendering pipeline, and integration surface."
+---
+
+## What Reelevant Is
+
+Reelevant is a **content-first personalisation engine** that renders individualised Content at the moment of user interaction — not at send time. A single Content definition produces millions of unique variants based on real-time customer data, Workflow logic, and live Datasource state.
+
+The platform handles the full pipeline: data ingestion, real-time decisioning, Content rendering, delivery, event capture, and incrementality measurement.
+
+## Core Architecture Concepts
+
+### Workflows (Decisioning DAG)
+
+A Workflow is a directed acyclic graph (DAG) that defines the personalisation logic. Each Workflow consists of:
+
+- **Data Nodes** — Fetch customer data from connected Datasources at execution time
+- **Logic Nodes** — Branching logic (Conditions, Split, Real-time Testing) that determines which path a user follows
+- **Output Nodes** — Define the rendered Content format (visual image, HTML, JSON)
+- **Channel Nodes** — Define the delivery surface (email, web, mobile, push)
+
+Workflows are built visually in the platform UI (no-code) but are stored and executed as a typed DAG with deterministic evaluation order.
+
+### Datasources (Data Layer)
+
+Datasources are typed data stores that feed Workflows. Data is ingested via:
+
+| Method | Protocol | Typical Use |
+|--------|----------|-------------|
+| REST API (batch) | JSON / CSV over HTTPS | Full catalogue sync, daily CRM imports |
+| REST API (real-time) | JSON over HTTPS | Purchase events, stock changes |
+| DataHub connectors | Pre-built (BigQuery, Snowflake, S3, GCS, Kafka, FTP/SFTP) | Scheduled or streaming imports |
+
+Datasources support field mapping, type coercion, PGP decryption, and deduplication. Each Datasource record is individually queryable from Workflow Data Nodes at render time.
+
+### Content (Rendering Engine)
+
+Content is a template composed of visual components (text, image, shape, barcode, countdown, map) with data bindings. At render time, the engine resolves all bindings from Workflow context — customer data, product fields, offer details — and produces the final output.
+
+Supported output formats:
+
+| Format | Delivered as | Typical channel |
+|--------|-------------|----------------|
+| Visual Content | PNG/GIF image | Email, web |
+| HTML fragment | Raw HTML | Web, in-app |
+| JSON payload | Structured JSON | Mobile apps, headless integrations |
+
+## Request Lifecycle
+
+```
+Customer opens email / visits page
+        │
+        ▼
+   Edge CDN (TLS termination, routing)
+        │
+        ▼
+   Runner (Content Decisioning Engine)
+        │
+        ├─ 1. Identify customer (encrypted ID from URL params)
+        ├─ 2. Fetch Datasource records (in-memory cache + live fallback)
+        ├─ 3. Execute Workflow DAG (evaluate Conditions, Splits, Data Nodes)
+        ├─ 4. Resolve Output Node → render Content with bound data
+        └─ 5. Return image/HTML/JSON + capture impression event
+        │
+        ▼
+   Event stream (impressions, clicks, conversions)
+        │
+        ▼
+   Analytics + Incrementality measurement
+```
+
+The full pipeline completes in under 50ms (P95). Cache-hit paths are sub-10ms.
+
+## Integration Surface
+
+### Email Integration
+
+Insert a single `<img>` tag (or HTML embed) in your ESP template. The tag URL encodes the Workflow ID and an encrypted customer identifier. No server-side code required.
+
+```html
+<img src="https://serve.reelevant.com/{workflowId}?uid={encryptedCustomerId}" />
+```
+
+### Web Integration
+
+Two options:
+
+1. **Server-side SDK** (recommended for SEO / SSR) — Available for Node.js, Next.js, Nuxt, Remix, SvelteKit. The SDK calls the Runner at page-render time and injects personalised Content into the HTML response.
+2. **Client-side script** — A lightweight JavaScript snippet that fetches and renders Content in the browser.
+
+### Mobile Integration
+
+Native SDKs for iOS, Android, and Flutter. The SDK handles authentication, Content fetching, and view lifecycle. A JSON API fallback is available for custom implementations.
+
+### JSON API
+
+For headless integrations (push notifications, in-app messages, custom frontends), the JSON API returns structured payloads matching a JSON Template schema defined in the platform.
+
+## Authentication & Security
+
+| Layer | Mechanism |
+|-------|-----------|
+| Datasources API | OAuth 2.0 Bearer tokens (per environment) |
+| Content serving | HMAC-signed URLs (no auth header needed — signature = auth) |
+| Admin platform | OAuth 2.0 with Authorization Code + PKCE, RBAC, optional SSO |
+| Data encryption at rest | AES-256 |
+| Data encryption in transit | TLS 1.3 |
+| Customer identifiers in URLs | Encrypted and opaque — no PII exposed |
+
+## Data Residency & Compliance
+
+| Aspect | Detail |
+|--------|--------|
+| Primary data residency | EU |
+| GDPR | Full compliance — configurable retention, data minimisation, right to erasure |
+| SOC 2 | Type II certified |
+| Retention controls | Configurable per Datasource; default 90 days for behavioural events |
+| Audit logging | All admin actions logged with user attribution |
+| Penetration testing | Annual third-party assessment |
+
+## Performance Guarantees
+
+| Metric | Guarantee |
+|--------|-----------|
+| Availability | 99.9% SLA (measured monthly) |
+| P95 response latency | <50ms |
+| P99 response latency | <200ms |
+| Throughput | 100M+ personalised Content renders/month per client |
+| Failover | Multi-region active-active |
+
+## What Does NOT Require Custom Development
+
+| Capability | How it works | Your effort |
+|------------|-------------|-------------|
+| Workflow logic | Visual DAG editor (no-code) | Business user can build |
+| Product recommendations | Built-in engine, configure via Datasource connection | Data connection only |
+| A/B testing (Split) | Drag-and-drop Split node with percentage slider | Zero — built in |
+| Real-time testing (MAB) | Multi-armed bandit node, auto-optimises | Zero — built in |
+| Incrementality measurement | Automatic Exposed vs Non-Exposed framework | Zero — read the dashboard |
+| Multilingual Content | Locale detection + variant selection | Upload translated assets |
+| Stock filtering | Automatic from Stock Datasource | Connect the data feed |
+| Event tracking | Automatic impression and click capture | Zero |
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Architecture Deep Dive" icon="diagram-project" href="/why-reelevant/technical-evaluators/architecture-overview">
+Infrastructure details, integration effort estimates, and security posture.
+</Card>
+<Card title="API Reference" icon="code" href="/developer-docs/api-reference/introduction">
+Full REST API documentation for Datasources ingestion and Content retrieval.
+</Card>
+<Card title="SDK Documentation" icon="cube" href="/developer-docs/web-integration/overview">
+Server-side and client-side SDKs for web and mobile integration.
+</Card>
+<Card title="OAuth Authentication" icon="lock" href="/developer-docs/api-reference/authentication">
+OAuth 2.0 flows, token management, and PKCE implementation.
+</Card>
+</CardGroup>
