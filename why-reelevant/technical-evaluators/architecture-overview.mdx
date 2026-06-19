@@ -1,8 +1,145 @@
 ---
-title: 'Architecture Overview'
-description: 'High-level system architecture, data flow, and integration patterns for technical evaluators'
+title: "Architecture Overview"
+description: "Technical architecture of the Reelevant platform — real-time content decisioning at email open, data integration patterns, and infrastructure guarantees."
 ---
 
 ## System Architecture
 
-_This page is a placeholder for the technical architecture overview. Content to be written by the Engineering team._
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        EMAIL CLIENT                          │
+│  Customer opens email → browser requests Reelevant image    │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ HTTP GET (image request)
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    REELEVANT EDGE (CDN)                      │
+│  Route to nearest region, TLS termination                   │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 CONTENT DECISIONING ENGINE                   │
+│                                                             │
+│  1. Identify customer (ID from URL params)                  │
+│  2. Fetch customer data from Datasources (cached + live)    │
+│  3. Execute Workflow logic (Branches, conditions)            │
+│  4. Select Output Node → render Content                     │
+│  5. Return personalised image/HTML                          │
+│                                                             │
+│  P95 latency: <50ms │ Availability: 99.9% SLA              │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      DATA LAYER                              │
+│                                                             │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────────┐  │
+│  │ Datasources │  │ Workflow      │  │ Event             │  │
+│  │ (CRM, Prod, │  │ Definitions  │  │ Stream            │  │
+│  │  Stock...)  │  │ (DAG logic)  │  │ (impressions,     │  │
+│  └─────────────┘  └──────────────┘  │  clicks, polls)   │  │
+│                                      └───────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## How It Works — Request Lifecycle
+
+1. **Email send:** Your ESP sends the email with a Reelevant image tag (`<img src="https://serve.reelevant.com/...">`)
+2. **Email open:** The email client requests the image from Reelevant's edge
+3. **Customer identification:** The URL contains an encrypted customer identifier mapped to your Datasource records
+4. **Data retrieval:** The engine fetches the customer's current data from connected Datasources (sub-millisecond from cache, with fallback to live query)
+5. **Workflow execution:** The Workflow DAG evaluates conditions (Branches), retrieves additional data (Data Nodes), and selects the appropriate Output Node
+6. **Content rendering:** The selected Content is rendered with individual data (product images, prices, offers, text) and returned as an image or HTML fragment
+7. **Event capture:** Impression event is recorded. Click tracking captures interactions for future Workflow logic
+
+## Integration Patterns
+
+### Data Ingestion
+
+| Pattern | Protocol | Use case | Latency |
+|---------|----------|----------|---------|
+| **Batch import** | REST API (JSON/CSV) | Full catalogue sync, daily CRM updates | Minutes |
+| **Real-time events** | REST API (webhook) | Purchase events, stock changes | Seconds |
+| **Streaming** | Event stream integration | High-volume behavioural data | Sub-second |
+| **DataHub connectors** | Pre-built | Major CDPs and CRMs | Configuration-only |
+
+### Content Delivery
+
+| Channel | Integration method | Effort |
+|---------|-------------------|--------|
+| **Email** | Single `<img>` or HTML tag in template | 5 minutes |
+| **Web** | JavaScript SDK or server-side SDK | 1–2 hours |
+| **Mobile** | Native SDK (iOS, Android, Flutter) | 1–2 days |
+| **Push / In-App** | JSON API response | 1 day |
+
+### Authentication
+
+- **Datasources API:** Bearer token (API key per environment)
+- **Content serving:** HMAC-signed URLs (no authentication at request time — the signature IS the authentication)
+- **Admin API:** OAuth 2.0 with RBAC
+
+## What Does NOT Require Custom Development
+
+| Capability | Implementation | Your effort |
+|------------|---------------|-------------|
+| Workflow logic (branching, conditions) | Visual editor (no-code) | Business user can build |
+| Product recommendations | Built-in engine (configure, don't code) | Data connection only |
+| A/B testing (Exposed vs Non-Exposed) | Automatic 90/10 split | Zero — built in |
+| Multilingual Content | Locale detection + variant selection | Upload translated assets |
+| Stock filtering | Automatic from Stock Datasource | Connect the data feed |
+| Event tracking (impressions, clicks) | Automatic | Zero |
+| Incrementality measurement | Built-in statistical framework | Zero — read the dashboard |
+
+## Infrastructure Guarantees
+
+| Metric | Guarantee |
+|--------|-----------|
+| Availability | 99.9% SLA (measured monthly) |
+| P95 response latency | <50ms (content decisioning) |
+| P99 response latency | <200ms |
+| Data encryption at rest | AES-256 |
+| Data encryption in transit | TLS 1.3 |
+| Data residency | EU (primary), configurable |
+| GDPR compliance | Full — no personal data stored beyond configured retention |
+| SOC 2 | Type II certified |
+| Throughput | 100M+ personalised Content renders/month per client |
+| Failover | Multi-region active-active |
+
+## Integration Effort Estimates
+
+| Scope | Timeline | Team |
+|-------|----------|------|
+| **First Use Case (email only)** | 1–2 weeks | 1 developer (part-time) + 1 CRM manager |
+| **Full email integration (5+ Workflows)** | 4–6 weeks | 1 developer + 1 CRM manager |
+| **Email + Web** | 6–8 weeks | 1–2 developers + 1 CRM manager |
+| **Full omnichannel** | 8–12 weeks | 2 developers + 1 CRM manager |
+
+### What takes the most time
+
+| Task | Typical effort | Notes |
+|------|---------------|-------|
+| Data preparation (CRM export, catalogue mapping) | 60% of total | One-time; reusable across Use Cases |
+| Workflow design and testing | 25% | Business-user driven, no code |
+| Template integration | 10% | Single tag insertion |
+| Go-live validation | 5% | Reelevant support included |
+
+## Security & Compliance
+
+- **No PII in URLs:** Customer identifiers are encrypted and opaque
+- **Data minimisation:** Only fields explicitly mapped in Datasources are accessible
+- **Retention controls:** Configurable per Datasource (default 90 days for events)
+- **Access control:** RBAC with environment separation (staging/production)
+- **Audit logging:** All admin actions logged with user attribution
+- **Penetration testing:** Annual third-party assessment
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="API Reference" icon="code" href="/developer-docs/api-reference/introduction">
+Full REST API documentation for Datasources ingestion and Content retrieval.
+</Card>
+<Card title="SDK Documentation" icon="cube" href="/developer-docs/web-integration/overview">
+Server-side and client-side SDKs for web and mobile integration.
+</Card>
+</CardGroup>

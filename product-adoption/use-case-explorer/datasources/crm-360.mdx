@@ -1,8 +1,64 @@
 ---
-title: 'CRM 360'
-description: 'Consolidated customer data including purchase history, preferences, and client status'
+title: "CRM 360"
+description: "The foundational Datasource containing the complete customer profile — identity, purchase history, lifecycle stage, preferences, and channel subscriptions."
 ---
 
-## CRM 360
+## Overview
 
-_This page will contain the full Datasource definition translated from source material. Content to be completed by CS + TAM teams._
+CRM 360 is the **master Datasource** that provides the individual customer profile to all Workflows. It contains everything needed to identify a customer and understand their relationship with the brand: identity, purchase behaviour, lifecycle stage, value metrics, channel preferences, and loyalty status.
+
+This is the most-connected Datasource — used by every Use Case.
+
+## Key Fields
+
+| Field | Type | Description | Example values |
+|-------|------|-------------|----------------|
+| `customer_id` | String | Unique customer identifier | `"C-2847391"` |
+| `email` | String | Primary email address | `"marie@example.com"` |
+| `lifecycle_stage` | Enum | Current lifecycle position | `prospect`, `one-timer`, `repeat`, `loyal`, `at-risk`, `dormant`, `VIP` |
+| `purchase_count` | Integer | Total number of orders | `7` |
+| `last_purchase_date` | Date | Date of most recent order | `2024-11-15` |
+| `first_purchase_date` | Date | Date of first order | `2023-02-20` |
+| `total_spend` | Currency | Cumulative revenue from this customer | `€1,247.50` |
+| `average_basket` | Currency | Average order value | `€178.21` |
+| `preferred_category` | String | Most-purchased product category | `"shoes"` |
+| `locale` | String | Language/country preference | `"fr-FR"`, `"en-GB"` |
+| `channel_preferences` | Object | Opt-in status per channel | `{email: true, push: false, sms: true}` |
+| `loyalty_member` | Boolean | Whether enrolled in loyalty programme | `true` |
+| `app_installed` | Boolean | Whether mobile app is installed | `false` |
+| `churn_score` | Float | Proprietary churn risk score (0–1) | `0.73` |
+| `segment` | String | Business segment assignment | `"high-value-recurring"` |
+
+## Connected Use Cases
+
+| Use Case | How CRM 360 is used |
+|----------|---------------------|
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Customer segment, preferences, and locale for targeting |
+| [Lifecycle Banner](/product-adoption/use-case-explorer/use-cases/lifecycle-banner) | Lifecycle stage detection and messaging adaptation |
+| [Loyalty Programme Banner](/product-adoption/use-case-explorer/use-cases/loyalty-programme-banner) | Membership status, enrolment eligibility |
+| [Customer Value Block](/product-adoption/use-case-explorer/use-cases/customer-value-block) | Total spend, purchase count, relationship metrics |
+| [Live Polling](/product-adoption/use-case-explorer/use-cases/live-polling) | Profile completeness, data gaps to fill |
+| [1:1 Personalised Digest](/product-adoption/use-case-explorer/use-cases/personalised-digest) | Master orchestration of all blocks |
+| [Drive to Store / Web / App](/product-adoption/use-case-explorer/use-cases/drive-to-channel) | Channel preferences, location, app status |
+| [Opt-in Banner](/product-adoption/use-case-explorer/use-cases/optin-banner) | Current opt-in status per channel |
+
+## Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Update frequency | Daily minimum — ideally real-time for transactional fields |
+| Minimum fields | `customer_id`, `email`, `lifecycle_stage`, `purchase_count`, `last_purchase_date` |
+| Recommended fields | All listed above for full personalisation coverage |
+| Format | JSON or CSV via Datasources API |
+| Volume | No limit — one record per customer |
+
+## Integration Notes
+
+CRM 360 is typically sourced from the brand's CDP (Customer Data Platform) or CRM system. It can be populated via:
+- **Batch import:** Daily CSV/JSON upload via the Datasources API
+- **Real-time sync:** Webhook-triggered updates on purchase events
+- **DataHub connectors:** Pre-built integrations with major CDPs
+
+<Info>
+CRM 360 is the only Datasource required for ALL Use Cases. Start here when integrating with Reelevant — other Datasources add depth but CRM 360 is the foundation.
+</Info>

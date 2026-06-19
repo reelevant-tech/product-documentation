@@ -1,0 +1,51 @@
+---
+title: "Loyalty Programme"
+description: "The Datasource containing loyalty programme data — status, points, tiers, benefits, and programme rules for personalised loyalty communications."
+---
+
+## Overview
+
+The Loyalty Programme Datasource provides all data related to a customer's membership in the brand's loyalty programme: current status, points balance, tier thresholds, available benefits, and expiration dates. This powers the Loyalty Programme Banner and informs lifecycle decisions across all Use Cases.
+
+## Key Fields
+
+| Field | Type | Description | Example values |
+|-------|------|-------------|----------------|
+| `customer_id` | String | Customer identifier | `"C-2847391"` |
+| `member` | Boolean | Whether enrolled in the programme | `true` |
+| `tier` | Enum | Current tier | `"Silver"`, `"Gold"`, `"Platinum"`, `"VIP"` |
+| `points_balance` | Integer | Current available points | `2,340` |
+| `points_to_next_tier` | Integer | Points needed for next tier | `660` |
+| `next_tier` | String | Name of the next tier | `"Gold"` |
+| `tier_benefits` | Array | Benefits of current tier | `["free_delivery", "early_access", "birthday_gift"]` |
+| `points_expiration_date` | Date | When current points expire | `2025-03-31` |
+| `points_expiring` | Integer | Points about to expire | `450` |
+| `member_since` | Date | Programme enrolment date | `2023-05-10` |
+| `lifetime_points` | Integer | Total points earned since enrolment | `8,750` |
+
+## Connected Use Cases
+
+| Use Case | How Loyalty Programme is used |
+|----------|-------------------------------|
+| [Loyalty Programme Banner](/product-adoption/use-case-explorer/use-cases/loyalty-programme-banner) | Core data: status, points, benefits, progression |
+| [Customer Value Block](/product-adoption/use-case-explorer/use-cases/customer-value-block) | Loyalty context for relational messaging |
+| [Lifecycle Banner](/product-adoption/use-case-explorer/use-cases/lifecycle-banner) | Status-based lifecycle stage enrichment |
+| [1:1 Personalised Digest](/product-adoption/use-case-explorer/use-cases/personalised-digest) | Loyalty block within the digest |
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Points multiplier on specific products |
+
+## Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Update frequency | Daily minimum (points balance changes after each purchase) |
+| Minimum fields | `customer_id`, `member`, `tier`, `points_balance` |
+| Recommended fields | All listed above for full loyalty personalisation |
+| Format | JSON via Datasources API |
+| Volume | One record per loyalty member |
+
+## Integration Notes
+
+Loyalty Programme data is sourced from the brand's loyalty platform or CRM. Key integration considerations:
+- Points balance must be updated at least daily (ideally after each transaction)
+- Tier thresholds and benefits are typically static configuration
+- Expiration dates enable time-sensitive urgency messaging

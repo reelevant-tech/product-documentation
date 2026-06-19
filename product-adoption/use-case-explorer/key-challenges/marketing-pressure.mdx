@@ -1,8 +1,45 @@
 ---
-title: 'Marketing Pressure'
-description: 'Managing individual exposure control to prevent fatigue without reducing communications'
+title: "Marketing Pressure Management"
+description: "Managing individual exposure to avoid over-solicitation — automatic content rotation based on interaction data."
 ---
 
-## Marketing Pressure Management
+Marketing pressure management is a transversal challenge that applies across all Use Cases. The goal is to avoid over-solicitation by controlling individual exposure.
 
-_This page will contain the marketing pressure Key Challenge translated from source material. Content to be completed by CS + TAM teams._
+## The Challenge
+
+<Card title="Marketing Pressure Management" icon="gauge-high">
+Common to all Use Cases. Avoid over-solicitation by controlling individual exposure — for example, using Workflow Events data (impressions, clicks) to create automatic Content rotation if no conversion is detected within X days. This prevents always displaying the same message and reduces fatigue without removing communications.
+
+**Connected Use Cases:** 1
+</Card>
+
+## How It Works with Reelevant
+
+Rather than suppressing communications entirely, Reelevant enables **intelligent Content rotation** within the same communication:
+
+1. The Workflow tracks individual exposure history via [Workflow Events](/product-adoption/use-case-explorer/datasources/workflow-events)
+2. If a person has been exposed to the same Content N times without converting, the Workflow automatically switches to a different variant
+3. The rotation happens at the block level — the email itself is still sent; only the personalised Content changes
+
+This approach reduces pressure fatigue while maintaining CRM frequency.
+
+## Required Datasources
+
+| Datasource | Usage |
+|------------|-------|
+| [Workflow Events](/product-adoption/use-case-explorer/datasources/workflow-events) | Track individual exposure count, click history, conversion status |
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Customer engagement level, channel preferences |
+
+## Connected Capabilities
+
+| Capability | Role |
+|------------|------|
+| Lifecycle Offer Engine | Manages escalation timing and rotation logic |
+| Recommendation Engine | Selects alternative Content when primary exhausted |
+
+## Measuring Impact
+
+Marketing pressure management is measured indirectly:
+- **Negative indicator:** Unsubscribe rate (should decrease with better pressure management)
+- **Positive indicator:** Long-term engagement metrics (open rate, click rate maintained over time)
+- **Value preserved:** Revenue not lost due to unsubscribes that would have occurred under higher pressure

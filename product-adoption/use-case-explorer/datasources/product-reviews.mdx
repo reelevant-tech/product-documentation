@@ -1,0 +1,41 @@
+---
+title: "Product Reviews"
+description: "The Datasource containing customer product reviews, ratings, and feedback data for personalisation based on satisfaction signals."
+---
+
+## Overview
+
+The Product Reviews Datasource contains customer-generated ratings and reviews for products. This data enables personalisation based on satisfaction signals — recommending highly-rated products, collecting reviews post-purchase, and adapting messaging based on individual review behaviour.
+
+## Key Fields
+
+| Field | Type | Description | Example values |
+|-------|------|-------------|----------------|
+| `review_id` | String | Unique review identifier | `"REV-847291"` |
+| `customer_id` | String | Customer who left the review | `"C-2847391"` |
+| `product_id` | String | Reviewed product | `"SKU-12345"` |
+| `rating` | Integer | Star rating (1–5) | `4` |
+| `review_text` | String | Review content | `"Great quality, runs slightly large"` |
+| `review_date` | Date | Date of review submission | `2024-10-20` |
+| `verified_purchase` | Boolean | Whether reviewer purchased the product | `true` |
+| `helpful_votes` | Integer | Number of "helpful" votes | `12` |
+
+## Connected Use Cases
+
+| Use Case | How Product Reviews is used |
+|----------|----------------------------|
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Prioritise highly-rated products in recommendations |
+| [Live Polling](/product-adoption/use-case-explorer/use-cases/live-polling) | Post-purchase review collection, NPS follow-up |
+
+## Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Update frequency | Daily or on review submission |
+| Minimum fields | `review_id`, `customer_id`, `product_id`, `rating` |
+| Format | JSON via Datasources API |
+| Volume | One record per review |
+
+## Integration Notes
+
+Product Reviews are typically sourced from the brand's review platform (Bazaarvoice, Trustpilot, Verified Reviews, or proprietary). The data enriches recommendation quality and enables satisfaction-based personalisation.

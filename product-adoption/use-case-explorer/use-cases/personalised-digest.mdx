@@ -1,0 +1,87 @@
+---
+title: "1:1 Personalised Digest"
+description: "A fully individualised email where every block is personalised — combining lifecycle messaging, recommendations, loyalty status, and contextual offers into one coherent communication."
+---
+
+## What It Is
+
+The 1:1 Personalised Digest is a complete email where **every single block** is individually personalised. Rather than a generic newsletter with one personalised section, the entire communication is composed of multiple Reelevant Content blocks — each serving a different purpose, all orchestrated by interconnected Workflows.
+
+This is the most advanced Use Case: it combines product recommendations, lifecycle messaging, loyalty status, contextual offers, and relational content into a single, fully individualised communication.
+
+## Key Challenges Addressed
+
+This Use Case addresses **10 Key Challenges** across 5 categories:
+
+| Category | Challenges addressed |
+|----------|---------------------|
+| [Customer Lifecycle & Value](/product-adoption/use-case-explorer/key-challenges/customer-lifecycle) | Frequency increase, basket increase, churn reduction, one-timer conversion, reduce promo dependence |
+| [Loyalty Programme](/product-adoption/use-case-explorer/key-challenges/loyalty-program) | Status progression, programme recruitment |
+| [New Data Usage](/product-adoption/use-case-explorer/key-challenges/new-data-usage) | Proprietary scoring, preference qualification |
+| [Language Management](/product-adoption/use-case-explorer/key-challenges/language-management) | Language adaptation |
+| [Omnichannel](/product-adoption/use-case-explorer/key-challenges/omnichannel-experience) | Coherent omnichannel experience |
+
+## Required Datasources
+
+| Datasource | Fields used | Role |
+|------------|------------|------|
+| [CRM 360](/product-adoption/use-case-explorer/datasources/crm-360) | Full customer profile, lifecycle stage, preferences | Master orchestration |
+| [Product Catalogue](/product-adoption/use-case-explorer/datasources/product) | Products, categories, pricing | Recommendation block |
+| [Loyalty Programme](/product-adoption/use-case-explorer/datasources/loyalty-programme) | Status, points, benefits | Loyalty block |
+| [Offers](/product-adoption/use-case-explorer/datasources/offers) | Active offers, eligibility | Offer block |
+| [Navigation](/product-adoption/use-case-explorer/datasources/navigation) | Recent browsing, cart abandonment | Intent signals |
+| [Stock & Availability](/product-adoption/use-case-explorer/datasources/stock-availability) | Product availability | Real-time filtering |
+
+## Required Capabilities
+
+| Capability | Role in this Use Case |
+|------------|----------------------|
+| Recommendation Engine | Product selection for recommendation blocks |
+| Lifecycle Offer Engine | Offer selection based on lifecycle stage |
+| Loyalty Programme Integration | Real-time loyalty data for status block |
+| Language Scaling | Full email in individual's locale |
+| Category Affinity | Cross-sell block based on purchase patterns |
+
+## Example Implementation
+
+### Email Composition (5 blocks)
+
+```
+Block 1 — Lifecycle Banner (Workflow A):
+  Contextual greeting based on lifecycle stage
+
+Block 2 — Product Recommendations (Workflow B):
+  3–6 products selected by affinity, filtered by stock
+
+Block 3 — Loyalty Status (Workflow C):
+  Points balance, distance to next reward, or enrolment CTA
+
+Block 4 — Contextual Offer (Workflow D):
+  Personalised offer based on lifecycle + purchase pattern
+
+Block 5 — Live Polling or Relational Content (Workflow E):
+  One-click survey OR customer value metrics
+```
+
+### What the Customer Sees
+
+A single email where:
+1. The header greets them by lifecycle context ("Welcome back, Marie — 3 months together!")
+2. Product recommendations reflect their actual browsing from yesterday
+3. Their loyalty points and next benefit are displayed in real time
+4. An offer is calibrated to their value and lifecycle stage
+5. A relational block shows their journey or asks a preference question
+
+Every element is different from what another customer sees — **no two emails are identical**.
+
+## Measuring Incremental Value
+
+| Metric | How to measure |
+|--------|----------------|
+| Overall engagement | Open rate, click rate, click-to-open rate |
+| Revenue per email | Total attributable revenue per Exposed vs Non-Exposed |
+| Block-level CTR | Individual block performance within the digest |
+| Frequency impact | Purchase frequency over 90 days for Exposed vs Non-Exposed |
+| Unsubscribe rate | Should decrease vs generic newsletters |
+
+See [Key Challenges — Frequency](/product-adoption/incremental-value/key-challenges#challenge-7--purchase-frequency-increase) and [Annual Spend](/product-adoption/incremental-value/key-challenges#challenge-8--average-basket-aov-and-annual-spend) for valorisation formulas.

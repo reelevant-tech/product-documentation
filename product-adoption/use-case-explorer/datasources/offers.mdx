@@ -1,0 +1,50 @@
+---
+title: "Offers"
+description: "The Datasource containing promotional offers, eligibility conditions, validity periods, and discount mechanics for personalised offer display."
+---
+
+## Overview
+
+The Offers Datasource contains all promotional offers, discounts, and incentives that can be displayed within personalised Content. Each offer includes eligibility conditions, validity dates, discount mechanics, and visual assets — enabling Workflows to select and display the most relevant offer for each individual.
+
+## Key Fields
+
+| Field | Type | Description | Example values |
+|-------|------|-------------|----------------|
+| `offer_id` | String | Unique offer identifier | `"OFF-2024-BF-001"` |
+| `title` | String | Offer headline | `"20% off your next order"` |
+| `description` | String | Offer details | `"Valid on full-price items only"` |
+| `discount_type` | Enum | Mechanic type | `percentage`, `fixed_amount`, `free_shipping`, `points_multiplier` |
+| `discount_value` | Number | Discount amount | `20` (= 20% or €20 depending on type) |
+| `eligibility_segment` | Array | Customer segments eligible | `["one-timer", "dormant"]` |
+| `valid_from` | Date | Start date | `2024-12-01` |
+| `valid_until` | Date | Expiry date | `2024-12-31` |
+| `minimum_basket` | Currency | Minimum order value | `€50` |
+| `image_url` | URL | Offer visual asset | `"https://cdn.brand.com/offers/bf-001.jpg"` |
+
+## Connected Use Cases
+
+| Use Case | How Offers is used |
+|----------|-------------------|
+| [Enriched Product Recommendation](/product-adoption/use-case-explorer/use-cases/enriched-product-recommendation) | Display applicable offer on recommended products |
+| [Lifecycle Banner](/product-adoption/use-case-explorer/use-cases/lifecycle-banner) | Stage-specific offers (welcome, winback, VIP exclusive) |
+| [Loyalty Programme Banner](/product-adoption/use-case-explorer/use-cases/loyalty-programme-banner) | Points multipliers, loyalty-specific offers |
+| [1:1 Personalised Digest](/product-adoption/use-case-explorer/use-cases/personalised-digest) | Contextual offer block within the digest |
+
+## Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Update frequency | Daily or on offer creation/modification |
+| Minimum fields | `offer_id`, `title`, `discount_type`, `discount_value`, `valid_from`, `valid_until` |
+| Recommended fields | All listed above for full targeting coverage |
+| Format | JSON via Datasources API |
+| Volume | Typically 10–200 active offers at any time |
+
+## Integration Notes
+
+Offers are typically sourced from the brand's promotion management system or marketing automation platform. The Workflow evaluates eligibility conditions at the moment of email open, ensuring only valid, applicable offers are shown.
+
+<Warning>
+Always include `valid_until` — an expired offer displayed to a customer creates a negative experience. The Workflow automatically filters expired offers but relies on accurate dates.
+</Warning>
