@@ -190,8 +190,8 @@ When a file-upload datasource is created, Reelevant automatically generates FTP 
     | Field | Value |
     |-------|-------|
     | **Host** | `ftp.reelevant.com` |
-    | **FTP Port** | `21` (or `990` for FTPS) |
-    | **SFTP Port** | `22` |
+    | **FTP/FTPS Port** | `21` |
+    | **SFTP Port** | `8022` |
     | **Username** | Your datasource ID (the 24-character hex string) |
     | **Password** | The password returned in step 1 |
   </Step>
@@ -204,7 +204,7 @@ Once you have the credentials, upload a file using any standard FTP or SFTP clie
 <Tabs>
   <Tab title="SFTP">
     ```bash
-    sftp -P 22 ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -212,7 +212,7 @@ Once you have the credentials, upload a file using any standard FTP or SFTP clie
 
     Or using an SFTP library/client, connect with:
     - Host: `ftp.reelevant.com`
-    - Port: `22`
+    - Port: `8022`
     - Username: `<datasource_id>`
     - Password: `<password from API>`
   </Tab>
