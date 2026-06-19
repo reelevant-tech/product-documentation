@@ -13,8 +13,8 @@ The Kafka source streams data from an Apache Kafka topic into Reelevant. Use it 
 
 | Field | Description |
 |-------|-------------|
-| **Brokers** | A list of Kafka broker addresses (e.g. `broker1:9092`, `broker2:9092`). |
-| **Topic** | The Kafka topic to consume from. |
+| `brokers` | A list of Kafka broker addresses (e.g. `broker1:9092`, `broker2:9092`). |
+| `topic` | The Kafka topic to consume from. |
 
 ### Authentication
 
@@ -27,9 +27,9 @@ The Kafka source streams data from an Apache Kafka topic into Reelevant. Use it 
 
     | Field | Description |
     |-------|-------------|
-    | **Username** | SASL username. |
-    | **Password** | SASL password. |
-    | **SSL** | Enable SSL/TLS for the connection. |
+    | `username` | SASL username. |
+    | `password` | SASL password. |
+    | `ssl` | Enable SSL/TLS for the connection. |
   </Tab>
 </Tabs>
 
@@ -37,17 +37,17 @@ The Kafka source streams data from an Apache Kafka topic into Reelevant. Use it 
 
 | Field | Description |
 |-------|-------------|
-| **Group prefix** | A prefix for the consumer group name. Use this if your Kafka cluster enforces naming conventions for consumer groups. |
+| `groupPrefix` | A prefix for the consumer group name. Use this if your Kafka cluster enforces naming conventions for consumer groups. |
 
 ### Schema Registry
 
-If your Kafka messages use Avro serialization with a Confluent Schema Registry:
+If your Kafka messages use Avro serialization with a Confluent Schema Registry, configure the `registry` object:
 
 | Field | Description |
 |-------|-------------|
-| **Registry URL** | The Schema Registry endpoint URL. |
-| **Registry username** | Schema Registry authentication username. |
-| **Registry password** | Schema Registry authentication password. |
+| `registry.url` | The Schema Registry endpoint URL. |
+| `registry.username` | Schema Registry authentication username. |
+| `registry.password` | Schema Registry authentication password. |
 
 When configured, messages are automatically deserialized using the schema from the registry.
 

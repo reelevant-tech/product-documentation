@@ -15,17 +15,20 @@ The URL source type fetches data from a web address. Use it for API endpoints, h
 
 | Field | Description |
 |-------|-------------|
-| **URL** | The full URL to the data source (API endpoint or hosted file URL). |
+| `url` | The full URL to the data source (API endpoint or hosted file URL). |
 
 ### HTTP Options
 
+These fields are nested under the `options` object.
+
 | Field | Description |
 |-------|-------------|
-| **Method** | The HTTP method to use: `GET` *(default)*, `POST`, `PUT`, or `PATCH`. |
-| **Headers** | Custom HTTP headers to include in the request (key-value pairs). Useful for API keys or custom tokens. |
-| **Query parameters** | URL query parameters to append to the request (key-value pairs). |
-| **Body** | The request body (for `POST`, `PUT`, `PATCH` methods). |
-| **Timeout** | Request timeout in milliseconds. |
+| `method` | The HTTP method to use: `GET` *(default)*, `POST`, `PUT`, or `PATCH`. |
+| `headers` | Custom HTTP headers to include in the request (key-value pairs). Useful for API keys or custom tokens. |
+| `query` | URL query parameters to append to the request (key-value pairs). |
+| `body` | The request body (for `POST`, `PUT`, `PATCH` methods). |
+| `timeout` | Request timeout in milliseconds. |
+| `oauth` | DatasourceAuth ID for OAuth-protected APIs. |
 
 ### Authentication
 
@@ -34,7 +37,7 @@ The URL source type fetches data from a web address. Use it for API endpoints, h
     For publicly accessible URLs, no additional configuration is needed.
   </Tab>
   <Tab title="Custom Headers">
-    For API key or token-based authentication, add the appropriate header in the **Headers** configuration:
+    For API key or token-based authentication, add the appropriate header in the `headers` configuration:
 
     | Header | Example |
     |--------|---------|
@@ -89,9 +92,9 @@ For APIs that paginate their responses, the URL source supports several paginati
 
     | Field | Description |
     |-------|-------------|
-    | **Parameter name** | The query parameter name (e.g. `page`, `offset`). |
-    | **Start at** | The initial value (default: `1`). Some APIs start at `0`. |
-    | **Subtype** | `page` (page number) or `offset` (record offset). |
+    | `value` | The query parameter name (e.g. `page`, `offset`). |
+    | `startAt` | The initial value (default: `1`). Some APIs start at `0`. |
+    | `subtype` | `page` (page number) or `offset` (record offset). |
   </Tab>
   <Tab title="Body Parameter">
     Same as query parameter pagination, but the page/offset value is included in the request body.
@@ -101,15 +104,16 @@ For APIs that paginate their responses, the URL source supports several paginati
 
     | Field | Description |
     |-------|-------------|
-    | **Attribute** | The JSON path to the next page URL in the response (e.g. `next_page_url`). |
+    | `value` | The JSON path to the next page URL in the response (e.g. `next_page_url`). |
   </Tab>
   <Tab title="Page Token">
     Use a token from the response body to request the next page.
 
     | Field | Description |
     |-------|-------------|
-    | **Token attribute** | The JSON path to the token in the response body. |
-    | **Query parameter** | The query parameter to use for the token in subsequent requests. |
+    | `value` | The JSON path to the token in the response body. |
+    | `param` | The query parameter to use for the token in subsequent requests. |
+    | `removeParams` | Remove other URL parameters when paginating (optional). |
   </Tab>
   <Tab title="Link Header">
     Follow pagination URLs from the standard HTTP `Link` header (as defined by [RFC 8288](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)).
@@ -119,13 +123,14 @@ For APIs that paginate their responses, the URL source supports several paginati
 
     | Field | Description |
     |-------|-------------|
-    | **Token attribute** | The field name in each entry that serves as a cursor. |
-    | **Query parameter** | The query parameter to use for the cursor in subsequent requests. |
+    | `value` | The field name in each entry that serves as a cursor. |
+    | `param` | The query parameter to use for the cursor in subsequent requests. |
+    | `removeParams` | Remove other URL parameters when paginating (optional). |
   </Tab>
 </Tabs>
 
 <Info>
-  You can optionally set a **Maximum page** limit to cap the number of pages fetched during a sync.
+  You can optionally set `maximumPage` to cap the number of pages fetched during a sync.
 </Info>
 
 ## Runtime Variables
@@ -136,9 +141,9 @@ Each variable has:
 
 | Field | Description |
 |-------|-------------|
-| **Name** | The variable name used in the URL, headers, body, or query parameters. |
-| **Default value** | A static value or a dynamic expression evaluated at runtime. |
-| **Type** | The data type (string, number, etc.). |
+| `name` | The variable name used in the URL, headers, body, or query parameters. |
+| `default` | A static value or a dynamic expression evaluated at runtime. |
+| `primitive` | The data type (string, number, etc.). |
 
 Variables can be referenced in the URL, headers, body, and query parameters. This enables building dynamic URLs like `https://api.example.com/products?since={{last_sync_date}}`.
 

@@ -13,25 +13,26 @@ The S3 source retrieves data files from an Amazon S3 bucket or any S3-compatible
 
 | Field | Description |
 |-------|-------------|
-| **Access key** | The AWS access key ID (or equivalent for S3-compatible services). |
-| **Secret key** | The AWS secret access key (or equivalent for S3-compatible services). |
-| **Bucket** | The S3 bucket name. |
-| **Path** | The file path or pattern within the bucket (see [Wildcard Paths](#wildcard-paths) below). |
+| `accessKey` | The AWS access key ID (or equivalent for S3-compatible services). |
+| `secretKey` | The AWS secret access key (or equivalent for S3-compatible services). |
+| `bucket` | The S3 bucket name. |
+| `path` | The file path or pattern within the bucket (see [Wildcard Paths](#wildcard-paths) below). |
 
 ### Optional Fields
 
 | Field | Description |
 |-------|-------------|
-| **Endpoint** | Custom endpoint URL for S3-compatible services. Defaults to `https://s3.amazonaws.com` for standard AWS S3. |
-| **Region** | The AWS region where the bucket is located (e.g. `eu-west-1`, `us-east-1`). |
+| `endpoint` | Custom endpoint URL for S3-compatible services. Defaults to `https://s3.amazonaws.com` for standard AWS S3. |
+| `region` | The AWS region where the bucket is located (e.g. `eu-west-1`, `us-east-1`). |
+| `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
 
 <Tip>
-  For standard AWS S3, the **Access key** must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket.
+  For standard AWS S3, the `accessKey` must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket.
 </Tip>
 
 ### S3-Compatible Services
 
-The S3 source works with any service that implements the S3 API. Set the **Endpoint** to your provider's URL:
+The S3 source works with any service that implements the S3 API. Set `endpoint` to your provider's URL:
 
 | Provider | Example Endpoint |
 |----------|-----------------|
@@ -87,13 +88,13 @@ You can use a wildcard (`*`) in the file path to match multiple files. This is u
 
 ## File Processing Modes
 
-When using wildcard paths, you can configure how files are selected:
+When using wildcard paths, you can configure how files are selected via the `processType` field:
 
-| Mode | Description |
+| `processType` value | Description |
 |------|-------------|
-| **Last unprocessed** *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
-| **All unprocessed** | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
-| **All** | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
+| `last_unprocess` *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
+| `all_unprocess` | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
+| `all` | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
 
 ## How It Works
 

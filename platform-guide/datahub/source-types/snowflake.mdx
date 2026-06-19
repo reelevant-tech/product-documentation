@@ -15,12 +15,12 @@ The Snowflake source synchronizes data from a Snowflake table or view into Reele
 
 | Field | Description |
 |-------|-------------|
-| **Account** | Your Snowflake account identifier (e.g. `xy12345.eu-west-1`). |
-| **Username** | Snowflake login username. |
-| **Warehouse** | The Snowflake warehouse to use for running queries. |
-| **Database** | The database name. |
-| **Schema** | The schema name. |
-| **Table** | The table or view to synchronize. |
+| `account` | Your Snowflake account identifier (e.g. `xy12345.eu-west-1`). |
+| `username` | Snowflake login username. |
+| `warehouse` | The Snowflake warehouse to use for running queries. |
+| `database` | The database name. |
+| `schema` | The schema name. |
+| `table` | The table or view to synchronize. |
 
 ### Authentication
 
@@ -32,14 +32,14 @@ Snowflake supports two authentication methods:
 
     | Field | Description |
     |-------|-------------|
-    | **Password** | Snowflake login password. |
+    | `password` | Snowflake login password. |
   </Tab>
   <Tab title="Key-Pair">
     Authenticate using a key pair (JWT-based authentication). This is the recommended method for production environments.
 
     | Field | Description |
     |-------|-------------|
-    | **Private key** | The RSA private key in PEM format. |
+    | `privateKey` | The RSA private key in PEM format. |
 
     When a private key is provided, Reelevant uses Snowflake's JWT (`SNOWFLAKE_JWT`) authentication, and the password field is ignored.
 
@@ -61,7 +61,7 @@ Snowflake supports two authentication methods:
 
 | Field | Description |
 |-------|-------------|
-| **Query** | A custom SQL query to filter or transform the data before import. When provided, the query is executed instead of reading the full table. |
+| `query` | A custom SQL query to filter or transform the data before import. When provided, the query is executed instead of reading the full table. |
 
 ### Custom SQL Queries
 
@@ -82,7 +82,7 @@ Snowflake supports incremental synchronization when used with the **Keep Previou
 
 | Field | Description |
 |-------|-------------|
-| **Timestamp column** | The column name used to compute the delta since the last fetch. |
+| `timestampColumn` | The column name used to compute the delta since the last fetch. |
 
 When configured, Reelevant appends a `WHERE` clause to your query (or generates one automatically) to only fetch rows where the timestamp column is greater than the last recorded value.
 
