@@ -1,0 +1,115 @@
+---
+title: 'JSON Template'
+description: 'Return a structured JSON payload using a pre-defined template with dynamic variables'
+---
+
+![Workflow editor showing an Email Content node connected to a JSON Template output node](/images/workflows/json-template-canvas.png)
+
+## Overview
+
+The JSON Template output node returns a **structured JSON payload** based on a pre-defined template. Unlike the [JSON Format](/platform-guide/workflows/output-nodes/json-format) node (which gives raw, free-form JSON), JSON Template ensures a **consistent, predictable schema** across every execution.
+
+Each template declares **named variables** that are resolved at runtime from your workflow's datasources. This means your frontend always receives the exact fields it expects — no guessing, no parsing surprises.
+
+<Info>
+  JSON Templates are ideal when your technical team defines the contract (the JSON shape) and your marketing team decides **what data** fills it. The schema stays stable; only the variable bindings change.
+</Info>
+
+## When to Use JSON Template vs JSON Format
+
+| Criteria | JSON Template | JSON Format |
+|----------|--------------|-------------|
+| Schema is defined upfront | Yes — template enforces structure | No — free-form |
+| Frontend knows what to expect | Yes — fields are predictable | Depends on implementation |
+| Non-technical users can configure | Yes — just select template & bind variables | Requires writing JSON manually |
+| Cross-branch consistency | Enforced at publish time | Not enforced |
+
+## Configuration
+
+![JSON Template node configuration drawer showing template selection and variable binding](/images/workflows/json-template-node-config.png)
+
+<Steps>
+  <Step title="Open the configuration drawer">
+    Click the **three-dot menu** (⋮) on the JSON Template node in the canvas, then select **Edit**.
+  </Step>
+  <Step title="Select a template">
+    Use the **Template** dropdown to choose from the available JSON Templates. Templates are created and managed by your engineering team in [Workflow Settings](/platform-guide/workflows/settings#json-templates).
+  </Step>
+  <Step title="Bind variables">
+    Once a template is selected, its **variables** appear below. For each variable:
+    - Click the **Parameter value** picker.
+    - Select a datasource field from your workflow's upstream data nodes.
+    
+    Each variable has a description indicating whether it retrieves **a single value** (scalar) or **all values** (array) from the datasource.
+  </Step>
+  <Step title="Confirm">
+    Click **Confirm** to save the configuration. The node is now ready for publishing.
+  </Step>
+</Steps>
+
+## Understanding Variables
+
+Variables are the dynamic slots in your JSON template. When the workflow runs, each variable is replaced by real data from your datasources.
+
+### Scalar Variables (single value)
+
+A scalar variable retrieves **one value** from the datasource — for example, a user's loyalty points or a product name. The description reads: *"Retrieves a single value from the datasource"*.
+
+### Array Variables (all values)
+
+An array variable retrieves **all matching values** — for example, a list of recommended products or recent purchases. The description reads: *"Retrieves all values from the datasource"*. The engine automatically iterates over all rows in the datasource.
+
+## How It Works
+
+When the workflow executes and reaches a JSON Template output node:
+
+1. The engine loads the selected template's definition (the JSON structure).
+2. For each variable in the template, it resolves the bound datasource field to a real value.
+3. The final JSON — with all variables filled in — is returned as the HTTP response.
+
+The response is a `200 OK` with `Content-Type: application/json` when data is available, or a `204 No Content` when no personalisation applies.
+
+## Example
+
+Suppose you want to personalise a product recommendation card. Your engineering team creates a JSON Template with this definition:
+
+```json
+{
+  "headline": { "type": "static", "value": "Recommended for you" },
+  "productName": { "type": "dependency", "variable": "productName" },
+  "loyaltyPoints": { "type": "dependency", "variable": "loyaltyPoints" }
+}
+```
+
+Each field is either:
+- `"type": "static"` — a fixed value that never changes at runtime.
+- `"type": "dependency"` — a named variable that the marketing team binds to a datasource field.
+
+The template declares two variables:
+- `productName` — **isArray: true** → retrieves all matching rows from the datasource
+- `loyaltyPoints` — **isArray: false** → retrieves a single value
+
+At runtime, the engine resolves each variable from the bound datasource and returns a flat JSON response:
+
+```json
+{
+  "headline": "Recommended for you",
+  "productName": ["Running Shoes", "Sports Watch"],
+  "loyaltyPoints": 4250
+}
+```
+
+Your frontend simply consumes these fields using its own components — the shape is always the same.
+
+## Best Practices
+
+- **Let engineering define the template, marketing bind the variables.** This separation keeps the schema stable while allowing marketing to experiment with different datasource bindings.
+- **Use descriptive variable names.** Names like `productRecommendations` or `userLoyaltyScore` make it clear what data each variable expects.
+- **Test with real data.** Use the [Integration](/platform-guide/workflows/integration) URL to call the workflow directly and verify the JSON output matches your frontend's expectations.
+- **One template per workflow.** All JSON Template nodes in a workflow must reference the same template — this is enforced at publish time.
+
+## Feature Flag
+
+<Note>
+  The JSON Template output node requires the `workflow_output_json-template` feature flag to be enabled for your company. Contact your account manager or enable it in **Workflow Settings > Feature Flags**.
+</Note>

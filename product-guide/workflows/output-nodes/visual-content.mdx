@@ -1,0 +1,34 @@
+---
+title: 'Visual Content'
+description: 'Render a visual template designed in the Content Editor'
+---
+
+![Visual content node showing content library with content selection](/images/workflows/node-visual-content.png)
+
+## Overview
+
+The most common output type. A visual content output renders a **visual template** designed in the [Content Editor](/platform-guide/contents/overview).
+
+## Configuration
+
+1. Click on the content output node to open its configuration drawer.
+2. Select a content template from your content library.
+3. The system automatically maps data from upstream data nodes to the content's dynamic variables.
+
+<Info>
+  If upstream data nodes provide fields that match the content template's dynamic variables, they are automatically bound. If there are mismatches, the editor highlights them as errors during [publishing](/platform-guide/workflows/editor#publishing-a-workflow).
+</Info>
+
+## How It Works
+
+When the workflow executes and reaches a Visual Content output node, the engine:
+1. Fetches the selected content template.
+2. Binds data from upstream nodes to the template's dynamic variables.
+3. Renders the final visual (image or HTML depending on the channel type).
+4. Returns the rendered content to the user.
+
+## Best Practices
+
+- Design your content templates with clear variable names that match your datasource fields.
+- Use the preview feature to verify how the content looks with real data before publishing.
+- If the same template is used across multiple branches, each branch can bind different data to the same variables.

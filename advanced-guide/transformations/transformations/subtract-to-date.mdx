@@ -1,0 +1,30 @@
+---
+title: 'Subtract from Date'
+description: 'Subtract time from a date'
+---
+
+## Overview
+
+The `sub-to-date` transformation subtracts a specified amount of time from a date.
+
+## Syntax
+
+```text
+sub-to-date(<date-variable>, <amount-variable>, unit="days")
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `date-variable` | date | Yes | The date to subtract time from |
+| `amount-variable` | number | Yes | The amount of time to subtract |
+| `unit` | string | No | Unit of time: `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, `"days"`, `"months"`, or `"years"` |
+| `inputLocale` | string | No | Locale used to parse the input date: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
+
+## Examples
+
+```text
+sub-to-date(<date-variable>, <amount-variable>, unit="days")
+sub-to-date(<date-variable>, <amount-variable>, unit="hours", inputLocale="fr")
+```

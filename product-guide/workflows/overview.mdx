@@ -1,0 +1,87 @@
+---
+title: 'Workflows Overview'
+description: 'Understand what workflows are and how they power personalized content delivery in Reelevant'
+---
+
+![Workflow editor showing a complex workflow with multiple nodes and branches](/images/workflows/editor-canvas.png)
+
+## What is a Workflow?
+
+A workflow is the core building block of every Reelevant campaign. It is a **visual, node-based graph** (a directed acyclic graph, or DAG) that defines the logic for delivering personalized content to your audience.
+
+Each workflow answers three questions:
+1. **Where** does the content appear? ([Channels](/platform-guide/workflows/channels))
+2. **What data** drives the personalization? ([Data nodes](/platform-guide/workflows/data-nodes))
+3. **What logic** determines the experience? ([Logic nodes](/platform-guide/workflows/logic-nodes), [conditions](/platform-guide/workflows/logic-nodes/conditions), [splits](/platform-guide/workflows/logic-nodes/split))
+
+When a user visits a page, opens an email, or triggers a mobile event, Reelevant evaluates the workflow in real time and returns the most relevant content.
+
+## Workflow Structure
+
+A workflow is composed of connected **nodes** organized into four categories:
+
+<CardGroup cols={2}>
+  <Card title="Channels" icon="right-to-bracket" href="/platform-guide/workflows/channels">
+    Define where content is displayed — Email, Web (image or HTML), Landing Page, or Mobile (push, in-app, inbox).
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/platform-guide/workflows/data-nodes">
+    Fetch and transform data — product catalogs, geolocation, weather, URL parameters, website events, and more.
+  </Card>
+  <Card title="Logic Nodes" icon="code-branch" href="/platform-guide/workflows/logic-nodes">
+    Control the flow — conditions, A/B splits, and real-time testing decide which branch a user follows.
+  </Card>
+  <Card title="Output Nodes" icon="square-check" href="/platform-guide/workflows/output-nodes">
+    Define what gets returned — a visual content template, a JSON format payload, or an empty response.
+  </Card>
+</CardGroup>
+
+Nodes are connected by **edges** that define the flow of execution from [channels](/platform-guide/workflows/channels) through [data](/platform-guide/workflows/data-nodes) and [logic](/platform-guide/workflows/logic-nodes) nodes down to [outputs](/platform-guide/workflows/output-nodes).
+
+## Workflow Lifecycle
+
+Every workflow goes through a series of states:
+
+| Status | Description |
+|--------|-------------|
+| **Draft** | The workflow is being edited and has not been published yet. |
+| **Publishing** | The workflow is in the process of being published. |
+| **Published** | The workflow is live and actively serving personalized content. |
+| **Inactive** | The workflow has been archived and is no longer serving content. |
+| **Error** | The workflow encountered an issue during publishing. |
+
+<Info>
+  You can only integrate (deploy) a workflow after it has been **Published**.
+</Info>
+
+## Branches
+
+A **branch** is a unique path through the workflow from a [channel](/platform-guide/workflows/channels) to an [output node](/platform-guide/workflows/output-nodes). Branches are the fundamental unit of personalization — each branch can deliver a different experience based on the user's context.
+
+Branches can be:
+- **Qualified** with a category (e.g., "Promotion", "New Arrivals") using the branch categories defined in [Workflow Settings](/platform-guide/workflows/settings).
+- **Highlighted** as individualized branches in the editor to visually distinguish personalized paths.
+- **Analyzed** for statistics to see how traffic distributes across different paths.
+
+## Versions
+
+Workflows support **versioning**. Each time you publish, a new version is created. You can:
+- View the history of all published versions.
+- Browse any previous version in read-only mode.
+- Restore a previous version by making it the active draft.
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Creating a Workflow" icon="plus" href="/platform-guide/workflows/creating-a-workflow">
+    Step-by-step guide to creating your first workflow.
+  </Card>
+  <Card title="Workflow Editor" icon="pen-to-square" href="/platform-guide/workflows/editor">
+    Learn how to use the visual editor.
+  </Card>
+  <Card title="Channels" icon="right-to-bracket" href="/platform-guide/workflows/channels">
+    Understand the different channel types.
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/platform-guide/workflows/data-nodes">
+    Learn how to bring data into your workflow.
+  </Card>
+</CardGroup>

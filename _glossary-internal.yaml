@@ -1,0 +1,122 @@
+# Single source of truth for terminology across ALL persona directories.
+# Platform concepts are NEVER renamed or simplified regardless of audience.
+# AI agents MUST use canonical_name exactly as written.
+
+terms:
+  workflow:
+    canonical_name: "Workflow"
+    definition: "A directed graph of Nodes that defines personalisation logic — what content to show, to whom, and when."
+    synonyms_forbidden: ["flow", "automation", "scenario", "journey", "sequence"]
+
+  datasource:
+    canonical_name: "Datasource"
+    definition: "A connection to an external data feed that Reelevant fetches, parses, and stores for use in personalisation."
+    synonyms_forbidden: ["data source", "data-source", "feed", "connector", "data connection"]
+
+  content:
+    canonical_name: "Content"
+    definition: "A visual template (banner, email section, landing page) designed in the Content Editor."
+    synonyms_forbidden: ["creative", "asset", "visual"]
+    note: "Never say 'template' as a substitute for the Reelevant 'Content' object."
+
+  node:
+    canonical_name: "Node"
+    definition: "A single processing unit in a Workflow graph. Types: Channel Node, Data Node, Logic Node, Output Node."
+    synonyms_forbidden: ["step", "block", "element", "box", "action"]
+
+  channel:
+    canonical_name: "Channel"
+    definition: "The entry Node of a Workflow that defines the delivery medium (Email, Web, Mobile, Landing Page)."
+    synonyms_forbidden: ["touchpoint", "medium", "entry point"]
+
+  branch:
+    canonical_name: "Branch"
+    definition: "A unique execution path through a Workflow, from a Channel to an Output Node."
+    synonyms_forbidden: ["path", "route", "variant", "scenario"]
+
+  output_node:
+    canonical_name: "Output Node"
+    definition: "A terminal Workflow Node that produces the final response (Visual Content, JSON Template, Empty)."
+    synonyms_forbidden: ["end node", "terminal", "result node", "final step"]
+
+  data_node:
+    canonical_name: "Data Node"
+    definition: "A Workflow Node that fetches or provides data (Datasource query, URL Parameter, Geolocation, Weather, Transform)."
+    synonyms_forbidden: ["data step", "data block", "data source node"]
+
+  logic_node:
+    canonical_name: "Logic Node"
+    definition: "A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing)."
+    synonyms_forbidden: ["decision step", "logic block", "routing node"]
+
+  datahub:
+    canonical_name: "DataHub"
+    definition: "The platform's data management center for importing and configuring external data."
+    synonyms_forbidden: ["data hub", "data center", "data layer"]
+
+  resource_group:
+    canonical_name: "Team"
+    definition: "An organisational unit (Resource Group) for controlling access to Workflows, Contents, and Datasources."
+    technical_name: "Resource Group"
+    note: "Use 'Team' in all user-facing docs. Add '(Resource Group)' in parentheses in developer-docs only."
+
+  runner:
+    canonical_name: "Runner"
+    definition: "The backend service that executes a Workflow and returns personalised content."
+    synonyms_forbidden: ["engine", "executor", "processor", "server"]
+
+  uplift:
+    canonical_name: "Uplift"
+    definition: "The incremental performance gain from personalised content compared to default content."
+    synonyms_forbidden: ["lift", "improvement", "gain", "boost"]
+
+  field_mapping:
+    canonical_name: "Field Mapping"
+    definition: "The configuration that maps raw data fields to standardised Reelevant types."
+    synonyms_forbidden: ["schema mapping", "field config", "mapping rules"]
+
+  variable_profile:
+    canonical_name: "Variable Profile"
+    definition: "A reusable set of URL parameters (UTM, tracking) applied when integrating a Workflow."
+    synonyms_forbidden: ["tracking profile", "URL profile", "parameter set"]
+
+  incremental_value:
+    canonical_name: "Incremental Value"
+    definition: "The measurable difference in behaviour between the Exposed Population (who see Reelevant personalisation) and the Non-Exposed Population (who see default content). It represents value that would NOT have existed without personalisation."
+    synonyms_forbidden: ["added value", "extra value", "generated value"]
+
+  exposed_population:
+    canonical_name: "Exposed Population"
+    definition: "The group of users (typically 90%) who see personalised Reelevant content during a campaign."
+    synonyms_forbidden: ["test group", "treatment group", "A group"]
+
+  non_exposed_population:
+    canonical_name: "Non-Exposed Population"
+    definition: "The control group (typically 10%) who see default content without Reelevant personalisation, used as baseline for measuring Incremental Value."
+    synonyms_forbidden: ["control group", "B group", "holdout"]
+    note: "Always call it 'Non-Exposed Population' — never 'control group' (too generic)."
+
+  key_challenge:
+    canonical_name: "Key Challenge"
+    definition: "A business or marketing problem that personalisation can solve (e.g., one-timer to recurrent buyer, churn reduction)."
+    synonyms_forbidden: ["problematic", "issue", "pain point"]
+
+  use_case:
+    canonical_name: "Use Case"
+    definition: "A specific personalisation strategy and execution pattern that addresses one or more Key Challenges."
+    synonyms_forbidden: ["scenario", "recipe", "playbook"]
+
+  content_editor:
+    canonical_name: "Content Editor"
+    definition: "The visual drag-and-drop editor for designing Content templates with dynamic data bindings."
+    synonyms_forbidden: ["designer", "builder", "canvas"]
+
+  real_time_testing:
+    canonical_name: "Real-Time Testing"
+    definition: "A Logic Node that splits traffic between multiple Branches for A/B or multivariate testing."
+    synonyms_forbidden: ["A/B test node", "split test", "experiment"]
+
+  transform:
+    canonical_name: "Transform"
+    definition: "A Data Node that applies transformations (string, number, date, array operations) to data within a Workflow."
+    synonyms_forbidden: ["transformer", "mutation", "processor"]

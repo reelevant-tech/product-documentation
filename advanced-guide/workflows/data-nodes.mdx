@@ -1,0 +1,67 @@
+---
+title: 'Data Nodes'
+description: 'Import and use external data in your workflows with data nodes'
+---
+
+![Data node picker showing all available data node types](/images/workflows/node-picker-data.png)
+
+## What are Data Nodes?
+
+Data nodes bring external data into your workflow. They fetch, filter, and transform information from your datasources, URL parameters, geolocation services, weather APIs, and more. This data is then available to downstream [logic](/platform-guide/workflows/logic-nodes) and [output](/platform-guide/workflows/output-nodes) nodes for personalization.
+
+## Adding a Data Node
+
+1. Hover over the **Data** button (database icon) in the bottom toolbar.
+2. A menu appears listing all available data node types.
+3. Click on the desired type to open its configuration drawer.
+
+Alternatively, right-click on an existing node and select **Use data** to add a data node downstream.
+
+## Data Node Types
+
+<CardGroup cols={2}>
+  <Card title="Datasource Nodes" icon="database" href="/platform-guide/workflows/data-nodes/datasources">
+    Connect to data imported in DataHub — generic, product, and location datasources.
+  </Card>
+  <Card title="URL Parameter" icon="link" href="/platform-guide/workflows/data-nodes/url-parameter">
+    Capture values passed via the URL when the workflow is executed.
+  </Card>
+  <Card title="Geolocation" icon="location-dot" href="/platform-guide/workflows/data-nodes/geolocation">
+    Resolve the user's geographic location based on their IP address.
+  </Card>
+  <Card title="Weather" icon="cloud-sun" href="/platform-guide/workflows/data-nodes/weather">
+    Fetch current weather data for the user's location.
+  </Card>
+  <Card title="Website Events" icon="chart-line" href="/platform-guide/workflows/data-nodes/website-events">
+    Retrieve user behavior data from your website tracking.
+  </Card>
+  <Card title="Transform" icon="wand-magic-sparkles" href="/platform-guide/workflows/data-nodes/transform">
+    Apply data transformations to values from other nodes.
+  </Card>
+</CardGroup>
+
+## Filtering and Ordering
+
+Most datasource nodes support **filters** and **ordering**:
+
+### Filters
+Add one or more filter rules to narrow down results:
+- **Field** — Select which datasource field to filter on.
+- **Operator** — Choose a comparison operator (equals, contains, greater than, etc.).
+- **Value** — Provide a static value or reference data from another node in the workflow.
+
+### Ordering
+Choose how results are sorted:
+- **Default order** — As stored in the datasource.
+- **Ascending / Descending** — Sort by a specific field.
+- **Change every 10 seconds for everyone** — Randomize results periodically for all users.
+- **Change for each person** — Each user sees a different order.
+
+## Using Data Downstream
+
+Once a data node is configured, its output fields become available to all downstream nodes through the **Variable Picker**. The variable picker organizes available data by source:
+
+- **Context** — Standard context data (user, device, time).
+- **Geolocation** — Location data from the Geolocation node.
+- **Workflow data** — Data from upstream data nodes, labeled by the datasource name.
+- **Import new data** — Quickly add a new data node if the data you need isn't available yet.

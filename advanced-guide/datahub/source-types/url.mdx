@@ -1,0 +1,160 @@
+---
+title: 'URL'
+description: 'Fetch data from a web URL — API endpoints, hosted files, or data feeds'
+---
+
+![URL source configuration form](/images/datahub/source-url-v2.png)
+
+## Overview
+
+The URL source type fetches data from a web address. Use it for API endpoints, hosted CSV/JSON files, or any data feed accessible via HTTP/HTTPS.
+
+## Configuration
+
+### Required Fields
+
+| Field | Description |
+|-------|-------------|
+| `url` | The full URL to the data source (API endpoint or hosted file URL). |
+
+### HTTP Options
+
+These fields are nested under the `options` object.
+
+| Field | Description |
+|-------|-------------|
+| `method` | The HTTP method to use: `GET` *(default)*, `POST`, `PUT`, or `PATCH`. |
+| `headers` | Custom HTTP headers to include in the request (key-value pairs). Useful for API keys or custom tokens. |
+| `query` | URL query parameters to append to the request (key-value pairs). |
+| `body` | The request body (for `POST`, `PUT`, `PATCH` methods). |
+| `timeout` | Request timeout in milliseconds. |
+| `oauth` | DatasourceAuth ID for OAuth-protected APIs. |
+
+### Authentication
+
+<Tabs>
+  <Tab title="No Authentication">
+    For publicly accessible URLs, no additional configuration is needed.
+  </Tab>
+  <Tab title="Custom Headers">
+    For API key or token-based authentication, add the appropriate header in the `headers` configuration:
+
+    | Header | Example |
+    |--------|---------|
+    | `Authorization` | `Bearer <your-token>` |
+    | `X-API-Key` | `<your-api-key>` |
+  </Tab>
+  <Tab title="OAuth">
+    For OAuth-protected APIs, connect an OAuth integration configured in Reelevant. The platform handles token refresh automatically.
+  </Tab>
+</Tabs>
+
+## Supported File Formats
+
+The URL source automatically detects the response format. The following formats are supported:
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Comma-separated values. Delimiter is auto-detected (comma, semicolon, tab, pipe). |
+| **JSON** | Standard JSON files with a root array or object. |
+| **NDJSON** | Newline-delimited JSON (one JSON object per line). |
+| **XML** | XML files — the root element path is auto-detected. |
+| **Parquet** | Apache Parquet columnar format. |
+| **Avro** | Apache Avro serialization format. |
+| **XLSX** | Microsoft Excel files. |
+
+<Info>
+  Compressed responses (`.gz`, `.zip`) are automatically decompressed before parsing.
+</Info>
+
+## PGP Decryption
+
+The URL source supports fetching **PGP-encrypted files**. When `pgpPrivateKey` is configured, the response is decrypted before decompression and parsing.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Yes | The PGP/GPG private key in armored (ASCII) format. |
+| `pgpPassphrase` | No | The passphrase for the private key, if encrypted. |
+
+Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
+
+<Info>
+  See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
+</Info>
+
+## Pagination
+
+For APIs that paginate their responses, the URL source supports several pagination strategies:
+
+<Tabs>
+  <Tab title="Query Parameter">
+    Increment a query parameter (page number or offset) on each request.
+
+    | Field | Description |
+    |-------|-------------|
+    | `value` | The query parameter name (e.g. `page`, `offset`). |
+    | `startAt` | The initial value (default: `1`). Some APIs start at `0`. |
+    | `subtype` | `page` (page number) or `offset` (record offset). |
+  </Tab>
+  <Tab title="Body Parameter">
+    Same as query parameter pagination, but the page/offset value is included in the request body.
+  </Tab>
+  <Tab title="Hypermedia Attribute">
+    Follow a URL found in the response body (e.g. a `next` attribute in the JSON response).
+
+    | Field | Description |
+    |-------|-------------|
+    | `value` | The JSON path to the next page URL in the response (e.g. `next_page_url`). |
+  </Tab>
+  <Tab title="Page Token">
+    Use a token from the response body to request the next page.
+
+    | Field | Description |
+    |-------|-------------|
+    | `value` | The JSON path to the token in the response body. |
+    | `param` | The query parameter to use for the token in subsequent requests. |
+    | `removeParams` | Remove other URL parameters when paginating (optional). |
+  </Tab>
+  <Tab title="Link Header">
+    Follow pagination URLs from the standard HTTP `Link` header (as defined by [RFC 8288](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)).
+  </Tab>
+  <Tab title="Entry Token">
+    Use a value from the last entry of the current page to request the next page.
+
+    | Field | Description |
+    |-------|-------------|
+    | `value` | The field name in each entry that serves as a cursor. |
+    | `param` | The query parameter to use for the cursor in subsequent requests. |
+    | `removeParams` | Remove other URL parameters when paginating (optional). |
+  </Tab>
+</Tabs>
+
+<Info>
+  You can optionally set `maximumPage` to cap the number of pages fetched during a sync.
+</Info>
+
+## Runtime Variables
+
+For API endpoints that require dynamic parameters (e.g. current date, user-specific IDs), you can define **variables** that are resolved at fetch time.
+
+Each variable has:
+
+| Field | Description |
+|-------|-------------|
+| `name` | The variable name used in the URL, headers, body, or query parameters. |
+| `default` | A static value or a dynamic expression evaluated at runtime. |
+| `primitive` | The data type (string, number, etc.). |
+
+Variables can be referenced in the URL, headers, body, and query parameters. This enables building dynamic URLs like `https://api.example.com/products?since={{last_sync_date}}`.
+
+## How It Works
+
+1. Reelevant sends an HTTP request to the configured URL with the specified method, headers, and body.
+2. If pagination is configured, subsequent pages are fetched automatically.
+3. The response is parsed based on the detected format.
+4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+5. On subsequent syncs, the URL is re-fetched and the data is updated.
+
+<Tip>
+  Make sure your URL returns data in a supported format. The platform auto-detects the format from the response content type and content.
+</Tip>

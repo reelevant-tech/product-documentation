@@ -1,0 +1,303 @@
+---
+title: 'File Upload'
+description: 'Upload data files directly from your computer to create a datasource'
+---
+
+![File upload source configuration with drag-and-drop area](/images/datahub/source-file-v2.png)
+
+## Overview
+
+The File Upload source lets you import data by uploading a file directly from your computer. The platform parses the file and extracts fields for [mapping](/platform-guide/datahub/field-mapping).
+
+## Supported File Formats
+
+The platform automatically detects the file format. The following formats are supported:
+
+| Format | Extension(s) | Description |
+|--------|-------------|-------------|
+| **CSV** | `.csv`, `.tsv`, `.txt` | Comma-separated values. Delimiter is auto-detected (comma, semicolon, tab, pipe). |
+| **JSON** | `.json` | Standard JSON files with a root array or object. |
+| **NDJSON** | `.ndjson`, `.jsonl` | Newline-delimited JSON (one JSON object per line). |
+| **XML** | `.xml` | XML files — the root element path is auto-detected. |
+| **Parquet** | `.parquet` | Apache Parquet columnar format. |
+| **Avro** | `.avro` | Apache Avro serialization format. |
+| **XLSX** | `.xlsx` | Microsoft Excel files. |
+
+<Info>
+  Compressed files (`.gz`, `.zip`) are automatically decompressed before parsing.
+</Info>
+
+<Note>
+  **PGP-encrypted files** cannot be uploaded directly via the File Upload source because format detection runs at upload time, before a decryption key can be provided. To import PGP-encrypted files, use [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), [S3](/platform-guide/datahub/source-types/s3), or [GCS](/platform-guide/datahub/source-types/gcs) instead. See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details.
+</Note>
+
+## Upload via the UI
+
+The easiest way to create a file-upload datasource is through the platform interface.
+
+<Steps>
+  <Step title="Create a new datasource">
+    Navigate to **DataHub** and click **Create datasource**.
+  </Step>
+  <Step title="Select File Upload as the source type">
+    In the source configuration step, choose **File Upload**.
+  </Step>
+  <Step title="Upload your file">
+    Drag and drop your file into the upload area, or click to open the file browser and select a file from your computer. The platform automatically detects the file format and text encoding.
+  </Step>
+  <Step title="Configure field mapping">
+    Once the file is parsed, fields are extracted and displayed. Configure the [field mapping](/platform-guide/datahub/field-mapping) to define how data should be imported.
+  </Step>
+  <Step title="Validate and publish">
+    Review your configuration and click **Validate** to publish the datasource. Data ingestion starts immediately.
+  </Step>
+</Steps>
+
+To **update data** later, edit the datasource and re-upload a new file using the same drag-and-drop area.
+
+## Upload via the API
+
+You can also create and update file-upload datasources programmatically using the Reelevant API. This is a multi-step process:
+
+<Steps>
+  <Step title="Authenticate">
+    Obtain an access token via the [authentication endpoint](/api-reference/authentication):
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/auth/token \
+      -H "Content-Type: application/json" \
+      -d '{
+        "username": "your-email",
+        "password": "your-password",
+        "grant_type": "password",
+        "client_id": "<client_id>"
+      }'
+    ```
+
+    Use the returned `access_token` in subsequent requests.
+  </Step>
+  <Step title="Create a datasource">
+    Create a new datasource of type `worker`:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/ \
+      -H "Authorization: Bearer ${access_token}" \
+      -H "Content-Type: application/json" \
+      -d '{ "mode": "worker" }'
+    ```
+
+    The response contains the datasource `id` (a 24-character hex string) which is needed for subsequent steps.
+  </Step>
+  <Step title="Upload the file">
+    Upload your data file using the upload endpoint. The file must be sent as `multipart/form-data`:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/worker/${datasource_id}/upload \
+      -H "Authorization: Bearer ${access_token}" \
+      -F "File=@/path/to/your/data.csv"
+    ```
+
+    The response returns the file source options (including `bucket`, `path`, `format`, and `textEncoding`) that you need for the next step.
+  </Step>
+  <Step title="Configure sources (configure_sources step)">
+    Submit the `configure_sources` step with the file options returned by the upload:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/${datasource_id}/steps \
+      -H "Authorization: Bearer ${access_token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "configure_sources",
+        "payload": {
+          "pipeline": [
+            {
+              "input": {
+                "source": {
+                  "type": "file",
+                  "options": {
+                    "bucket": "<bucket from upload response>",
+                    "path": "<path from upload response>",
+                    "format": <format object from upload response>,
+                    "textEncoding": "<textEncoding from upload response>"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }'
+    ```
+  </Step>
+  <Step title="Configure fields (configure_fields step)">
+    After configuring sources, configure the field mapping. Use the fields extracted from the sample to define which fields to import:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/${datasource_id}/steps \
+      -H "Authorization: Bearer ${access_token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "configure_fields",
+        "payload": [<fields_map array>]
+      }'
+    ```
+
+    <Tip>
+      Use `GET https://api.reelevant.com/v2/datasources/${datasource_id}/steps` to retrieve the current step state including the extracted fields map, which you can then modify and submit.
+    </Tip>
+  </Step>
+  <Step title="Validate and publish">
+    Submit the `validate` step to publish the datasource and trigger data ingestion:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/${datasource_id}/steps \
+      -H "Authorization: Bearer ${access_token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "validate",
+        "payload": {}
+      }'
+    ```
+  </Step>
+</Steps>
+
+To **update data** on an existing datasource, repeat from step 3 (upload a new file) and then call the promote endpoint to trigger re-ingestion:
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/worker/${datasource_id}/promote \
+  -H "Authorization: Bearer ${access_token}"
+```
+
+## Update via FTP / SFTP
+
+When a file-upload datasource is created, Reelevant automatically generates FTP and SFTP credentials. Your systems can push updated files to the hosted endpoint, and the datasource will automatically re-process the latest file.
+
+### Retrieving Credentials
+
+<Steps>
+  <Step title="Get the upload password">
+    Retrieve the SFTP/FTP password for your datasource via the API:
+
+    ```bash
+    curl -XGET https://api.reelevant.com/v2/datasources/worker/${datasource_id}/upload-password \
+      -H "Authorization: Bearer ${access_token}"
+    ```
+
+    The response contains the `password` field.
+  </Step>
+  <Step title="Note the connection details">
+    Use the following connection parameters:
+
+    | Field | Value |
+    |-------|-------|
+    | **Host** | `ftp.reelevant.com` |
+    | **FTP/FTPS Port** | `21` |
+    | **SFTP Port** | `8022` |
+    | **Username** | Your datasource ID (the 24-character hex string) |
+    | **Password** | The password returned in step 1 |
+  </Step>
+</Steps>
+
+### SFTP with SSH Key-Pair Authentication
+
+Instead of using a password, you can configure your datasource to authenticate via an SSH key pair. Once a public key is configured, **password authentication is disabled** for that datasource — only key-based auth will work.
+
+<Steps>
+  <Step title="Generate an SSH key pair">
+    If you don't already have one, generate a key pair:
+
+    ```bash
+    ssh-keygen -t ed25519 -f sftp-key -N ""
+    ```
+
+    This creates `sftp-key` (private key) and `sftp-key.pub` (public key).
+  </Step>
+  <Step title="Register the public key on the datasource">
+    Use the `patch` step to set the `sftpPublicKey` field on your datasource:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/${datasource_id}/steps \
+      -H "Authorization: Bearer ${access_token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "patch",
+        "payload": {
+          "sftpPublicKey": "<contents of sftp-key.pub>"
+        }
+      }'
+    ```
+  </Step>
+  <Step title="Connect using your private key">
+    ```bash
+    sftp -P 8022 -i sftp-key ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/data.csv data.csv
+    quit
+    EOF
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  Once a public key is registered, password authentication is disabled for that datasource. Remove the `sftpPublicKey` (set it to an empty string via the `patch` step) to re-enable password auth.
+</Warning>
+
+### Pushing a File
+
+Once you have credentials (password or SSH key), upload a file using any standard FTP or SFTP client:
+
+<Tabs>
+  <Tab title="SFTP (password)">
+    ```bash
+    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/data.csv data.csv
+    quit
+    EOF
+    ```
+
+    Or using an SFTP library/client, connect with:
+    - Host: `ftp.reelevant.com`
+    - Port: `8022`
+    - Username: `<datasource_id>`
+    - Password: `<password from API>`
+  </Tab>
+  <Tab title="SFTP (SSH key)">
+    ```bash
+    sftp -P 8022 -i /path/to/private-key ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/data.csv data.csv
+    quit
+    EOF
+    ```
+
+    Or using an SFTP library/client, connect with:
+    - Host: `ftp.reelevant.com`
+    - Port: `8022`
+    - Username: `<datasource_id>`
+    - Private key: `<path to your private key file>`
+  </Tab>
+  <Tab title="FTP">
+    ```bash
+    curl -T /path/to/your/data.csv \
+      ftp://ftp.reelevant.com/ \
+      --user "${datasource_id}:${password}"
+    ```
+
+    Or using any FTP client with:
+    - Host: `ftp.reelevant.com`
+    - Port: `21`
+    - Username: `<datasource_id>`
+    - Password: `<password from API>`
+  </Tab>
+</Tabs>
+
+After the file is uploaded, the datasource automatically re-processes the new file and updates the data.
+
+<Info>
+  The FTP/SFTP endpoint only accepts file uploads (`STOR` / write operations). You cannot delete or rename files on the server.
+</Info>
+
+<Tip>
+  Use SFTP when security is a concern — it encrypts the connection and all data transfer. FTP with TLS (FTPS) is also supported.
+</Tip>
+
+<Info>
+  File upload creates an initial import. To keep data updated automatically on a schedule, consider using a [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), or cloud storage source instead.
+</Info>

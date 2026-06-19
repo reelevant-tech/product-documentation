@@ -1,0 +1,30 @@
+---
+title: 'Parse Date'
+description: 'Parse a date string into an ISO date'
+---
+
+## Overview
+
+The `parse-date` transformation parses a date string into an ISO 8601 date string.
+
+## Syntax
+
+```text
+parse-date(<variable>)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Yes | The date string to parse |
+| `useCurrentYear` | boolean | No | When true, replaces the parsed year with the current year |
+| `inputLocale` | string | No | Locale used to parse the input date: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
+
+## Examples
+
+```text
+parse-date(<variable>)
+parse-date(<variable>, inputLocale="fr")
+parse-date(<variable>, useCurrentYear=true)
+```
