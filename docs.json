@@ -393,25 +393,20 @@
             ]
           },
           {
-            "group": "API Reference",
-            "pages": [
-              {
-                "group": "Datasources API",
-                "openapi": "api-reference/openapi/datasources-api.json"
-              },
-              {
-                "group": "Contents API",
-                "openapi": "https://openapi.production.reelevant.io/v1/render/contents-api"
-              },
-              {
-                "group": "Workflow API",
-                "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
-              },
-              {
-                "group": "Datasources Collector",
-                "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
-              }
-            ]
+            "group": "Datasources API",
+            "openapi": "api-reference/openapi/datasources-api.json"
+          },
+          {
+            "group": "Contents API",
+            "openapi": "https://openapi.production.reelevant.io/v1/render/contents-api"
+          },
+          {
+            "group": "Workflow API",
+            "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
+          },
+          {
+            "group": "Datasources Collector",
+            "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
           }
         ]
       },
@@ -510,8 +505,7 @@
             ]
           }
         ]
-      },
-
+      }
     ]
   },
   "global": {
