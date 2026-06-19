@@ -1,31 +1,45 @@
 ---
 title: 'Real-Time Testing (RTT)'
-description: 'Automated traffic distribution that optimizes over time'
+description: 'Automatically optimise traffic distribution across content variants using multi-armed bandit logic'
 ---
 
 ![Real-time testing node configuration panel showing content variant settings](/images/workflows/node-real-time-testing.png)
 
 ## Overview
 
-Real-time testing nodes enable automated traffic distribution that optimizes over time. Unlike a static A/B split, real-time testing can automatically adjust traffic allocation based on performance metrics.
+Real-time testing distributes traffic across content variants and automatically optimises allocation over time. It uses a **multi-armed bandit (MAB)** algorithm that balances exploration (testing underexposed variants) with exploitation (sending traffic to higher performers).
+
+Unlike a static [Split](/advanced-guide/workflows/logic-nodes/split), real-time testing does not require a fixed split ratio. The system continuously adjusts the distribution based on observed performance.
 
 ## Configuration
 
-Similar to [Split](/platform-guide/workflows/logic-nodes/split), but with additional settings for:
-- **Testing duration** — How long the test should run.
-- **Optimization metric** — What metric to optimize for (clicks, conversions, etc.).
-- **Confidence level** — Statistical significance threshold.
+The only configurable setting is the **number of variants** — select between 2 and 10. Each variant creates a separate branch in the Workflow. The node has no other configuration parameters; the optimisation logic is fully automated.
 
-## How It Works
+## How the Algorithm Works
 
-1. Initially, traffic is distributed evenly across all variants.
-2. As data is collected, the system analyzes which variant performs best.
-3. Traffic is gradually shifted toward the winning variant.
-4. Once the confidence level is reached, the test concludes and the winner receives all traffic.
+1. **Initialisation** — Traffic is distributed evenly across all variants.
+2. **Data collection** — The system tracks user interactions (clicks, conversions) per variant.
+3. **Rebalancing** — The MAB algorithm incrementally shifts traffic toward higher-performing variants while keeping a portion of traffic on underexposed variants to detect changes.
+4. **Convergence** — Over time, the best-performing variant receives the majority of traffic.
+
+The algorithm operates continuously — there is no fixed end date or confidence threshold. If user behaviour changes (e.g., seasonal shifts), the algorithm adapts by re-exploring other variants.
+
+## Deterministic User Assignment
+
+Users are assigned to variants deterministically based on their identifier. The same user sees the same variant across repeated interactions within a single Workflow. This is handled identically to [Split](/advanced-guide/workflows/logic-nodes/split) node user assignment.
+
+## When to Use RTT vs Split
+
+| Scenario | Recommended Node |
+|----------|-----------------|
+| Fixed A/B test with known split ratios | Split |
+| Automatic optimisation toward the best variant | Real-time testing |
+| Quick test with 2 variants | Either |
+| 5+ variants with limited traffic | Real-time testing (faster convergence than equal split) |
 
 ## Best Practices
 
-- Use RTT when you want the system to automatically find the best-performing variant.
-- Set realistic testing durations — too short may not produce statistically significant results.
-- Choose the right optimization metric that aligns with your campaign goals.
-- Monitor the test progress through the workflow's statistics mode.
+- Start with 2–3 variants for faster convergence. More variants require proportionally more traffic.
+- Monitor the distribution in the Workflow's statistics mode to observe how the algorithm is allocating traffic.
+- Use [branch categories](/product-guide/workflows/branches) to tag RTT branches for downstream Analytics reporting.
+- Do not combine multiple RTT nodes in the same branch. Use a single RTT node per decision point.

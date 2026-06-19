@@ -11,10 +11,11 @@ Condition nodes evaluate rules to decide which branch a user takes. They are the
 
 ## How It Works
 
-- A condition node has **two or more output branches** — one for each possible outcome plus a default branch.
-- Each branch (except the default) has a set of **rules** that must be satisfied for a user to follow that path.
-- Rules can reference data from upstream data nodes, context variables, or URL parameters.
-- If no condition is met, the user follows the **default** branch.
+- A condition node has **two output branches** — one for users who match the conditions and one for users who do not.
+- You define a set of **rules** that must be satisfied for a user to follow the matching branch.
+- Rules can reference data from upstream Data Nodes, context variables, or URL parameters.
+- Rules are combined with either **AND** (all must match) or **OR** (any must match) logic.
+- If no condition is met, the user follows the non-matching branch.
 
 ## Configuration
 
@@ -29,10 +30,11 @@ Condition nodes evaluate rules to decide which branch a user takes. They are the
 ## Operators
 
 Conditions support various operators depending on the field type:
-- **Text** — equals, not equals, contains, starts with, ends with
-- **Numbers** — equals, greater than, less than, between
-- **Dates** — before, after, between
-- **Arrays** — includes, excludes
+- **Text** — equals, not equals, contains, not contains, is empty, is not empty
+- **Numbers** — equals, not equals, greater than, less than, less than or equal, greater than or equal
+- **Dates** — equals, not equals, before, after, is empty, is not empty, in future range, in past range
+- **Booleans** — equals
+- **Arrays** — contains, not contains
 
 ## Best Practices
 
