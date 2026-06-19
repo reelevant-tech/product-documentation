@@ -15,17 +15,19 @@ The FTP and SFTP sources let you retrieve data files from remote file servers. T
 
 | Field | Description |
 |-------|-------------|
-| **Host** | The FTP server hostname or IP address. |
-| **Port** | The FTP port (default: `21`). |
-| **Username** | FTP login username. |
-| **Password** | FTP login password. |
-| **Path** | The file path on the server (see [Wildcard Paths](#wildcard-paths) below). |
+| `host` | The FTP server hostname or IP address. |
+| `port` | The FTP port (default: `21`). |
+| `username` | FTP login username. |
+| `password` | FTP login password. |
+| `path` | The file path on the server (see [Wildcard Paths](#wildcard-paths) below). |
 
 ### Optional Fields
 
 | Field | Description |
 |-------|-------------|
-| **Secure** | Enable FTPS (FTP over TLS) for encrypted connections. |
+| `secure` | Enable FTPS (FTP over TLS) for encrypted connections. |
+| `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
+| `disableProxy` | Disable the SOCKS5 proxy for the FTP connection (optional). |
 
 ## SFTP Configuration
 
@@ -33,10 +35,10 @@ The FTP and SFTP sources let you retrieve data files from remote file servers. T
 
 | Field | Description |
 |-------|-------------|
-| **Host** | The SFTP server hostname or IP address. |
-| **Port** | The SFTP port (default: `22`). |
-| **Username** | SFTP login username. |
-| **Path** | The file path on the server (see [Wildcard Paths](#wildcard-paths) below). |
+| `host` | The SFTP server hostname or IP address. |
+| `port` | The SFTP port (default: `22`). |
+| `username` | SFTP login username. |
+| `path` | The file path on the server (see [Wildcard Paths](#wildcard-paths) below). |
 
 ### Authentication
 
@@ -48,15 +50,15 @@ SFTP supports two authentication methods:
 
     | Field | Description |
     |-------|-------------|
-    | **Password** | SFTP login password. |
+    | `password` | SFTP login password. |
   </Tab>
   <Tab title="Private Key">
     Authenticate using an SSH private key.
 
     | Field | Description |
     |-------|-------------|
-    | **Private key** | The SSH private key in PEM format. |
-    | **Passphrase** *(optional)* | The passphrase for the private key, if it is encrypted. |
+    | `privateKey` | The SSH private key in PEM format. |
+    | `passphrase` *(optional)* | The passphrase for the private key, if it is encrypted. |
 
     When a private key is provided, password authentication is disabled.
   </Tab>
@@ -112,13 +114,13 @@ You can use a wildcard (`*`) in the file name to match multiple files. This is u
 
 ## File Processing Modes
 
-When using wildcard paths, you can configure how files are selected:
+When using wildcard paths, you can configure how files are selected via the `processType` field:
 
-| Mode | Description |
+| `processType` value | Description |
 |------|-------------|
-| **Last unprocessed** *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
-| **All unprocessed** | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
-| **All** | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
+| `last_unprocess` *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
+| `all_unprocess` | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
+| `all` | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
 
 ## Reelevant-Hosted SFTP
 

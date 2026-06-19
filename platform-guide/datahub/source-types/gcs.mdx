@@ -15,11 +15,17 @@ The GCS (Google Cloud Storage) source retrieves data files from a GCS bucket. Us
 
 | Field | Description |
 |-------|-------------|
-| **Project ID** | The Google Cloud project ID. |
-| **Client email** | The service account email address (e.g. `my-sa@project.iam.gserviceaccount.com`). |
-| **Private key** | The service account private key (from the JSON key file). |
-| **Bucket** | The GCS bucket name. |
-| **Path** | The file path or pattern within the bucket (see [Wildcard Paths](#wildcard-paths) below). |
+| `projectId` | The Google Cloud project ID. |
+| `clientEmail` | The service account email address (e.g. `my-sa@project.iam.gserviceaccount.com`). |
+| `privateKey` | The service account private key (from the JSON key file). |
+| `bucket` | The GCS bucket name. |
+| `path` | The file path or pattern within the bucket (see [Wildcard Paths](#wildcard-paths) below). |
+
+### Optional Fields
+
+| Field | Description |
+|-------|-------------|
+| `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
 
 <Tip>
   The minimum required role is **Storage Object Viewer** (`roles/storage.objectViewer`) on the target bucket.
@@ -71,13 +77,13 @@ You can use a wildcard (`*`) in the file path to match multiple files. This is u
 
 ## File Processing Modes
 
-When using wildcard paths, you can configure how files are selected:
+When using wildcard paths, you can configure how files are selected via the `processType` field:
 
-| Mode | Description |
+| `processType` value | Description |
 |------|-------------|
-| **Last unprocessed** *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
-| **All unprocessed** | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
-| **All** | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
+| `last_unprocess` *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
+| `all_unprocess` | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
+| `all` | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
 
 ## How It Works
 

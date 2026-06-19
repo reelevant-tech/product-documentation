@@ -15,9 +15,9 @@ The BigQuery source synchronizes data from a Google BigQuery table directly into
 
 | Field | Description |
 |-------|-------------|
-| **Project ID** | The Google Cloud project ID that contains your BigQuery dataset. |
-| **Dataset** | The BigQuery dataset name. |
-| **Table** | The table name to synchronize. |
+| `projectId` | The Google Cloud project ID that contains your BigQuery dataset. |
+| `dataset` | The BigQuery dataset name. |
+| `table` | The table name to synchronize. |
 
 ### Authentication
 
@@ -29,8 +29,8 @@ BigQuery supports two authentication methods:
 
     | Field | Description |
     |-------|-------------|
-    | **Client email** | The service account email address (e.g. `my-sa@project.iam.gserviceaccount.com`). |
-    | **Private key** | The service account private key (from the JSON key file). |
+    | `clientEmail` | The service account email address (e.g. `my-sa@project.iam.gserviceaccount.com`). |
+    | `privateKey` | The service account private key (from the JSON key file). |
 
     <Tip>
       The minimum required role is **BigQuery Data Viewer** (`roles/bigquery.dataViewer`) on the target dataset. If you use a custom SQL query, the service account also needs **BigQuery Job User** (`roles/bigquery.jobUser`) on the project.
@@ -45,8 +45,9 @@ BigQuery supports two authentication methods:
 
 | Field | Description |
 |-------|-------------|
-| **Query** | A custom SQL query to filter or transform data before import. When provided, the query is executed instead of reading the full table. |
-| **Table Project ID** | If the table belongs to a different GCP project than the service account, specify the table's project ID here. |
+| `query` | A custom SQL query to filter or transform data before import. When provided, the query is executed instead of reading the full table. |
+| `tableProjectId` | If the table belongs to a different GCP project than the service account, specify the table's project ID here. |
+| `customOAuthClientId` | DatasourceAuth ID for OAuth-based authentication (alternative to service account). |
 
 ### Custom SQL Queries
 
@@ -67,8 +68,8 @@ BigQuery supports incremental synchronization when used with the **Keep Previous
 
 | Field | Description |
 |-------|-------------|
-| **Timestamp field** | The column used to track new or updated rows since the last sync. |
-| **Timestamp field type** | Whether the field is a `DATETIME` or `TIMESTAMP` type in BigQuery. |
+| `timestampField` | The column used to track new or updated rows since the last sync. |
+| `timestampFieldType` | Whether the field is a `datetime` or `timestamp` type in BigQuery. |
 
 When configured, Reelevant only fetches rows where the timestamp field is greater than the last recorded value, appending new data to the existing dataset.
 
