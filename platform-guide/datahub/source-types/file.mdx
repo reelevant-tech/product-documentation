@@ -197,12 +197,55 @@ When a file-upload datasource is created, Reelevant automatically generates FTP 
   </Step>
 </Steps>
 
+### SFTP with SSH Key-Pair Authentication
+
+Instead of using a password, you can configure your datasource to authenticate via an SSH key pair. Once a public key is configured, **password authentication is disabled** for that datasource — only key-based auth will work.
+
+<Steps>
+  <Step title="Generate an SSH key pair">
+    If you don't already have one, generate a key pair:
+
+    ```bash
+    ssh-keygen -t ed25519 -f sftp-key -N ""
+    ```
+
+    This creates `sftp-key` (private key) and `sftp-key.pub` (public key).
+  </Step>
+  <Step title="Register the public key on the datasource">
+    Use the `patch` step to set the `sftpPublicKey` field on your datasource:
+
+    ```bash
+    curl -XPOST https://api.reelevant.com/v2/datasources/${datasource_id}/steps \
+      -H "Authorization: Bearer ${access_token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "patch",
+        "payload": {
+          "sftpPublicKey": "<contents of sftp-key.pub>"
+        }
+      }'
+    ```
+  </Step>
+  <Step title="Connect using your private key">
+    ```bash
+    sftp -P 8022 -i sftp-key ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/data.csv data.csv
+    quit
+    EOF
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  Once a public key is registered, password authentication is disabled for that datasource. Remove the `sftpPublicKey` (set it to an empty string via the `patch` step) to re-enable password auth.
+</Warning>
+
 ### Pushing a File
 
-Once you have the credentials, upload a file using any standard FTP or SFTP client:
+Once you have credentials (password or SSH key), upload a file using any standard FTP or SFTP client:
 
 <Tabs>
-  <Tab title="SFTP">
+  <Tab title="SFTP (password)">
     ```bash
     sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
@@ -215,6 +258,20 @@ Once you have the credentials, upload a file using any standard FTP or SFTP clie
     - Port: `8022`
     - Username: `<datasource_id>`
     - Password: `<password from API>`
+  </Tab>
+  <Tab title="SFTP (SSH key)">
+    ```bash
+    sftp -P 8022 -i /path/to/private-key ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/data.csv data.csv
+    quit
+    EOF
+    ```
+
+    Or using an SFTP library/client, connect with:
+    - Host: `ftp.reelevant.com`
+    - Port: `8022`
+    - Username: `<datasource_id>`
+    - Private key: `<path to your private key file>`
   </Tab>
   <Tab title="FTP">
     ```bash
