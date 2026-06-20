@@ -4,6 +4,25 @@
 
 Reelevant product documentation built with [Mintlify](https://mintlify.com). Five directories target different audience personas. Each directory has its own `AGENTS.md` with strict writing rules — **read the AGENTS.md in the directory you are editing before making any changes**.
 
+## Before You Start Writing
+
+**Always ask the contributor which persona they are targeting.** Before making any edit, confirm:
+
+1. **Which directory** the change belongs to (`product-guide/`, `advanced-guide/`, `developer-docs/`, `why-reelevant/`, `product-adoption/`)
+2. **Who is the target reader** — match the contributor's intent to the right persona:
+
+| If the contributor says... | Target directory |
+|---|---|
+| "for users", "for marketers", "how to use the UI" | `product-guide/` |
+| "for advanced users", "for data teams", "for TAMs" | `advanced-guide/` |
+| "for developers", "for engineers", "API docs", "SDK" | `developer-docs/` |
+| "for prospects", "for sales", "why buy", "comparison" | `why-reelevant/` |
+| "ROI", "incremental value", "use cases", "methodology" | `product-adoption/` |
+
+If the contributor's request is ambiguous or could fit multiple directories, **ask them to clarify the target persona before writing**. Never guess — writing in the wrong tone or vocabulary for a persona creates review churn.
+
+Once you know the target directory, read its `AGENTS.md` and follow every rule strictly (tone, sentence length, forbidden words, structure).
+
 ## Mandatory Terminology
 
 Before writing or editing any page, check `_glossary-internal.yaml` at the repo root. Use ONLY canonical names. Common mistakes to avoid:
