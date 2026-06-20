@@ -7,20 +7,10 @@ This guide helps each team member set up Claude Code to edit documentation and o
 ## Prerequisites (all roles)
 
 1. **GitHub account** with write access to `reelevant-tech/product-documentation`
-2. **Claude Code** installed — run this in your terminal:
-   ```bash
-   npm install -g @anthropic-ai/claude-code
-   ```
-3. **Clone the repo** (one-time):
-   ```bash
-   git clone https://github.com/reelevant-tech/product-documentation.git
-   cd product-documentation
-   ```
-4. **Authenticate Claude Code** (one-time):
-   ```bash
-   claude
-   # Follow the browser prompt to log in
-   ```
+2. **Claude Code** — use one of the two options:
+   - **Cloud** (recommended, zero install): Go to [claude.ai/code](https://claude.ai/code), connect your GitHub account, and select the `reelevant-tech/product-documentation` repository.
+   - **Desktop app**: Download [Claude for Desktop](https://claude.ai/download), open it, and connect to the repository via the GitHub integration.
+3. **Connect the repo**: When Claude Code asks which repository to work on, select `reelevant-tech/product-documentation`. Claude Code will clone it and set up the workspace for you — no terminal commands needed.
 
 That's it for setup. Now follow the section for your role below.
 
@@ -32,13 +22,7 @@ That's it for setup. Now follow the section for your role below.
 
 ### Quick start
 
-Open your terminal in the repo folder and run:
-
-```bash
-claude
-```
-
-Then tell Claude what you need in plain language. Examples:
+Open Claude Code (cloud or desktop) with the `product-documentation` repo connected, then tell Claude what you need in plain language. Examples:
 
 ```
 Add a new page explaining how to duplicate a Workflow in product-guide/workflows/.
@@ -69,11 +53,7 @@ simple, following product-guide/AGENTS.md rules. Open a PR when done.
 
 ### Quick start
 
-```bash
-claude
-```
-
-Example prompts:
+Open Claude Code with the repo connected. Example prompts:
 
 ```
 Create a new page in advanced-guide/datahub/ explaining how to set up
@@ -104,11 +84,7 @@ operator, expected input, and behaviour. Open a PR.
 
 ### Quick start
 
-```bash
-claude
-```
-
-Example prompts:
+Open Claude Code with the repo connected. Example prompts:
 
 ```
 Add a new guide in developer-docs/ for server-side rendering with the
@@ -138,11 +114,7 @@ and error codes. Follow developer-docs/AGENTS.md. Open a PR.
 
 ### Quick start
 
-```bash
-claude
-```
-
-Example prompts:
+Open Claude Code with the repo connected. Example prompts:
 
 ```
 Update why-reelevant/decision-makers/capabilities.mdx to add a new section
@@ -174,11 +146,7 @@ Follow why-reelevant/AGENTS.md. Open a PR.
 
 ### Quick start
 
-```bash
-claude
-```
-
-Example prompts:
+Open Claude Code with the repo connected. Example prompts:
 
 ```
 Add a new Use Case page in product-adoption/use-case-explorer/use-cases/
