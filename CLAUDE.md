@@ -102,8 +102,22 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 
 ## PR Workflow
 
-1. Create a new branch from `main` — name it `docs/{your-name}/{short-description}`
-2. Make your edits following the directory-specific rules above
-3. Validate JSON: `python3 -c "import json; json.load(open('docs.json'))"`
-4. Commit with a descriptive message: `docs(product-guide): add workflow creation guide`
-5. Push and open a PR against `main`
+Contributors work from **their own fork** — they do NOT have write access to the main repo.
+
+1. The contributor is working on a fork of `reelevant-tech/product-documentation`. Make sure you are pushing to their fork, not to the upstream repo.
+2. Create a new branch from `main` — name it `docs/{contributor-name}/{short-description}`
+3. Make your edits following the directory-specific rules above
+4. Validate JSON: `python3 -c "import json; json.load(open('docs.json'))"`
+5. Commit with a descriptive message: `docs(product-guide): add workflow creation guide`
+6. Push the branch to the fork
+7. Open a PR **from the fork's branch** to `reelevant-tech/product-documentation` `main` branch
+8. Tell the contributor that their PR will be **reviewed by a maintainer** and they may receive feedback requesting changes. This is a normal part of the process — not a rejection.
+
+## Handling Review Feedback
+
+When a contributor comes back saying their PR received review comments:
+
+1. Read the review comments on the PR
+2. Make the requested changes, following the same directory rules
+3. Commit and push to the **same branch** on the fork — the PR updates automatically
+4. Let the contributor know the changes are pushed and the reviewer will re-review
