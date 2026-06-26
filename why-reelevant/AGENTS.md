@@ -12,7 +12,7 @@ Two sub-personas:
 - Avoid being "salesy" — let capabilities speak for themselves
 - Use concrete numbers and specifics over vague claims
 - For business: focus on outcomes ("reduce time-to-launch from weeks to hours")
-- For tech: focus on facts ("P95 latency <50ms, 99.9% uptime SLA")
+- For tech: focus on facts ("99.9% uptime SLA, EU data residency")
 
 ## Vocabulary Rules
 - Use ALL platform terms as canonical (Workflow, Datasource, Content, etc.)

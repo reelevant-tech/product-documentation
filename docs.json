@@ -90,7 +90,6 @@
                   "product-guide/workflows/output-nodes",
                   "product-guide/workflows/output-nodes/visual-content",
                   "product-guide/workflows/output-nodes/json-template",
-                  "product-guide/workflows/output-nodes/json-format",
                   "product-guide/workflows/output-nodes/empty"
                 ]
               },
