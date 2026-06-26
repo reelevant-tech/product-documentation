@@ -7,12 +7,15 @@ description: 'Browse your workflow list and view workflow details from the brows
 
 ## Workflow List
 
-After logging in, the side panel shows your [workflows](/platform-guide/workflows/overview) in a searchable list:
+After logging in, the side panel shows your [workflows](/product-guide/workflows/overview) in a searchable table:
 
-| Control | Description |
-|---------|-------------|
+| Column / Control | Description |
+|------------------|-------------|
 | **Search** | Filter workflows by name. |
-| **Workflow cards** | Each workflow shows its name, status, and channel type. Click to view details. |
+| **Filter by channel** | Narrow the list to workflows for a specific channel type. |
+| **Name** | Workflow name. Click to open workflow details. |
+| **Status** | Current state — **Draft** or **Published**. |
+| **Last update** | Date the workflow was last modified. |
 
 ## Workflow Detail
 
@@ -21,13 +24,14 @@ Click a workflow to see its details:
 | Section | Description |
 |---------|-------------|
 | **Workflow info** | Name, status, and metadata. |
-| **Channels** | The [channels](/platform-guide/workflows/channels) configured for this workflow. |
-| **Integration** | Navigate to the [integration configuration](/platform-guide/browser-extension/integration) for the selected channel. |
+| **Channels** | The [channels](/product-guide/workflows/channels) configured for this workflow. |
+| **Integration instructions** | Open the [integration instructions](/developer-docs/guides/browser-extension-integration) for a channel to copy image and redirection URLs. |
+| **On-site integration** | For client-side channels, configure the integration on your website using the [content script](/developer-docs/guides/browser-extension-content-script). |
 
 ## Navigation
 
 | Control | Description |
 |---------|-------------|
 | **Back button** | Return to the workflow list. |
-| **Settings** | Open extension settings (e.g., logout, company picker). |
-| **Refresh** | Refresh the workflow list. |
+| **Settings** | Open extension settings (e.g., logout). |
+| **Bottom navigation** | Switch between Workflows, Contents, DataHub, and Analytics sections. |

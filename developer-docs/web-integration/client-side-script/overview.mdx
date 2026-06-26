@@ -34,7 +34,7 @@ sequenceDiagram
 | Consent-dependent content | Client-side script |
 | Overlays, popups, and floating elements | Client-side script |
 | Pages without server-side rendering (SPAs) | Client-side script |
-| Quick integration without code changes | Client-side script + [Browser Extension](/platform-guide/browser-extension/overview) |
+| Quick integration without code changes | Client-side script + [Browser Extension](/product-guide/browser-extension/overview) |
 
 ## Integration methods
 
@@ -75,23 +75,23 @@ Mark elements on your page where personalised content should appear:
 
 ### 3. Browser extension integrations
 
-The [Reelevant Browser Extension](/platform-guide/browser-extension/overview) provides a no-code way to configure client-side integrations:
+The [Reelevant Browser Extension](/product-guide/browser-extension/overview) provides a no-code way to set up client-side integrations:
 
 <Steps>
   <Step title="Install the extension">
-    Install from the Chrome Web Store and log in with your Reelevant credentials.
+    Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/reelevant/lgacfbhgdhamkljnljckjhogkmifijla?hl=en) or [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/aocpmahppepplambefpfnbnifdgolncb) and sign in with your Reelevant email and password or SSO.
   </Step>
   <Step title="Navigate to your website">
     Open the page where you want personalised content to appear.
   </Step>
   <Step title="Select a workflow">
-    In the extension side panel, browse your [workflow list](/platform-guide/browser-extension/workflows) and select the one to integrate.
+    In the extension side panel, browse your [workflow list](/product-guide/browser-extension/workflows) and select the one to integrate.
   </Step>
-  <Step title="Configure the integration">
-    Use the [DOM selector](/platform-guide/browser-extension/content-script) to visually pick the HTML element where content should be injected. Configure [datalayer variables and filter conditions](/platform-guide/browser-extension/integration).
+  <Step title="Configure the on-site integration">
+    Use the [content script UI](/developer-docs/guides/browser-extension-content-script) to pick a DOM selector, set emplacement, and define integration conditions. Click **Save** to persist the configuration.
   </Step>
-  <Step title="Save">
-    The integration is saved to your workflow. The tracking script will use this configuration on matching pages.
+  <Step title="Copy integration URLs (optional)">
+    For channels that need direct URLs, open the [integration instructions](/developer-docs/guides/browser-extension-integration) to copy image and redirection links.
   </Step>
 </Steps>
 

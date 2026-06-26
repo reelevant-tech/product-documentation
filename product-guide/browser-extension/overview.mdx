@@ -3,54 +3,54 @@ title: 'Browser Extension Overview'
 description: 'Install and use the Reelevant browser extension to integrate workflows with your website'
 ---
 
-![Browser extension side panel showing workflow list](/images/browser-extension/side-panel-v2.png)
+![Browser extension side panel showing workflow list](/images/browser-extension/workflow-list-v2.png)
 
 ## What is the Browser Extension?
 
-The Reelevant Browser Extension is a Chrome extension that helps you integrate [workflows](/platform-guide/workflows/overview) directly with your website. It provides a side panel for browsing workflows and configuring integrations, plus a content script that lets you select DOM elements on any page for targeting.
+The Reelevant Browser Extension is a Chrome and Edge extension that helps you integrate [workflows](/product-guide/workflows/overview) with your website. It provides a side panel for browsing workflows, retrieving integration URLs, and configuring on-site integrations through a content script that runs on your pages.
 
 ## Key Features
 
 | Feature | Description |
 |---------|-------------|
-| **Side panel** | Browse your workflow list, view workflow details, and configure integrations. |
-| **DOM selector** | A visual toolbox overlaid on the page to pick HTML elements for integration targeting. |
-| **Company picker** | Switch between companies if you have access to multiple tenants. |
+| **Side panel** | Browse your workflow list, view workflow details, and open integration instructions. |
+| **Integration instructions** | Copy image and redirection URLs for a workflow channel without leaving the extension. |
+| **On-site integration** | Configure client-side integrations directly on your website using the content script UI. |
 
 ## Installation & Setup
 
 <Steps>
   <Step title="Install the extension">
-    Install the Reelevant extension from the Chrome Web Store. Once installed, the Reelevant icon appears in your browser toolbar.
+    Install the Reelevant extension from the browser store:
+
+    - [Chrome Web Store](https://chromewebstore.google.com/detail/reelevant/lgacfbhgdhamkljnljckjhogkmifijla?hl=en)
+    - [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/aocpmahppepplambefpfnbnifdgolncb)
+
+    Once installed, the Reelevant icon appears in your browser toolbar.
   </Step>
   <Step title="Log in">
-    Click the extension icon to open the side panel. Enter your Reelevant credentials:
+    Click the extension icon to open the side panel. Sign in with the same credentials you use in the [Reelevant app](https://app.reelevant.com):
 
-    | Field | Description |
-    |-------|-------------|
-    | **Email** | Your Reelevant account email. |
-    | **Password** | Your Reelevant account password. |
+    - **Email and password** — enter your Reelevant account email and password.
+    - **SSO** — if your organization uses single sign-on, follow the same SSO flow as in the app.
 
     Click **Sign in** to authenticate.
   </Step>
-  <Step title="Select a company">
-    If your account has access to multiple companies, a company picker appears. Select the company you want to work with.
-  </Step>
   <Step title="Start using the extension">
-    Once logged in, the side panel shows your workflow list. Navigate to the target website to start configuring integrations.
+    Once logged in, the side panel shows your workflow list. Navigate to the target website to configure on-site integrations or open a workflow to retrieve integration URLs.
   </Step>
 </Steps>
 
 ## What's Next?
 
 <CardGroup cols={2}>
-  <Card title="Workflows" icon="diagram-project" href="/platform-guide/browser-extension/workflows">
+  <Card title="Workflows" icon="diagram-project" href="/product-guide/browser-extension/workflows">
     Browse and view workflow details from the side panel.
   </Card>
-  <Card title="Integration" icon="plug" href="/platform-guide/browser-extension/integration">
-    Configure links, datalayer variables, and filter conditions.
+  <Card title="Integration Instructions" icon="link" href="/developer-docs/guides/browser-extension-integration">
+    Retrieve image and redirection URLs for a workflow channel.
   </Card>
-  <Card title="Content Script" icon="crosshairs" href="/platform-guide/browser-extension/content-script">
-    Use the DOM selector to pick elements on your website.
+  <Card title="On-site Integration" icon="crosshairs" href="/developer-docs/guides/browser-extension-content-script">
+    Configure client-side integrations on your website.
   </Card>
 </CardGroup>
