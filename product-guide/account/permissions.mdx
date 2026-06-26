@@ -11,7 +11,7 @@ The permission evaluation follows three layers:
 
 1. **Role** — Defines which actions the user can perform on which resource types.
 2. **Company** — Every permission rule is automatically scoped to the user's company, ensuring complete tenant isolation.
-3. **Team (Resource Group)** — For team-scoped resources, the user can only access resources that belong to one of their teams.
+3. **Team** — For team-scoped resources, the user can only access resources that belong to one of their teams.
 
 <Note>
   Every user automatically has permission to read and update their own profile, regardless of their role configuration. These built-in rules cannot be removed.
@@ -30,7 +30,7 @@ Resources represent the different entities you can manage on the platform. Each 
 | **Statistics** | [Analytics](/platform-guide/analytics/overview) data access and export. | Company |
 | **User** | User account management (invite, edit, delete). | Company |
 | **Role** | Role creation and management. | Company |
-| **Teams** (Resource Group) | Team creation and management. | Company |
+| **Teams** | Team creation and management. | Company |
 | **Company** | Company-level settings and configuration. | Company |
 | **Billing** | Billing and subscription access. | Company |
 | **Invitation** | User invitation management. | Company |
