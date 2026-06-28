@@ -1,0 +1,112 @@
+---
+title: 'Analytics Database Sync'
+description: 'How Datasources synchronise events to the analytics database used for statistics and scoring'
+---
+
+## Overview
+
+Reelevant can synchronise events collected through your Datasources into a dedicated analytics database. This database powers statistical dashboards, scoring models, and deduplication — giving you a reliable, query-ready store of all purchase and navigation activity.
+
+Synchronisation is configured per Datasource through **destinations**. When a destination is configured, every event processed by that Datasource is automatically written to the analytics database alongside its normal processing.
+
+## Supported Datasource Modes
+
+Analytics database sync works across all ingestion modes:
+
+| Mode | Behaviour |
+|------|-----------|
+| **Ingester** (navigation tracking) | Events are written to the analytics database in real time as they arrive. |
+| **Pubsub** (Kafka / real-time streams) | Events are written to the analytics database in real time as they are consumed. |
+| **Worker** (batch imports) | Events are written in bulk using optimised load operations at the end of each import job. |
+
+## Table Types
+
+Two table types are supported, determined by the Datasource subtype:
+
+### Purchases
+
+Stores transactional purchase events. Each row represents a single product purchased by a user.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **user** | Yes | The user identifier (from the user Field Mapping type). |
+| **transaction_id** | Optional | The transaction identifier grouping items in a single order. |
+| **reference_id** | Yes | The product reference purchased. |
+| **price** | Yes | The item price. |
+| **timestamp** | Yes | When the purchase occurred (from the datetime Field Mapping type). |
+
+### Website Events
+
+Stores navigation and behavioural events. Each row represents a single tracked interaction.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **user** | Yes | The user identifier. |
+| **name** | Yes | The event name (e.g., page view, add to cart). |
+| **url** | Yes | The page URL where the event occurred. |
+| **ids** | Yes | Reference identifiers associated with the event (e.g., product IDs viewed). |
+| **timestamp** | Yes | When the event occurred. |
+| **transaction_id** | Optional | A transaction identifier, if applicable. |
+| **user_agent** | Optional | The browser user agent string. |
+
+## How Field Mapping Drives the Schema
+
+The analytics database schema is derived from your Datasource's [Field Mapping](/advanced-guide/datahub/field-mapping). You do not need to manually define columns — the platform maps your configured fields to the correct analytics columns based on their assigned **field type**.
+
+For example, a field mapped to the **Reference ID** type will appear as the `reference_id` column in the analytics table, regardless of its original name in your source data.
+
+<Info>
+  Only fields with recognised field types (user, price, reference ID, event name, URL, datetime, transaction ID, user agent) are synchronised. Other fields in your Datasource are not written to the analytics database.
+</Info>
+
+## Configuring a Destination
+
+Destinations are configured in the Datasource's **storage options**. Each destination specifies:
+
+| Parameter | Description |
+|-----------|-------------|
+| **Dataset** | The target dataset (database schema) where the table resides. |
+| **Table name** | The table name. Supports the `{COMPANY_ID}` placeholder for multi-tenant isolation. |
+
+Once a destination is configured, synchronisation begins automatically on the next Datasource execution or event ingestion.
+
+## Deduplication
+
+Duplicate events can occur due to retries, reprocessing, or upstream data issues. Reelevant provides an optional deduplication mechanism that runs periodically to remove duplicates from the analytics database.
+
+### How It Works
+
+A scheduled job inspects all Datasources with deduplication enabled and removes duplicate rows based on a fixed deduplication key per table type:
+
+| Table type | Deduplication key |
+|------------|-------------------|
+| **Purchases** | `user` + `transaction_id` + `reference_id` — only one row per user/transaction/product combination is kept. |
+| **Website Events** | `transaction_id` + `ids` when a transaction is present, otherwise `event_id` — ensures each unique event is stored once. |
+
+When duplicates are found, the most recent row (by partition time) is kept and older duplicates are removed.
+
+### Enabling Deduplication
+
+Deduplication is enabled per destination using the **deduplication option**:
+
+| Parameter | Description |
+|-----------|-------------|
+| **Enabled** | Toggle deduplication on or off for this destination. |
+
+<Info>
+  Deduplication runs on a fixed schedule (every 12 hours). It is not triggered in real time — brief periods of duplicate data may exist between runs.
+</Info>
+
+## Prerequisites
+
+Before enabling analytics database sync for a Datasource:
+
+1. **Field Mapping must be configured** — the Datasource must have fields mapped to the correct types (user, datetime, reference ID, etc.) so the platform knows which columns to populate.
+2. **The Datasource must be published** — only published (active) Datasources write to the analytics database.
+3. **A destination must be configured** — your Technical Account Manager or administrator will configure the destination dataset and table name for your Datasource.
+
+## Migration from Legacy Sync
+
+If your Datasources previously synchronised to the analytics database through an intermediary relay system, the new direct-sync approach replaces it entirely. The behaviour is the same — events are written to the same tables with the same schema — but with lower latency and simpler architecture.
+
+No action is required on your side. Your administrator will update the Datasource configuration to use the new destination-based approach, and synchronisation continues seamlessly.

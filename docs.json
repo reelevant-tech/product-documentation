@@ -205,7 +205,8 @@
               "advanced-guide/datahub/pgp-decryption",
               "advanced-guide/datahub/queries",
               "advanced-guide/datahub/logs",
-              "advanced-guide/datahub/special-configurations"
+              "advanced-guide/datahub/special-configurations",
+              "advanced-guide/datahub/analytics-database-sync"
             ]
           },
           {
