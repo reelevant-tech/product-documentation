@@ -501,8 +501,14 @@
           {
             "group": "For Technical Evaluators",
             "pages": [
-              "why-reelevant/technical-evaluators/architecture-overview",
-              "why-reelevant/technical-evaluators/technical-overview"
+              "why-reelevant/technical-evaluators/overview",
+              "why-reelevant/technical-evaluators/architecture",
+              "why-reelevant/technical-evaluators/data-ingestion",
+              "why-reelevant/technical-evaluators/integrations",
+              "why-reelevant/technical-evaluators/authentication",
+              "why-reelevant/technical-evaluators/security",
+              "why-reelevant/technical-evaluators/status-page",
+              "why-reelevant/technical-evaluators/documentation"
             ]
           }
         ]

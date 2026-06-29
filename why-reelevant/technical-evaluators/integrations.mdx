@@ -1,0 +1,92 @@
+---
+title: "Integration Channels"
+description: "How personalised Content is delivered across email, web, mobile, and headless channels — protocols, effort, and SDK ecosystem."
+---
+
+## Channel Overview
+
+| Channel | Integration method | Effort | Authentication |
+|---------|-------------------|--------|----------------|
+| **Email** | Single `<img>` or HTML tag in ESP template | 5 minutes | None (public URL) |
+| **Web (SSR)** | Server-side SDK (Node.js, Next.js, Nuxt, Remix, SvelteKit) | 1–2 hours | None (public URL) |
+| **Web (client)** | Client-side JavaScript snippet | 30 minutes | None (public URL) |
+| **Mobile** | Native SDK (iOS, Android, Flutter) | 1–2 days | None (public URL) |
+| **Push / In-App** | JSON API response | 1 day | None (public URL) |
+
+<Warning>
+Integration URLs are publicly accessible — no authentication is required at request time. Customer IDs in URL parameters are **public by design** (visible in email HTML, browser history, and server logs). Use opaque identifiers, not email addresses or other PII.
+</Warning>
+
+## Email Integration
+
+Insert a single image tag (or HTML embed code) in your ESP template. The tag URL encodes the Workflow ID and a customer identifier as a query parameter.
+
+```html
+<img src="https://reelevant.run/{workflowId}?uid={customerId}" />
+```
+
+No server-side code required. Works with any ESP (Salesforce Marketing Cloud, Braze, Selligent, Adobe Campaign, custom solutions).
+
+**How it works:** When the recipient opens the email, the email client requests the image. Reelevant renders personalised Content at that moment using the customer's current data — not data from send time.
+
+## Web Integration
+
+Two options depending on your rendering strategy:
+
+### Server-side SDK (recommended for SEO / SSR)
+
+Available for Node.js frameworks. The SDK calls the Runner at page-render time and injects personalised Content into the HTML response.
+
+Supported frameworks:
+- **Next.js** (App Router and Pages Router)
+- **Nuxt** (Nuxt 3)
+- **Remix**
+- **SvelteKit**
+- **Generic Node.js** (Express, Fastify, or any HTTP server)
+
+### Client-side script
+
+A lightweight JavaScript snippet that fetches and renders Content in the browser. Suitable for static sites, SPAs, or when SSR is not available.
+
+## Mobile Integration
+
+Native SDKs handle initialisation, Content fetching, identity management, and view lifecycle:
+
+| Platform | Package | Min version |
+|----------|---------|-------------|
+| **Android** | Kotlin SDK | Android 5.0+ |
+| **iOS** | Swift SDK | iOS 13+ |
+| **Flutter** | Dart SDK | Flutter 3.0+ |
+
+A JSON API fallback is available for custom implementations or platforms without native SDK support.
+
+## JSON API (Headless)
+
+For headless integrations (push notifications, in-app messages, custom frontends), the JSON API returns structured payloads matching a JSON Template schema defined in the platform.
+
+The response shape is deterministic and typed — your client code can rely on the schema without runtime type checking.
+
+## Content Delivery Formats
+
+| Format | Delivered as | Typical channel |
+|--------|-------------|----------------|
+| **Visual Content** | PNG/GIF image | Email, web banners |
+| **HTML fragment** | Raw HTML string | Web, in-app embeds |
+| **JSON payload** | Structured JSON | Mobile apps, headless integrations |
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Web SDK Reference" icon="cube" href="/developer-docs/web-integration/overview">
+Full server-side and client-side SDK documentation.
+</Card>
+<Card title="Mobile SDK Reference" icon="mobile" href="/developer-docs/mobile-integration/overview">
+iOS, Android, and Flutter SDK guides.
+</Card>
+<Card title="JSON API" icon="code" href="/developer-docs/web-integration/api-json/overview">
+Headless JSON API integration guide.
+</Card>
+<Card title="API Reference" icon="book" href="/developer-docs/api-reference/introduction">
+Full REST API documentation.
+</Card>
+</CardGroup>

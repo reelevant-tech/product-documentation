@@ -1,0 +1,86 @@
+---
+title: "Status & Monitoring"
+description: "Real-time platform status at status.reelevant.com — component health, SLA tracking, incident communication, and customer-scoped visibility."
+---
+
+## Overview
+
+Reelevant operates a dedicated status page at **[status.reelevant.com](https://status.reelevant.com)** providing real-time visibility into platform health, incident history, and uptime metrics.
+
+The status page is available to all customers and prospects without authentication for global platform status, with authenticated views providing company-specific incident details.
+
+## Monitored Components
+
+The platform monitors three core pillars that together deliver the personalisation pipeline:
+
+| Component | Description | What it covers |
+|-----------|-------------|----------------|
+| **Ingestion** | Datasource ingestion pipeline | Data imports, scheduled syncs, streaming ingestion, field mapping |
+| **Workflows** | Workflow execution engine | DAG evaluation, Condition logic, Data Node resolution, Content rendering |
+| **Web** | Web rendering and delivery platform | Runner responses, CDN delivery, SDK endpoints, redirect handling |
+
+## Status Levels
+
+Each component reports one of three operational states:
+
+| Status | Meaning | Visual indicator |
+|--------|---------|-----------------|
+| **Operational** | All systems functioning normally | Green |
+| **Degraded** | Reduced performance or partial functionality | Yellow |
+| **Down** | Service unavailable or critically impaired | Red |
+
+The overall platform status is derived from the worst-performing component. A single component in "Down" state marks the entire platform as experiencing issues.
+
+## Incident Communication
+
+When an issue is detected, the status page provides:
+
+- **Real-time status updates** — Component status changes are reflected immediately
+- **Incident timeline** — Each incident includes a chronological log of events (opened, updated, resolved)
+- **Severity classification** — Incidents are categorised as Critical, Warning, or Informational
+- **Resolution tracking** — Incidents transition through states: Ongoing → Resolved (or Planned for scheduled maintenance)
+
+### Incident Types
+
+| Type | Description |
+|------|-------------|
+| **Ongoing** | Active issue currently affecting the platform |
+| **Planned** | Scheduled maintenance or known upcoming change |
+| **Resolved** | Issue has been fixed and service restored |
+
+## SLA & Uptime
+
+The status page displays:
+
+- **30-day uptime percentage** (SLA) per component
+- **Daily and hourly status history** visualised as uptime bars
+- **Historical incident log** with duration and impact details
+
+Reelevant commits to a **99.9% availability SLA** measured monthly across all core components.
+
+## Authenticated Views
+
+Logged-in customers see additional detail scoped to their account:
+
+- **Company-specific incidents** — Issues affecting only your organisation's Datasources or Workflows
+- **Resource-level status** — Health indicators on individual Datasources and Workflows
+- **Targeted notifications** — Alerts relevant to your specific configuration
+
+## Freshness Guarantees
+
+The status page implements a staleness detection system:
+
+- Component status is re-evaluated on a regular schedule (typically every 30 seconds)
+- If status data is older than the configured threshold, the page displays a "delayed" badge
+- This ensures that "service down" is never confused with "status page could not check"
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Security & Compliance" icon="shield-check" href="/why-reelevant/technical-evaluators/security">
+SOC 2, GDPR, encryption, and penetration testing details.
+</Card>
+<Card title="Architecture" icon="diagram-project" href="/why-reelevant/technical-evaluators/architecture">
+System architecture and request lifecycle.
+</Card>
+</CardGroup>
