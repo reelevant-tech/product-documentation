@@ -45,19 +45,19 @@ Consider a stock feed delivered without headers:
 
 ## Configuring csvColumns
 
-To set explicit column names on a Datasource:
+<Info>
+  There is no UI for setting `csvColumns` yet. This option is currently configured via the API only. Contact your Technical Account Manager if you need assistance setting it up on a Datasource.
+</Info>
 
-<Steps>
-  <Step title="Create or edit the Datasource">
-    Navigate to **DataHub** and open the Datasource configuration.
-  </Step>
-  <Step title="Set the source format options">
-    In the source configuration, set the format to CSV and add the `csvColumns` option with an ordered list of column names matching the number of columns in your file.
-  </Step>
-  <Step title="Verify the Field Mapping">
-    After saving, check that the [Field Mapping](/advanced-guide/datahub/field-mapping) displays the expected column names and that all rows are ingested as data.
-  </Step>
-</Steps>
+To set explicit column names, include `csvColumns` in the format options of the source configuration when calling the `configure_sources` step via the [Datasources API](/developer-docs/introduction):
+
+| Field | Value |
+|-------|-------|
+| **format.type** | `csv` |
+| **format.options.csvColumns** | An ordered list of column names, e.g. `["id", "store_code", "quantite"]` |
+| **format.options.csvDelimiter** | *(optional)* Override the auto-detected delimiter |
+
+After the Datasource is configured, verify that the [Field Mapping](/advanced-guide/datahub/field-mapping) displays the expected column names and that all rows are ingested as data.
 
 <Warning>
   The number of names in `csvColumns` must match the number of columns in the CSV file. If a row has more or fewer values than expected, it is skipped during ingestion.
