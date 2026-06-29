@@ -1,0 +1,102 @@
+---
+title: "Authentication & SSO"
+description: "Platform access control, single sign-on (SSO) configuration, API authentication, and the RBAC/ABAC authorisation model."
+---
+
+## Authentication Layers
+
+Reelevant separates authentication into two distinct layers:
+
+| Layer | Mechanism | When it applies |
+|-------|-----------|-----------------|
+| **Content integration** | Public URLs — no auth | Runner requests (`reelevant.run`) |
+| **Platform access** | Email/password or SSO | Dashboard (`app.reelevant.com`) |
+| **Datasources API** | OAuth 2.0 Bearer tokens | Programmatic data ingestion |
+
+## Content Integration (Public)
+
+Integration URLs — image tags, redirection links, and Runner endpoints — are **publicly accessible**. No authentication header or token is required at request time.
+
+Customer identifiers are passed as **URL query parameters** (e.g. `uid`, `rlvt-u`). These are public by design: they appear in email HTML source, browser history, and proxy logs. Use opaque customer IDs rather than email addresses or other PII.
+
+## Platform Access
+
+### Email and Password
+
+Standard login at [app.reelevant.com](https://app.reelevant.com). Users authenticate with their email address and password. Multi-factor authentication (MFA) is supported.
+
+### Single Sign-On (SSO)
+
+Reelevant supports SSO integration with your organisation's identity provider. When SSO is configured, users are automatically redirected to your IdP for authentication — no separate Reelevant password is required.
+
+**Supported protocols:**
+- **SAML 2.0** — Standard enterprise SSO protocol
+- **OpenID Connect (OIDC)** — Modern OAuth 2.0-based identity layer
+
+**SSO configuration includes:**
+
+| Setting | Description |
+|---------|-------------|
+| Identity Provider URL | Your IdP's SSO endpoint |
+| Entity ID / Client ID | Reelevant's identifier in your IdP |
+| Certificate / Secret | Trust verification between Reelevant and your IdP |
+| Attribute mapping | Map IdP user attributes to Reelevant user fields |
+| Default role | Role assigned to users provisioned via SSO |
+
+**Provisioning behaviour:**
+- **Just-in-time (JIT) provisioning** — Users are automatically created in Reelevant on first SSO login. They receive the default role and team assignment configured for your organisation.
+- **Deprovisioning** — When a user is removed from your IdP, they lose access on their next authentication attempt.
+
+<Info>
+SSO configuration is managed at the organisation level. Contact your Reelevant account team or support@reelevant.com to enable and configure SSO for your organisation.
+</Info>
+
+## Authorisation Model
+
+Once authenticated, access is enforced through **RBAC** and **ABAC**:
+
+### RBAC (Role-Based Access Control)
+
+Each user is assigned a [role](/product-guide/account/roles) that defines permitted actions on resource types:
+
+| Resource | Actions |
+|----------|---------|
+| Workflows | Create, read, update, delete, publish |
+| Contents | Create, read, update, delete |
+| Datasources | Create, read, update, delete, configure |
+| Analytics | Read, export |
+| Account settings | Read, manage users, manage roles |
+
+### ABAC (Attribute-Based Access Control)
+
+Permissions are further scoped by attributes:
+
+- **Company** — Tenant isolation ensures users only access their organisation's resources
+- **Team** — Resources are assigned to Teams; users only see resources belonging to their Teams
+
+This means a user with the "Editor" role in "Team Marketing" can edit Workflows assigned to that team, but cannot see or modify Workflows belonging to "Team CRM".
+
+See [Permissions](/product-guide/account/permissions) for the full access model.
+
+## API Authentication
+
+### Datasources API
+
+Programmatic access to the Datasources API uses **OAuth 2.0 Bearer tokens**:
+
+- Tokens are scoped per environment (staging / production)
+- Tokens are managed in the platform under Account settings
+- All API requests require the `Authorization: Bearer {token}` header
+
+See [API Authentication](/developer-docs/api-reference/authentication) for OAuth 2.0 flows and token management.
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Security & Compliance" icon="shield-check" href="/why-reelevant/technical-evaluators/security">
+SOC 2, GDPR, encryption, and penetration testing.
+</Card>
+<Card title="Permissions Guide" icon="users" href="/product-guide/account/permissions">
+Detailed RBAC and ABAC configuration.
+</Card>
+</CardGroup>

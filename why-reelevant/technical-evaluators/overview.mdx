@@ -1,0 +1,74 @@
+---
+title: "Technical Overview"
+description: "Assess Reelevant integration complexity — architecture, data flow, SDK ecosystem, and implementation effort for the content-first personalisation engine."
+---
+
+## What Reelevant Is
+
+Reelevant is a **content-first personalisation engine** that renders individualised Content at the moment of user interaction — not at send time. A single Content definition produces millions of unique variants based on real-time customer data, Workflow logic, and live Datasource state.
+
+The platform handles the full pipeline: data ingestion, real-time decisioning, Content rendering, delivery, event capture, and incrementality measurement.
+
+## Core Components
+
+| Component | Role |
+|-----------|------|
+| **Workflow** | Directed acyclic graph (DAG) of Data Nodes, Logic Nodes, and Output Nodes — defines personalisation logic |
+| **Datasource** | Typed data store (Product, CRM, Location, Analytics, Generic) fed via batch or streaming ingestion |
+| **Content** | Visual template with data bindings — rendered at request time with individual data |
+| **Runner** | Execution engine at `reelevant.run` — resolves Workflows and returns personalised responses |
+| **DataHub** | Ingestion layer supporting URL, S3, GCS, BigQuery, Snowflake, Kafka, FTP/SFTP sources |
+
+## What Does NOT Require Custom Development
+
+| Capability | How it works | Your effort |
+|------------|-------------|-------------|
+| Workflow logic | Visual DAG editor (no-code) | Business user can build |
+| Product recommendations | Built-in engine, configure via Datasource connection | Data connection only |
+| A/B testing (Split) | Drag-and-drop Split node with percentage slider | Zero — built in |
+| Real-time testing (MAB) | Multi-armed bandit node, auto-optimises | Zero — built in |
+| Incrementality measurement | Automatic Exposed vs Non-Exposed framework | Zero — read the dashboard |
+| Multilingual Content | Locale detection + variant selection | Upload translated assets |
+| Stock filtering | Automatic from Stock Datasource | Connect the data feed |
+| Event tracking | Automatic impression and click capture | Zero |
+
+## Integration Effort Estimates
+
+| Scope | Timeline | Team |
+|-------|----------|------|
+| **First Use Case (email only)** | 1–2 weeks | 1 developer (part-time) + 1 CRM manager |
+| **Full email integration (5+ Workflows)** | 4–6 weeks | 1 developer + 1 CRM manager |
+| **Email + Web** | 6–8 weeks | 1–2 developers + 1 CRM manager |
+| **Full omnichannel** | 8–12 weeks | 2 developers + 1 CRM manager |
+
+### What takes the most time
+
+| Task | Typical effort | Notes |
+|------|---------------|-------|
+| Data preparation (CRM export, catalogue mapping) | 60% of total | One-time; reusable across Use Cases |
+| Workflow design and testing | 25% | Business-user driven, no code |
+| Template integration | 10% | Single tag insertion |
+| Go-live validation | 5% | Reelevant support included |
+
+## Section Contents
+
+<CardGroup cols={2}>
+<Card title="Architecture & Lifecycle" icon="diagram-project" href="/why-reelevant/technical-evaluators/architecture">
+System architecture, data flow, and request lifecycle with sequence diagram.
+</Card>
+<Card title="Data Ingestion" icon="database" href="/why-reelevant/technical-evaluators/data-ingestion">
+DataHub source types, ingestion modes, and Datasource categories.
+</Card>
+<Card title="Integration Channels" icon="plug" href="/why-reelevant/technical-evaluators/integrations">
+Email, web, mobile, and JSON API integration patterns.
+</Card>
+<Card title="Authentication & SSO" icon="lock" href="/why-reelevant/technical-evaluators/authentication">
+Platform access control, SSO configuration, and API authentication.
+</Card>
+<Card title="Security & Compliance" icon="shield-check" href="/why-reelevant/technical-evaluators/security">
+SOC 2, GDPR, encryption, penetration testing, and trust portal.
+</Card>
+<Card title="Status & Monitoring" icon="signal" href="/why-reelevant/technical-evaluators/status-page">
+Real-time platform status, SLA monitoring, and incident communication.
+</Card>
+</CardGroup>

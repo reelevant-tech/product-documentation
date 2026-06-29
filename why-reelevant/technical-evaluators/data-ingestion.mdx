@@ -1,0 +1,80 @@
+---
+title: "Data Ingestion"
+description: "DataHub source types, ingestion modes, and Datasource categories — how data flows into the Reelevant platform."
+---
+
+## Ingestion Modes
+
+Reelevant supports multiple ingestion patterns depending on data volume, freshness requirements, and source system capabilities.
+
+| Mode | Description | Freshness | Use case |
+|------|-------------|-----------|----------|
+| **Worker** (batch pull) | Scheduled job fetches and processes data from an external source | Minutes to hours | Full catalogue sync, daily CRM updates |
+| **Ingester** (real-time push) | REST API receives events pushed by your systems | Seconds | Purchase events, stock changes, behavioural data |
+| **PubSub** (streaming) | Continuous consumption from a message broker | Sub-second | High-volume event streams (e.g. Kafka topics) |
+| **Proxy** (live query) | Data fetched on demand at Workflow execution time | Real-time | External APIs queried per-request |
+
+## DataHub Source Types
+
+The DataHub supports the following source connectors for batch (Worker mode) ingestion:
+
+| Source | Protocol | Formats supported | Typical use |
+|--------|----------|-------------------|-------------|
+| **URL** | HTTP/HTTPS | CSV, JSON, XML, Avro | Public or authenticated API endpoints, hosted catalogue files |
+| **FTP / SFTP** | FTP, SFTP | CSV, JSON, XML, Avro | Legacy systems, partner data feeds |
+| **Google Cloud Storage (GCS)** | GCS API | CSV, JSON, XML, Avro | Data warehouse exports, scheduled dumps |
+| **Amazon S3** | S3 API | CSV, JSON, XML, Avro | Data lake exports, cross-cloud feeds |
+| **BigQuery** | BigQuery API | Structured query results | Analytics exports, CRM segments, computed tables |
+| **Snowflake** | Snowflake API | Structured query results | Data warehouse tables and views |
+| **Kafka** | Kafka protocol (with LZ4/Snappy compression) | JSON, Avro | Streaming event ingestion (purchases, navigation, stock updates) |
+| **Datasource Reference** | Internal | Derived from existing Datasource | Computed fields, cross-Datasource joins |
+| **File Upload** | Direct upload | CSV, JSON, XML, Avro | One-off imports, manual data loads |
+
+<Info>
+All batch sources support field mapping, type coercion, PGP decryption for encrypted files, and configurable CSV options (custom delimiters, header-less files with column definitions).
+</Info>
+
+## Datasource Categories
+
+Datasources are typed to enable specialised behaviours (required fields, indexing strategies, query capabilities):
+
+| Category | Purpose | Required fields | Subtypes |
+|----------|---------|-----------------|----------|
+| **Product** | Product catalogues, offers, recommendations | Reference ID | User-defined, Localised, Best Product, Bought Together |
+| **CRM** | Customer profiles, segments, attributes | Workflow User (identity key) | User-defined |
+| **Location** | Stores, points of interest, geographic data | Latitude, Longitude, Reference ID | User-defined, Google My Business, Partoo, Weather |
+| **Analytics** | Behavioural events, tracking data | Datetime | Reelevant events, Google Tag Manager, Workflow Events, Purchases |
+| **Generic** | Flexible schema for any structured data | None | User-defined, Top Attributes |
+| **Push** | Recipient lists for push notifications | Workflow User | Email |
+
+## Data Update Strategies
+
+When new data arrives, three strategies control how it merges with existing records:
+
+| Strategy | Behaviour | Use case |
+|----------|-----------|----------|
+| **Override** | Drop all existing records, replace with new dataset | Full catalogue refresh |
+| **Append** | Keep existing records, add new rows | Time-series events, purchase history |
+| **Upsert** | Merge by primary key — update existing, insert new | CRM profiles, stock levels, price changes |
+
+## Integration Effort
+
+| Scenario | Your effort | Reelevant support |
+|----------|-------------|-------------------|
+| Connect a CSV URL feed | Configure source URL + field mapping in the UI | Auto-scheduled sync |
+| BigQuery/Snowflake integration | Provide query + credentials in the UI | Managed scheduling |
+| Kafka streaming | Provide broker details + topic + schema | Continuous ingestion |
+| SFTP with PGP encryption | Upload PGP key, configure path pattern | Auto-decryption on fetch |
+
+All source configurations are managed through the platform UI — no code required. For programmatic Datasource management, see the [Datasources API](/developer-docs/api-reference/introduction).
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Integration Channels" icon="plug" href="/why-reelevant/technical-evaluators/integrations">
+How personalised Content is delivered to each channel.
+</Card>
+<Card title="Field Mapping" icon="map" href="/advanced-guide/datahub/field-mapping">
+Advanced field mapping and type coercion rules.
+</Card>
+</CardGroup>
