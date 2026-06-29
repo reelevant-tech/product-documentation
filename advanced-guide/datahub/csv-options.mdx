@@ -1,0 +1,78 @@
+---
+title: 'CSV Format Options'
+description: 'Advanced CSV parsing options — custom delimiters, explicit column names for header-less files'
+---
+
+## Overview
+
+By default, the platform auto-detects the CSV delimiter and reads column names from the first row of the file. For most CSV files, no additional configuration is needed.
+
+However, some data providers deliver CSV files **without a header row** — every row contains data, and there is no first row defining column names. In these cases, you can specify explicit column names so the platform knows how to label each field.
+
+## CSV Options
+
+The following options are available when the detected (or manually set) format is CSV:
+
+| Option | Required | Description |
+|--------|----------|-------------|
+| **csvDelimiter** | No | Override the auto-detected delimiter. Common values: `,` (comma), `;` (semicolon), `\t` (tab), `\|` (pipe). |
+| **csvColumns** | No | An ordered list of column names for header-less CSV files. When set, every row — including the first — is treated as data. |
+
+## When to Use csvColumns
+
+Use `csvColumns` when your CSV file has **no header row**. Without it, the platform reads the first row as column names, which means:
+
+- The first row of actual data is consumed as headers instead of being ingested.
+- Column names change unpredictably each time the file is refreshed, breaking the Field Mapping.
+
+### Example
+
+Consider a stock feed delivered without headers:
+
+| Row | Raw content |
+|-----|-------------|
+| 1 | `ABC123,STORE01,42` |
+| 2 | `DEF456,STORE02,17` |
+
+**Without csvColumns**, the platform treats `ABC123`, `STORE01`, and `42` as column names. The second row becomes the only data row, and column names change on the next delivery.
+
+**With csvColumns** set to `["id", "store_code", "quantite"]`, both rows are ingested as data with stable, meaningful column names:
+
+| id | store_code | quantite |
+|----|------------|----------|
+| ABC123 | STORE01 | 42 |
+| DEF456 | STORE02 | 17 |
+
+## Configuring csvColumns
+
+To set explicit column names on a Datasource:
+
+<Steps>
+  <Step title="Create or edit the Datasource">
+    Navigate to **DataHub** and open the Datasource configuration.
+  </Step>
+  <Step title="Set the source format options">
+    In the source configuration, set the format to CSV and add the `csvColumns` option with an ordered list of column names matching the number of columns in your file.
+  </Step>
+  <Step title="Verify the Field Mapping">
+    After saving, check that the [Field Mapping](/advanced-guide/datahub/field-mapping) displays the expected column names and that all rows are ingested as data.
+  </Step>
+</Steps>
+
+<Warning>
+  The number of names in `csvColumns` must match the number of columns in the CSV file. If a row has more or fewer values than expected, it is skipped during ingestion.
+</Warning>
+
+<Info>
+  `csvColumns` is optional. Existing Datasources that do not set this option continue to work as before — the first row is used as column headers.
+</Info>
+
+## Applicable Source Types
+
+The `csvColumns` option is available on all file-based connectors that support CSV:
+
+- [URL](/advanced-guide/datahub/source-types/url)
+- [File Upload](/advanced-guide/datahub/source-types/file)
+- [FTP / SFTP](/advanced-guide/datahub/source-types/ftp-sftp)
+- [Google Cloud Storage](/advanced-guide/datahub/source-types/gcs)
+- [Amazon S3](/advanced-guide/datahub/source-types/s3)

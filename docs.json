@@ -201,6 +201,7 @@
                   "advanced-guide/datahub/source-types/datasource-reference"
                 ]
               },
+              "advanced-guide/datahub/csv-options",
               "advanced-guide/datahub/field-mapping",
               "advanced-guide/datahub/pgp-decryption",
               "advanced-guide/datahub/queries",
