@@ -45,7 +45,7 @@ Datasources are typed to enable specialised behaviours (required fields, indexin
 | **Location** | Stores, points of interest, geographic data | Latitude, Longitude, Reference ID | User-defined, Google My Business, Partoo, Weather |
 | **Analytics** | Behavioural events, tracking data | Datetime | Reelevant events, Google Tag Manager, Workflow Events, Purchases |
 | **Generic** | Flexible schema for any structured data | None | User-defined, Top Attributes |
-| **Push** | Recipient lists for push notifications | Workflow User | Email |
+
 
 ## Data Update Strategies
 
@@ -66,7 +66,7 @@ When new data arrives, three strategies control how it merges with existing reco
 | Kafka streaming | Provide broker details + topic + schema | Continuous ingestion |
 | SFTP with PGP encryption | Upload PGP key, configure path pattern | Auto-decryption on fetch |
 
-All source configurations are managed through the platform UI — no code required. For programmatic Datasource management, see the [Datasources API](/developer-docs/api-reference/introduction).
+All source configurations are managed through the platform UI — no code required. For programmatic management, see the [API Reference](/developer-docs/api-reference/introduction).
 
 ## Next Steps
 
