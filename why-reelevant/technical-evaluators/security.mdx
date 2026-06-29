@@ -26,13 +26,12 @@ For the most up-to-date security documentation, certifications, and audit report
 | Data in transit | TLS 1.3 (minimum TLS 1.2) |
 | Data at rest | AES-256 disk encryption on all servers, workstations, and cloud storage |
 | Database encryption | Application-level encryption for sensitive fields; HTTPS for all database connections |
-| File transfer | Secure transfer platform for outbound files; PGP decryption supported for inbound data |
+| File transfer | Always over secure links (HTTPS, SFTP, or FTPS); PGP encryption can be added on top |
 
 ### Data Residency
 
-- **Primary region:** EU
-- **Configurable:** Data residency can be configured per deployment to meet local regulations
-- **Data segregation:** Customer data remains in dedicated secure cloud environments behind firewalls
+- **Primary region:** EU (additional regions planned)
+- **Multi-tenant architecture:** The platform operates a single production environment with strict logical tenant isolation — each customer's data is segregated through application-level access controls and scoping
 
 ### Data Minimisation
 
@@ -51,7 +50,7 @@ For the most up-to-date security documentation, certifications, and audit report
 ### Platform Access
 
 - **Multi-factor authentication (MFA)** required for all users
-- **SSO** supported via SAML 2.0 and OpenID Connect — see [Authentication & SSO](/why-reelevant/technical-evaluators/authentication)
+- **SSO** supported via SAML 2.0 — see [Authentication & SSO](/why-reelevant/technical-evaluators/authentication)
 - **RBAC + ABAC** — Role-based permissions scoped by company and team attributes
 - **Least privilege** — Users receive the minimum access required for their role
 - **Quarterly access reviews** — All production system access reviewed by management
