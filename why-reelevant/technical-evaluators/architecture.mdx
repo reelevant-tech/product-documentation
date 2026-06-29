@@ -3,49 +3,9 @@ title: "Architecture & Lifecycle"
 description: "System architecture, data flow, and request lifecycle of the Reelevant personalisation engine — from image request to individualised response."
 ---
 
-## System Architecture
+## Request Lifecycle
 
 Reelevant is the only **content-first personalisation engine**. Build Content once — the platform creates millions of individualised versions at the moment of interaction, not at send time.
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     CLIENT (Email / Web / Mobile)            │
-│  User interaction → requests Reelevant resource             │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ HTTPS request
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    REELEVANT EDGE (CDN)                      │
-│  Route to nearest region, TLS 1.3 termination               │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   RUNNER (Execution Engine)                  │
-│                                                             │
-│  1. Identify customer (ID from URL params)                  │
-│  2. Fetch Datasource records (cache + live fallback)        │
-│  3. Execute Workflow DAG (Conditions, Splits, Data Nodes)   │
-│  4. Resolve Output Node → render Content                    │
-│  5. Return personalised image/HTML/JSON                     │
-│                                                             │
-│  Availability: 99.9% SLA                                   │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      DATA LAYER                              │
-│                                                             │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────────┐  │
-│  │ Datasources │  │ Workflow      │  │ Event             │  │
-│  │ (CRM, Prod, │  │ Definitions  │  │ Stream            │  │
-│  │  Stock...)  │  │ (DAG logic)  │  │ (impressions,     │  │
-│  └─────────────┘  └──────────────┘  │  clicks, polls)   │  │
-│                                      └───────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Request Lifecycle
 
 The following sequence diagram shows the end-to-end flow from a user opening an email (or visiting a page) to receiving personalised Content.
 
@@ -101,7 +61,7 @@ sequenceDiagram
 | Availability | 99.9% SLA (measured monthly) |
 | Data encryption at rest | AES-256 |
 | Data encryption in transit | TLS 1.3 |
-| Data residency | EU (primary), configurable |
+| Data residency | EU (additional regions planned) |
 | Throughput | 100M+ personalised Content renders/month per client |
 | Failover | Multi-region active-active |
 

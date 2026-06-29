@@ -29,23 +29,22 @@ Standard login at [app.reelevant.com](https://app.reelevant.com). Users authenti
 
 Reelevant supports SSO integration with your organisation's identity provider. When SSO is configured, users are automatically redirected to your IdP for authentication — no separate Reelevant password is required.
 
-**Supported protocols:**
+**Supported protocol:**
 - **SAML 2.0** — Standard enterprise SSO protocol
-- **OpenID Connect (OIDC)** — Modern OAuth 2.0-based identity layer
 
 **SSO configuration includes:**
 
 | Setting | Description |
 |---------|-------------|
 | Identity Provider URL | Your IdP's SSO endpoint |
-| Entity ID / Client ID | Reelevant's identifier in your IdP |
-| Certificate / Secret | Trust verification between Reelevant and your IdP |
+| Entity ID | Reelevant's identifier in your IdP |
+| Certificate | X.509 certificate for trust verification between Reelevant and your IdP |
 | Attribute mapping | Map IdP user attributes to Reelevant user fields |
-| Default role | Role assigned to users provisioned via SSO |
+| Default role | Role assigned to users created via the platform |
 
-**Provisioning behaviour:**
-- **Just-in-time (JIT) provisioning** — Users are automatically created in Reelevant on first SSO login. They receive the default role and team assignment configured for your organisation.
-- **Deprovisioning** — When a user is removed from your IdP, they lose access on their next authentication attempt.
+**User provisioning:**
+
+Reelevant does not currently support JIT provisioning or SCIM. User accounts are managed via the platform's [User Management API](/developer-docs/api-reference/introduction) or through the UI. When SSO is enabled, users must have an existing account in Reelevant that matches their IdP identity to authenticate.
 
 <Info>
 SSO configuration is managed at the organisation level. Contact your Reelevant account team or support@reelevant.com to enable and configure SSO for your organisation.
@@ -65,7 +64,9 @@ Each user is assigned a [role](/product-guide/account/roles) that defines permit
 | Contents | Create, read, update, delete |
 | Datasources | Create, read, update, delete, configure |
 | Analytics | Read, export |
-| Account settings | Read, manage users, manage roles |
+| Roles | Create, read, update, delete |
+| Teams | Create, read, update, delete, assign members |
+| Settings | Read, update |
 
 ### ABAC (Attribute-Based Access Control)
 
@@ -80,15 +81,16 @@ See [Permissions](/product-guide/account/permissions) for the full access model.
 
 ## API Authentication
 
-### Datasources API
+### Platform APIs
 
-Programmatic access to the Datasources API uses **OAuth 2.0 Bearer tokens**:
+Reelevant treats its APIs as first-class citizens alongside the UI. All platform capabilities are accessible programmatically via REST APIs:
 
+- **OAuth 2.0 Bearer tokens** for authentication
 - Tokens are scoped per environment (staging / production)
 - Tokens are managed in the platform under Account settings
 - All API requests require the `Authorization: Bearer {token}` header
 
-See [API Authentication](/developer-docs/api-reference/authentication) for OAuth 2.0 flows and token management.
+See [API Authentication](/developer-docs/api-reference/authentication) for OAuth 2.0 flows and token management, and the [API Reference](/developer-docs/api-reference/introduction) for full endpoint documentation.
 
 ## Next Steps
 

@@ -19,37 +19,6 @@ The platform handles the full pipeline: data ingestion, real-time decisioning, C
 | **Runner** | Execution engine at `reelevant.run` — resolves Workflows and returns personalised responses |
 | **DataHub** | Ingestion layer supporting URL, S3, GCS, BigQuery, Snowflake, Kafka, FTP/SFTP sources |
 
-## What Does NOT Require Custom Development
-
-| Capability | How it works | Your effort |
-|------------|-------------|-------------|
-| Workflow logic | Visual DAG editor (no-code) | Business user can build |
-| Product recommendations | Built-in engine, configure via Datasource connection | Data connection only |
-| A/B testing (Split) | Drag-and-drop Split node with percentage slider | Zero — built in |
-| Real-time testing (MAB) | Multi-armed bandit node, auto-optimises | Zero — built in |
-| Incrementality measurement | Automatic Exposed vs Non-Exposed framework | Zero — read the dashboard |
-| Multilingual Content | Locale detection + variant selection | Upload translated assets |
-| Stock filtering | Automatic from Stock Datasource | Connect the data feed |
-| Event tracking | Automatic impression and click capture | Zero |
-
-## Integration Effort Estimates
-
-| Scope | Timeline | Team |
-|-------|----------|------|
-| **First Use Case (email only)** | 1–2 weeks | 1 developer (part-time) + 1 CRM manager |
-| **Full email integration (5+ Workflows)** | 4–6 weeks | 1 developer + 1 CRM manager |
-| **Email + Web** | 6–8 weeks | 1–2 developers + 1 CRM manager |
-| **Full omnichannel** | 8–12 weeks | 2 developers + 1 CRM manager |
-
-### What takes the most time
-
-| Task | Typical effort | Notes |
-|------|---------------|-------|
-| Data preparation (CRM export, catalogue mapping) | 60% of total | One-time; reusable across Use Cases |
-| Workflow design and testing | 25% | Business-user driven, no code |
-| Template integration | 10% | Single tag insertion |
-| Go-live validation | 5% | Reelevant support included |
-
 ## Section Contents
 
 <CardGroup cols={2}>
