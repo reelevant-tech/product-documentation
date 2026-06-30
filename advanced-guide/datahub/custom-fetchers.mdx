@@ -20,7 +20,7 @@ A datasource retrieves data in one of three modes, and each custom fetcher is bu
 | Mode | How data is retrieved | Typical sources |
 |------|-----------------------|-----------------|
 | **Pull-and-store** | Reelevant fetches the source on a schedule, parses it, and stores it for querying. | URL, File, FTP/SFTP, BigQuery, Snowflake, GCS, S3 |
-| **Event ingestion** | Records arrive continuously as events and are appended to storage. | Kafka, Website Events, Workflow events |
+| **Event ingestion** | Records arrive continuously as events and are appended to storage. | Kafka, Website Events |
 | **Real-time proxy** | Reelevant calls the upstream source live on every request and does not store the result. | URL configured as a real-time API |
 
 The summary table below shows which mode each generic custom fetcher applies to.
@@ -28,12 +28,48 @@ The summary table below shows which mode each generic custom fetcher applies to.
 | Custom fetcher | Mode | Purpose |
 |----------------|------|---------|
 | [Per User](#per-user) | All modes | Restrict results to a single user's records. |
-| [Workflow Events](#workflow-events) | Event ingestion | Read Workflow event data and expose the referenced item IDs. |
 | [Unwind Rows](#unwind-rows) | Pull-and-store | Pivot a wide row of columns into multiple long rows. |
 | [Product Exclusion](#product-exclusion) | Pull-and-store | Include or exclude products listed in another datasource. |
 | [Expired Product Lifetime](#expired-product-lifetime) | Pull-and-store | Surface products a user is due to repurchase. |
 | [Proxy Lock](#proxy-lock) | Real-time proxy | Deduplicate concurrent identical upstream calls. |
 | [Proxy Aggregation](#proxy-aggregation) | Real-time proxy | Compute an aggregation over a real-time response. |
+
+## Setting up a custom fetcher
+
+There is no self-serve interface for custom fetchers yet, so they are configured through the [Datasources API](/developer-docs/introduction) on the datasource's draft version. Setup is two steps: declare the fetcher with the `configure_fetcher` step, then promote the version with the `validate` step.
+
+Both calls require an access token — see [Authentication](/developer-docs/api-reference/authentication) for how to obtain one.
+
+```bash
+# 1. Configure the custom fetcher on the datasource's draft version
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "configure_fetcher",
+    "payload": {
+      "name": "product-exclusion",
+      "params": {
+        "exclusionDatasourceId": "665f1c0b2a9d4e0008b3a1f2",
+        "exclusionIdField": "sku",
+        "productIdField": "reference",
+        "mode": "exclusion"
+      }
+    }
+  }'
+
+# 2. Validate to promote the draft version to live
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "validate", "payload": {} }'
+```
+
+The `payload.name` is the fetcher identifier (e.g. `per-user`, `generic-unwind-rows`, `product-exclusion`), and `payload.params` holds the configuration fields documented for each fetcher below. For fetchers that take no configuration, send an empty object: `"params": {}`.
+
+<Info>
+  The `validate` step promotes the draft version to live. For pull-and-store datasources it also enqueues a verification job, so the new version only goes live once that job succeeds.
+</Info>
 
 ---
 
@@ -48,14 +84,6 @@ This custom fetcher takes no configuration.
 <Info>
   Use this on shared datasources (such as a CRM, purchases, or analytics feed) where a Workflow must only ever see the active user's own rows.
 </Info>
-
-## Workflow Events
-
-Reads Workflow event data — the record of what content was displayed or clicked — from an event-ingestion datasource. For each event it adds a `references` field containing the unique item reference IDs that were involved in that delivery, so you can build use cases such as "items this user already saw".
-
-To avoid scanning the entire event history, the fetcher enforces a time filter: if a query does not already filter on the timestamp field, it automatically restricts results to the **last 15 days**.
-
-This custom fetcher takes no configuration.
 
 ## Unwind Rows
 
@@ -139,12 +167,50 @@ Each entry in **temporalities** describes one repurchase window:
 
 ### How it works
 
-1. For each product the user bought, the fetcher derives a lifetime — either from the product's own lifetime field (single purchase) or from the average interval between repeat purchases.
-2. It computes the expected next purchase date and checks it against the matching temporality window.
-3. Returned products are enriched with `purchaseCount`, `lastPurchaseDate`, and `nextPurchaseDate`, and can be sorted by any of these.
+The fetcher looks at each product the user previously bought and predicts when they will need it again. The way the lifetime is derived depends on **how many times** the user bought that product.
+
+1. It reads the user's purchases (most recent first) and groups the purchase dates per product reference.
+2. For each product it derives an expected lifetime and an expected next purchase date (see the two behaviours below).
+3. It keeps the product only if today falls inside the matching temporality window — from `windowStart` days before the next purchase date to `windowEnd` days after it.
+4. Kept products are enriched with `purchaseCount`, `lastPurchaseDate`, and `nextPurchaseDate`, and can be sorted by any of these.
+
+#### Behaviour 1 — single purchase (lifetime lookup)
+
+When the product was bought **once**, the fetcher cannot measure a real repurchase interval, so it reads the expected lifetime from the product's own lifetime field in the [Field Mapping](/advanced-guide/datahub/field-mapping). The next purchase date is `lastPurchaseDate + lifetime`.
+
+*Example* — a coffee capsule pack with a lifetime field of **30 days**, bought once on **1 March**, using the default window (`windowStart` 0, `windowEnd` 90):
+
+| Signal | Value |
+|--------|-------|
+| Purchases found | 1 March |
+| `purchaseCount` | 1 |
+| Product lifetime field | 30 days |
+| `lastPurchaseDate` | 1 March |
+| `nextPurchaseDate` | 31 March (1 March + 30 days) |
+| Eligibility window | 31 March → 29 June (next purchase date → +90 days) |
+
+The capsule pack is returned for any user query run between 31 March and 29 June. If the product has no lifetime field, a single-purchase product cannot be evaluated and is skipped.
+
+#### Behaviour 2 — multiple purchases (computed average)
+
+When the product was bought **several times**, the fetcher ignores the static lifetime field and instead computes the **average interval** between consecutive purchases for this specific user. The next purchase date is `lastPurchaseDate + averageInterval`.
+
+*Example* — the same capsule pack bought on **1 January**, **1 February**, and **1 March**, using the default window:
+
+| Signal | Value |
+|--------|-------|
+| Purchases found | 1 Jan, 1 Feb, 1 Mar |
+| `purchaseCount` | 3 |
+| Intervals | 31 days (Jan→Feb), 28 days (Feb→Mar) |
+| Average interval | ≈ 29.5 days |
+| `lastPurchaseDate` | 1 March |
+| `nextPurchaseDate` | ≈ 30 March (1 March + 29.5 days) |
+| Eligibility window | 30 March → 28 June (next purchase date → +90 days) |
+
+Using the user's own cadence makes the prediction far more accurate than a single static lifetime. If the computed average is less than one day, the product is skipped.
 
 <Info>
-  When no **temporalities** are configured, a default rule is applied: products with a lifetime up to 365 days that are due within the next 90 days.
+  When no **temporalities** are configured, a default rule is applied: products with a lifetime up to 365 days that are due within the next 90 days (`maxLifetime` 365, `windowStart` 0, `windowEnd` 90).
 </Info>
 
 ## Proxy Lock
