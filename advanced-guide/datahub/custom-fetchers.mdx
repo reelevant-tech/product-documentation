@@ -1,0 +1,184 @@
+---
+title: 'Custom Fetchers'
+description: 'Generic processing layers that filter, reshape, or enrich a datasource at query time — per-user, unwind rows, product exclusion, expired lifetime, proxy lock, and proxy aggregation'
+---
+
+## Overview
+
+A **custom fetcher** is an optional processing layer applied on top of a datasource's standard retrieval. Instead of returning the stored rows as-is, the datasource runs the data through additional logic every time it is queried — filtering it to a single user, reshaping columns into rows, excluding products, or computing an aggregation.
+
+Custom fetchers run at query time, so they always reflect the latest stored data and the runtime context (such as the user being personalised for). This page documents the **generic** custom fetchers — the ones available to any account. Some custom fetchers implement customer-specific logic and are not covered here.
+
+<Info>
+  Custom fetchers do not have a self-serve interface yet. They are configured on a Datasource by Reelevant. Contact your Technical Account Manager if you want to enable one.
+</Info>
+
+## Retrieval modes
+
+A datasource retrieves data in one of three modes, and each custom fetcher is built for one or more of them:
+
+| Mode | How data is retrieved | Typical sources |
+|------|-----------------------|-----------------|
+| **Pull-and-store** | Reelevant fetches the source on a schedule, parses it, and stores it for querying. | URL, File, FTP/SFTP, BigQuery, Snowflake, GCS, S3 |
+| **Event ingestion** | Records arrive continuously as events and are appended to storage. | Kafka, Website Events, Workflow events |
+| **Real-time proxy** | Reelevant calls the upstream source live on every request and does not store the result. | URL configured as a real-time API |
+
+The summary table below shows which mode each generic custom fetcher applies to.
+
+| Custom fetcher | Mode | Purpose |
+|----------------|------|---------|
+| [Per User](#per-user) | All modes | Restrict results to a single user's records. |
+| [Workflow Events](#workflow-events) | Event ingestion | Read Workflow event data and expose the referenced item IDs. |
+| [Unwind Rows](#unwind-rows) | Pull-and-store | Pivot a wide row of columns into multiple long rows. |
+| [Product Exclusion](#product-exclusion) | Pull-and-store | Include or exclude products listed in another datasource. |
+| [Expired Product Lifetime](#expired-product-lifetime) | Pull-and-store | Surface products a user is due to repurchase. |
+| [Proxy Lock](#proxy-lock) | Real-time proxy | Deduplicate concurrent identical upstream calls. |
+| [Proxy Aggregation](#proxy-aggregation) | Real-time proxy | Compute an aggregation over a real-time response. |
+
+---
+
+## Per User
+
+Restricts the datasource so a query returns only the records that belong to the user currently being personalised. It works on any retrieval mode and automatically targets the user identifier field defined in the [Field Mapping](/advanced-guide/datahub/field-mapping) (the CRM user field, or the purchase user field for a purchases datasource).
+
+When a datasource has a timestamp field, results are automatically sorted from most recent to oldest. The fetcher also exposes the resolved locale field so a Workflow can read the user's locale alongside the data.
+
+This custom fetcher takes no configuration.
+
+<Info>
+  Use this on shared datasources (such as a CRM, purchases, or analytics feed) where a Workflow must only ever see the active user's own rows.
+</Info>
+
+## Workflow Events
+
+Reads Workflow event data — the record of what content was displayed or clicked — from an event-ingestion datasource. For each event it adds a `references` field containing the unique item reference IDs that were involved in that delivery, so you can build use cases such as "items this user already saw".
+
+To avoid scanning the entire event history, the fetcher enforces a time filter: if a query does not already filter on the timestamp field, it automatically restricts results to the **last 15 days**.
+
+This custom fetcher takes no configuration.
+
+## Unwind Rows
+
+Reshapes each stored row by turning its columns into several rows. One column is kept as an identifier, and every other column becomes its own row, with the original column name stored in one field and the cell value in another.
+
+### Configuration
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **source** | Yes | The column to keep as the identifier on every produced row. |
+| **destination** | Yes | The name of the field that will hold the identifier value. |
+| **columnDestination** | Yes | The name of the field that will hold the original column name. |
+| **valueType** | Yes | The data type of the value field — `string` or `number`. When `number`, the value field is sortable. |
+
+### Before and after
+
+Consider a stored row that lists three category affinities for a user:
+
+| user | category1 | category2 | category3 |
+|------|-----------|-----------|-----------|
+| user-42 | shoes | jackets | hats |
+
+With **source** = `user`, **destination** = `user`, and **columnDestination** = `category`, the fetcher unwinds it into:
+
+| user | category | value |
+|------|----------|-------|
+| user-42 | category1 | shoes |
+| user-42 | category2 | jackets |
+| user-42 | category3 | hats |
+
+<Info>
+  Sorting by the value field is applied after unwinding, so you can rank the produced rows by their numeric value when **valueType** is `number`.
+</Info>
+
+## Product Exclusion
+
+Filters a product datasource against a second datasource that lists items to keep or remove. A typical use is hiding products a user has already purchased, or restricting recommendations to an allow-list.
+
+### Configuration
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **exclusionDatasourceId** | Yes | The datasource that holds the list of reference items. |
+| **exclusionIdField** | Yes | The field in the exclusion datasource that contains the item IDs. |
+| **productIdField** | Yes | The field in the product datasource to match those IDs against. |
+| **mode** | Yes | `exclusion` removes matching products; `inclusion` keeps only matching products. |
+
+### How it works
+
+1. The fetcher reads the matching IDs from the exclusion datasource, respecting any query filters that apply to both datasources.
+2. In `exclusion` mode, those IDs are removed from the product results; in `inclusion` mode, only those IDs are kept.
+3. In `inclusion` mode, if the exclusion datasource returns no IDs, the product query returns no rows.
+
+<Info>
+  The exclusion list is read up to a configured limit. For very large lists, talk to your Technical Account Manager about the applicable threshold.
+</Info>
+
+## Expired Product Lifetime
+
+Surfaces products that a user is due to repurchase, based on their purchase history and an expected product lifetime. It joins the current product datasource with a purchases datasource, computes when each previously bought product should run out, and returns only the products whose next purchase date falls inside a configured window.
+
+### Configuration
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **purchaseDatasourceId** | Yes | The datasource containing the user's purchase events. |
+| **purchaseQuery** | Yes | A base query applied to the purchases datasource. |
+| **purchaseReferenceIdField** | Yes | The purchases field holding the product reference ID. |
+| **purchaseTimestampField** | Yes | The purchases field holding the purchase date. |
+| **purchaseClientField** | Yes | The purchases field holding the client (user) identifier. |
+| **temporalities** | No | A list of rules describing the repurchase windows (see below). |
+
+Each entry in **temporalities** describes one repurchase window:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **maxLifetime** | Yes | The maximum product lifetime, in days, this rule applies to. |
+| **windowStart** | Yes | How many days before the expected next purchase the product becomes eligible. |
+| **windowEnd** | Yes | How many days after the expected next purchase the product stays eligible. |
+| **minPurchaseCount** | No | The minimum number of past purchases required for this rule to apply. |
+
+### How it works
+
+1. For each product the user bought, the fetcher derives a lifetime — either from the product's own lifetime field (single purchase) or from the average interval between repeat purchases.
+2. It computes the expected next purchase date and checks it against the matching temporality window.
+3. Returned products are enriched with `purchaseCount`, `lastPurchaseDate`, and `nextPurchaseDate`, and can be sorted by any of these.
+
+<Info>
+  When no **temporalities** are configured, a default rule is applied: products with a lifetime up to 365 days that are due within the next 90 days.
+</Info>
+
+## Proxy Lock
+
+Applies only to real-time proxy datasources. When Reelevant receives many concurrent requests that would trigger the same upstream call, this fetcher lets the first call run and makes the others wait briefly, so the result can be served from cache instead of repeating the call.
+
+### Configuration
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **ttl** | Yes | How long, in milliseconds, concurrent identical requests wait for the first call to complete. |
+
+<Info>
+  Use this to protect a rate-limited or expensive upstream API when a single delivery fans out into many identical real-time calls.
+</Info>
+
+## Proxy Aggregation
+
+Applies only to real-time proxy datasources. After fetching the live response, it computes a single aggregation over a chosen field and adds the result to every returned row.
+
+### Configuration
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **targetField** | Yes | The field to aggregate. Supports nested fields using dot notation (e.g. `price.amount`). |
+| **aggregationType** | Yes | The aggregation to compute — `sum`, `avg`, `min`, or `max`. |
+| **outputField** | Yes | The field name under which the computed result is added to each row. |
+
+<Info>
+  Non-numeric and missing values are ignored. If no numeric values are found, the output field is empty.
+</Info>
+
+## Related pages
+
+- [Datasource Reference](/advanced-guide/datahub/source-types/datasource-reference) — building derived datasources from existing ones.
+- [Special Configurations](/advanced-guide/datahub/special-configurations) — other computed datasource types (Best Products, Merge, Cross-sell).
+- [Field Mapping](/advanced-guide/datahub/field-mapping) — defining the fields a custom fetcher reads and writes.
