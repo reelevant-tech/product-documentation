@@ -25,9 +25,11 @@ The Countdown component displays a live countdown timer that counts down to a ta
 
 ## Local Timezone
 
-Enable **Use user's local timezone** to adjust the countdown end date for each viewer automatically. The user's locale (from the Workflow context) is resolved to an IANA timezone. For example, a `fr_FR` locale maps to `Europe/Paris`, so a countdown ending at "23:59" will end at 23:59 local time in Paris.
+Enable **Use user's local timezone** to adjust the countdown end date for each viewer automatically. The user's locale (from the Workflow context) is resolved to an IANA timezone — for example, `fr_FR` maps to `Europe/Paris` and `ja_JP` maps to `Asia/Tokyo`.
 
-<Tip>This is ideal for multi-country campaigns where you want a promotion to end at the same local time everywhere — no need to create separate countdowns per country.</Tip>
+Without this option, a countdown set to "31 Dec at 23:59 UTC" ends at 00:59 on 1 Jan for a user in Paris (UTC+1) and at 08:59 on 1 Jan in Tokyo (UTC+9). With the option enabled, the date-time components are reinterpreted in each user's local timezone — the countdown ends at 23:59 local time for everyone.
+
+<Tip>This is ideal for multi-country campaigns where a promotion must end at the same local time in every country — no need to create separate countdowns per timezone.</Tip>
 
 ## Digit Configuration
 
