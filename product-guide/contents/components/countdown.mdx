@@ -25,9 +25,11 @@ The Countdown component displays a live countdown timer that counts down to a ta
 
 ## Local Timezone
 
-Enable **Use user's local timezone** to adjust the countdown end date for each viewer automatically. For example, a countdown ending at "23:59" will end at 23:59 in Paris for French users and 23:59 in Tokyo for Japanese users.
+Enable **Use user's local timezone** to adjust the countdown end date for each viewer automatically.
 
-<Tip>This is ideal for multi-country campaigns where you want a promotion to end at the same local time everywhere.</Tip>
+Without this option, a countdown set to "31 Dec at 23:59 UTC" ends at 00:59 on 1 Jan for a user in Paris (UTC+1) and at 08:59 on 1 Jan in Tokyo (UTC+9). With the option enabled, the countdown ends at 23:59 local time for everyone — so both the French and Japanese users see it expire at their own midnight.
+
+<Tip>This is ideal for multi-country campaigns where a promotion must end at the same local time in every country.</Tip>
 
 ## Digit Configuration
 
