@@ -29,13 +29,13 @@ Stores transactional purchase events. Each row represents a single product purch
 
 | Column | Source Field Mapping Type | Description |
 |--------|--------------------------|-------------|
-| **user** | User or Purchase User | The user identifier. |
-| **price** | Price | The item price. |
-| **reference_id** | Reference ID or Reference IDs | The product reference purchased. |
-| **transaction_id** | Transaction ID | The transaction identifier grouping items in a single order. |
-| **transaction_source** | Transaction Source | The origin of the transaction (e.g., online, in-store). |
-| **transaction_metadata** | Transaction Metadata | Additional transaction metadata, stored as a structured string. |
-| **purchased_at** | Datetime | When the purchase occurred. |
+| **user** | `workflow_user` or `workflow_purchase_user` | The user identifier. |
+| **price** | `price` | The item price. |
+| **reference_id** | `reference_id` or `reference_ids` | The product reference purchased. |
+| **transaction_id** | `transaction_id` | The transaction identifier grouping items in a single order. |
+| **transaction_source** | `transaction_source` | The origin of the transaction (e.g., online, in-store). |
+| **transaction_metadata** | `transaction_metadata` | Additional transaction metadata, stored as a structured string. |
+| **purchased_at** | `datetime` | When the purchase occurred. |
 
 ### Website Events
 
@@ -45,22 +45,22 @@ Stores navigation and behavioural events. Each row represents a single tracked i
 
 | Column | Source Field Mapping Type | Description |
 |--------|--------------------------|-------------|
-| **clientId** | User | The primary user identifier (e.g., CRM ID, logged-in user). |
-| **userId** | Onsite User | A secondary user identifier (e.g., cookie-based or anonymous session ID). |
-| **name** | Event Name | The event name (e.g., page_view, add_to_cart, purchase). |
-| **ids** | Reference IDs or Reference ID | Reference identifiers associated with the event (e.g., product IDs viewed). Always stored as an array. |
-| **timestamp** | Datetime | When the event occurred. |
+| **clientId** | `workflow_user` | The primary user identifier (e.g., CRM ID, logged-in user). |
+| **userId** | `workflow_onsite_user` | A secondary user identifier (e.g., cookie-based or anonymous session ID). |
+| **name** | `event_name` | The event name (e.g., page_view, add_to_cart, purchase). |
+| **ids** | `reference_ids` or `reference_id` | Reference identifiers associated with the event (e.g., product IDs viewed). Always stored as an array. |
+| **timestamp** | `datetime` | When the event occurred. |
 
 **Optional columns** — included only when the Datasource's [Field Mapping](/advanced-guide/datahub/field-mapping) contains the corresponding type:
 
 | Column | Source Field Mapping Type | Description |
 |--------|--------------------------|-------------|
-| **tmpId** | Temporary User ID | A temporary device or session identifier (e.g., a fingerprint or first-party cookie). |
-| **url** | URL | The page URL where the event occurred. |
-| **eventId** | Event ID | A unique identifier for this specific event instance. |
-| **value** | Price | A numeric value associated with the event (e.g., cart total, product price). |
-| **transId** | Transaction ID | A transaction identifier, if the event is transactional. |
-| **agent** | User Agent | The browser user agent, stored as a structured record with browser, OS, and device details. |
+| **tmpId** | `user_tmp_id` | A temporary device or session identifier (e.g., a fingerprint or first-party cookie). |
+| **url** | `url` | The page URL where the event occurred. |
+| **eventId** | `event_id` | A unique identifier for this specific event instance. |
+| **value** | `price` | A numeric value associated with the event (e.g., cart total, product price). |
+| **transId** | `transaction_id` | A transaction identifier, if the event is transactional. |
+| **agent** | `user_agent` | The browser user agent, stored as a structured record with browser, OS, and device details. |
 
 <Info>
   Multiple Datasources can write to the **same** analytics table. For example, a Google Tag Manager ingester and a Reelevant Analytics ingester can both feed into the same website events table. The platform maps each Datasource's fields to the correct canonical columns based on their Field Mapping types.
