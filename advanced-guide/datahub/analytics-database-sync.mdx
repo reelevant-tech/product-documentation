@@ -68,26 +68,14 @@ Stores navigation and behavioural events. Each row represents a single tracked i
 
 ## How Field Mapping Drives the Schema
 
-The analytics database uses a **two-step field resolution** to determine which columns are populated for each event:
+The analytics database schema is derived from your Datasource's [Field Mapping](/advanced-guide/datahub/field-mapping). You do not need to manually define columns — the platform maps your configured fields to the correct analytics columns based on their assigned **semantic type**.
 
-### Step 1 — Type-based canonical mapping
-
-Each field in your Datasource's [Field Mapping](/advanced-guide/datahub/field-mapping) has an assigned **semantic type** (e.g., User, Event Name, Datetime, URL). The platform matches these types against the canonical column definitions shown in the tables above and writes each value to the corresponding canonical column.
+Each field in your Field Mapping has an assigned type (e.g., User, Event Name, Datetime, URL). The platform matches these types against the canonical column definitions shown in the tables above and writes each value to the corresponding canonical column.
 
 For example, if your Datasource has a field named `event_time` with type **Datetime**, its value is written to the `timestamp` column — regardless of the original field name.
 
-### Step 2 — Additional fields forwarded as-is
-
-Any selected fields in your Field Mapping that were **not** matched by type in Step 1 are forwarded to the analytics database using their **original field name** as the column name.
-
-For example, if your Datasource includes a field called `utm_campaign` with a generic text type, it is written to a column named `utm_campaign` in the analytics table.
-
-<Warning>
-  Fields forwarded as-is require the corresponding column to exist in the analytics table. If the column does not exist and unknown values are ignored, the field value is silently dropped. Coordinate with your Technical Account Manager to ensure the table schema includes any additional columns you need.
-</Warning>
-
 <Info>
-  Field Mapping must use **semantic types** (User, Event Name, Datetime, Reference ID, etc.) for the canonical column mapping to work correctly. Fields assigned generic types like "Text" or "Number" will not map to canonical columns — they will only be forwarded using their original name in Step 2.
+  Only fields with recognised semantic types (User, Event Name, Datetime, Reference ID, URL, Price, Transaction ID, User Agent, etc.) are written to canonical analytics columns. Fields assigned generic types like "Text" or "Number" are not synchronised to the analytics database.
 </Info>
 
 ## Configuring a Destination
@@ -132,7 +120,7 @@ Deduplication is enabled per destination using the **deduplication option**:
 
 Before enabling analytics database sync for a Datasource:
 
-1. **Field Mapping must use semantic types** — the Datasource must have fields mapped to the correct semantic types (User, Datetime, Reference ID, Event Name, etc.) so the platform can map them to canonical analytics columns. Generic types (Text, Number) are only forwarded as additional columns using their original field name.
+1. **Field Mapping must use semantic types** — the Datasource must have fields mapped to the correct semantic types (User, Datetime, Reference ID, Event Name, etc.) so the platform can map them to canonical analytics columns. Fields with generic types (Text, Number) are not synchronised.
 2. **The Datasource must be published** — only published (active) Datasources write to the analytics database.
 3. **A destination must be configured** — your Technical Account Manager or administrator will configure the destination dataset and table name for your Datasource.
 
