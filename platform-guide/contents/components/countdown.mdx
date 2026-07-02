@@ -20,7 +20,14 @@ The Countdown component displays a live countdown timer that counts down to a ta
 | Property | Description |
 |----------|-------------|
 | **Fixed date** | The target date and time for the countdown. Can be static or bound to a datasource variable. |
+| **Use user's local timezone** | When enabled, the countdown end date adjusts to each viewer's local timezone based on their locale. This uses the user's locale from the Workflow context to determine their timezone. |
 | **Space between numbers** | Horizontal spacing between the digit groups. |
+
+## Local Timezone
+
+Enable **Use user's local timezone** to adjust the countdown end date for each viewer automatically. The user's locale (from the Workflow context) is resolved to an IANA timezone. For example, a `fr_FR` locale maps to `Europe/Paris`, so a countdown ending at "23:59" will end at 23:59 local time in Paris.
+
+<Tip>This is ideal for multi-country campaigns where you want a promotion to end at the same local time everywhere — no need to create separate countdowns per country.</Tip>
 
 ## Digit Configuration
 
