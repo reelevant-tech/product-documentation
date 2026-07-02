@@ -25,17 +25,17 @@ Two table types are supported, determined by the Datasource subtype:
 
 ### Purchases
 
-Stores transactional purchase events. Each row represents a single product purchased by a user.
+Stores transactional purchase events. Each row represents a single product purchased by a user. All columns are always present in the table; values are set to null when no matching Field Mapping type exists.
 
-| Column | Required | Source Field Mapping Type | Description |
-|--------|----------|--------------------------|-------------|
-| **user** | Yes | User or Purchase User | The user identifier. |
-| **price** | Yes | Price | The item price. |
-| **reference_id** | Yes | Reference ID or Reference IDs | The product reference purchased. |
-| **transaction_id** | Yes | Transaction ID | The transaction identifier grouping items in a single order. |
-| **transaction_source** | Yes | Transaction Source | The origin of the transaction (e.g., online, in-store). |
-| **transaction_metadata** | Yes | Transaction Metadata | Additional transaction metadata, stored as a structured string. |
-| **purchased_at** | Yes | Datetime | When the purchase occurred. |
+| Column | Source Field Mapping Type | Description |
+|--------|--------------------------|-------------|
+| **user** | User or Purchase User | The user identifier. |
+| **price** | Price | The item price. |
+| **reference_id** | Reference ID or Reference IDs | The product reference purchased. |
+| **transaction_id** | Transaction ID | The transaction identifier grouping items in a single order. |
+| **transaction_source** | Transaction Source | The origin of the transaction (e.g., online, in-store). |
+| **transaction_metadata** | Transaction Metadata | Additional transaction metadata, stored as a structured string. |
+| **purchased_at** | Datetime | When the purchase occurred. |
 
 ### Website Events
 
@@ -63,7 +63,7 @@ Stores navigation and behavioural events. Each row represents a single tracked i
 | **agent** | User Agent | The browser user agent, stored as a structured record with browser, OS, and device details. |
 
 <Info>
-  Multiple Datasources can write to the **same** analytics table. For example, a Google Tag Manager ingester and a Reelevant Analytics ingester can both feed into the same website events table — the platform maps each Datasource's fields to the correct canonical columns based on their Field Mapping types.
+  Multiple Datasources can write to the **same** analytics table. For example, a Google Tag Manager ingester and a Reelevant Analytics ingester can both feed into the same website events table. The platform maps each Datasource's fields to the correct canonical columns based on their Field Mapping types.
 </Info>
 
 ## How Field Mapping Drives the Schema
