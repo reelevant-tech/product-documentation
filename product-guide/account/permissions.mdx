@@ -5,7 +5,7 @@ description: 'Understand how the permission system controls access to platform r
 
 ## How Permissions Work
 
-The Reelevant platform uses a **role-based access control** (RBAC) system. Every user is assigned exactly one [role](/platform-guide/account/roles) that defines what they can do and which resources they can interact with. Resources are further scoped by [teams](/platform-guide/account/teams) so that users only see what belongs to their teams.
+The Reelevant platform uses a **role-based access control** (RBAC) system. Every user is assigned exactly one [role](/product-guide/account/roles) that defines what they can do and which resources they can interact with. Resources are further scoped by [teams](/product-guide/account/teams) so that users only see what belongs to their teams.
 
 The permission evaluation follows three layers:
 
@@ -23,11 +23,11 @@ Resources represent the different entities you can manage on the platform. Each 
 
 | Resource | Description | Scoping |
 |----------|-------------|---------|
-| **Workflow** | [Workflow](/platform-guide/workflows/overview) creation and management. | Company + Team |
+| **Workflow** | [Workflow](/product-guide/workflows/overview) creation and management. | Company + Team |
 | **Workflow Settings** | Global workflow configuration (variable profiles, etc.). | Company |
-| **Content** | [Content template](/platform-guide/contents/overview) creation and management. | Company + Team |
-| **Datasource** | [Datasource](/platform-guide/datahub/overview) creation and management. | Company + Team |
-| **Statistics** | [Analytics](/platform-guide/analytics/overview) data access and export. | Company |
+| **Content** | [Content template](/product-guide/contents/overview) creation and management. | Company + Team |
+| **Datasource** | [Datasource](/product-guide/datahub/overview) creation and management. | Company + Team |
+| **Statistics** | [Analytics](/product-guide/analytics/overview) data access and export. | Company |
 | **User** | User account management (invite, edit, delete). | Company |
 | **Role** | Role creation and management. | Company |
 | **Teams** | Team creation and management. | Company |
@@ -73,7 +73,7 @@ Actions define what operations a user can perform on a given resource. Not every
 
 ## Permissions Matrix
 
-The table below shows which actions are available for each resource. When configuring a [role](/platform-guide/account/roles), you can toggle each available action individually.
+The table below shows which actions are available for each resource. When configuring a [role](/product-guide/account/roles), you can toggle each available action individually.
 
 | Resource | Access | Create | Read | Query | Update | Delete | Export |
 |----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|
@@ -107,7 +107,7 @@ When a user tries to perform an action, the system checks the following conditio
     Does the target resource belong to the same company as the user? This check is automatic and ensures complete tenant isolation.
   </Step>
   <Step title="Team check (team-scoped resources only)">
-    Is the user a member of at least one team that the target resource belongs to? Team membership includes inherited access from the [team hierarchy](/platform-guide/account/teams#team-hierarchy).
+    Is the user a member of at least one team that the target resource belongs to? Team membership includes inherited access from the [team hierarchy](/product-guide/account/teams#team-hierarchy).
   </Step>
 </Steps>
 

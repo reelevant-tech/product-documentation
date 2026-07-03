@@ -94,7 +94,7 @@ BigQuery data types are automatically converted:
 1. Reelevant authenticates with BigQuery using the provided credentials.
 2. If a custom query is provided, it is executed. Otherwise, the full table is exported.
 3. For large tables, Reelevant uses an optimized export-to-GCS pipeline for better performance.
-4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 5. On subsequent syncs, the query or table is re-read (or incrementally fetched if configured).
 
 <Warning>

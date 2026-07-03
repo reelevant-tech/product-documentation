@@ -5,7 +5,7 @@ description: 'Integrate Reelevant personalisation on the client side using the t
 
 ## Overview
 
-Client-side personalisation uses a JavaScript tracking script that loads in the browser. It fetches personalised content after the page renders and injects it into designated DOM zones. This is the original integration method and works alongside the [Server Side SDK](/platform-guide/omni-channels/websites/server-side-sdk/overview).
+Client-side personalisation uses a JavaScript tracking script that loads in the browser. It fetches personalised content after the page renders and injects it into designated DOM zones. This is the original integration method and works alongside the [Server Side SDK](/developer-docs/web-integration/server-side-sdk/overview).
 
 ```mermaid
 sequenceDiagram
@@ -28,8 +28,8 @@ sequenceDiagram
 
 | Use case | Recommended approach |
 |----------|---------------------|
-| Content that must be visible immediately (no flash) | [Server-side SDK](/platform-guide/omni-channels/websites/server-side-sdk/overview) |
-| SEO-critical personalised content | [Server-side SDK](/platform-guide/omni-channels/websites/server-side-sdk/overview) |
+| Content that must be visible immediately (no flash) | [Server-side SDK](/developer-docs/web-integration/server-side-sdk/overview) |
+| SEO-critical personalised content | [Server-side SDK](/developer-docs/web-integration/server-side-sdk/overview) |
 | Event tracking (clicks, impressions, conversions) | Client-side script |
 | Consent-dependent content | Client-side script |
 | Overlays, popups, and floating elements | Client-side script |
@@ -40,7 +40,7 @@ sequenceDiagram
 
 ### 1. Script tag (manual)
 
-Add the Reelevant tracking script to your page. The integration URL is generated from the [Integration modal](/platform-guide/workflows/integration) in the workflow editor.
+Add the Reelevant tracking script to your page. The integration URL is generated from the [Integration modal](/product-guide/workflows/integration) in the workflow editor.
 
 ```html
 <!-- Add in your <head> or before </body> -->
@@ -159,4 +159,4 @@ window.dataLayer.push({
 })
 ```
 
-These values are automatically forwarded to workflows as URL parameters for use in [data nodes](/platform-guide/workflows/data-nodes/url-parameter).
+These values are automatically forwarded to workflows as URL parameters for use in [data nodes](/product-guide/workflows/data-nodes/url-parameter).

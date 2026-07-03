@@ -9,10 +9,10 @@ Reelevant supports **PGP (Pretty Good Privacy)** decryption for file-based data 
 
 PGP decryption is available on the following source types:
 
-- [URL](/platform-guide/datahub/source-types/url)
-- [FTP & SFTP](/platform-guide/datahub/source-types/ftp-sftp)
-- [Amazon S3](/platform-guide/datahub/source-types/s3)
-- [Google Cloud Storage](/platform-guide/datahub/source-types/gcs)
+- [URL](/advanced-guide/datahub/source-types/url)
+- [FTP & SFTP](/advanced-guide/datahub/source-types/ftp-sftp)
+- [Amazon S3](/advanced-guide/datahub/source-types/s3)
+- [Google Cloud Storage](/advanced-guide/datahub/source-types/gcs)
 
 <Info>
   PGP decryption works with both **armored** (`.asc`) and **binary** (`.pgp`, `.gpg`) encrypted files. The format is detected automatically.
@@ -41,7 +41,7 @@ pgpPassphrase?: string
 1. Reelevant fetches the encrypted file from the configured source (URL, FTP, S3, etc.).
 2. The file is **streamed** through the PGP decryption layer — the entire file is never buffered in memory.
 3. The decrypted stream is then decompressed (if `.gz` or `.zip`) and parsed as usual.
-4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 
 ```
 Source → PGP Decrypt → Decompress (gzip/zip) → Parse (CSV, JSON, XML…) → Field Mapping
@@ -105,4 +105,4 @@ gpg --armor --export-secret-keys your-email@example.com > private-key.asc
 
 - **Single key only** — each source configuration supports one private key. If files are encrypted to multiple recipients, provide the matching private key.
 - **Decryption only** — Reelevant decrypts incoming files but does not encrypt outgoing data.
-- **File Upload source** — PGP decryption is not supported for files uploaded directly via the platform UI. Use [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), [S3](/platform-guide/datahub/source-types/s3), or [GCS](/platform-guide/datahub/source-types/gcs) for encrypted files instead.
+- **File Upload source** — PGP decryption is not supported for files uploaded directly via the platform UI. Use [URL](/advanced-guide/datahub/source-types/url), [FTP/SFTP](/advanced-guide/datahub/source-types/ftp-sftp), [S3](/advanced-guide/datahub/source-types/s3), or [GCS](/advanced-guide/datahub/source-types/gcs) for encrypted files instead.

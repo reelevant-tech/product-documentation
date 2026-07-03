@@ -9,7 +9,7 @@ description: 'Import Figma or Photoshop designs to kickstart your content templa
 
 ## Overview
 
-Design Import lets you convert an existing **Figma** or **Adobe Photoshop** design into a Reelevant content template. Instead of recreating layouts from scratch in the [Content Editor](/platform-guide/contents/editor), you can import a design file and get a fully structured template with positioned text, images, and shapes ready to edit.
+Design Import lets you convert an existing **Figma** or **Adobe Photoshop** design into a Reelevant content template. Instead of recreating layouts from scratch in the [Content Editor](/product-guide/contents/editor), you can import a design file and get a fully structured template with positioned text, images, and shapes ready to edit.
 
 Supported formats:
 
@@ -26,7 +26,7 @@ Design import is part of the content creation flow. When you create a new conten
 
 <Steps>
   <Step title="Open the content creation modal">
-    From the [Content Listing](/platform-guide/contents/listing) page, click the **Create content** button.
+    From the [Content Listing](/product-guide/contents/listing) page, click the **Create content** button.
   </Step>
   <Step title="Fill in the content details">
     Enter a name, optional description, select teams, and configure the folder hierarchy as usual.
@@ -78,18 +78,18 @@ The importer converts design elements into Reelevant content components:
 
 | Design element | Reelevant component | Notes |
 |----------------|---------------------|-------|
-| Text layers | [Text](/platform-guide/contents/components/text) | Font family, size, weight, color, alignment, letter spacing, and line height are preserved. |
-| Rectangles & shapes | [Shape](/platform-guide/contents/components/shape) | Fill color and position are imported. |
-| Images | [Image](/platform-guide/contents/components/image) | Raster images are extracted, uploaded, and linked. |
+| Text layers | [Text](/product-guide/contents/components/text) | Font family, size, weight, color, alignment, letter spacing, and line height are preserved. |
+| Rectangles & shapes | [Shape](/product-guide/contents/components/shape) | Fill color and position are imported. |
+| Images | [Image](/product-guide/contents/components/image) | Raster images are extracted, uploaded, and linked. |
 | Layer positions | Component layout | Absolute positions and sizes are mapped to the canvas. |
 
 ### Font Handling
 
-Imported fonts are automatically matched against fonts available in your Reelevant account. If a font family from the design is not found, a default fallback font is used. You can update the font after import via the [Text component](/platform-guide/contents/components/text) configuration panel.
+Imported fonts are automatically matched against fonts available in your Reelevant account. If a font family from the design is not found, a default fallback font is used. You can update the font after import via the [Text component](/product-guide/contents/components/text) configuration panel.
 
 ## Limitations
 
-- Only one frame or artboard is imported per file. For multi-frame content, import the primary frame and add additional [frames](/platform-guide/contents/frames) manually.
+- Only one frame or artboard is imported per file. For multi-frame content, import the primary frame and add additional [frames](/product-guide/contents/frames) manually.
 - Complex vector paths, effects (shadows, blurs), and gradients are not imported — only solid fills are supported.
 - Nested components and symbols are flattened into their visual representation.
-- After import, the template may need minor layout adjustments. Use the [Content Editor](/platform-guide/contents/editor) to fine-tune positions and styling.
+- After import, the template may need minor layout adjustments. Use the [Content Editor](/product-guide/contents/editor) to fine-tune positions and styling.

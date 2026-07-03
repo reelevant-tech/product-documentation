@@ -81,7 +81,7 @@ When used with an **ingester-mode** datasource (continuous streaming), the Kafka
 2. A consumer group is created (or resumed) for the datasource.
 3. Messages are consumed from the configured topic.
 4. If a Schema Registry is configured, messages are deserialized using the Avro schema.
-5. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+5. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 
 <Warning>
   Ensure the Kafka user (if authentication is configured) has read access to the specified topic and permission to create/manage consumer groups.

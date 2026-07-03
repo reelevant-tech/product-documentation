@@ -9,7 +9,7 @@ description: 'Fetch current weather data for the user location'
 
 The Weather node fetches current weather data for the user's location. It can be used to personalize content based on weather conditions.
 
-This node uses data from the [Geolocation](/platform-guide/workflows/data-nodes/geolocation) node to determine the user's location and then fetches the current weather.
+This node uses data from the [Geolocation](/product-guide/workflows/data-nodes/geolocation) node to determine the user's location and then fetches the current weather.
 
 ## Output Data
 
@@ -26,6 +26,6 @@ The Weather node provides:
 
 ## Best Practices
 
-- Always pair the Weather node with a [Geolocation](/platform-guide/workflows/data-nodes/geolocation) node upstream.
-- Use [condition nodes](/platform-guide/workflows/logic-nodes/conditions) downstream to branch based on weather conditions or temperature ranges.
+- Always pair the Weather node with a [Geolocation](/product-guide/workflows/data-nodes/geolocation) node upstream.
+- Use [condition nodes](/product-guide/workflows/logic-nodes/conditions) downstream to branch based on weather conditions or temperature ranges.
 - Consider time zones — weather data reflects the current conditions at the user's location.

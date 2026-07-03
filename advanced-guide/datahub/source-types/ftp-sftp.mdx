@@ -98,7 +98,7 @@ FTP and SFTP sources support fetching **PGP-encrypted files**. When `pgpPrivateK
 Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
 
 <Info>
-  See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
+  See the [PGP Decryption guide](/advanced-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
 </Info>
 
 ## Wildcard Paths
@@ -136,5 +136,5 @@ The SFTP credentials (host, username, password) are generated automatically when
 1. Reelevant connects to the FTP/SFTP server using the provided credentials.
 2. The file at the configured path is located. If a wildcard is used, matching files are listed.
 3. Files are downloaded, decompressed if needed, and parsed based on the detected format.
-4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 5. On subsequent syncs, files are re-fetched according to the configured processing mode.

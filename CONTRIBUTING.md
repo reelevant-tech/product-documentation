@@ -122,17 +122,16 @@ Open a PR to reelevant-tech/product-documentation.
 Open Claude Code with your fork connected. Example prompts:
 
 ```
-Update why-reelevant/decision-makers/capabilities.mdx to add a new section
-about our real-time personalisation for mobile push notifications.
-Include concrete performance numbers. Follow why-reelevant/AGENTS.md.
+Update why-reelevant/technical-evaluators/integrations.mdx to add a section
+about our mobile SDK integration patterns. Focus on architecture and effort,
+not UI steps. Follow why-reelevant/AGENTS.md.
 Open a PR to reelevant-tech/product-documentation.
 ```
 
 ```
-Create a new page in why-reelevant/decision-makers/ about how Reelevant
-compares to manual A/B testing tools. Focus on outcomes and ROI, not
-technical details. Use real customer metrics where available.
-Follow why-reelevant/AGENTS.md.
+Create a new page in why-reelevant/technical-evaluators/ about authentication
+options for enterprise deployments. Focus on protocols, token lifecycle, and
+integration effort. Follow why-reelevant/AGENTS.md.
 Open a PR to reelevant-tech/product-documentation.
 ```
 
@@ -143,38 +142,6 @@ Open a PR to reelevant-tech/product-documentation.
 - Business pages: lead with the problem → show outcome → customer examples → CTA
 - Tech evaluator pages: architecture → protocols → integration effort
 - Never mention pricing or internal infrastructure (Pinot, Pulsar)
-
----
-
-## CS + TAM (Joint) — Product Adoption
-
-**You own:** `product-adoption/` — Incremental Value methodology and Use Case Explorer.
-
-### Quick start
-
-Open Claude Code with your fork connected. Example prompts:
-
-```
-Add a new Use Case page in product-adoption/use-case-explorer/use-cases/
-for "abandoned cart recovery". Link it to the relevant Key Challenges
-and Datasources. Follow product-adoption/AGENTS.md.
-Open a PR to reelevant-tech/product-documentation.
-```
-
-```
-Update product-adoption/incremental-value/statistical-model.mdx to clarify
-the minimum sample size requirement. Add a worked example showing why
-500 observations is too few. Follow product-adoption/AGENTS.md.
-Open a PR to reelevant-tech/product-documentation.
-```
-
-### Rules to remind Claude about
-
-- Authoritative and data-driven — content must withstand finance/leadership scrutiny
-- Always use exact terminology: Exposed Population, Non-Exposed Population, Incremental Value, Uplift
-- Include formulas and worked examples with realistic numbers
-- Show connections: Key Challenge → Use Case → Datasource → Capability
-- Never use "control group" (say "Non-Exposed Population"), never use "added value" (say "Incremental Value")
 
 ---
 

@@ -7,36 +7,36 @@ description: 'Learn about each data source connector available for importing dat
 
 ## Overview
 
-When [creating a datasource](/platform-guide/datahub/creating-a-datasource), you select a **source type** that defines how Reelevant retrieves the data. Each source type has its own configuration fields and capabilities.
+When [creating a datasource](/product-guide/datahub/creating-a-datasource), you select a **source type** that defines how Reelevant retrieves the data. Each source type has its own configuration fields and capabilities.
 
 ## Available Connectors
 
 <CardGroup cols={3}>
-  <Card title="URL" icon="link" href="/platform-guide/datahub/source-types/url">
+  <Card title="URL" icon="link" href="/advanced-guide/datahub/source-types/url">
     Fetch data from any HTTP/HTTPS endpoint — APIs, hosted files, or data feeds. Supports custom methods, headers, pagination, OAuth, and runtime variables.
   </Card>
-  <Card title="File Upload" icon="file-arrow-up" href="/platform-guide/datahub/source-types/file">
+  <Card title="File Upload" icon="file-arrow-up" href="/advanced-guide/datahub/source-types/file">
     Upload a data file directly from your computer. Supports CSV, JSON, XML, Parquet, Avro, and XLSX.
   </Card>
-  <Card title="FTP & SFTP" icon="server" href="/platform-guide/datahub/source-types/ftp-sftp">
+  <Card title="FTP & SFTP" icon="server" href="/advanced-guide/datahub/source-types/ftp-sftp">
     Connect to FTP or SFTP servers. Supports password and private key authentication, wildcard paths, and multiple file processing modes.
   </Card>
-  <Card title="BigQuery" icon="database" href="/platform-guide/datahub/source-types/bigquery">
+  <Card title="BigQuery" icon="database" href="/advanced-guide/datahub/source-types/bigquery">
     Synchronize data from Google BigQuery. Supports service account and OAuth authentication, custom SQL queries, and incremental sync.
   </Card>
-  <Card title="Snowflake" icon="snowflake" href="/platform-guide/datahub/source-types/snowflake">
+  <Card title="Snowflake" icon="snowflake" href="/advanced-guide/datahub/source-types/snowflake">
     Synchronize tables from Snowflake. Supports password and key-pair authentication, custom SQL queries, and incremental sync.
   </Card>
-  <Card title="Google Cloud Storage" icon="cloud" href="/platform-guide/datahub/source-types/gcs">
+  <Card title="Google Cloud Storage" icon="cloud" href="/advanced-guide/datahub/source-types/gcs">
     Retrieve files from GCS buckets. Supports wildcard paths, multiple file processing modes, and all common file formats.
   </Card>
-  <Card title="Amazon S3" icon="bucket" href="/platform-guide/datahub/source-types/s3">
+  <Card title="Amazon S3" icon="bucket" href="/advanced-guide/datahub/source-types/s3">
     Retrieve files from S3 or S3-compatible storage (MinIO, DigitalOcean Spaces, etc.). Supports wildcard paths and all common file formats.
   </Card>
-  <Card title="Kafka" icon="bolt" href="/platform-guide/datahub/source-types/kafka">
+  <Card title="Kafka" icon="bolt" href="/advanced-guide/datahub/source-types/kafka">
     Stream data from Apache Kafka topics. Supports SASL authentication, Schema Registry (Avro), and batch or continuous consumption.
   </Card>
-  <Card title="Datasource Reference" icon="arrows-rotate" href="/platform-guide/datahub/source-types/datasource-reference">
+  <Card title="Datasource Reference" icon="arrows-rotate" href="/advanced-guide/datahub/source-types/datasource-reference">
     Reference another existing datasource as a data source for derived computations (merge, best products, cross-sell).
   </Card>
 </CardGroup>
@@ -60,7 +60,7 @@ File-based connectors (URL, File Upload, FTP/SFTP, GCS, S3) automatically detect
 </Info>
 
 <Info>
-  File-based connectors (URL, FTP/SFTP, GCS, S3) also support [PGP decryption](/platform-guide/datahub/pgp-decryption) — encrypted files (`.asc`, `.pgp`, `.gpg`) are decrypted transparently during import when `pgpPrivateKey` is configured.
+  File-based connectors (URL, FTP/SFTP, GCS, S3) also support [PGP decryption](/advanced-guide/datahub/pgp-decryption) — encrypted files (`.asc`, `.pgp`, `.gpg`) are decrypted transparently during import when `pgpPrivateKey` is configured.
 </Info>
 
 ## Multiple Sources
@@ -81,4 +81,4 @@ Use **Delete the source** to remove individual source configurations.
 | OAuth support | Yes | — | — | Yes | — | — | — | — | — |
 | Key-pair auth | — | — | Yes | — | Yes | — | — | — | — |
 | Multiple sources | Yes | — | Yes | — | — | Yes | Yes | — | — |
-| [PGP decryption](/platform-guide/datahub/pgp-decryption) | Yes | — | Yes | — | — | Yes | Yes | — | — |
+| [PGP decryption](/advanced-guide/datahub/pgp-decryption) | Yes | — | Yes | — | — | Yes | Yes | — | — |

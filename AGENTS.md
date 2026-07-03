@@ -36,5 +36,4 @@
 | `advanced-guide/` | Technical Account Managers (TAM) | CS, Engineering |
 | `developer-docs/` | Engineering | TAM |
 | `why-reelevant/` | Sales | Marketing, Product |
-| `product-adoption/` | CS + TAM (joint) | Sales, Product |
 | `_glossary-internal.yaml` | Product (governance) | All teams |
