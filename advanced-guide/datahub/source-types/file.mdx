@@ -7,7 +7,7 @@ description: 'Upload data files directly from your computer to create a datasour
 
 ## Overview
 
-The File Upload source lets you import data by uploading a file directly from your computer. The platform parses the file and extracts fields for [mapping](/platform-guide/datahub/field-mapping).
+The File Upload source lets you import data by uploading a file directly from your computer. The platform parses the file and extracts fields for [mapping](/advanced-guide/datahub/field-mapping).
 
 ## Supported File Formats
 
@@ -28,7 +28,7 @@ The platform automatically detects the file format. The following formats are su
 </Info>
 
 <Note>
-  **PGP-encrypted files** cannot be uploaded directly via the File Upload source because format detection runs at upload time, before a decryption key can be provided. To import PGP-encrypted files, use [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), [S3](/platform-guide/datahub/source-types/s3), or [GCS](/platform-guide/datahub/source-types/gcs) instead. See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details.
+  **PGP-encrypted files** cannot be uploaded directly via the File Upload source because format detection runs at upload time, before a decryption key can be provided. To import PGP-encrypted files, use [URL](/advanced-guide/datahub/source-types/url), [FTP/SFTP](/advanced-guide/datahub/source-types/ftp-sftp), [S3](/advanced-guide/datahub/source-types/s3), or [GCS](/advanced-guide/datahub/source-types/gcs) instead. See the [PGP Decryption guide](/advanced-guide/datahub/pgp-decryption) for details.
 </Note>
 
 ## Upload via the UI
@@ -46,7 +46,7 @@ The easiest way to create a file-upload datasource is through the platform inter
     Drag and drop your file into the upload area, or click to open the file browser and select a file from your computer. The platform automatically detects the file format and text encoding.
   </Step>
   <Step title="Configure field mapping">
-    Once the file is parsed, fields are extracted and displayed. Configure the [field mapping](/platform-guide/datahub/field-mapping) to define how data should be imported.
+    Once the file is parsed, fields are extracted and displayed. Configure the [field mapping](/advanced-guide/datahub/field-mapping) to define how data should be imported.
   </Step>
   <Step title="Validate and publish">
     Review your configuration and click **Validate** to publish the datasource. Data ingestion starts immediately.
@@ -299,5 +299,5 @@ After the file is uploaded, the datasource automatically re-processes the new fi
 </Tip>
 
 <Info>
-  File upload creates an initial import. To keep data updated automatically on a schedule, consider using a [URL](/platform-guide/datahub/source-types/url), [FTP/SFTP](/platform-guide/datahub/source-types/ftp-sftp), or cloud storage source instead.
+  File upload creates an initial import. To keep data updated automatically on a schedule, consider using a [URL](/advanced-guide/datahub/source-types/url), [FTP/SFTP](/advanced-guide/datahub/source-types/ftp-sftp), or cloud storage source instead.
 </Info>

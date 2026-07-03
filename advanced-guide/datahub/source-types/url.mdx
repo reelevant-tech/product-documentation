@@ -79,7 +79,7 @@ The URL source supports fetching **PGP-encrypted files**. When `pgpPrivateKey` i
 Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
 
 <Info>
-  See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
+  See the [PGP Decryption guide](/advanced-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
 </Info>
 
 ## Pagination
@@ -152,7 +152,7 @@ Variables can be referenced in the URL, headers, body, and query parameters. Thi
 1. Reelevant sends an HTTP request to the configured URL with the specified method, headers, and body.
 2. If pagination is configured, subsequent pages are fetched automatically.
 3. The response is parsed based on the detected format.
-4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 5. On subsequent syncs, the URL is re-fetched and the data is updated.
 
 <Tip>

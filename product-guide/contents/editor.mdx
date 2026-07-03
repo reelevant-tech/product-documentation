@@ -12,9 +12,9 @@ The content editor is a full-screen visual workspace for designing templates. It
 1. **Header bar** — Displays the content name, status badge, and action buttons (Preview, Publish, Settings).
 2. **Canvas** — The central design area where components are rendered. You can pan, zoom, and select components.
 3. **Toolbar** — A horizontal bar with tools for adding components, adjusting zoom, undo/redo, and toggling layout guides.
-4. **Layers panel** — A tree view on the left showing all components with their hierarchy, grouping, and visibility toggles. See [Layers](/platform-guide/contents/layers).
-5. **Configuration panel** — Opens on the right when a component is selected, showing its properties. See individual [component pages](/platform-guide/contents/components).
-6. **Frame dock** — A page preview carousel at the bottom for multi-frame content. See [Frames](/platform-guide/contents/frames).
+4. **Layers panel** — A tree view on the left showing all components with their hierarchy, grouping, and visibility toggles. See [Layers](/product-guide/contents/layers).
+5. **Configuration panel** — Opens on the right when a component is selected, showing its properties. See individual [component pages](/product-guide/contents/components).
+6. **Frame dock** — A page preview carousel at the bottom for multi-frame content. See [Frames](/product-guide/contents/frames).
 
 ## Toolbar
 
@@ -25,13 +25,13 @@ The toolbar provides quick access to all component types and canvas controls:
 | Tool | Description |
 |------|-------------|
 | **Move** (pointer) | Default selection and movement tool. |
-| **Text** | Add a [Text](/platform-guide/contents/components/text) component to the canvas. |
-| **Shapes** | Open the shapes menu — [Rectangle, Circle, Triangle](/platform-guide/contents/components/shape). |
-| **Images** | Add an [Image](/platform-guide/contents/components/image) component. |
-| **Barcode** | Add a [Barcode](/platform-guide/contents/components/barcode) component. |
-| **Map** | Add a [Map](/platform-guide/contents/components/map) component. |
-| **Countdown** | Add a [Countdown](/platform-guide/contents/components/countdown) component. |
-| **Progress bars** | Add a [Progress Bar or Progress Arc](/platform-guide/contents/components/progress) component. |
+| **Text** | Add a [Text](/product-guide/contents/components/text) component to the canvas. |
+| **Shapes** | Open the shapes menu — [Rectangle, Circle, Triangle](/product-guide/contents/components/shape). |
+| **Images** | Add an [Image](/product-guide/contents/components/image) component. |
+| **Barcode** | Add a [Barcode](/product-guide/contents/components/barcode) component. |
+| **Map** | Add a [Map](/product-guide/contents/components/map) component. |
+| **Countdown** | Add a [Countdown](/product-guide/contents/components/countdown) component. |
+| **Progress bars** | Add a [Progress Bar or Progress Arc](/product-guide/contents/components/progress) component. |
 
 ### Canvas Controls
 
@@ -63,7 +63,7 @@ When no component is selected, the configuration panel shows the content-level s
 |---------|-------------|
 | **Content size** | Width and height of the canvas in pixels. |
 | **Canvas background color** | The background fill for the design area. |
-| **Animated content** | Toggle to enable [frames](/platform-guide/contents/frames) for animated or multi-page templates. |
+| **Animated content** | Toggle to enable [frames](/product-guide/contents/frames) for animated or multi-page templates. |
 | **Content title** | A title displayed only on landing pages. |
 
 ## Keyboard Shortcuts
@@ -83,7 +83,7 @@ The content editor supports keyboard shortcuts for common actions:
 You can copy and paste components, component groups, and condition groups within the same content or across different contents.
 
 **Copying:**
-1. Select one or more elements in the [layers panel](/platform-guide/contents/layers) or directly on the canvas.
+1. Select one or more elements in the [layers panel](/product-guide/contents/layers) or directly on the canvas.
 2. Press **Ctrl+C** (or **⌘+C** on Mac).
 3. A success notification confirms how many elements were copied.
 
@@ -108,7 +108,7 @@ Click a tool in the toolbar, then click on the canvas to place the component. Al
 
 ### Selecting and Moving
 
-Click a component on the canvas or in the [layers tree](/platform-guide/contents/layers) to select it. Drag to reposition. Use the resize handles to change dimensions.
+Click a component on the canvas or in the [layers tree](/product-guide/contents/layers) to select it. Drag to reposition. Use the resize handles to change dimensions.
 
 ### Configuration Panel
 
@@ -119,12 +119,12 @@ When a component is selected, the configuration panel shows:
 - **Size** — Dimensions with optional aspect ratio lock.
 - **Rotation** — Rotation angle.
 - **Appearance** — Component-specific styling (fill, stroke, border radius, etc.).
-- **Redirection** — A [redirection link](/platform-guide/contents/components/text) URL that users navigate to when clicking the component.
+- **Redirection** — A [redirection link](/product-guide/contents/components/text) URL that users navigate to when clicking the component.
 
 ### Publishing
 
-Click **Publish** in the header to validate and publish the content. Once published, the content can be used in [workflow output nodes](/platform-guide/workflows/output-nodes/visual-content).
+Click **Publish** in the header to validate and publish the content. Once published, the content can be used in [workflow output nodes](/product-guide/workflows/output-nodes/visual-content).
 
 <Info>
-  The Publish action validates the content structure. If there are dependency errors (e.g., a referenced [workflow](/platform-guide/workflows/overview) is missing a variable), an error modal will list the issues.
+  The Publish action validates the content structure. If there are dependency errors (e.g., a referenced [workflow](/product-guide/workflows/overview) is missing a variable), an error modal will list the issues.
 </Info>

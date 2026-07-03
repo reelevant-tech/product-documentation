@@ -24,7 +24,7 @@ Each template declares **named variables** that are resolved at runtime from you
     Click the **three-dot menu** (⋮) on the JSON Template node in the canvas, then select **Edit**.
   </Step>
   <Step title="Select a template">
-    Use the **Template** dropdown to choose from the available JSON Templates. Templates are created and managed by your engineering team in [Workflow Settings](/platform-guide/workflows/settings#json-templates).
+    Use the **Template** dropdown to choose from the available JSON Templates. Templates are created and managed by your engineering team in [Workflow Settings](/product-guide/workflows/settings#json-templates).
   </Step>
   <Step title="Bind variables">
     Once a template is selected, its **variables** appear below. For each variable:
@@ -96,7 +96,7 @@ Your frontend simply consumes these fields using its own components — the shap
 
 - **Let engineering define the template, marketing bind the variables.** This separation keeps the schema stable while allowing marketing to experiment with different datasource bindings.
 - **Use descriptive variable names.** Names like `productRecommendations` or `userLoyaltyScore` make it clear what data each variable expects.
-- **Test with real data.** Use the [Integration](/platform-guide/workflows/integration) URL to call the workflow directly and verify the JSON output matches your frontend's expectations.
+- **Test with real data.** Use the [Integration](/product-guide/workflows/integration) URL to call the workflow directly and verify the JSON output matches your frontend's expectations.
 - **One template per workflow.** All JSON Template nodes in a workflow must reference the same template — this is enforced at publish time.
 
 ## Feature Flag

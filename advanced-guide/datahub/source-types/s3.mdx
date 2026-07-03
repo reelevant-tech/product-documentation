@@ -72,7 +72,7 @@ The S3 source supports **PGP-encrypted files**. When `pgpPrivateKey` is configur
 Both armored (`.asc`) and binary (`.pgp`, `.gpg`) encrypted files are supported.
 
 <Info>
-  See the [PGP Decryption guide](/platform-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
+  See the [PGP Decryption guide](/advanced-guide/datahub/pgp-decryption) for details on key generation, supported formats, and error handling.
 </Info>
 
 ## Wildcard Paths
@@ -101,7 +101,7 @@ When using wildcard paths, you can configure how files are selected via the `pro
 1. Reelevant authenticates with S3 using the provided access key and secret key.
 2. The specified bucket and path are accessed. If a wildcard is used, matching objects are listed.
 3. Files are downloaded, decompressed if needed, and parsed based on the detected format.
-4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 5. On subsequent syncs, files are re-fetched according to the configured processing mode.
 
 <Warning>

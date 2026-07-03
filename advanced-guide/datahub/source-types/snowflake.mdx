@@ -105,7 +105,7 @@ Snowflake data types are streamed with the following conversions:
 1. Reelevant connects to Snowflake using the provided credentials and warehouse.
 2. If a custom query is provided, it is executed. Otherwise, `SELECT * FROM <table>` is run.
 3. Results are streamed row-by-row for efficient memory usage.
-4. Fields are extracted and made available for [mapping](/platform-guide/datahub/field-mapping).
+4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 5. On subsequent syncs, the data is re-read (or incrementally fetched if a timestamp column is configured).
 
 <Warning>

@@ -7,19 +7,19 @@ description: 'Organize users into hierarchical teams for resource access control
 
 ## Overview
 
-Teams control which users can access which [workflows](/platform-guide/workflows/overview), [contents](/platform-guide/contents/overview), and [datasources](/platform-guide/datahub/overview). They act as the **team-scoping layer** of the [permission system](/platform-guide/account/permissions) — a user's [role](/platform-guide/account/roles) defines _what_ they can do, while their teams define _which resources_ they can do it on.
+Teams control which users can access which [workflows](/product-guide/workflows/overview), [contents](/product-guide/contents/overview), and [datasources](/product-guide/datahub/overview). They act as the **team-scoping layer** of the [permission system](/product-guide/account/permissions) — a user's [role](/product-guide/account/roles) defines _what_ they can do, while their teams define _which resources_ they can do it on.
 
 Every user must belong to at least one team. Teams can be organized into a hierarchy with parent-child relationships, enabling automatic access inheritance.
 
 ## How Team Scoping Works
 
-[Team-scoped resources](/platform-guide/account/permissions#resource-scoping) (workflows, contents, datasources, datagraph schemas, datagraph entities) are assigned to one or more teams when they are created. A user can only interact with a team-scoped resource if:
+[Team-scoped resources](/product-guide/account/permissions#resource-scoping) (workflows, contents, datasources, datagraph schemas, datagraph entities) are assigned to one or more teams when they are created. A user can only interact with a team-scoped resource if:
 
-1. Their [role](/platform-guide/account/roles) grants the required action on that resource type.
+1. Their [role](/product-guide/account/roles) grants the required action on that resource type.
 2. They are a member of at least one team that the resource belongs to (directly or through [inheritance](#team-hierarchy)).
 
 <Info>
-  [Company-scoped resources](/platform-guide/account/permissions#resource-scoping) (users, roles, company settings, billing, etc.) are not affected by team membership — they are accessible to any user whose role permits the action.
+  [Company-scoped resources](/product-guide/account/permissions#resource-scoping) (users, roles, company settings, billing, etc.) are not affected by team membership — they are accessible to any user whose role permits the action.
 </Info>
 
 ## Teams Listing

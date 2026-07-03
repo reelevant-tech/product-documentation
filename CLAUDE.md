@@ -2,13 +2,13 @@
 
 ## What This Repo Is
 
-Reelevant product documentation built with [Mintlify](https://mintlify.com). Five directories target different audience personas. Each directory has its own `AGENTS.md` with strict writing rules — **read the AGENTS.md in the directory you are editing before making any changes**.
+Reelevant product documentation built with [Mintlify](https://mintlify.com). Four directories target different audience personas. Each directory has its own `AGENTS.md` with strict writing rules — **read the AGENTS.md in the directory you are editing before making any changes**.
 
 ## Before You Start Writing
 
 **Always ask the contributor which persona they are targeting.** Before making any edit, confirm:
 
-1. **Which directory** the change belongs to (`product-guide/`, `advanced-guide/`, `developer-docs/`, `why-reelevant/`, `product-adoption/`)
+1. **Which directory** the change belongs to (`product-guide/`, `advanced-guide/`, `developer-docs/`, `why-reelevant/`)
 2. **Who is the target reader** — match the contributor's intent to the right persona:
 
 | If the contributor says... | Target directory |
@@ -17,7 +17,7 @@ Reelevant product documentation built with [Mintlify](https://mintlify.com). Fiv
 | "for advanced users", "for data teams", "for TAMs" | `advanced-guide/` |
 | "for developers", "for engineers", "API docs", "SDK" | `developer-docs/` |
 | "for prospects", "for sales", "why buy", "comparison" | `why-reelevant/` |
-| "ROI", "incremental value", "use cases", "methodology" | `product-adoption/` |
+| "ROI", "incremental value", "use cases", "methodology" | `why-reelevant/` or `product-guide/analytics/` |
 
 If the contributor's request is ambiguous or could fit multiple directories, **ask them to clarify the target persona before writing**. Never guess — writing in the wrong tone or vocabulary for a persona creates review churn.
 
@@ -91,14 +91,6 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 - Business pages: explain terms on first use, lead with problem → outcome → CTA
 - Tech pages: architecture/data flow → protocols → integration effort → link to developer-docs
 - **NEVER include**: UI instructions, code >5 lines, pricing, internal infra (Pinot, Pulsar, MongoDB)
-
-### `product-adoption/` — Customers measuring ROI + prospects evaluating
-- Owner: CS + TAM
-- Tone: Authoritative, data-driven, pedagogical. Must withstand finance/leadership scrutiny.
-- Max sentence: 35 words. Explain statistical terms on first use.
-- Incremental Value pages: formula + worked example + Exposed vs Non-Exposed table
-- Use Case Explorer: show connections (Key Challenge → Use Case → Datasource → Capability)
-- **NEVER include**: code, UI instructions, pricing, customer-specific data
 
 ## PR Workflow
 

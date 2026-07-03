@@ -25,7 +25,7 @@ Datasource references are used in several special configurations:
 
 | Configuration | Description |
 |---------------|-------------|
-| **Merged Datasources** | Combine two datasources by joining them on a common field. See [Special Configurations](/platform-guide/datahub/special-configurations). |
+| **Merged Datasources** | Combine two datasources by joining them on a common field. See [Special Configurations](/advanced-guide/datahub/special-configurations). |
 | **Best Products** | Compute top-performing products by combining a product catalog datasource with an analytics datasource. |
 | **Top Attributes** | Identify preferred product attributes (brands, categories) per user based on behavioral data. |
 | **Bought Together (Cross-sell)** | Identify products frequently purchased together. |
@@ -33,7 +33,7 @@ Datasource references are used in several special configurations:
 ## How It Works
 
 1. The new datasource reads data from the referenced datasource's live storage instead of an external source.
-2. Fields from the referenced datasource are available for [mapping](/platform-guide/datahub/field-mapping) in the new datasource.
+2. Fields from the referenced datasource are available for [mapping](/advanced-guide/datahub/field-mapping) in the new datasource.
 3. When the referenced datasource updates, the dependent datasource can automatically refresh (depending on the configured refresh schedule).
 
 <Tip>

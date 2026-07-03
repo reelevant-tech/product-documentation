@@ -41,6 +41,7 @@
             "group": "Getting Started",
             "pages": [
               "product-guide/introduction",
+              "product-guide/new-interface",
               "glossary"
             ]
           },
@@ -105,6 +106,7 @@
               "product-guide/contents/overview",
               "product-guide/contents/listing",
               "product-guide/contents/editor",
+              "product-guide/contents/design-import",
               {
                 "group": "Components",
                 "pages": [
@@ -413,90 +415,12 @@
         ]
       },
       {
-        "tab": "Product Adoption",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "product-adoption/introduction"
-            ]
-          },
-          {
-            "group": "Incremental Value",
-            "pages": [
-              "product-adoption/incremental-value/overview",
-              "product-adoption/incremental-value/methodology",
-              "product-adoption/incremental-value/statistical-model",
-              "product-adoption/incremental-value/key-challenges",
-              "product-adoption/incremental-value/dashboard",
-              "product-adoption/incremental-value/common-mistakes"
-            ]
-          },
-          {
-            "group": "Use Case Explorer",
-            "pages": [
-              "product-adoption/use-case-explorer/overview",
-              {
-                "group": "Key Challenges",
-                "pages": [
-                  "product-adoption/use-case-explorer/key-challenges/customer-lifecycle",
-                  "product-adoption/use-case-explorer/key-challenges/loyalty-program",
-                  "product-adoption/use-case-explorer/key-challenges/base-engagement",
-                  "product-adoption/use-case-explorer/key-challenges/marketing-pressure",
-                  "product-adoption/use-case-explorer/key-challenges/new-data-usage",
-                  "product-adoption/use-case-explorer/key-challenges/language-management",
-                  "product-adoption/use-case-explorer/key-challenges/omnichannel-experience",
-                  "product-adoption/use-case-explorer/key-challenges/data-qualification",
-                  "product-adoption/use-case-explorer/key-challenges/app-download"
-                ]
-              },
-              {
-                "group": "Use Cases",
-                "pages": [
-                  "product-adoption/use-case-explorer/use-cases/enriched-product-recommendation",
-                  "product-adoption/use-case-explorer/use-cases/lifecycle-banner",
-                  "product-adoption/use-case-explorer/use-cases/loyalty-programme-banner",
-                  "product-adoption/use-case-explorer/use-cases/customer-value-block",
-                  "product-adoption/use-case-explorer/use-cases/live-polling",
-                  "product-adoption/use-case-explorer/use-cases/personalised-digest",
-                  "product-adoption/use-case-explorer/use-cases/drive-to-channel",
-                  "product-adoption/use-case-explorer/use-cases/optin-banner"
-                ]
-              },
-              {
-                "group": "Datasources",
-                "pages": [
-                  "product-adoption/use-case-explorer/datasources/crm-360",
-                  "product-adoption/use-case-explorer/datasources/offers",
-                  "product-adoption/use-case-explorer/datasources/workflow-events",
-                  "product-adoption/use-case-explorer/datasources/product-reviews",
-                  "product-adoption/use-case-explorer/datasources/nps",
-                  "product-adoption/use-case-explorer/datasources/loyalty-programme",
-                  "product-adoption/use-case-explorer/datasources/product",
-                  "product-adoption/use-case-explorer/datasources/store",
-                  "product-adoption/use-case-explorer/datasources/purchases",
-                  "product-adoption/use-case-explorer/datasources/navigation",
-                  "product-adoption/use-case-explorer/datasources/stock-availability"
-                ]
-              },
-              "product-adoption/use-case-explorer/capabilities"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "Why Reelevant",
         "groups": [
           {
             "group": "Overview",
             "pages": [
               "why-reelevant/introduction"
-            ]
-          },
-          {
-            "group": "For Decision Makers",
-            "pages": [
-              "why-reelevant/decision-makers/capabilities"
             ]
           },
           {
