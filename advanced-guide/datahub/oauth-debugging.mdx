@@ -23,8 +23,7 @@ The status check gives you a snapshot of an OAuth client's current health. Use i
 
 ```bash
 curl -XGET https://api.reelevant.com/v2/datasources/oauth/<auth_id>/status \
-  -H "Authorization: Bearer <access_token>" \
-  -H "x-rlvt-company-id: <company_id>"
+  -H "Authorization: Bearer <access_token>"
 ```
 
 ### Example response
@@ -98,8 +97,7 @@ The test token endpoint executes the full token acquisition flow and reports eac
 
 ```bash
 curl -XPOST https://api.reelevant.com/v2/datasources/oauth/<auth_id>/test-token \
-  -H "Authorization: Bearer <access_token>" \
-  -H "x-rlvt-company-id: <company_id>"
+  -H "Authorization: Bearer <access_token>"
 ```
 
 ### How it works
@@ -320,8 +318,7 @@ Reelevant caches access tokens to avoid requesting a new token on every Datasour
 
 ```bash
 curl -XPOST https://api.reelevant.com/v2/datasources/oauth/<auth_id>/invalidate-cache \
-  -H "Authorization: Bearer <access_token>" \
-  -H "x-rlvt-company-id: <company_id>"
+  -H "Authorization: Bearer <access_token>"
 ```
 
 ### Example response — cache existed
@@ -367,8 +364,7 @@ For OAuth clients using `custom_payload` or `jwt_bearer` mode, the authenticatio
 
 ```bash
 curl -XPOST https://api.reelevant.com/v2/datasources/oauth/<auth_id>/preview-request \
-  -H "Authorization: Bearer <access_token>" \
-  -H "x-rlvt-company-id: <company_id>"
+  -H "Authorization: Bearer <access_token>"
 ```
 
 ### Example response
