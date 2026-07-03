@@ -1,0 +1,213 @@
+---
+title: 'OAuth Client Debugging'
+description: 'Diagnose and troubleshoot OAuth client configurations used by Datasources — status checks, dry-run token tests, cache management, and request previews'
+---
+
+## Overview
+
+Datasources that connect to external platforms (Shopify, Salesforce, Google, Instagram, etc.) authenticate using OAuth client configurations. When a Datasource fails to fetch data, the root cause is often an OAuth issue — expired credentials, a misconfigured token URL, or a broken chain of authentication steps.
+
+The OAuth debugging tools let you inspect the health of an OAuth client, test token acquisition without affecting live data, clear stale cached tokens, and preview the outgoing authentication request. Each tool is designed for safe, non-destructive use in production.
+
+<Info>
+  These diagnostic tools never store tokens. Every test is strictly a dry run — it verifies the flow and discards the result. Your live Datasource configuration is never modified.
+</Info>
+
+---
+
+## OAuth client status
+
+The status check gives you a snapshot of an OAuth client's current health. Use it as the first diagnostic step when a Datasource reports authentication errors.
+
+### What the status check returns
+
+| Field | Description |
+|-------|-------------|
+| **id** | The unique identifier of the OAuth client. |
+| **mode** | The authentication mode — `password`, `client_credentials`, `refresh_token`, `access_token`, `custom_payload`, or `jwt_bearer`. |
+| **hasRefreshToken** | Whether a refresh token is stored (boolean). |
+| **hasAccessToken** | Whether an access token is stored (boolean). |
+| **hasPassword** | Whether a password is stored (boolean). |
+| **tokenUrl** | The URL used to request tokens from the external platform. |
+| **scopes** | The list of permission scopes requested during authorisation. |
+| **cachedToken** | Whether a cached token exists and its remaining time-to-live in seconds. |
+| **chain** | Whether this client is chained to another OAuth client, and if so, the chained client's identifier and mode. |
+| **configuration type** | Whether the configuration is company-scoped or global. |
+
+### Interpreting the results
+
+Start by checking the credential booleans. The expected values depend on the authentication mode:
+
+| Mode | Expected credentials |
+|------|---------------------|
+| `refresh_token` | **hasRefreshToken** = true |
+| `access_token` | **hasAccessToken** = true |
+| `password` | **hasPassword** = true |
+| `client_credentials` | Credentials are in the configuration itself (clientId + clientSecret). |
+| `custom_payload` | Credentials are embedded in the custom payload template. |
+| `jwt_bearer` | The signing key is stored in the clientSecret field of the configuration. |
+
+If the expected credential boolean is `false`, the OAuth callback likely did not complete successfully. Re-run the authorisation flow for that Datasource.
+
+<Info>
+  The **hasRefreshToken**, **hasAccessToken**, and **hasPassword** booleans also appear in the standard OAuth client listing. You do not need the status endpoint to see them — any response that includes an OAuth client will show these fields.
+</Info>
+
+---
+
+## Test token (dry-run)
+
+The test token tool executes the full token acquisition flow and reports each step with its outcome, duration, and diagnostic detail. It is the most powerful debugging tool — it tells you exactly which step failed and why.
+
+### How it works
+
+The tool runs through up to seven steps, stopping at the first failure:
+
+| Step | What it checks |
+|------|----------------|
+| **resolve_auth** | Verifies the OAuth client configuration is populated. Reports the mode, configuration type, and whether a chain exists. |
+| **check_credentials** | Validates that the required credentials are present for the authentication mode (see the table above). |
+| **build_request** | Constructs the token request. Reports the target URL, the method, and the body fields that will be sent. |
+| **send_request** | Sends the token request to the external platform. Reports whether a token was received. |
+| **parse_response** | Validates that the response contains a usable access token. |
+| **resolve_chain** | *(Only for chained configurations.)* Looks up the next OAuth client in the chain and verifies it exists. |
+| **chain_request** | *(Only for chained configurations.)* Runs the full test token flow recursively on the chained client, nesting its own step trace inside this step. |
+
+### Reading the step trace
+
+Each step in the result includes:
+
+| Field | Description |
+|-------|-------------|
+| **name** | The step identifier (e.g., `send_request`). |
+| **status** | `success` or `failed`. |
+| **durationMs** | How long the step took, in milliseconds. |
+| **detail** | Diagnostic information specific to the step (e.g., credential booleans, body field names, token URL). |
+| **error** | *(Only on failure.)* A description of what went wrong, including the external platform's error message when available. |
+
+### Worked example — successful client_credentials flow
+
+| Step | Status | Duration | Detail |
+|------|--------|----------|--------|
+| resolve_auth | success | 1 ms | mode: `client_credentials`, configType: `company-scoped`, hasChain: false |
+| check_credentials | success | 0 ms | hasClientId: true, hasClientSecret: true |
+| build_request | success | 0 ms | method: `GET`, url: `https://api.partner.com/oauth/token` |
+| send_request | success | 245 ms | hasTokenAcquired: true |
+| parse_response | success | 0 ms | tokenFound: true |
+
+**Result:** `success: true` — the configuration is working correctly.
+
+### Worked example — expired refresh token
+
+| Step | Status | Duration | Detail |
+|------|--------|----------|--------|
+| resolve_auth | success | 1 ms | mode: `refresh_token`, configType: `company-scoped`, hasChain: false |
+| check_credentials | success | 0 ms | hasRefreshToken: true |
+| build_request | success | 0 ms | method: `GET`, url: `https://accounts.google.com/o/oauth2/token` |
+| send_request | failed | 312 ms | httpStatus: 401, responseBody: `{"error": "invalid_grant"}` |
+
+**Result:** `success: false` — the refresh token has been revoked or has expired. Re-authorise the Datasource to obtain a new refresh token.
+
+### Worked example — chained configuration failure
+
+Some OAuth setups use **chained authentication**, where the first OAuth client's token is fed into a second client. The test token tool handles this automatically.
+
+| Step | Status | Duration | Detail |
+|------|--------|----------|--------|
+| resolve_auth | success | 1 ms | mode: `client_credentials`, hasChain: true |
+| check_credentials | success | 0 ms | hasClientId: true, hasClientSecret: true |
+| build_request | success | 0 ms | method: `GET`, url: `https://auth.partner.com/token` |
+| send_request | success | 198 ms | hasTokenAcquired: true |
+| parse_response | success | 0 ms | tokenFound: true |
+| resolve_chain | success | 2 ms | chainedAuthId: `665f1c…`, chainedMode: `custom_payload` |
+| chain_request | failed | 450 ms | The chained client's own step trace is nested here, showing which step in the second client failed. |
+
+**Result:** `success: false` — the primary client authenticated correctly, but the chained client failed. Expand the `chain_request` detail to see the nested step trace and identify the exact failure in the second client.
+
+<Info>
+  Chained configurations are common with platforms that require a two-stage authentication process — for example, obtaining a platform token first, then exchanging it for a data-access token with a different provider.
+</Info>
+
+---
+
+## Invalidate cache
+
+Reelevant caches access tokens to avoid requesting a new token on every Datasource refresh. The cache uses a time-to-live based on the token's expiration. In some cases, the cached token may become invalid before its TTL expires — for example, when the external platform revokes it.
+
+The invalidate cache tool deletes the cached token for an OAuth client and reports:
+
+| Field | Description |
+|-------|-------------|
+| **cacheKey** | The internal cache key that was targeted. |
+| **deleted** | `true` if a cached token was found and removed; `false` if no cached token existed. |
+
+After invalidation, the next Datasource refresh will request a fresh token from the external platform.
+
+<Info>
+  If a Datasource is failing with authentication errors but the status check shows a cached token exists, try invalidating the cache first. The cached token may be stale or revoked.
+</Info>
+
+---
+
+## Preview request
+
+For OAuth clients using `custom_payload` or `jwt_bearer` mode, the authentication request is constructed dynamically from a template with variable substitution. The preview request tool shows you the fully interpolated request — exactly what would be sent to the external platform — without actually sending it.
+
+### What the preview returns
+
+| Field | Description |
+|-------|-------------|
+| **method** | The request method (typically `GET` or `POST`). |
+| **url** | The fully constructed token URL. |
+| **headers** | The request headers after variable substitution, with secret values masked. |
+| **body** | The request body after variable substitution, with secret values masked. |
+| **mode** | The authentication mode (`custom_payload` or `jwt_bearer`). |
+
+Use this to verify that variable placeholders (such as `{{clientId}}` or `{{jwt}}`) are being replaced correctly and that the request structure matches the external platform's requirements.
+
+<Info>
+  The preview tool only works for `custom_payload` and `jwt_bearer` modes. Other modes use standard OAuth libraries and do not construct a custom request.
+</Info>
+
+---
+
+## Callback diagnostics
+
+When a user completes the OAuth authorisation flow (clicking "Authorise" in the Datasource wizard), the callback page now shows diagnostic information if something goes wrong.
+
+### Success
+
+On a successful callback, the page displays a confirmation message and can be closed.
+
+### Failure
+
+On failure, the callback page displays:
+
+| Field | Description |
+|-------|-------------|
+| **Error** | The type of failure — for example, `token_mismatch` when the expected token type was not returned. |
+| **Mode** | The authentication mode of the OAuth client. |
+| **Hint** | A human-readable suggestion for resolving the issue. |
+
+A `token_mismatch` error typically means the external platform returned an access token when a refresh token was expected (or vice versa). Check that the OAuth scopes include `offline_access` or the platform-specific equivalent for obtaining refresh tokens.
+
+---
+
+## Common issues and solutions
+
+| Symptom | Likely cause | Recommended action |
+|---------|-------------|-------------------|
+| Datasource fails with "authentication error" | Expired or revoked token | Run a **test token** to identify the failing step. If `send_request` fails with a 401, re-authorise the Datasource. |
+| **hasRefreshToken** is false after authorisation | OAuth callback did not receive a refresh token | Check the scopes — ensure `offline_access` (or the platform equivalent) is included. Re-authorise. |
+| Test token succeeds but Datasource still fails | Stale cached token | **Invalidate the cache**, then trigger a Datasource refresh. |
+| `custom_payload` mode returns unexpected errors | Incorrect variable substitution in the request template | Use **preview request** to inspect the interpolated request and compare it with the platform's documentation. |
+| Chained configuration fails at `chain_request` | The second OAuth client in the chain has a configuration issue | Expand the nested step trace in `chain_request` to find the failing step. Fix the issue on the chained client, then re-test. |
+| Callback page shows `token_mismatch` | The platform returned a different token type than expected | Verify the OAuth scopes and the platform's token exchange behaviour. Some platforms require specific scopes to return refresh tokens. |
+
+---
+
+## Related pages
+
+- [Special Configurations](/advanced-guide/datahub/special-configurations) — OAuth integration setup, API keys, and other advanced Datasource configurations.
+- [Logs](/advanced-guide/datahub/logs) — monitoring Datasource execution history.
+- [Source Types](/advanced-guide/datahub/source-types) — configuring different Datasource source types.
