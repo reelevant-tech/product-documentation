@@ -21,24 +21,22 @@ Other clients fetch at open time, which gives a fresher result when the Runner r
 
 ## Client behaviour
 
-| Client | Behaviour | How Reelevant identifies it |
-|---|---|---|
-| Gmail image proxy | Routes images through Google and caches them. | `GmailImageProxy` in the user agent. |
-| Apple Mail Privacy Protection | Proxies images soon after delivery, even before a manual open. | `Apple Mail Proxy` and `Apple Mail`. |
-| Outlook desktop and Outlook web | Uses Outlook user agents and webmail referers. | `Outlook` and Outlook web referer patterns. |
-| Yahoo Mail | Webmail referer detection. | Yahoo referer pattern. |
-| Orange Mail | Webmail referer detection. | Orange referer pattern. |
-| SFR Mail | Webmail referer detection. | SFR referer pattern. |
-
-<Info>
-  Reelevant also detects a generic `Mozilla/5.0` request as Apple Mail Proxy.
-</Info>
+| Client | Caches or pre-fetches images? | Behaviour | How Reelevant identifies it |
+|---|---|---|---|
+| Gmail image proxy | Yes | Routes images through Google's proxy and caches them, even though the Runner returns no-cache headers. | `GmailImageProxy` in the user agent. |
+| Apple Mail Privacy Protection | Yes | Proxies and caches images soon after delivery, even before a manual open. | `Apple Mail Proxy`, `Apple Mail`, or a bare `Mozilla/5.0` user agent. |
+| Outlook web | Often | Webmail that can serve images through a caching proxy. | `Outlook` user agent, or an `outlook`/`office`/`live`.com referer. |
+| Outlook desktop | No | Fetches at open time and honours the Runner's no-cache headers. | `Outlook` user agent. |
+| Outlook (enterprise) | Depends on IT setup | Security tooling can pre-fetch or cache images depending on the organisation's configuration. Reelevant identifies it as Outlook. | Detected as `Outlook`; no dedicated signal. |
+| Yahoo Mail | Often | Webmail that can serve images through a caching proxy. | Yahoo webmail referer. |
+| Orange Mail | No | Webmail detected by referer; fetches at open time. | Orange webmail referer. |
+| SFR Mail | No | Webmail detected by referer; fetches at open time. | SFR webmail referer. |
 
 ## What Reelevant does
 
-The Runner marks its responses as non-cacheable.
+The Runner marks every response as non-cacheable, sending `Cache-Control: no-cache, no-store, max-age=0`, `Pragma: no-cache`, and `Expires: -1`.
 
-That encourages clients that honour cache headers to request a fresh image.
+That encourages clients that honour cache headers to request a fresh image. Proxy-based clients such as Gmail and Apple Mail can still cache the image despite these headers.
 
 When a click redirect happens, Reelevant preserves the previously identified client.
 
