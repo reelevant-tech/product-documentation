@@ -1,0 +1,61 @@
+---
+title: 'Email Client Caching and Proxies'
+description: 'Understand how inbox proxies and caching affect open-time rendering'
+---
+
+![Email rendering and caching behaviour illustration](/images/email-rendering/caching-and-proxies-v2.png)
+
+## Overview
+
+Email clients can fetch and cache images before a recipient opens the email.
+
+That means open-time rendering can reflect the fetch moment, not the exact open.
+
+This matters for features such as Live Polling and Countdown, where the image itself carries live content.
+
+## Send-time and open-time rendering
+
+Some inboxes and proxies pre-fetch images shortly after delivery.
+
+If they cache the image, the recipient can later see a frozen version.
+
+Other clients fetch at open time, which gives a fresher result when the Runner returns non-cacheable responses.
+
+## Client behaviour
+
+| Client | Behaviour | How Reelevant identifies it |
+|---|---|---|
+| Gmail image proxy | Routes images through Google and caches them. | `GmailImageProxy` in the user agent. |
+| Apple Mail Privacy Protection | Proxies images soon after delivery, even before a manual open. | `Apple Mail Proxy` and `Apple Mail`. |
+| Outlook desktop and Outlook web | Uses Outlook user agents and webmail referers. | `Outlook` and Outlook web referer patterns. |
+| Yahoo Mail | Webmail referer detection. | Yahoo referer pattern. |
+| Orange Mail | Webmail referer detection. | Orange referer pattern. |
+| SFR Mail | Webmail referer detection. | SFR referer pattern. |
+
+<Info>
+  Reelevant also detects a generic `Mozilla/5.0` request as Apple Mail Proxy.
+</Info>
+
+## What Reelevant does
+
+The Runner marks its responses as non-cacheable.
+
+That encourages clients that honour cache headers to request a fresh image.
+
+When a click redirect happens, Reelevant preserves the previously identified client.
+
+That matters because some proxies, such as Apple Mail Proxy, do not forward the same identifying headers on the click request.
+
+## Impact on open-time features
+
+| Feature | What can go wrong | Mitigation |
+|---|---|---|
+| Live Polling | The percentage can freeze at pre-fetch time, so it reflects fetch time rather than the true open. | Non-cacheable responses and a fresh fetch reduce staleness, but aggressive proxy caching can still skew the figure. |
+| Countdown | A cached rendered image can freeze the timer and show an older time. | Non-cacheable responses help, but proxy caching can still show stale content. |
+| Any open-time value | The image can show earlier data than the recipient expects. | Treat the image as a fetched snapshot when inbox proxies are involved. |
+
+## Related pages
+
+- [Live Polling](/advanced-guide/workflows/data-nodes/live-polling)
+- [Data Nodes](/advanced-guide/workflows/data-nodes)
+- [Countdown Component](/product-guide/contents/components/countdown)
