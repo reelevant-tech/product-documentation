@@ -1,6 +1,6 @@
 ---
-title: 'Branches & Branch Categories'
-description: 'Organize and categorize workflow branches for better analytics and management'
+title: 'Branches, Categories & Tags'
+description: 'Qualify workflow branches with categories and tags for better analytics and management'
 ---
 
 ![Workflow editor showing multiple branches through the workflow graph](/images/workflows/editor-canvas.png)
@@ -13,17 +13,29 @@ A single workflow typically has multiple branches — each one delivering a diff
 
 ## Branch Qualification
 
-You can **qualify** a branch by assigning it a category. This is useful for:
-- **Analytics** — Group results by branch category to compare performance across different strategies.
-- **Organization** — Label branches by their purpose (e.g., "Promotion", "Loyalty", "Default").
-- **Reporting** — Filter dashboards by category to focus on specific campaign strategies.
+You can **qualify** a branch by giving it a category and tags. This is useful for:
+- **Analytics** — Group results by branch category or tag to compare performance across different strategies.
+- **Organisation** — Label branches by their purpose (e.g., "Promotion", "Loyalty", "Default").
+- **Reporting** — Filter dashboards by category or tag to focus on specific campaign strategies.
+
+Categories and tags are complementary. The category describes what the branch **is**, while tags add contextual dimensions for analysis (e.g., the lifecycle moment it targets).
 
 ### How to Qualify a Branch
 
+![Branch qualification drawer with branch name, category, tags and individualization fields](/images/workflows/branch-qualification-drawer.png)
+
 1. **Right-click on an edge** (the arrow connecting two nodes) in the workflow editor.
 2. Select **Qualify branch** from the context menu.
-3. The **branch drawer** opens, showing the branch path and available categories.
-4. Choose a category from the branch categories tree, and optionally give the branch a custom name.
+3. The **Branch qualification** drawer opens. It lets you set:
+   - **Branch name** — An optional custom name to identify the branch.
+   - **Category** — A category from the branch categories tree.
+   - **Tags** — One or more tags from your account's tag list.
+   - **Individualization** — A toggle to mark the branch as individualized in the Analytics app.
+4. Click **Confirm** to save your qualification.
+
+<Tip>
+Every branch should have a category. Tags are optional — add them when extra context helps your analysis.
+</Tip>
 
 ## Branch Categories
 
@@ -53,6 +65,61 @@ Each branch can be assigned a category at any level of the tree.
 - **Analytics** — Analytics dashboards can filter and group metrics by category at any level of the hierarchy.
 - **Upstream resolution** — Branch categories are inherited downstream through the workflow graph. If a parent branch is qualified, child branches inherit that category context.
 
+## Branch Tags
+
+Tags add extra context to a branch, on top of its category. Each tag pairs a **tag key** (the dimension) with a **tag value**, displayed as `Key: Value`.
+
+For example:
+- `Lifecycle: Birthday`
+- `Lifecycle: Welcome`
+- `Seasonal Moment: Sales`
+
+### Where Tags Come From
+
+Administrators define the list of available tag keys and values for your account. When qualifying a branch, you pick from this shared list — you cannot create new tags on the fly.
+
+This keeps tagging consistent across your team. Everyone analyses performance with the same vocabulary.
+
+### How Many Values per Key?
+
+![Tag selector showing multiple value selection for the Lifecycle key](/images/workflows/branch-tags-select.png)
+
+Each tag key accepts either one value or several values per branch:
+
+| Key type | Behaviour | Example |
+|---|---|---|
+| Single value | Picking a new value replaces the previous one | `Individualization: Yes` or `No` |
+| Multiple values | You can add several values from the same key | `Lifecycle: Birthday` and `Lifecycle: Welcome` |
+
+### Custom and System-Managed Tags
+
+There are two kinds of tags:
+- **Custom tags** — You assign them yourself in the Branch qualification drawer.
+- **System-managed tags** — The platform applies them automatically. You cannot assign or edit them manually.
+
+Both kinds are available in the Analytics app for filtering and grouping.
+
+### Tags in Analytics
+
+In the Analytics app, you can use tags to slice your results:
+- **Filter by tag** — Keep only data with a specific tag (e.g., `Lifecycle: Birthday`). Branches with additional values for the same key are included too.
+- **Filter by tag key** — Keep only data that has any value for a key. Pick **Any value** for the key (e.g., `Lifecycle: Any value`).
+- **Group by tag key** — Use a tag key as a dimension to compare performance across its values.
+
+![Tag filter in the Analytics app with key and key/value selections](/images/analytics/tag-filter.png)
+
+When you group by a tag key, branches with several values for that key appear as a combined group (e.g., `Birthday, Welcome`). Data without any value for the key appears in its own unlabelled group.
+
+![Results table grouped by two tag keys as dimensions](/images/analytics/tag-dimension-results.png)
+
+<Tip>
+Filter on **Any value** for a tag key to keep only tagged data in your results.
+</Tip>
+
+### Tags on the Canvas
+
+Branches with tags display them as badges on the workflow canvas. This gives you a quick view of how your workflow is qualified without opening each branch.
+
 ## Viewing Branch Statistics
 
 Toggle the **Statistics mode** from the bottom toolbar to overlay traffic distribution data on the workflow canvas. In statistics mode:
@@ -65,4 +132,16 @@ Toggle the **Statistics mode** from the bottom toolbar to overlay traffic distri
 
 - Qualify branches early in your workflow design process — it makes analytics much more useful once the workflow is live.
 - Use a consistent naming convention for branches within a workflow to make them easy to identify.
-- Branch categories are shared across all workflows in your account. Design your category tree to be general enough to apply across campaigns.
+- Branch categories and tags are shared across all workflows in your account. Design them to be general enough to apply across campaigns.
+- Don't use tags to replace categories. If a concept describes the structural or business nature of a branch (e.g., "Cross-sell"), it belongs in the category tree.
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Workflow Settings" icon="gear" href="/product-guide/workflows/settings">
+    Manage your branch categories tree.
+  </Card>
+  <Card title="Analytics Overview" icon="chart-line" href="/product-guide/analytics/overview">
+    Analyse performance by category and tag.
+  </Card>
+</CardGroup>
