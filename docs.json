@@ -73,6 +73,7 @@
                   "product-guide/workflows/data-nodes/geolocation",
                   "product-guide/workflows/data-nodes/weather",
                   "product-guide/workflows/data-nodes/website-events",
+                  "product-guide/workflows/data-nodes/live-polling",
                   "product-guide/workflows/data-nodes/transform"
                 ]
               },
@@ -153,6 +154,7 @@
                 ]
               },
               "product-guide/analytics/data-exploration",
+              "product-guide/analytics/measures-and-dimensions",
               "product-guide/analytics/saved-queries",
               "product-guide/analytics/settings"
             ]
@@ -226,6 +228,7 @@
                   "advanced-guide/workflows/data-nodes/geolocation",
                   "advanced-guide/workflows/data-nodes/weather",
                   "advanced-guide/workflows/data-nodes/website-events",
+                  "advanced-guide/workflows/data-nodes/live-polling",
                   "advanced-guide/workflows/data-nodes/transform"
                 ]
               },
@@ -239,6 +242,12 @@
                 ]
               },
               "advanced-guide/workflows/settings"
+            ]
+          },
+          {
+            "group": "Email Rendering",
+            "pages": [
+              "advanced-guide/email-rendering/caching-and-proxies"
             ]
           },
           {
@@ -321,6 +330,7 @@
             "group": "Advanced Analytics",
             "pages": [
               "product-guide/analytics/data-exploration",
+              "product-guide/analytics/measures-and-dimensions",
               "product-guide/analytics/dashboards/individualization",
               "product-guide/analytics/dashboards/uplift",
               "product-guide/analytics/settings"

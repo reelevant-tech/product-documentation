@@ -1,0 +1,57 @@
+---
+title: 'Live Polling'
+description: 'Show the current click share for a Branch in your Content'
+---
+
+![Live polling Node shown in the workflow Data Nodes menu](/images/workflows/data-nodes-live-polling-v2.png)
+
+## Overview
+
+Live Polling shows the current click share for a Branch in your Content.
+
+It updates when the image is fetched, so the value reflects that moment.
+
+## How it works
+
+| Item | Description |
+|---|---|
+| Data Node | Returns the live percentage of clicks for its Branch. |
+| Unique clicks | Each user's click counts once per Branch. |
+| Calculation | Clicks on this Branch ÷ total clicks across the poll × 100. |
+| Label in the Content Editor | Current (live) % of clicks. |
+
+## In the Content Editor
+
+You add Live Polling through **Workflow → Live polling**.
+
+The Live poll preset adds an image and a text component.
+
+The text component binds to the live percentage and adds a percent sign.
+
+## Good to know
+
+<Warning>
+  Some email clients pre-fetch or cache images. That can freeze the value at fetch time, not at the exact moment the recipient opens it.
+</Warning>
+
+<Info>
+  See [Data Binding](/product-guide/contents/data-binding) for how Content uses workflow values.
+</Info>
+
+<Info>
+  See [Email client caching and proxies](/advanced-guide/email-rendering/caching-and-proxies) for accuracy caveats.
+</Info>
+
+## What's Next?
+
+<CardGroup cols={3}>
+  <Card title="Data Binding" icon="link" href="/product-guide/contents/data-binding">
+    Connect Live Polling to text, images, and other Content properties.
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/product-guide/workflows/data-nodes">
+    Compare Live Polling with the other Data Nodes.
+  </Card>
+  <Card title="Email client caching and proxies" icon="shield-halved" href="/advanced-guide/email-rendering/caching-and-proxies">
+    See why some inboxes can show a frozen value.
+  </Card>
+</CardGroup>

@@ -1,0 +1,46 @@
+---
+title: 'Live Polling'
+description: 'Return the current click share for a Branch'
+---
+
+![Live polling Data Node in the workflow catalogue](/images/workflows/data-nodes-live-polling-v2.png)
+
+## Overview
+
+Live Polling is a Data Node with no configuration.
+
+It returns the current percentage of clicks attributed to its Branch.
+
+The value is calculated at open time, so it reflects the moment the image is fetched.
+
+## Behaviour
+
+| Item | Description |
+|---|---|
+| Output | A number. |
+| Configuration | None. |
+| Counting | Each unique user counts once per Branch. |
+| Calculation | Clicks on this Branch ÷ total clicks across the poll × 100. |
+| Editor label | Current (live) % of clicks. |
+
+## Content Editor connection
+
+You add it in the Content Editor through **Workflow → Live polling**.
+
+The Live poll preset adds an image and a text component.
+
+The text component binds to the live percentage and appends a percent sign.
+
+This is a common pattern for live vote and poll visuals in email.
+
+<Info>
+  See [Data Nodes](/advanced-guide/workflows/data-nodes) for the full Data Node catalogue.
+</Info>
+
+<Info>
+  Some email clients pre-fetch or cache images. The value can therefore reflect the fetch moment rather than the recipient's manual open.
+</Info>
+
+<Info>
+  See [Email client caching and proxies](/advanced-guide/email-rendering/caching-and-proxies) for the inbox behaviours that matter most here.
+</Info>
