@@ -23,9 +23,9 @@ Other clients fetch at open time, which gives a fresher result when the Runner r
 
 | Client | Caches or pre-fetches images? | Behaviour | How Reelevant identifies it |
 |---|---|---|---|
-| Gmail image proxy | Yes | Routes images through Google's proxy and caches them, even though the Runner returns no-cache headers. | `GmailImageProxy` in the user agent. |
+| Gmail image proxy | No | Routes images through Google's proxy, but honours the Runner's no-cache headers, so the proxy refetches instead of serving a cached copy. | `GmailImageProxy` in the user agent. |
 | Apple Mail Privacy Protection | Yes | Proxies and caches images soon after delivery, even before a manual open. | `Apple Mail Proxy`, `Apple Mail`, or a bare `Mozilla/5.0` user agent. |
-| Outlook web | Often | Webmail that can serve images through a caching proxy. | `Outlook` user agent, or an `outlook`/`office`/`live`.com referer. |
+| Outlook web | Sometimes | Webmail that can serve images through a caching proxy. | `Outlook` user agent, or an `outlook`/`office`/`live`.com referer. |
 | Outlook desktop | No | Fetches at open time and honours the Runner's no-cache headers. | `Outlook` user agent. |
 | Outlook (enterprise) | Depends on IT setup | Security tooling can pre-fetch or cache images depending on the organisation's configuration. Reelevant identifies it as Outlook. | Detected as `Outlook`; no dedicated signal. |
 | Yahoo Mail | Often | Webmail that can serve images through a caching proxy. | Yahoo webmail referer. |
@@ -36,7 +36,7 @@ Other clients fetch at open time, which gives a fresher result when the Runner r
 
 The Runner marks every response as non-cacheable, sending `Cache-Control: no-cache, no-store, max-age=0`, `Pragma: no-cache`, and `Expires: -1`.
 
-That encourages clients that honour cache headers to request a fresh image. Proxy-based clients such as Gmail and Apple Mail can still cache the image despite these headers.
+That encourages clients that honour cache headers, such as the Gmail image proxy, to request a fresh image. Some clients, such as Apple Mail Privacy Protection, can still cache the image despite these headers.
 
 When a click redirect happens, Reelevant preserves the previously identified client.
 
