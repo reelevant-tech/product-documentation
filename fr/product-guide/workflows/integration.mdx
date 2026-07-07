@@ -1,0 +1,72 @@
+---
+title: 'Intégration et déploiement'
+description: 'Déployer vos Workflows publiés en configurant les paramètres d'URL, les Variable Profiles et les liens d'intégration'
+---
+
+![Modale d'intégration montrant les étapes de génération d'URL Reelevant](/images/workflows/integration-modal.png)
+
+## Vue d'ensemble
+
+Une fois qu'un Workflow est **Published**, vous pouvez le déployer en générant des liens d'intégration. Le processus d'intégration est un flux guidé, étape par étape, accessible depuis le bouton **Use** dans l'en-tête de l'éditeur de Workflow.
+
+## Étapes d'intégration
+
+La modale d'intégration vous guide à travers jusqu'à trois étapes :
+
+### Étape 1 : Sélection du Variable Profile
+
+Si votre compte dispose de **Variable Profiles** configurés (voir les [paramètres du Workflow](/fr/product-guide/workflows/settings)), vous sélectionnerez d'abord le profil à utiliser.
+
+Un Variable Profile est un ensemble préconfiguré de paramètres d'URL (tels que les tags UTM et les identifiants de suivi) qui sont automatiquement ajoutés à vos liens d'intégration.
+
+- Choisissez un profil dans la liste déroulante.
+- Si aucun profil n'est configuré, cette étape est automatiquement ignorée.
+- Si le Workflow a déjà un profil attribué, vous pouvez le modifier ou continuer avec le profil actuel.
+
+### Étape 2 : Configuration des paramètres d'URL
+
+Configurez les paramètres d'URL qui seront transmis au Workflow lors de l'exécution. Ces paramètres fournissent le contexte que le Workflow utilise pour la personnalisation.
+
+Les paramètres courants incluent :
+- **Identifiant utilisateur** — Pour associer le visiteur à ses données de profil.
+- **Identifiant de campagne** — Pour associer l'interaction à une campagne spécifique.
+- **Paramètres personnalisés** — Tout paramètre d'URL défini dans les Nodes [URL Parameter](/fr/product-guide/workflows/data-nodes/url-parameter) de votre Workflow.
+
+Pour chaque paramètre, spécifiez :
+- **Nom du paramètre** — Doit correspondre au nom utilisé dans le Workflow.
+- **Source de la valeur** — Comment la valeur est fournie (ex. dynamiquement par votre ESP, en dur, etc.).
+
+### Étape 3 : Liens d'intégration
+
+La dernière étape fournit les liens réels à intégrer dans vos campagnes.
+
+Chaque [Channel](/fr/product-guide/workflows/channels) de votre Workflow génère son propre lien d'intégration. Les liens sont affichés avec :
+- **Type de Channel** — Le Channel auquel ce lien correspond.
+- **URL d'intégration** — L'URL complète à intégrer dans votre e-mail, site web ou application.
+- **Bouton copier** — Copie en un clic pour coller facilement dans vos outils.
+
+## Types de liens d'intégration
+
+Selon le type de Channel, vous recevrez différents formats d'intégration :
+
+| Channel | Format | Comment l'utiliser |
+|---------|--------|------------|
+| **Email** | URL d'image (balise `<img>`) | Collez comme source d'image dans votre template e-mail. |
+| **Web Image** | URL d'image | Intégrez comme source d'image sur votre site web. |
+| **Web HTML** | Balise script ou iframe | Incluez le snippet HTML sur votre page web. |
+| **Landing Page** | URL de page complète | Liez vers cette URL depuis vos e-mails ou publicités. |
+| **Mobile** | Point d'accès mobile | Appelez depuis votre application mobile. |
+
+## Accéder aux liens d'intégration
+
+Il existe deux façons d'ouvrir la modale d'intégration :
+
+1. **Depuis l'éditeur** — Cliquez sur le bouton **Use** (icône lien) dans l'en-tête de l'éditeur de Workflow. Disponible uniquement lorsque le statut du Workflow est **Published**.
+2. **Depuis la liste** — Utilisez le menu d'actions sur un Workflow publié dans le tableau de liste.
+
+## Conseils
+
+- Configurez toujours les paramètres d'URL **avant** de générer les liens d'intégration — les liens incluent votre configuration de paramètres.
+- Testez vos liens d'intégration dans un environnement de staging avant de déployer en production.
+- Si vous mettez à jour et republiez le Workflow, les liens d'intégration existants continuent de fonctionner — ils servent automatiquement la dernière version publiée.
+- Les Variable Profiles font gagner du temps lorsque vous avez un ensemble standard de paramètres de suivi utilisés dans plusieurs Workflows.

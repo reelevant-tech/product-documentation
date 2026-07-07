@@ -1,0 +1,106 @@
+---
+title: 'JSON Template'
+description: 'Renvoyer un payload JSON structuré basé sur un template prédéfini avec des variables dynamiques'
+---
+
+![Éditeur de Workflow montrant un Node Email Content connecté à un Output Node JSON Template](/images/workflows/json-template-canvas.png)
+
+## Vue d'ensemble
+
+L'Output Node JSON Template renvoie un **payload JSON structuré** basé sur un template prédéfini avec un **schéma cohérent et prévisible** à chaque exécution.
+
+Chaque template déclare des **variables nommées** qui sont résolues à l'exécution à partir des Datasources de votre Workflow. Cela signifie que votre frontend reçoit toujours exactement les champs attendus — pas de devinettes, pas de surprises de parsing.
+
+<Info>
+  Les JSON Templates sont idéaux lorsque votre équipe technique définit le contrat (la forme JSON) et que votre équipe marketing décide **quelles données** le remplissent. Le schéma reste stable ; seules les liaisons de variables changent.
+</Info>
+
+## Configuration
+
+![Panneau de configuration du Node JSON Template montrant la sélection de template et la liaison des variables](/images/workflows/json-template-node-config.png)
+
+<Steps>
+  <Step title="Ouvrir le panneau de configuration">
+    Cliquez sur le **menu trois points** (⋮) du Node JSON Template sur le canevas, puis sélectionnez **Edit**.
+  </Step>
+  <Step title="Sélectionner un template">
+    Utilisez le menu déroulant **Template** pour choisir parmi les JSON Templates disponibles. Les templates sont créés et gérés par votre équipe technique dans les [paramètres du Workflow](/fr/product-guide/workflows/settings#json-templates).
+  </Step>
+  <Step title="Lier les variables">
+    Une fois un template sélectionné, ses **variables** apparaissent en dessous. Pour chaque variable :
+    - Cliquez sur le sélecteur **Parameter value**.
+    - Sélectionnez un champ de Datasource parmi les Data Nodes en amont de votre Workflow.
+    
+    Chaque variable a une description indiquant si elle récupère **une seule valeur** (scalaire) ou **toutes les valeurs** (tableau) de la Datasource.
+  </Step>
+  <Step title="Confirmer">
+    Cliquez sur **Confirm** pour enregistrer la configuration. Le Node est maintenant prêt pour la publication.
+  </Step>
+</Steps>
+
+## Comprendre les variables
+
+Les variables sont les emplacements dynamiques de votre JSON Template. Lorsque le Workflow s'exécute, chaque variable est remplacée par des données réelles de vos Datasources.
+
+### Variables scalaires (valeur unique)
+
+Une variable scalaire récupère **une valeur** de la Datasource — par exemple, les points de fidélité d'un utilisateur ou un nom de produit. La description indique : *« Retrieves a single value from the datasource »*.
+
+### Variables tableau (toutes les valeurs)
+
+Une variable tableau récupère **toutes les valeurs correspondantes** — par exemple, une liste de produits recommandés ou d'achats récents. La description indique : *« Retrieves all values from the datasource »*. Le moteur itère automatiquement sur toutes les lignes de la Datasource.
+
+## Comment ça fonctionne
+
+Lorsque le Workflow s'exécute et atteint un Output Node JSON Template :
+
+1. Le moteur charge la définition du template sélectionné (la structure JSON).
+2. Pour chaque variable du template, il résout le champ de Datasource lié en une valeur réelle.
+3. Le JSON final — avec toutes les variables remplies — est renvoyé comme réponse.
+
+La réponse est un `200 OK` avec `Content-Type: application/json` lorsque des données sont disponibles, ou un `204 No Content` lorsqu'aucune personnalisation ne s'applique.
+
+## Exemple
+
+Supposons que vous souhaitez personnaliser une carte de recommandation produit. Votre équipe technique crée un JSON Template avec cette définition :
+
+```json
+{
+  "headline": { "type": "static", "value": "Recommended for you" },
+  "productName": { "type": "dependency", "variable": "productName" },
+  "loyaltyPoints": { "type": "dependency", "variable": "loyaltyPoints" }
+}
+```
+
+Chaque champ est soit :
+- `"type": "static"` — une valeur fixe qui ne change jamais à l'exécution.
+- `"type": "dependency"` — une variable nommée que l'équipe marketing lie à un champ de Datasource.
+
+Le template déclare deux variables :
+- `productName` — **isArray: true** → récupère toutes les lignes correspondantes de la Datasource
+- `loyaltyPoints` — **isArray: false** → récupère une seule valeur
+
+À l'exécution, le moteur résout chaque variable à partir de la Datasource liée et renvoie une réponse JSON plate :
+
+```json
+{
+  "headline": "Recommended for you",
+  "productName": ["Running Shoes", "Sports Watch"],
+  "loyaltyPoints": 4250
+}
+```
+
+Votre frontend consomme simplement ces champs avec ses propres composants — la forme est toujours la même.
+
+## Bonnes pratiques
+
+- **Laissez l'équipe technique définir le template, l'équipe marketing lier les variables.** Cette séparation maintient le schéma stable tout en permettant au marketing d'expérimenter avec différentes liaisons de Datasources.
+- **Utilisez des noms de variables descriptifs.** Des noms comme `productRecommendations` ou `userLoyaltyScore` rendent clair quelles données chaque variable attend.
+- **Testez avec des données réelles.** Utilisez l'URL d'[intégration](/fr/product-guide/workflows/integration) pour appeler le Workflow directement et vérifier que la sortie JSON correspond aux attentes de votre frontend.
+- **Un template par Workflow.** Tous les Nodes JSON Template d'un Workflow doivent référencer le même template — ceci est imposé à la publication.
+
+## Feature Flag
+
+<Note>
+  L'Output Node JSON Template nécessite que le feature flag `workflow_output_json-template` soit activé pour votre entreprise. Contactez votre account manager ou activez-le dans **Workflow Settings > Feature Flags**.
+</Note>

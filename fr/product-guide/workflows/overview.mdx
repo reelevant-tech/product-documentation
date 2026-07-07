@@ -1,0 +1,87 @@
+---
+title: 'Vue d'ensemble des Workflows'
+description: 'Comprendre ce que sont les Workflows et comment ils permettent la diffusion de contenus personnalisés dans Reelevant'
+---
+
+![Éditeur de Workflow montrant un Workflow complexe avec plusieurs Nodes et Branches](/images/workflows/editor-canvas.png)
+
+## Qu'est-ce qu'un Workflow ?
+
+Un Workflow est l'élément central de chaque campagne Reelevant. C'est un **graphe visuel à base de Nodes** (un graphe acyclique dirigé, ou DAG) qui définit la logique de diffusion de contenus personnalisés à votre audience.
+
+Chaque Workflow répond à trois questions :
+1. **Où** le contenu apparaît-il ? ([Channels](/fr/product-guide/workflows/channels))
+2. **Quelles données** alimentent la personnalisation ? ([Data Nodes](/fr/product-guide/workflows/data-nodes))
+3. **Quelle logique** détermine l'expérience ? ([Logic Nodes](/fr/product-guide/workflows/logic-nodes), [conditions](/fr/product-guide/workflows/logic-nodes/conditions), [splits](/fr/product-guide/workflows/logic-nodes/split))
+
+Lorsqu'un utilisateur visite une page, ouvre un e-mail ou déclenche un événement mobile, Reelevant évalue le Workflow en temps réel et renvoie le contenu le plus pertinent.
+
+## Structure d'un Workflow
+
+Un Workflow est composé de **Nodes** connectés, organisés en quatre catégories :
+
+<CardGroup cols={2}>
+  <Card title="Channels" icon="right-to-bracket" href="/fr/product-guide/workflows/channels">
+    Définissent où le contenu est affiché — Email, Web (image ou HTML), Landing Page ou Mobile (push, in-app, inbox).
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/fr/product-guide/workflows/data-nodes">
+    Récupèrent et transforment les données — catalogues produits, géolocalisation, météo, paramètres d'URL, événements web, et plus encore.
+  </Card>
+  <Card title="Logic Nodes" icon="code-branch" href="/fr/product-guide/workflows/logic-nodes">
+    Contrôlent le flux — conditions, splits A/B et Real-Time Testing déterminent quelle Branch un utilisateur emprunte.
+  </Card>
+  <Card title="Output Nodes" icon="square-check" href="/fr/product-guide/workflows/output-nodes">
+    Définissent ce qui est renvoyé — un template de contenu visuel, un payload JSON Template ou une réponse vide.
+  </Card>
+</CardGroup>
+
+Les Nodes sont reliés par des **arêtes** qui définissent le flux d'exécution depuis les [Channels](/fr/product-guide/workflows/channels), en passant par les [Data Nodes](/fr/product-guide/workflows/data-nodes) et les [Logic Nodes](/fr/product-guide/workflows/logic-nodes), jusqu'aux [Output Nodes](/fr/product-guide/workflows/output-nodes).
+
+## Cycle de vie d'un Workflow
+
+Chaque Workflow passe par une série d'états :
+
+| Statut | Description |
+|--------|-------------|
+| **Draft** | Le Workflow est en cours d'édition et n'a pas encore été publié. |
+| **Publishing** | Le Workflow est en cours de publication. |
+| **Published** | Le Workflow est en production et diffuse activement du contenu personnalisé. |
+| **Inactive** | Le Workflow a été archivé et ne diffuse plus de contenu. |
+| **Error** | Le Workflow a rencontré un problème lors de la publication. |
+
+<Info>
+  Vous ne pouvez intégrer (déployer) un Workflow qu'après qu'il a été **Published**.
+</Info>
+
+## Branches
+
+Une **Branch** est un chemin unique à travers le Workflow, depuis un [Channel](/fr/product-guide/workflows/channels) jusqu'à un [Output Node](/fr/product-guide/workflows/output-nodes). Les Branches sont l'unité fondamentale de la personnalisation — chaque Branch peut offrir une expérience différente selon le contexte de l'utilisateur.
+
+Les Branches peuvent être :
+- **Qualifiées** avec une catégorie (ex. « Promotion », « Nouveautés ») en utilisant les catégories de Branches définies dans les [paramètres du Workflow](/fr/product-guide/workflows/settings).
+- **Mises en avant** comme Branches individualisées dans l'éditeur pour distinguer visuellement les parcours personnalisés.
+- **Analysées** via les statistiques pour voir comment le trafic se répartit entre les différents parcours.
+
+## Versions
+
+Les Workflows prennent en charge le **versioning**. Chaque publication crée une nouvelle version. Vous pouvez :
+- Consulter l'historique de toutes les versions publiées.
+- Parcourir n'importe quelle version précédente en mode lecture seule.
+- Restaurer une version précédente en la définissant comme brouillon actif.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Créer un Workflow" icon="plus" href="/fr/product-guide/workflows/creating-a-workflow">
+    Guide pas à pas pour créer votre premier Workflow.
+  </Card>
+  <Card title="Éditeur de Workflow" icon="pen-to-square" href="/fr/product-guide/workflows/editor">
+    Apprenez à utiliser l'éditeur visuel.
+  </Card>
+  <Card title="Channels" icon="right-to-bracket" href="/fr/product-guide/workflows/channels">
+    Découvrez les différents types de Channels.
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/fr/product-guide/workflows/data-nodes">
+    Apprenez à intégrer des données dans votre Workflow.
+  </Card>
+</CardGroup>

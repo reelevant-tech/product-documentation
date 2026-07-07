@@ -1,0 +1,46 @@
+---
+title: 'Datasource Nodes'
+description: 'Se connecter aux données importées dans le DataHub avec des Datasources génériques, produits et localisations'
+---
+
+![Panneau de configuration d'une Datasource générique](/images/workflows/node-datasource.png)
+
+## Vue d'ensemble
+
+Les Datasource Nodes se connectent aux données que vous avez importées dans le [DataHub](/fr/product-guide/datahub/overview). Il existe trois types spécialisés, chacun optimisé pour une catégorie de données spécifique.
+
+## Datasource générique
+
+Pour les données qui ne correspondent pas aux catégories produit ou localisation — avis, promotions, flux externes, données CRM, etc.
+
+**Configuration :**
+- **Select a datasource** — Recherchez et choisissez parmi vos Datasources importées.
+- **Filters** — Appliquez des règles pour affiner les résultats. Les filtres peuvent utiliser des valeurs statiques ou référencer des données d'autres Nodes du Workflow.
+- **Ordering** — Personnalisez l'ordre des résultats : garder l'ordre par défaut, changer toutes les 10 secondes pour tout le monde, ou changer pour chaque personne.
+- **Location data** — Incluez optionnellement des données de localisation si votre Datasource contient des informations géographiques.
+
+## Datasource produit
+
+Conçue spécifiquement pour les données de catalogue produit. Inclut des fonctionnalités supplémentaires pour les cas d'usage spécifiques aux produits.
+
+**Configuration :**
+- Toutes les mêmes options que la Datasource générique, plus :
+- **Combinatorial products** — Activez pour créer des combinaisons de produits.
+- **Group results by** — Regroupez les produits par un champ (ex. marque, catégorie) avec des modes de sortie :
+  - Données agrégées
+  - Premier produit de chaque groupe
+  - Tous les produits du premier groupe
+  - Tous les produits de tous les groupes
+
+## Datasource localisation
+
+Pour le store locator et la personnalisation basée sur la localisation. Trouve les emplacements proches d'un point donné.
+
+**Configuration :**
+- **Address** — L'adresse de référence à partir de laquelle rechercher (peut être statique ou dynamique depuis un autre Node).
+- **Distance (km)** — Rayon maximum de recherche.
+- **Filters** — Règles de filtrage supplémentaires.
+
+<Tip>
+  Combinez une Datasource localisation avec un Node [Geolocation](/fr/product-guide/workflows/data-nodes/geolocation) pour trouver automatiquement les magasins proches de la position actuelle de l'utilisateur.
+</Tip>

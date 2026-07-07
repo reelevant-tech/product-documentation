@@ -1,0 +1,57 @@
+---
+title: 'Live Polling'
+description: 'Afficher la part de clics actuelle pour une Branch dans votre Content'
+---
+
+![Node Live Polling affiché dans le menu des Data Nodes du Workflow](/images/workflows/node-live-polling.png)
+
+## Vue d'ensemble
+
+Le Live Polling affiche la part de clics actuelle pour une Branch dans votre Content.
+
+La valeur se met à jour lorsque l'image est récupérée, elle reflète donc cet instant précis.
+
+## Comment ça fonctionne
+
+| Élément | Description |
+|---|---|
+| Data Node | Renvoie le pourcentage en direct des clics pour sa Branch. |
+| Clics uniques | Le clic de chaque utilisateur compte une seule fois par Branch. |
+| Calcul | Clics sur cette Branch ÷ total des clics sur le sondage × 100. |
+| Libellé dans le Content Editor | Pourcentage actuel (en direct) de clics. |
+
+## Dans le Content Editor
+
+Vous ajoutez le Live Polling via **Workflow → Live polling**.
+
+Le preset Live poll ajoute une image et un composant texte.
+
+Le composant texte est lié au pourcentage en direct et ajoute un symbole de pourcentage.
+
+## Bon à savoir
+
+<Warning>
+  Certains clients e-mail pré-récupèrent ou mettent en cache les images. Cela peut figer la valeur au moment de la récupération, et non à l'instant exact où le destinataire ouvre le message.
+</Warning>
+
+<Info>
+  Consultez [Data Binding](/fr/product-guide/contents/data-binding) pour comprendre comment le Content utilise les valeurs du Workflow.
+</Info>
+
+<Info>
+  Consultez [Mise en cache et proxys des clients e-mail](/fr/advanced-guide/email-rendering/caching-and-proxies) pour les mises en garde sur la précision.
+</Info>
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Data Binding" icon="link" href="/fr/product-guide/contents/data-binding">
+    Connectez le Live Polling au texte, aux images et aux autres propriétés du Content.
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/fr/product-guide/workflows/data-nodes">
+    Comparez le Live Polling avec les autres Data Nodes.
+  </Card>
+  <Card title="Mise en cache et proxys des clients e-mail" icon="shield-halved" href="/fr/advanced-guide/email-rendering/caching-and-proxies">
+    Découvrez pourquoi certaines boîtes de réception peuvent afficher une valeur figée.
+  </Card>
+</CardGroup>

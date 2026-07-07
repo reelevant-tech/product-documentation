@@ -1,0 +1,34 @@
+---
+title: 'Real-Time Testing (RTT)'
+description: 'Optimiser automatiquement la répartition du trafic entre les variantes de contenu grâce à un algorithme multi-armed bandit'
+---
+
+![Panneau de configuration du Node Real-Time Testing montrant les paramètres de variantes de contenu](/images/workflows/node-real-time-testing.png)
+
+## Vue d'ensemble
+
+Le Real-Time Testing distribue automatiquement le trafic entre les variantes de contenu et optimise l'allocation au fil du temps. Contrairement à un [Split](/fr/product-guide/workflows/logic-nodes/split) statique, le Real-Time Testing utilise un algorithme multi-armed bandit pour déplacer le trafic vers la variante la plus performante.
+
+## Configuration
+
+Le seul paramètre est le **nombre de variantes** (2 à 10). Sélectionnez le nombre de parcours de contenu que vous souhaitez tester à l'aide du menu déroulant. Chaque variante devient une Branch séparée dans le Workflow.
+
+Il n'y a pas de paramètres supplémentaires à configurer. L'optimisation s'exécute automatiquement une fois le Workflow en production.
+
+## Comment ça fonctionne
+
+1. Le trafic est initialement distribué de manière égale entre toutes les variantes.
+2. Au fur et à mesure que les utilisateurs interagissent avec chaque variante, le système collecte des données de performance.
+3. L'algorithme multi-armed bandit déplace progressivement le trafic vers les variantes les plus performantes.
+4. Au fil du temps, la meilleure variante reçoit la majorité du trafic.
+
+<Info>
+  Contrairement à un test A/B fixe, le Real-Time Testing s'adapte en continu. Il n'y a pas de « date de fin » ni de « seuil de confiance » à définir manuellement — l'algorithme équilibre automatiquement l'exploration (tester les variantes sous-exposées) et l'exploitation (favoriser les gagnantes).
+</Info>
+
+## Bonnes pratiques
+
+- Utilisez le Real-Time Testing lorsque vous voulez que le système trouve et favorise la variante la plus performante sans intervention manuelle.
+- Commencez avec 2 à 3 variantes pour une convergence plus rapide. Plus de variantes nécessitent plus de trafic pour identifier un gagnant.
+- Suivez les résultats dans le mode statistiques du Workflow pour voir comment le trafic est réparti.
+- Combinez avec les [catégories de Branches](/fr/product-guide/workflows/branches) pour suivre la performance des variantes dans Analytics.

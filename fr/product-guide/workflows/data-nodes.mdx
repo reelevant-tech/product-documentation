@@ -1,0 +1,70 @@
+---
+title: 'Vue d'ensemble'
+description: 'Importer et utiliser des données externes dans vos Workflows avec les Data Nodes'
+---
+
+![Sélecteur de Data Nodes montrant tous les types de Data Nodes disponibles](/images/workflows/node-picker-data.png)
+
+## Que sont les Data Nodes ?
+
+Les Data Nodes apportent des données externes dans votre Workflow. Ils récupèrent, filtrent et transforment les informations provenant de vos Datasources, paramètres d'URL, services de géolocalisation, services météo, et plus encore. Ces données sont ensuite disponibles pour les Nodes en aval — [Logic Nodes](/fr/product-guide/workflows/logic-nodes) et [Output Nodes](/fr/product-guide/workflows/output-nodes) — pour la personnalisation.
+
+## Ajouter un Data Node
+
+1. Survolez le bouton **Data** (icône base de données) dans la barre d'outils inférieure.
+2. Un menu apparaît listant tous les types de Data Nodes disponibles.
+3. Cliquez sur le type souhaité pour ouvrir son panneau de configuration.
+
+Vous pouvez également faire un clic droit sur un Node existant et sélectionner **Use data** pour ajouter un Data Node en aval.
+
+## Types de Data Nodes
+
+<CardGroup cols={2}>
+  <Card title="Datasource Nodes" icon="database" href="/fr/product-guide/workflows/data-nodes/datasources">
+    Connectez-vous aux données importées dans le DataHub — Datasources génériques, produits et localisations.
+  </Card>
+  <Card title="URL Parameter" icon="link" href="/fr/product-guide/workflows/data-nodes/url-parameter">
+    Capturez les valeurs transmises via l'URL lors de l'exécution du Workflow.
+  </Card>
+  <Card title="Geolocation" icon="location-dot" href="/fr/product-guide/workflows/data-nodes/geolocation">
+    Résolvez la localisation géographique de l'utilisateur à partir de son adresse IP.
+  </Card>
+  <Card title="Weather" icon="cloud-sun" href="/fr/product-guide/workflows/data-nodes/weather">
+    Récupérez les données météo actuelles pour la localisation de l'utilisateur.
+  </Card>
+  <Card title="Website Events" icon="chart-line" href="/fr/product-guide/workflows/data-nodes/website-events">
+    Récupérez les données de comportement utilisateur issues du tracking de votre site web.
+  </Card>
+  <Card title="Live Polling" icon="chart-simple" href="/fr/product-guide/workflows/data-nodes/live-polling">
+    Affichez la part de clics actuelle pour une Branch.
+  </Card>
+  <Card title="Transform" icon="wand-magic-sparkles" href="/fr/product-guide/workflows/data-nodes/transform">
+    Appliquez des transformations de données aux valeurs d'autres Nodes.
+  </Card>
+</CardGroup>
+
+## Filtrage et tri
+
+La plupart des Datasource Nodes supportent les **filtres** et le **tri** :
+
+### Filtres
+Ajoutez une ou plusieurs règles de filtre pour affiner les résultats :
+- **Field** — Sélectionnez le champ de Datasource sur lequel filtrer.
+- **Operator** — Choisissez un opérateur de comparaison (égal, contient, supérieur à, etc.).
+- **Value** — Fournissez une valeur statique ou référencez des données d'un autre Node du Workflow.
+
+### Tri
+Choisissez comment les résultats sont triés :
+- **Ordre par défaut** — Tel que stocké dans la Datasource.
+- **Croissant / Décroissant** — Trier par un champ spécifique.
+- **Changer toutes les 10 secondes pour tout le monde** — Randomiser les résultats périodiquement pour tous les utilisateurs.
+- **Changer pour chaque personne** — Chaque utilisateur voit un ordre différent.
+
+## Utiliser les données en aval
+
+Une fois un Data Node configuré, ses champs de sortie deviennent disponibles pour tous les Nodes en aval via le **Variable Picker**. Le Variable Picker organise les données disponibles par source :
+
+- **Context** — Données de contexte standard (utilisateur, appareil, heure).
+- **Geolocation** — Données de localisation issues du Node Geolocation.
+- **Workflow data** — Données des Data Nodes en amont, identifiées par le nom de la Datasource.
+- **Import new data** — Ajoutez rapidement un nouveau Data Node si les données dont vous avez besoin ne sont pas encore disponibles.

@@ -1,0 +1,34 @@
+---
+title: 'Web Image'
+description: 'Générer des images personnalisées à afficher sur des sites web'
+---
+
+![Sélecteur de Channels montrant le type Web Image](/images/workflows/channel-picker.png)
+
+## Vue d'ensemble
+
+Le Channel Web Image génère une image personnalisée à afficher sur des sites web. La sortie est une image générée dynamiquement qui peut être intégrée dans n'importe quelle page web.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Web |
+| **Format de sortie** | Image web |
+| **Cas d'usage** | Bannières héros, recommandations en barre latérale, widgets personnalisés |
+
+## Comment ça fonctionne
+
+Lorsqu'un visiteur charge une page contenant une zone Reelevant Web Image, le Workflow s'exécute en temps réel. Le moteur évalue le contexte de l'utilisateur et renvoie une image personnalisée.
+
+L'image est servie sous forme de balise `<img>` standard, ce qui la rend compatible avec n'importe quel site web ou CMS.
+
+## Configuration
+
+1. Ajoutez un Node Channel Web Image à votre canevas de Workflow.
+2. Connectez-le en aval à votre logique de personnalisation.
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir l'URL d'intégration de l'image.
+
+## Bonnes pratiques
+
+- Web Image est idéal pour les scénarios où vous avez besoin d'un seul élément visuel qui s'adapte à chaque utilisateur.
+- Pour du contenu interactif ou responsive, envisagez d'utiliser [Web HTML](/fr/product-guide/workflows/channels/web-html) à la place.
+- Utilisez les [paramètres d'URL](/fr/product-guide/workflows/data-nodes/url-parameter) pour transmettre le contexte de la page (ex. catégorie de produit, segment utilisateur) dans le Workflow.

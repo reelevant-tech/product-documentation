@@ -1,0 +1,34 @@
+---
+title: 'Email'
+description: 'Générer des visuels personnalisés à intégrer dans des campagnes e-mail'
+---
+
+![Node Channel Email sur le canevas du Workflow](/images/workflows/node-email.png)
+
+## Vue d'ensemble
+
+Le Channel Email génère un visuel personnalisé à intégrer dans des campagnes e-mail. C'est le type de Channel le plus couramment utilisé.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Email |
+| **Format de sortie** | Contenu e-mail |
+| **Cas d'usage** | Bannières de newsletters, recommandations produits dans les e-mails, emplacements promotionnels |
+
+## Comment ça fonctionne
+
+Lorsqu'un utilisateur ouvre un e-mail contenant une zone visuelle Reelevant, le Workflow est déclenché en temps réel. Le moteur évalue les Branches du Workflow et renvoie le contenu le plus pertinent pour cet utilisateur spécifique.
+
+La sortie rendue est une image servie dynamiquement au moment de l'ouverture de l'e-mail — garantissant que le contenu est toujours à jour et personnalisé.
+
+## Configuration
+
+1. Ajoutez un Node Channel Email à votre canevas de Workflow.
+2. Connectez-le en aval à des [Data Nodes](/fr/product-guide/workflows/data-nodes), des [Logic Nodes](/fr/product-guide/workflows/logic-nodes) et un [Output Node](/fr/product-guide/workflows/output-nodes).
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir le code d'intégration pour votre template e-mail.
+
+## Bonnes pratiques
+
+- Utilisez **plusieurs Channels Email** si votre e-mail comporte plusieurs zones personnalisées (ex. bannière d'en-tête, grille de produits, recommandation en pied de page).
+- Connectez chaque Channel à des Data Nodes et Logic Nodes différents si les zones nécessitent une logique de personnalisation indépendante.
+- Testez vos Workflows e-mail avec la fonctionnalité de prévisualisation avant de publier pour vous assurer que le visuel s'affiche correctement dans les différents clients e-mail.

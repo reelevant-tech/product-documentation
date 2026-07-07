@@ -1,0 +1,32 @@
+---
+title: 'In-App Inbox'
+description: 'Générer des images personnalisées pour la boîte de réception in-app'
+---
+
+![Sélecteur de Channels montrant le type In-App Inbox](/images/workflows/channel-picker.png)
+
+## Vue d'ensemble
+
+Le Channel In-App Inbox génère une image personnalisée pour la boîte de réception in-app ou le centre de messages. Il est utilisé pour alimenter du contenu personnalisé dans une boîte de réception de type notification au sein de votre application mobile.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Mobile |
+| **Format de sortie** | Image de boîte de réception in-app |
+| **Cas d'usage** | Cartes de boîte de réception personnalisées, éléments du centre de notifications |
+
+## Comment ça fonctionne
+
+Lorsque votre application charge la boîte de réception/le centre de messages, le Workflow s'exécute et renvoie des images personnalisées pour chaque élément de la boîte de réception. Chaque élément peut être personnalisé indépendamment en fonction du contexte de l'utilisateur.
+
+## Configuration
+
+1. Ajoutez un Node Channel In-App Inbox à votre canevas de Workflow.
+2. Connectez-le en aval à votre logique de personnalisation.
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir l'URL d'intégration pour votre SDK mobile.
+
+## Bonnes pratiques
+
+- Les éléments de boîte de réception persistent plus longtemps que les popups, concevez donc un contenu qui reste pertinent dans le temps.
+- Utilisez différents [Data Nodes](/fr/product-guide/workflows/data-nodes) et Branches logiques pour créer de la variété dans le contenu de la boîte de réception.
+- Envisagez des [conditions](/fr/product-guide/workflows/logic-nodes/conditions) basées sur le temps pour rafraîchir périodiquement le contenu de la boîte de réception.

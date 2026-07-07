@@ -1,0 +1,147 @@
+---
+title: 'Branches'
+description: 'Qualifier les Branches d'un Workflow avec des catégories et des tags pour améliorer l'analyse et la gestion'
+---
+
+![Éditeur de Workflow montrant plusieurs Branches à travers le graphe](/images/workflows/editor-canvas.png)
+
+## Qu'est-ce qu'une Branch ?
+
+Une **Branch** est un chemin d'exécution unique à travers un Workflow, depuis un Node [Channel](/fr/product-guide/workflows/channels) jusqu'à un [Output Node](/fr/product-guide/workflows/output-nodes). Lorsqu'un utilisateur déclenche un Workflow, le moteur évalue les [conditions](/fr/product-guide/workflows/logic-nodes/conditions) et les données pour déterminer quelle Branch suivre, puis renvoie la sortie à la fin de cette Branch.
+
+Un même Workflow comporte généralement plusieurs Branches — chacune offrant une expérience différente selon le contexte de l'utilisateur.
+
+## Qualification des Branches
+
+Vous pouvez **qualifier** une Branch en lui attribuant une catégorie et des tags. Cela est utile pour :
+- **Analytics** — Regrouper les résultats par catégorie ou tag de Branch pour comparer les performances entre différentes stratégies.
+- **Organisation** — Étiqueter les Branches selon leur objectif (ex. « Promotion », « Fidélité », « Par défaut »).
+- **Reporting** — Filtrer les tableaux de bord par catégorie ou tag pour se concentrer sur des stratégies de campagne spécifiques.
+
+Les catégories et les tags sont complémentaires. La catégorie décrit ce que la Branch **est**, tandis que les tags ajoutent des dimensions contextuelles pour l'analyse (ex. le moment de cycle de vie ciblé).
+
+### Comment qualifier une Branch
+
+![Panneau de qualification de Branch avec nom de Branch, catégorie, tags et champs d'individualisation](/images/workflows/branch-qualification-drawer.png)
+
+1. **Faites un clic droit sur une arête** (la flèche reliant deux Nodes) dans l'éditeur de Workflow.
+2. Sélectionnez **Qualify branch** dans le menu contextuel.
+3. Le panneau de **qualification de Branch** s'ouvre. Il vous permet de définir :
+   - **Branch name** — Un nom personnalisé optionnel pour identifier la Branch.
+   - **Category** — Une catégorie issue de l'arborescence des catégories de Branches.
+   - **Tags** — Un ou plusieurs tags issus de la liste de tags de votre compte.
+   - **Individualization** — Un interrupteur pour marquer la Branch comme individualisée dans l'application Analytics.
+4. Cliquez sur **Confirm** pour enregistrer votre qualification.
+
+<Tip>
+Chaque Branch devrait avoir une catégorie. Les tags sont optionnels — ajoutez-les lorsqu'un contexte supplémentaire aide votre analyse.
+</Tip>
+
+## Catégories de Branches
+
+Les **catégories de Branches** forment une arborescence hiérarchique de catégories que vous définissez dans les [paramètres du Workflow](/fr/product-guide/workflows/settings). Elles fournissent un vocabulaire cohérent pour qualifier les Branches dans tous vos Workflows.
+
+### Structure
+
+Les catégories sont organisées en arborescence à plusieurs niveaux. Par exemple :
+
+```
+├── Personalized
+│   ├── Product Recommendation
+│   ├── Store Locator
+│   └── Weather-based
+├── Promotional
+│   ├── Discount
+│   └── New Arrivals
+└── Default
+    └── Generic Content
+```
+
+Chaque Branch peut se voir attribuer une catégorie à n'importe quel niveau de l'arborescence.
+
+### Avantages
+
+- **Cohérence** — Tous les membres de l'équipe utilisent le même vocabulaire pour qualifier les Branches.
+- **Analytics** — Les tableaux de bord Analytics peuvent filtrer et regrouper les métriques par catégorie à n'importe quel niveau de la hiérarchie.
+- **Résolution ascendante** — Les catégories de Branches sont héritées en aval dans le graphe du Workflow. Si une Branch parente est qualifiée, les Branches filles héritent de ce contexte de catégorie.
+
+## Tags de Branch
+
+Les tags ajoutent un contexte supplémentaire à une Branch, en complément de sa catégorie. Chaque tag associe une **clé de tag** (la dimension) à une **valeur de tag**, affichée sous la forme `Clé : Valeur`.
+
+Par exemple :
+- `Lifecycle: Birthday`
+- `Lifecycle: Welcome`
+- `Seasonal Moment: Sales`
+
+### D'où viennent les tags
+
+Les administrateurs définissent la liste des clés et valeurs de tags disponibles pour votre compte. Lors de la qualification d'une Branch, vous choisissez dans cette liste partagée — vous ne pouvez pas créer de nouveaux tags à la volée.
+
+Cela garantit une cohérence du tagging au sein de votre équipe. Tout le monde analyse les performances avec le même vocabulaire.
+
+### Combien de valeurs par clé ?
+
+![Sélecteur de tags montrant la sélection de valeurs multiples pour la clé Lifecycle](/images/workflows/branch-tags-select.png)
+
+Chaque clé de tag accepte une ou plusieurs valeurs par Branch :
+
+| Type de clé | Comportement | Exemple |
+|---|---|---|
+| Valeur unique | Choisir une nouvelle valeur remplace la précédente | `Individualization: Yes` ou `No` |
+| Valeurs multiples | Vous pouvez ajouter plusieurs valeurs pour la même clé | `Lifecycle: Birthday` et `Lifecycle: Welcome` |
+
+### Tags personnalisés et tags gérés par le système
+
+Il existe deux types de tags :
+- **Tags personnalisés** — Vous les attribuez vous-même dans le panneau de qualification de Branch.
+- **Tags gérés par le système** — La plateforme les applique automatiquement. Vous ne pouvez pas les attribuer ni les modifier manuellement.
+
+Les deux types sont disponibles dans l'application Analytics pour le filtrage et le regroupement.
+
+### Tags dans Analytics
+
+Dans l'application Analytics, vous pouvez utiliser les tags pour segmenter vos résultats :
+- **Filtrer par tag** — Ne garder que les données avec un tag spécifique (ex. `Lifecycle: Birthday`). Les Branches avec des valeurs supplémentaires pour la même clé sont également incluses.
+- **Filtrer par clé de tag** — Ne garder que les données ayant une valeur pour une clé. Choisissez **Any value** pour la clé (ex. `Lifecycle: Any value`).
+- **Regrouper par clé de tag** — Utiliser une clé de tag comme dimension pour comparer les performances entre ses valeurs.
+
+![Filtre par tag dans l'application Analytics avec sélection de clé et de clé/valeur](/images/analytics/tag-filter.png)
+
+Lorsque vous regroupez par clé de tag, les Branches ayant plusieurs valeurs pour cette clé apparaissent comme un groupe combiné (ex. `Birthday, Welcome`). Les données sans valeur pour la clé apparaissent dans leur propre groupe non étiqueté.
+
+![Tableau de résultats regroupés par deux clés de tag comme dimensions](/images/analytics/tag-dimension-results.png)
+
+<Tip>
+Filtrez sur **Any value** pour une clé de tag afin de ne garder que les données taguées dans vos résultats.
+</Tip>
+
+### Tags sur le canevas
+
+Les Branches avec des tags les affichent sous forme de badges sur le canevas du Workflow. Cela vous donne un aperçu rapide de la qualification de votre Workflow sans avoir à ouvrir chaque Branch.
+
+## Consulter les statistiques de Branches
+
+Activez le **mode Statistiques** depuis la barre d'outils inférieure pour superposer les données de répartition du trafic sur le canevas du Workflow. En mode statistiques :
+
+- Les arêtes affichent le **pourcentage de trafic** passant par chaque Branch.
+- Les Branches individualisées peuvent être mises en avant pour distinguer les parcours personnalisés des parcours par défaut.
+- Utilisez l'interrupteur **Individualized branches** pour différencier visuellement les parcours personnalisés.
+
+## Conseils
+
+- Qualifiez les Branches tôt dans la conception de votre Workflow — cela rend les analyses bien plus utiles une fois le Workflow en production.
+- Utilisez une convention de nommage cohérente pour les Branches au sein d'un Workflow afin de les identifier facilement.
+- Les catégories et tags de Branches sont partagés entre tous les Workflows de votre compte. Concevez-les de manière suffisamment générale pour s'appliquer à toutes les campagnes.
+- N'utilisez pas les tags pour remplacer les catégories. Si un concept décrit la nature structurelle ou métier d'une Branch (ex. « Cross-sell »), il appartient à l'arborescence des catégories.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Paramètres du Workflow" icon="gear" href="/fr/product-guide/workflows/settings">
+    Gérez votre arborescence de catégories de Branches.
+  </Card>
+  <Card title="Vue d'ensemble Analytics" icon="chart-line" href="/fr/product-guide/analytics/overview">
+    Analysez les performances par catégorie et par tag.
+  </Card>
+</CardGroup>

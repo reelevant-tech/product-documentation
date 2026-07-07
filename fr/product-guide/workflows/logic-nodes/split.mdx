@@ -1,0 +1,34 @@
+---
+title: 'Split (A/B Testing)'
+description: 'Répartir le trafic en plusieurs Branches selon des pourcentages de population'
+---
+
+![Panneau de configuration du Node Split montrant la répartition des groupes avec un curseur de pourcentage](/images/workflows/node-split.png)
+
+## Vue d'ensemble
+
+Les Nodes Split répartissent le trafic en plusieurs Branches selon des **pourcentages de population**. Ils sont utilisés pour les tests A/B ou les tests multivariés.
+
+## Configuration
+
+- **Nombre de variantes** — Ajoutez deux groupes ou plus à l'aide du bouton **Add**. Les groupes sont automatiquement nommés A, B, C, et ainsi de suite.
+- **Part de population** — Utilisez le curseur pour définir le pourcentage de trafic que chaque groupe reçoit. Le total de tous les groupes est toujours égal à 100 %.
+- **Remove** — Cliquez sur le bouton de suppression sur n'importe quelle ligne de groupe pour le retirer (minimum deux groupes requis).
+
+## Exemple
+
+| Groupe | Part de population |
+|-------|-----------------|
+| Variant A | 50 % |
+| Variant B | 30 % |
+| Control | 20 % |
+
+## Comment ça fonctionne
+
+Lorsqu'un utilisateur déclenche le Workflow, le Node Split l'assigne aléatoirement à l'un des groupes selon les pourcentages configurés. L'assignation est déterministe par utilisateur — le même utilisateur empruntera toujours la même Branch.
+
+## Bonnes pratiques
+
+- Incluez toujours un **groupe de contrôle** (ex. 10-20 %) pour mesurer l'impact de la personnalisation.
+- Laissez les tests se dérouler suffisamment longtemps pour atteindre une significativité statistique avant de tirer des conclusions.
+- Utilisez les [catégories de Branches](/fr/product-guide/workflows/branches) pour taguer les Branches de split dans Analytics.

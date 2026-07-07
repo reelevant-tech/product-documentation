@@ -1,0 +1,119 @@
+---
+title: 'Éditeur de Workflow'
+description: 'Naviguer et utiliser l'éditeur visuel de Workflow pour construire votre logique d'automatisation'
+---
+
+![Canevas de l'éditeur de Workflow avec barre d'outils et Nodes connectés](/images/workflows/editor-canvas.png)
+
+## Disposition de l'éditeur
+
+L'éditeur de Workflow est un canevas visuel en plein écran où vous construisez votre Workflow en ajoutant et connectant des Nodes. Il se compose de trois zones principales :
+
+1. **Barre d'en-tête** — Affiche le nom du Workflow, le badge de statut et les boutons d'action (Settings, Save, Publish, Use).
+2. **Canevas** — La zone interactive principale où les Nodes sont affichés sous forme de diagramme de flux. Vous pouvez le déplacer, zoomer et faire glisser les Nodes.
+3. **Barre d'outils inférieure** — Une barre de menus en bas du canevas avec des outils pour ajouter des Nodes, zoomer, annuler/rétablir, et plus encore.
+
+## Actions de l'en-tête
+
+L'en-tête de l'éditeur donne un accès rapide aux opérations clés du Workflow :
+
+| Action | Description |
+|--------|-------------|
+| **Flèche retour** | Retour à la liste des Workflows. |
+| **Settings** (icône engrenage) | Modifier le nom, la description, les Teams et le dossier du Workflow. |
+| **Save** | Enregistrer le brouillon en cours sans publier. Activé uniquement lorsqu'il y a des modifications non enregistrées. |
+| **Publish** | Valider et publier le Workflow pour le mettre en production. Voir [Publication](#publier-un-workflow). |
+| **Use** | Ouvrir la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir les liens de déploiement (disponible uniquement une fois publié). |
+
+## Barre d'outils inférieure
+
+La barre d'outils inférieure est organisée en sections :
+
+### Ajouter des Nodes
+| Outil | Description |
+|------|-------------|
+| **Channel** (icône smartphone) | Ouvrir le sélecteur de Channels pour ajouter un Node [Channel](/fr/product-guide/workflows/channels). |
+| **Data** (icône base de données) | Survolez pour afficher le menu des [Data Nodes](/fr/product-guide/workflows/data-nodes) — Datasources, paramètres d'URL, géolocalisation, météo, Transform, etc. |
+| **Output** (icône contenu) | Ouvrir le panneau des types de contenu pour ajouter des Output Nodes [Visual Content](/fr/product-guide/workflows/output-nodes/visual-content), [JSON Template](/fr/product-guide/workflows/output-nodes/json-template) ou [Empty](/fr/product-guide/workflows/output-nodes/empty). |
+
+### Navigation sur le canevas
+| Outil | Description |
+|------|-------------|
+| **Zoom arrière / Zoom avant** | Ajuster le niveau de zoom du canevas. Le pourcentage de zoom actuel est affiché entre les boutons. |
+| **Ajuster à l'écran** | Zoom automatique pour afficher tous les Nodes dans la fenêtre. |
+| **Mise en page automatique** | Réorganiser automatiquement tous les Nodes dans une disposition claire et lisible. |
+
+### Historique
+| Outil | Description |
+|------|-------------|
+| **Annuler** | Revenir à l'action précédente. |
+| **Rétablir** | Réappliquer la dernière action annulée. |
+
+### Modes d'affichage
+| Outil | Description |
+|------|-------------|
+| **Nested nodes** | Ouvrir un panneau listant les Nodes non visibles sur le canevas principal (imbriqués dans d'autres Nodes). |
+| **Individualized branches** | Activer/désactiver la mise en avant des Branches qui diffusent du contenu personnalisé. |
+| **Statistics mode** | Basculer entre la vue éditeur et la vue statistiques pour voir la répartition du trafic entre les Branches. |
+| **Debug mode** | Activer/désactiver les informations de débogage sur les Nodes (temps d'exécution, identifiants des Nodes). |
+| **AI Copilot** | Ouvrir le panneau de l'assistant IA Simone (si activé pour votre compte). |
+| **Versions** | Ouvrir le panneau de l'[historique des versions](/fr/product-guide/workflows/versions). |
+| **Generate documentation** | Générer automatiquement une documentation métier ou technique pour le Workflow en cours. |
+
+## Travailler avec les Nodes
+
+### Ajouter des Nodes
+Il existe plusieurs façons d'ajouter des Nodes :
+1. **Barre d'outils** — Utilisez les boutons de la barre d'outils inférieure pour ajouter des Channels, Data Nodes ou Output Nodes.
+2. **Menu contextuel** — Faites un clic droit sur le canevas ou sur un Node existant pour accéder aux actions contextuelles.
+3. **Glisser-déposer** — Faites glisser les types de Nodes depuis les panneaux de sélection vers le canevas.
+
+### Connecter les Nodes
+Les Nodes possèdent des **poignées de connexion** (petits cercles sur leurs bords). Pour connecter deux Nodes :
+1. Cliquez et faites glisser depuis une poignée d'un Node.
+2. Relâchez sur la poignée d'un autre Node.
+3. Une arête (flèche) apparaît pour les connecter.
+
+### Configurer les Nodes
+Cliquez sur n'importe quel Node pour ouvrir son **panneau de configuration** sur le côté droit du canevas. Les options de configuration varient selon le type de Node — consultez les pages dédiées pour les [Channels](/fr/product-guide/workflows/channels), [Data Nodes](/fr/product-guide/workflows/data-nodes), [Logic Nodes](/fr/product-guide/workflows/logic-nodes) et [Output Nodes](/fr/product-guide/workflows/output-nodes).
+
+### Actions du menu contextuel
+Faites un clic droit sur un Node pour accéder à :
+- **Edit** — Ouvrir le panneau de configuration.
+- **Duplicate** — Créer une copie du Node.
+- **Delete** — Supprimer le Node et ses connexions.
+- **Add documentation** — Ajouter une note de documentation au Node.
+- **Create branches** — Ajouter un Logic Node en aval.
+- **Use data** — Ajouter un Data Node en aval.
+- **Add content** — Ajouter un Output Node en aval.
+
+Faites un clic droit sur une arête pour :
+- **Delete** — Supprimer la connexion entre deux Nodes.
+- **Qualify branch** — Attribuer une catégorie de Branch à ce chemin.
+
+## Publier un Workflow
+
+Avant qu'un Workflow puisse diffuser du contenu, il doit être publié :
+
+<Steps>
+  <Step title="Cliquer sur Publish">
+    Cliquez sur le bouton **Publish** dans l'en-tête.
+  </Step>
+  <Step title="Validation automatique">
+    Le système valide le Workflow pour détecter les erreurs courantes :
+    - Channels manquants
+    - Output Nodes manquants
+    - Dépendances circulaires
+    - Configurations de Nodes invalides
+    - Erreurs de liaison de contenu
+
+    Si des erreurs sont détectées, une notification apparaît et le canevas se focalise sur le premier Node problématique.
+  </Step>
+  <Step title="Enregistrer et publier">
+    Si la validation réussit, le Workflow est enregistré et publié en une seule étape. Le badge de statut passe à **Published**.
+  </Step>
+</Steps>
+
+<Warning>
+  La publication remplace la version actuellement en production. La version précédente est conservée dans l'[historique des versions](/fr/product-guide/workflows/versions).
+</Warning>

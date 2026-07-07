@@ -1,0 +1,34 @@
+---
+title: 'Landing Page'
+description: 'Générer des expériences de Landing Page personnalisées complètes'
+---
+
+![Sélecteur de Channels montrant le type Landing Page](/images/workflows/channel-picker.png)
+
+## Vue d'ensemble
+
+Le Channel Landing Page génère une expérience de Landing Page complète. La sortie est une page HTML entière servie sur une URL dédiée.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Landing |
+| **Format de sortie** | Page HTML Landing |
+| **Cas d'usage** | Pages de destination de campagne, microsites personnalisés |
+
+## Comment ça fonctionne
+
+Lorsqu'un utilisateur visite l'URL de la Landing Page, le Workflow s'exécute et renvoie une page HTML entièrement rendue. Le contenu de la page est personnalisé en fonction du contexte de l'utilisateur et des paramètres d'URL transmis.
+
+Chaque Landing Page obtient sa propre URL unique qui peut être partagée dans des campagnes, e-mails ou réseaux sociaux.
+
+## Configuration
+
+1. Ajoutez un Node Channel Landing Page à votre canevas de Workflow.
+2. Connectez-le en aval à votre logique de personnalisation.
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir l'URL de la Landing Page.
+
+## Bonnes pratiques
+
+- Utilisez les [paramètres d'URL](/fr/product-guide/workflows/data-nodes/url-parameter) pour transmettre le contexte de campagne (ex. tags UTM, identifiants utilisateur) dans le Workflow.
+- Les Landing Pages supportent les templates de contenu pleine page conçus dans le Content Editor.
+- Envisagez d'utiliser les [Variable Profiles](/fr/product-guide/workflows/settings) pour préconfigurer des modèles de paramètres d'URL pour différentes campagnes.

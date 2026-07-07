@@ -1,0 +1,32 @@
+---
+title: 'In-App Popup'
+description: 'Générer des images personnalisées pour les popups in-app'
+---
+
+![Sélecteur de Channels montrant le type In-App Popup](/images/workflows/channel-picker.png)
+
+## Vue d'ensemble
+
+Le Channel In-App Popup génère une image personnalisée pour les popups in-app. L'image est affichée comme un overlay modale au sein de votre application mobile.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Mobile |
+| **Format de sortie** | Image de popup in-app |
+| **Cas d'usage** | Promotions modales, annonces in-app |
+
+## Comment ça fonctionne
+
+Lorsque votre application déclenche un événement de popup in-app, le Workflow s'exécute et renvoie une image personnalisée. Cette image est affichée comme un overlay popup au sein de l'application.
+
+## Configuration
+
+1. Ajoutez un Node Channel In-App Popup à votre canevas de Workflow.
+2. Connectez-le en aval à votre logique de personnalisation.
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir l'URL d'intégration pour votre SDK mobile.
+
+## Bonnes pratiques
+
+- Utilisez les popups avec parcimonie pour éviter de perturber l'expérience utilisateur.
+- Ciblez les popups en fonction du comportement ou du contexte de l'utilisateur (ex. après un achat, au premier lancement de l'application).
+- Concevez le contenu des popups pour qu'il soit immédiatement actionnable avec un appel à l'action clair.
