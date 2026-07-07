@@ -1,0 +1,31 @@
+---
+title: 'Reelevant Mobile SDK'
+description: 'SDK natifs pour l''analytics et la personnalisation dans vos applications mobiles'
+---
+
+## Vue d'ensemble
+
+Les Reelevant Mobile SDK fournissent une API unifiée à la fois pour l'**analytics** (tracking d'événements) et la **personnalisation** (récupération de contenu) dans vos applications mobiles natives. Une seule instance du SDK gère la gestion de l'identité, la collecte d'événements et le contenu personnalisé en temps réel — aucun client séparé nécessaire.
+
+<CardGroup cols={3}>
+  <Card title="Android" icon="android" href="/fr/developer-docs/mobile-integration/sdk/android">
+    SDK Kotlin pour les applications Android. Utilise les coroutines pour les opérations asynchrones.
+  </Card>
+  <Card title="iOS" icon="apple" href="/fr/developer-docs/mobile-integration/sdk/ios">
+    SDK Swift pour les applications iOS. Utilise async/await (iOS 13+).
+  </Card>
+  <Card title="Flutter" icon="flutter" href="/fr/developer-docs/mobile-integration/sdk/flutter">
+    SDK Dart pour les applications Flutter. Utilise les Futures pour les opérations asynchrones.
+  </Card>
+</CardGroup>
+
+## Fonctionnalités
+
+| Fonctionnalité | Description |
+|---------|-------------|
+| **Identité unifiée** | `setUser()` partage l'identité entre les événements d'analytics et les appels de personnalisation |
+| **userId résolu automatiquement** | `run()` se résout automatiquement à partir de l'identité stockée — inutile de le transmettre manuellement |
+| **Réponses typées** | Types de contenu discriminés (JSON, HTML, Image, Empty) avec métadonnées typées |
+| **Stratégies de repli** | Choisissez entre résultats vides, propagation d'erreur ou handlers personnalisés en cas d'échec |
+| **Tracking des clics** | `trackClick()` intégré sur chaque résultat pour l'attribution |
+| **Exécutions concurrentes** | `runAll()` exécute plusieurs Workflows en parallèle |

@@ -1,0 +1,54 @@
+---
+title: 'Personnalisation de site web'
+description: 'Diffusez du contenu personnalisé sur votre site web — côté serveur pour un CLS nul, ou côté client pour des overlays dynamiques et le tracking d''événements'
+---
+
+## Vue d'ensemble
+
+Reelevant propose trois approches complémentaires pour la personnalisation de site web. Choisissez-en une ou combinez-les selon vos besoins :
+
+<CardGroup cols={3}>
+  <Card title="Reelevant Client Side Script" icon="browser" href="/fr/developer-docs/web-integration/client-side-script/overview">
+    Un script de tracking JavaScript qui se charge dans le navigateur, récupère du contenu personnalisé et l'injecte dans votre page. Idéal pour le tracking d'événements, le contenu dépendant du consentement, les overlays et les intégrations no-code via l'extension de navigateur.
+  </Card>
+  <Card title="Reelevant Server Side SDK" icon="server" href="/fr/developer-docs/web-integration/server-side-sdk/overview">
+    Un SDK Node.js / Edge qui récupère du contenu personnalisé pendant le rendu serveur. Le contenu arrive dans le HTML initial — aucun décalage de mise en page, visibilité SEO complète, affichage instantané.
+  </Card>
+  <Card title="Reelevant comme API (JSON)" icon="code" href="/fr/developer-docs/web-integration/api-json/overview">
+    Une API de personnalisation headless qui renvoie du JSON structuré. Vous contrôlez le rendu — utilisez vos propres composants, votre design system ou une UI mobile native avec des données personnalisées provenant de Reelevant.
+  </Card>
+</CardGroup>
+
+## Quand utiliser laquelle
+
+| | Client-Side Script | Server-Side SDK | API (JSON) |
+|---|---|---|---|
+| **Fonctionnement** | Le JavaScript se charge après le rendu de la page, récupère le contenu et l'injecte dans le DOM | Le contenu est récupéré pendant le rendu serveur et inclus dans la réponse HTML | Votre application appelle le Runner et reçoit des données JSON structurées |
+| **Décalage de mise en page (CLS)** | Le contenu apparaît après le chargement — décalage visible | Nul — le contenu figure dans le HTML initial | Vous contrôlez le rendu — aucun CLS si les données sont récupérées côté serveur |
+| **SEO** | Non indexé (injecté après le chargement de la page) | Entièrement indexé par les moteurs de recherche | Dépend de votre stratégie de rendu |
+| **Délai d'affichage du contenu** | Dépend du réseau côté client + de la latence du Runner | Inclus dès le premier rendu | Dépend du moment où vous appelez l'API |
+| **Idéal pour** | Tracking d'événements, consentement, overlays dynamiques, SPA, configuration no-code | Bannières hero, recommandations produits, landing pages, zones critiques pour le SEO | Composants d'UI personnalisés, applications mobiles, architectures headless, design systems |
+| **Effort de mise en place** | Coller une balise de script ou utiliser l'extension de navigateur | Installer un package npm et ajouter du code côté serveur | Créer un JSON Template, appeler un seul endpoint |
+
+Les trois approches fonctionnent ensemble. Les zones rendues côté serveur sont marquées avec `data-rlvt-ssr="true"` — le script client les ignore automatiquement. Les appels à l'API JSON peuvent être effectués depuis le client ou le serveur selon votre architecture.
+
+## Types de contenu
+
+Le Runner Reelevant peut renvoyer trois formats de contenu. L'[Output Node](/fr/product-guide/workflows/output-nodes) de votre Workflow détermine le format utilisé :
+
+| Type | Description | Cas d'usage |
+|------|-------------|----------|
+| **HTML** | Fragment HTML responsive | Bannières, cartes produits, blocs de contenu riche |
+| **JSON** | Objet de données structuré | Personnalisation headless — construisez votre propre UI avec des données personnalisées |
+| **Image** | Image binaire (PNG, etc.) | Bannières visuelles statiques, images de type email sur le web |
+
+## Gestion de l'identité
+
+Les trois approches partagent les mêmes cookies d'identité :
+
+| Cookie | Rôle |
+|--------|---------|
+| `rlvt_clientId` | Identité de l'utilisateur connu (définie par votre application ou le tracker client) |
+| `rlvt_tmpId` | ID de visiteur anonyme (défini automatiquement par le script ou le middleware du SDK) |
+
+Priorité : `rlvt_clientId` > `rlvt_tmpId`. Si aucun des deux n'existe, le script ou le middleware du SDK génère automatiquement un nouveau `rlvt_tmpId`.
