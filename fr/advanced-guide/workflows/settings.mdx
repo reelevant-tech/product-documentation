@@ -1,0 +1,217 @@
+---
+title: 'Paramètres du Workflow'
+description: 'Configurez les catégories de Branch, les Variable Profiles et les JSON Templates pour vos Workflows'
+---
+
+## Accéder aux paramètres du Workflow
+
+Ouvrez l'application **Workflows** depuis la barre latérale, puis naviguez vers la page **Settings**. La page de paramètres comporte trois onglets :
+- **Branch categories** — Gérez votre hiérarchie de catégories de Branch.
+- **Variable profiles** — Configurez des templates réutilisables de paramètres d'URL.
+- **JSON Templates** — Définissez et gérez les templates de sortie JSON pour les intégrations headless.
+
+---
+
+## Catégories de Branch
+
+![Onglet des paramètres de catégories de Branch affichant l'arbre de catégories](/images/workflows/branch-categories-settings-v2.png)
+
+La section des catégories de Branch est un arbre hiérarchique de catégories utilisé pour **qualifier les Branches** dans tous vos Workflows. Elle fournit un vocabulaire partagé pour votre équipe et alimente le filtrage Analytics par catégorie.
+
+### Visualiser l'arbre de catégories
+
+L'onglet **Branch categories** affiche votre arbre de catégories sous forme de hiérarchie interactive et dépliable. Chaque catégorie affiche :
+- **Nom** — Le libellé de la catégorie.
+- **Niveau** — Sa profondeur dans l'arbre.
+- **Enfants** — Les sous-catégories imbriquées en dessous.
+
+### Créer une catégorie
+
+<Steps>
+  <Step title="Ouvrir le formulaire">
+    Cliquez sur le bouton **Add** pour ouvrir le panneau de création de catégorie.
+  </Step>
+  <Step title="Remplir les détails">
+    - **Nom** — Un nom descriptif pour la catégorie (ex. : « Product Recommendation »).
+    - **Parent** — Sélectionnez optionnellement une catégorie parente pour imbriquer celle-ci en dessous.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Save** pour ajouter la catégorie à l'arbre.
+  </Step>
+</Steps>
+
+### Modifier une catégorie
+
+Cliquez sur une catégorie existante dans l'arbre pour ouvrir le panneau de modification. Vous pouvez mettre à jour le nom ou la déplacer sous un autre parent.
+
+### Supprimer une catégorie
+
+<Warning>
+  La suppression d'une catégorie la retire de tous les Workflows où elle est utilisée. Les Branches qui référençaient la catégorie supprimée perdront leur qualification.
+</Warning>
+
+1. Sélectionnez la catégorie dans l'arbre.
+2. Cliquez sur le bouton **Delete**.
+3. Confirmez la suppression dans la modale de confirmation.
+
+### Bonnes pratiques
+
+- **Concevez pour l'Analytics** — Structurez votre arbre de catégories autour des dimensions que vous souhaitez analyser (ex. : par type de stratégie, par catégorie de contenu, par segment d'audience).
+- **Restez suffisamment plat** — Un arbre trop profond est plus difficile à parcourir. Visez 2-3 niveaux maximum.
+- **Nommez clairement** — Utilisez des noms descriptifs que n'importe quel membre de l'équipe peut comprendre sans contexte.
+
+---
+
+## Variable Profiles
+
+![Onglet des paramètres de Variable Profiles affichant les profils configurés](/images/workflows/variable-profiles-settings-v2.png)
+
+Les Variable Profiles sont des **templates réutilisables de paramètres d'URL** qui sont appliqués lors de l'[intégration](/fr/product-guide/workflows/integration) du Workflow. Ils vous font gagner du temps lorsque vous avez un ensemble standard de paramètres de tracking (tags UTM, identifiants utilisateur, etc.) utilisés dans plusieurs Workflows.
+
+### Visualiser les profils
+
+L'onglet Variable Profiles affiche un tableau de tous les profils configurés avec leurs noms et paramètres.
+
+### Créer un Variable Profile
+
+<Steps>
+  <Step title="Ouvrir le formulaire">
+    Cliquez sur le bouton **Add** pour ouvrir le panneau de création de Variable Profile.
+  </Step>
+  <Step title="Configurer le profil">
+    - **Nom** — Un nom descriptif (ex. : « Standard Email Tracking », « Web Campaign UTM »).
+    - **Paramètres** — Définissez les paramètres d'URL inclus dans ce profil :
+      - **Nom du paramètre** — La clé du paramètre de requête URL (ex. : `utm_source`, `user_id`).
+      - **Valeur par défaut** — Une valeur par défaut optionnelle pour le paramètre.
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Save** pour créer le profil. Il sera disponible pour sélection lors de l'intégration du Workflow.
+  </Step>
+</Steps>
+
+### Modifier un profil
+
+Cliquez sur un profil dans le tableau pour ouvrir le panneau de modification. Mettez à jour le nom ou les paramètres selon vos besoins.
+
+### Supprimer un profil
+
+1. Cliquez sur l'action **Delete** sur la ligne du profil.
+2. Confirmez la suppression.
+
+<Info>
+  La suppression d'un Variable Profile n'affecte pas les intégrations de Workflow déjà déployées. Cependant, les futures intégrations ne pourront plus sélectionner ce profil.
+</Info>
+
+### Conseils
+
+- Créez des profils séparés pour les différents canaux (email vs web) car ils utilisent généralement des paramètres de tracking différents.
+- Standardisez les noms de paramètres au sein de votre équipe pour assurer des données Analytics cohérentes.
+- Les Variable Profiles complètent les Nodes URL Parameter dans les Workflows — le profil fournit la structure des paramètres, et le Node URL Parameter lit la valeur au moment de l'exécution.
+
+---
+
+## JSON Templates
+
+![Onglet des paramètres JSON Templates affichant la liste des templates](/images/workflows/json-templates-settings.png)
+
+Les JSON Templates définissent la **structure et le contrat** des payloads JSON retournés par les [Output Nodes JSON Template](/fr/product-guide/workflows/output-nodes/json-template). Ils sont la source unique de vérité pour ce que vos consommateurs d'API (applications mobiles, frontends, intégrations tierces) recevront.
+
+<Note>
+  Cette section est destinée aux **équipes engineering et contrat** qui définissent le schéma API. Les équipes marketing utilisent les templates résultants dans l'éditeur de Workflow — voir [Output Node JSON Template](/fr/product-guide/workflows/output-nodes/json-template) pour les instructions d'utilisation.
+</Note>
+
+### Pourquoi utiliser les JSON Templates ?
+
+Les JSON Templates séparent la **définition du schéma** du **binding de données** :
+
+- **L'engineering** définit la forme (quels champs existent, lesquels sont statiques, lesquels sont des variables dynamiques).
+- **Le marketing** décide quelles données remplissent chaque variable en connectant les champs de Datasource dans le Workflow.
+
+Cette séparation signifie que votre frontend peut s'appuyer sur un contrat stable — les champs ne changent jamais de manière inattendue — tandis que le marketing conserve le contrôle total sur les données personnalisées exposées.
+
+### Visualiser les templates
+
+L'onglet **JSON Templates** affiche tous les templates configurés avec leur nom et nombre de variables. Cliquez sur un template pour ouvrir son panneau de modification.
+
+### Créer un template
+
+<Steps>
+  <Step title="Ouvrir le formulaire de création">
+    Cliquez sur le bouton **Create** dans le coin supérieur droit de l'onglet JSON Templates. Un panneau s'ouvre sur la droite.
+  </Step>
+  <Step title="Nommer le template">
+    Saisissez un nom descriptif (ex. : « Product Recommendations », « Loyalty Dashboard »).
+  </Step>
+  <Step title="Assigner des Teams">
+    Sélectionnez une ou plusieurs **Teams** qui doivent avoir accès à ce template. Cela contrôle la visibilité — seuls les Workflows appartenant aux Teams correspondantes verront ce template dans la configuration de leur Node.
+  </Step>
+  <Step title="Définir le schéma JSON">
+    Utilisez l'**éditeur JSON** pour écrire la définition du template. Chaque champ est une paire clé-valeur où la valeur décrit comment il sera résolu :
+
+    - **Champs statiques** — `{ "type": "static", "value": <default> }` — Valeurs codées en dur qui ne changent jamais à l'exécution.
+    - **Champs dependency** — `{ "type": "dependency", "variable": "<variableName>" }` — Emplacements dynamiques liés aux champs de Datasource par l'équipe marketing.
+
+    ```json
+    {
+      "headline": { "type": "static", "value": "Recommended for you" },
+      "productName": { "type": "dependency", "variable": "productName" },
+      "loyaltyPoints": { "type": "dependency", "variable": "loyaltyPoints" }
+    }
+    ```
+
+    À l'exécution, les valeurs statiques sont retournées telles quelles et les valeurs dependency sont remplacées par les données réelles de la Datasource liée.
+  </Step>
+  <Step title="Configurer les variables">
+    Pour chaque champ dependency dans la définition, ajoutez une entrée **variable** :
+    - **Nom** — Doit correspondre exactement à la valeur `variable` dans la définition (ex. : `productName`).
+    - **Description** — Optionnel ; aide le marketing à comprendre ce que la variable représente.
+    - **Is Array** — Activez si cette variable doit récupérer toutes les valeurs de la Datasource (ex. : une liste de produits). Désactivez pour les valeurs scalaires (ex. : un score de fidélité unique).
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Save** pour créer le template. Il devient immédiatement disponible pour sélection dans les Output Nodes JSON Template de vos Workflows.
+  </Step>
+</Steps>
+
+### Modifier un template
+
+Cliquez sur un template dans la liste pour ouvrir son panneau de modification. Vous pouvez mettre à jour le nom, la définition JSON et les variables. Les changements prennent effet lors de la **prochaine publication** de tout Workflow utilisant ce template.
+
+<Warning>
+  Modifier le schéma (ajouter/supprimer des champs ou renommer des variables) peut casser les intégrations existantes. Coordonnez-vous avec les frontends consommateurs avant d'effectuer des changements structurels.
+</Warning>
+
+### Supprimer un template
+
+1. Ouvrez le panneau de modification du template.
+2. Cliquez sur le bouton **Delete**.
+3. Confirmez la suppression dans la modale.
+
+<Warning>
+  La suppression d'un template fera échouer la validation de publication de tout Workflow le référençant. Assurez-vous qu'aucun Workflow actif ne dépend du template avant de le supprimer.
+</Warning>
+
+### Bonnes pratiques pour la définition JSON
+
+- **Restez plat quand c'est possible.** Les objets imbriqués sont supportés mais les schémas plats sont plus faciles à consommer pour les équipes frontend.
+- **Utilisez des noms de clés significatifs.** Des clés comme `productName`, `loyaltyScore`, `recommendedItems` sont auto-documentées.
+- **Fournissez des valeurs statiques par défaut réalistes.** Utilisez des valeurs qui reflètent le type attendu (ex. : `{ "type": "static", "value": "default text" }` pour les chaînes, `{ "type": "static", "value": 0 }` pour les nombres).
+- **Documentez le contrat en externe.** Partagez la forme de sortie à l'exécution (avec les variables résolues) avec votre équipe frontend/mobile pour qu'elle puisse construire des clients typés en s'appuyant dessus.
+
+### Configuration des variables
+
+Chaque variable représente un **emplacement dynamique** dans le payload JSON :
+
+| Propriété | Description |
+|-----------|-------------|
+| **Nom** | Doit correspondre exactement à une clé dans la définition JSON. Sensible à la casse. |
+| **Description** | Explication lisible affichée au marketing dans l'éditeur de Workflow. |
+| **Is Array** | Lorsqu'activé, le moteur utilise le mapping automatique pour itérer sur toutes les lignes de la Datasource. Lorsque désactivé, il récupère une seule valeur. |
+
+### Validation à la publication
+
+Lorsqu'un Workflow avec des Output Nodes JSON Template est publié, le système valide :
+
+1. **Le template existe** — L'ID de template référencé doit pointer vers un template existant.
+2. **Cohérence inter-Branches** — Tous les Nodes JSON Template de tous les Branches doivent référencer le **même template**. Cela garantit que chaque Branch produit la même forme JSON.
+
+Si la validation échoue, la publication est bloquée avec un message d'erreur clair indiquant quel Node ou Branch présente une incohérence.

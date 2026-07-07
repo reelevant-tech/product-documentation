@@ -1,0 +1,44 @@
+---
+title: 'Conditions'
+description: 'Évaluez des règles pour décider quel Branch un utilisateur emprunte dans le Workflow'
+---
+
+![Panneau de configuration du Node Conditions affichant le constructeur de règles avec les sélecteurs de champ, opérateur et valeur](/images/workflows/node-conditions.png)
+
+## Vue d'ensemble
+
+Les Nodes de conditions évaluent des règles pour décider quel Branch un utilisateur emprunte. Ce sont la manière la plus courante de créer des chemins personnalisés dans un Workflow.
+
+## Fonctionnement
+
+- Un Node de condition possède **deux Branches de sortie** — un pour les utilisateurs qui correspondent aux conditions et un pour ceux qui ne correspondent pas.
+- Vous définissez un ensemble de **règles** qui doivent être satisfaites pour qu'un utilisateur suive le Branch correspondant.
+- Les règles peuvent référencer des données provenant de Data Nodes en amont, de variables de contexte ou de paramètres d'URL.
+- Les règles sont combinées avec une logique **ET** (toutes doivent correspondre) ou **OU** (une seule doit correspondre).
+- Si aucune condition n'est remplie, l'utilisateur suit le Branch par défaut.
+
+## Configuration
+
+1. Cliquez sur un Node de condition pour ouvrir son panneau de configuration.
+2. Définissez les conditions pour chaque Branch — chaque condition se compose d'un champ, d'un opérateur et d'une valeur.
+3. Le Branch par défaut capte tous les utilisateurs qui ne correspondent à aucune condition.
+
+<Tip>
+  Vous pouvez utiliser les Nodes de conditions pour créer des segments d'audience — par exemple, diriger les clients VIP vers un Branch de contenu premium tout en affichant une offre générique pour tous les autres.
+</Tip>
+
+## Opérateurs
+
+Les conditions prennent en charge différents opérateurs selon le type de champ :
+- **Texte** — égal, différent, contient, ne contient pas, est vide, n'est pas vide
+- **Nombres** — égal, différent, supérieur à, inférieur à, inférieur ou égal, supérieur ou égal
+- **Dates** — égal, différent, avant, après, est vide, n'est pas vide, dans une plage future, dans une plage passée
+- **Booléens** — égal
+- **Tableaux** — contient, ne contient pas
+
+## Bonnes pratiques
+
+- Concentrez chaque Node de condition sur un seul point de décision.
+- Utilisez des noms descriptifs pour les Branches afin que le Workflow soit auto-documenté.
+- Placez les conditions les plus spécifiques en premier — elles sont évaluées dans l'ordre.
+- Vérifiez toujours que le Branch par défaut fournit une expérience de secours pertinente.

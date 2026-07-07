@@ -1,0 +1,45 @@
+---
+title: 'Real-Time Testing (RTT)'
+description: 'Optimisez automatiquement la distribution du trafic entre les variantes de contenu grâce à la logique multi-armed bandit'
+---
+
+![Panneau de configuration du Node Real-Time Testing affichant les paramètres des variantes de contenu](/images/workflows/node-real-time-testing.png)
+
+## Vue d'ensemble
+
+Le Real-Time Testing distribue le trafic entre les variantes de contenu et optimise automatiquement l'allocation au fil du temps. Il utilise un algorithme **multi-armed bandit (MAB)** qui équilibre l'exploration (tester les variantes sous-exposées) et l'exploitation (envoyer le trafic vers les plus performantes).
+
+Contrairement à un [Split](/fr/advanced-guide/workflows/logic-nodes/split) statique, le Real-Time Testing ne nécessite pas de ratio de répartition fixe. Le système ajuste continuellement la distribution en fonction des performances observées.
+
+## Configuration
+
+Le seul paramètre configurable est le **nombre de variantes** — sélectionnez entre 2 et 10. Chaque variante crée un Branch distinct dans le Workflow. Le Node n'a pas d'autre paramètre de configuration ; la logique d'optimisation est entièrement automatisée.
+
+## Fonctionnement de l'algorithme
+
+1. **Initialisation** — Le trafic est distribué équitablement entre toutes les variantes.
+2. **Collecte de données** — Le système suit les interactions des utilisateurs (clics, conversions) par variante.
+3. **Rééquilibrage** — L'algorithme MAB déplace progressivement le trafic vers les variantes les plus performantes tout en conservant une portion de trafic sur les variantes sous-exposées pour détecter les changements.
+4. **Convergence** — Au fil du temps, la variante la plus performante reçoit la majorité du trafic.
+
+L'algorithme fonctionne en continu — il n'y a pas de date de fin fixe ni de seuil de confiance. Si le comportement des utilisateurs change (ex. : variations saisonnières), l'algorithme s'adapte en ré-explorant d'autres variantes.
+
+## Affectation déterministe des utilisateurs
+
+Les utilisateurs sont affectés aux variantes de manière déterministe en fonction de leur identifiant. Le même utilisateur voit la même variante lors d'interactions répétées au sein d'un même Workflow. Ce comportement est identique à l'affectation des utilisateurs dans le Node [Split](/fr/advanced-guide/workflows/logic-nodes/split).
+
+## Quand utiliser RTT vs Split
+
+| Scénario | Node recommandé |
+|----------|-----------------|
+| Test A/B fixe avec des ratios de répartition connus | Split |
+| Optimisation automatique vers la meilleure variante | Real-Time Testing |
+| Test rapide avec 2 variantes | L'un ou l'autre |
+| 5+ variantes avec un trafic limité | Real-Time Testing (convergence plus rapide qu'un split égal) |
+
+## Bonnes pratiques
+
+- Commencez avec 2–3 variantes pour une convergence plus rapide. Plus de variantes nécessitent proportionnellement plus de trafic.
+- Surveillez la distribution dans le mode statistiques du Workflow pour observer comment l'algorithme alloue le trafic.
+- Utilisez les [catégories de Branch](/fr/product-guide/workflows/branches) pour taguer les Branches RTT pour le reporting Analytics en aval.
+- Ne combinez pas plusieurs Nodes RTT dans le même Branch. Utilisez un seul Node RTT par point de décision.

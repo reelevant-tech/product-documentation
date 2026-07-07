@@ -1,0 +1,143 @@
+---
+title: "Sécurité et conformité"
+description: "Certification SOC 2 Type II, conformité RGPD, standards de chiffrement, gestion des vulnérabilités et posture de sécurité de Reelevant pour les évaluateurs techniques."
+---
+
+## Vue d'ensemble de la sécurité
+
+Reelevant maintient un programme complet de sécurité de l'information supervisé par un comité des risques dédié. Le programme est revu au moins annuellement et couvre tous les aspects de la protection des données, du contrôle d'accès, de la réponse aux incidents et de la gestion des fournisseurs.
+
+Pour la documentation de sécurité, les certifications et les rapports d'audit les plus à jour, consultez le **[Trust Centre Reelevant](https://trust.reelevant.com)**.
+
+## Certifications et conformité
+
+| Standard | Statut | Détail |
+|----------|--------|--------|
+| **SOC 2 Type II** | Certifié | Audit annuel couvrant les critères de services de confiance Sécurité, Disponibilité et Confidentialité |
+| **RGPD** | Pleine conformité | Rétention configurable, minimisation des données, droit à l'effacement, DPA disponible |
+| **Tests de pénétration** | Annuel | Évaluation indépendante par un tiers de tous les systèmes accessibles de l'extérieur |
+
+## Protection des données
+
+### Chiffrement
+
+| Couche | Standard |
+|--------|----------|
+| Données en transit | TLS 1.3 (minimum TLS 1.2) |
+| Données au repos | Chiffrement de disque AES-256 sur tous les serveurs, postes de travail et stockage cloud |
+| Chiffrement de base de données | Chiffrement au niveau applicatif pour les champs sensibles ; HTTPS pour toutes les connexions base de données |
+| Transfert de fichiers | Toujours via des liens sécurisés (HTTPS, SFTP ou FTPS) ; le chiffrement PGP peut être ajouté en plus |
+
+### Résidence des données
+
+- **Région principale :** UE (régions supplémentaires prévues)
+- **Architecture multi-tenant :** La plateforme opère un environnement de production unique avec une isolation logique stricte des tenants — les données de chaque client sont ségrégées par des contrôles d'accès et un scoping au niveau applicatif
+
+### Minimisation des données
+
+- Seuls les champs explicitement mappés dans les Datasources sont accessibles à la plateforme
+- Aucune donnée personnelle n'est stockée au-delà de la période de rétention configurée
+- Les données de production sont assainies avant utilisation dans les environnements hors-production
+
+### Contrôles de rétention
+
+- Configurable par Datasource (90 jours par défaut pour les événements comportementaux)
+- La destruction sécurisée suit les standards industriels acceptés pour la suppression de données
+- La destruction est suivie et documentée
+
+## Contrôle d'accès
+
+### Accès à la plateforme
+
+- **Authentification multi-facteurs (MFA)** requise pour tous les utilisateurs
+- **SSO** supporté via SAML 2.0 — voir [Authentification et SSO](/fr/why-reelevant/technical-evaluators/authentication)
+- **RBAC + ABAC** — Permissions basées sur les rôles scopées par attributs d'entreprise et de Team
+- **Moindre privilège** — Les utilisateurs reçoivent l'accès minimum requis pour leur rôle
+- **Revues d'accès trimestrielles** — Tous les accès aux systèmes de production sont revus par la direction
+
+### Systèmes de production
+
+- Accès distant restreint au personnel autorisé avec un token MFA valide
+- VPN (IPSec / SSL) requis pour tout accès distant à la production
+- Authentification SSH par clé pour l'accès au niveau système
+- Les accès des employés partis sont révoqués dans les 24 heures
+
+## Gestion des vulnérabilités
+
+### Scans et tests
+
+| Activité | Fréquence |
+|----------|-----------|
+| Scans de vulnérabilités internes | Au moins trimestriel |
+| Scans de vulnérabilités externes | Au moins trimestriel |
+| Tests de pénétration par un tiers | Annuel |
+| Tests des couches réseau et application | Par cycle de test |
+
+### Délais de remédiation
+
+| Sévérité | Fenêtre de remédiation |
+|----------|------------------------|
+| Critique / Zero-day | Immédiatement à 7 jours |
+| Haute | Sous 14 jours |
+| Moyenne / Basse | Sous 30 jours |
+
+### Gestion des correctifs
+
+Tous les correctifs système sont obtenus depuis des sources de confiance et déployés au moins mensuellement, avec les correctifs critiques escaladés pour un déploiement immédiat.
+
+## Réponse aux incidents
+
+Reelevant maintient une équipe de réponse aux incidents (IRT) dédiée avec des rôles et procédures définis :
+
+- **Événements de sécurité** (activité suspecte, pas de compromission confirmée) — enquête et suivi internes
+- **Incidents de sécurité** (compromission confirmée) — activation complète de l'IRT, enquête documentée, notification client si nécessaire
+- **Exercice de simulation annuel** pour tester les procédures de continuité d'activité et de reprise après sinistre
+- **Rapports post-incident** avec analyse des causes racines et actions de remédiation
+
+### Niveaux de sévérité des incidents
+
+| Niveau | Définition | Réponse |
+|--------|-----------|----------|
+| Bas | Tentative d'activité, pas de compromission (ex. : tentative d'intrusion échouée) | Enquête, suivi interne |
+| Moyen | Déviation suspecte du comportement normal | Monitoring renforcé, escalade potentielle |
+| Haut | Compromission confirmée, accès non autorisé | Réponse complète de l'IRT, notification potentielle des clients et autorités |
+
+## Continuité d'activité
+
+- Architecture de failover **multi-région actif-actif**
+- **Sauvegardes complètes quotidiennes** de toutes les données de production, stockées dans des emplacements distants sécurisés
+- **Rétention des sauvegardes de 180 jours** avec test de restauration annuel
+- **Objectifs de reprise** testés annuellement via des exercices de simulation
+
+## Gestion des fournisseurs
+
+Reelevant évalue tous les fournisseurs en termes de criticité et de risque avant engagement :
+
+- Les fournisseurs manipulant des données sensibles ou confidentielles font l'objet d'une diligence raisonnable renforcée
+- Les fournisseurs critiques et à haut risque sont revus au moins annuellement via des rapports de conformité
+- Tous les fournisseurs doivent se conformer aux politiques de sécurité de l'information de Reelevant
+
+## Journalisation des audits
+
+- Toutes les actions d'administration sont journalisées avec attribution utilisateur et horodatage
+- Les événements d'authentification (réussis et échoués) sont capturés et surveillés
+- Monitoring d'intégrité des fichiers et détection d'intrusion basée sur l'hôte déployés
+- Les données de logs sont protégées en termes de confidentialité, intégrité et disponibilité
+
+## Sensibilisation à la sécurité
+
+- Tous les employés suivent une formation de sensibilisation à la sécurité dans les 30 jours suivant leur embauche
+- Formation de rappel annuelle obligatoire
+- Vérifications d'antécédents effectuées sur toutes les nouvelles embauches
+- Accords de confidentialité signés avant l'octroi de l'accès aux systèmes
+
+## En savoir plus
+
+<CardGroup cols={2}>
+<Card title="Trust Centre" icon="shield-check" href="https://trust.reelevant.com">
+Certifications, rapports d'audit et documentation de sécurité à jour.
+</Card>
+<Card title="Status Page" icon="signal" href="/fr/why-reelevant/technical-evaluators/status-page">
+Disponibilité de la plateforme en temps réel et historique des incidents.
+</Card>
+</CardGroup>

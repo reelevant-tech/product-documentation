@@ -1,0 +1,37 @@
+---
+title: 'Glossaire'
+description: 'Terminologie canonique utilisée dans l'ensemble de la documentation Reelevant'
+---
+
+## Concepts de la plateforme
+
+| Terme | Définition |
+|-------|-----------|
+| **Workflow** | Un graphe dirigé de Nodes qui définit la logique de personnalisation — quel contenu afficher, à qui, et quand. |
+| **Datasource** | Une connexion vers un flux de données externe que Reelevant récupère, analyse et stocke pour utilisation dans la personnalisation. |
+| **Content** | Un template visuel (bannière, section d'email, landing page) conçu dans le Content Editor. |
+| **Node** | Une unité de traitement unique dans le graphe d'un Workflow. Types : Channel Node, Data Node, Logic Node, Output Node. |
+| **Channel** | Le Node d'entrée d'un Workflow qui définit le canal de diffusion (Email, Web, Mobile, Landing Page). |
+| **Branch** | Un chemin d'exécution unique à travers un Workflow, d'un Channel à un Output Node. |
+| **Output Node** | Un Node terminal du Workflow qui produit la réponse finale (Visual Content, JSON Template, Empty). |
+| **Data Node** | Un Node du Workflow qui récupère ou fournit des données (requête Datasource, URL Parameter, Geolocation, Weather, Transform). |
+| **Logic Node** | Un Node du Workflow qui contrôle le flux avec plusieurs chemins de sortie (Condition, Split, Real-Time Testing). |
+| **DataHub** | Le centre de gestion des données de la plateforme pour importer et configurer les données externes. |
+| **Content Editor** | L'éditeur visuel par glisser-déposer pour concevoir des templates de Content avec des liaisons de données dynamiques. |
+| **Team** | Une unité organisationnelle pour contrôler l'accès aux Workflows, Contents et Datasources. |
+| **Runner** | Le service backend qui exécute un Workflow et retourne du contenu personnalisé. |
+| **Field Mapping** | La configuration qui associe les champs de données brutes aux types standardisés Reelevant. |
+| **Variable Profile** | Un ensemble réutilisable de paramètres d'URL (UTM, tracking) appliqué lors de l'intégration d'un Workflow. |
+| **Real-Time Testing** | Un Logic Node qui répartit le trafic entre plusieurs Branches pour les tests A/B ou multivariés. |
+| **Transform** | Un Data Node qui applique des transformations (opérations sur les chaînes, nombres, dates, tableaux) aux données au sein d'un Workflow. |
+
+## Concepts de mesure et d'adoption
+
+| Terme | Définition |
+|-------|-----------|
+| **Incremental Value** | La différence mesurable de comportement entre l'Exposed Population et la Non-Exposed Population. Elle représente la valeur qui n'aurait PAS existé sans la personnalisation. |
+| **Exposed Population** | Le groupe d'utilisateurs (typiquement 90 %) qui voient le contenu personnalisé Reelevant pendant une campagne. |
+| **Non-Exposed Population** | Le groupe (typiquement 10 %) qui voit le contenu par défaut sans personnalisation Reelevant, utilisé comme référence pour mesurer l'Incremental Value. |
+| **Uplift** | Le gain de performance incrémental du contenu personnalisé par rapport au contenu par défaut. |
+| **Key Challenge** | Un problème business ou marketing que la personnalisation peut résoudre (ex. : convertir un acheteur ponctuel en acheteur récurrent, réduction du churn). |
+| **Use Case** | Une stratégie de personnalisation spécifique et un pattern d'exécution qui répond à un ou plusieurs Key Challenges. |

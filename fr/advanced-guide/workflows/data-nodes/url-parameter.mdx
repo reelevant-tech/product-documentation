@@ -1,0 +1,30 @@
+---
+title: 'URL Parameter'
+description: 'Capturez les valeurs transmises via l'URL lors de l'exécution du Workflow'
+---
+
+![Panneau de configuration du Node URL Parameter](/images/workflows/node-url-parameter.png)
+
+## Vue d'ensemble
+
+Le Node URL Parameter capture une valeur transmise via l'URL lors de l'exécution du Workflow. Cela est utile pour transmettre du contexte depuis votre ESP (fournisseur de service email), votre site web, ou toute intégration qui déclenche le Workflow via URL.
+
+**Configuration :**
+- **Nom du paramètre** — Le paramètre de requête URL à lire (ex. : `product_id`, `campaign_date`).
+- **Format de date** — Si le paramètre contient une date, spécifiez le format attendu pour un parsing correct.
+
+## Cas d'usage courants
+
+- Transmettez des **identifiants utilisateur** depuis votre fournisseur de service email pour personnaliser le contenu par destinataire.
+- Transmettez des **identifiants de campagne** pour personnaliser le contenu en fonction du contexte de la campagne.
+- Transmettez des **identifiants produit** ou des **noms de catégorie** depuis votre site web pour afficher des recommandations pertinentes.
+
+<Tip>
+  Les paramètres d'URL sont couramment utilisés pour transmettre des identifiants utilisateur, des identifiants de campagne ou des données contextuelles depuis vos outils marketing vers les Workflows Reelevant. En savoir plus sur leur configuration lors de l'[intégration](/fr/product-guide/workflows/integration).
+</Tip>
+
+## Bonnes pratiques
+
+- Utilisez les [Variable Profiles](/fr/product-guide/workflows/settings) pour pré-configurer des templates de paramètres d'URL pour différentes intégrations.
+- Documentez toujours les noms et formats de paramètres attendus dans la description de votre Workflow.
+- Pensez à utiliser un format de date lors de la transmission de dates pour assurer un parsing correct selon les locales.

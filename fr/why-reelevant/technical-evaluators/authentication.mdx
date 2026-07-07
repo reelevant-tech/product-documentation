@@ -1,0 +1,104 @@
+---
+title: "Authentification et SSO"
+description: "Contrôle d'accès à la plateforme, configuration du single sign-on (SSO), authentification API et modèle d'autorisation RBAC/ABAC."
+---
+
+## Couches d'authentification
+
+Reelevant sépare l'authentification en deux couches distinctes :
+
+| Couche | Mécanisme | Quand il s'applique |
+|--------|-----------|---------------------|
+| **Intégration de Content** | URL publiques — pas d'authentification | Requêtes Runner (`reelevant.run`) |
+| **Accès plateforme** | Email/mot de passe ou SSO | Tableau de bord (`app.reelevant.com`) |
+| **API plateforme** | Tokens Bearer OAuth 2.0 | Accès programmatique à toutes les capacités de la plateforme |
+
+## Intégration de Content (publique)
+
+Les URL d'intégration — balises image, liens de redirection et endpoints Runner — sont **accessibles publiquement**. Aucun en-tête d'authentification ou token n'est requis au moment de la requête.
+
+Les identifiants client sont transmis en tant que **paramètres de requête URL** (ex. : `uid`, `rlvt-u`). Ils sont publics par conception : ils apparaissent dans le code source HTML des emails, l'historique du navigateur et les logs des proxys. Utilisez des identifiants client opaques plutôt que des adresses email ou d'autres données personnelles.
+
+## Accès à la plateforme
+
+### Email et mot de passe
+
+Connexion standard sur [app.reelevant.com](https://app.reelevant.com). Les utilisateurs s'authentifient avec leur adresse email et leur mot de passe. L'authentification multi-facteurs (MFA) est supportée.
+
+### Single Sign-On (SSO)
+
+Reelevant supporte l'intégration SSO avec le fournisseur d'identité de votre organisation. Lorsque le SSO est configuré, les utilisateurs sont automatiquement redirigés vers votre IdP pour l'authentification — aucun mot de passe Reelevant séparé n'est requis.
+
+**Protocole supporté :**
+- **SAML 2.0** — Protocole SSO standard pour entreprises
+
+**La configuration SSO inclut :**
+
+| Paramètre | Description |
+|-----------|-------------|
+| URL du fournisseur d'identité | L'endpoint SSO de votre IdP |
+| Entity ID | L'identifiant de Reelevant dans votre IdP |
+| Certificat | Certificat X.509 pour la vérification de confiance entre Reelevant et votre IdP |
+| Mapping d'attributs | Associez les attributs utilisateur de l'IdP aux champs utilisateur Reelevant |
+| Rôle par défaut | Rôle attribué aux utilisateurs créés via la plateforme |
+
+**Provisionnement des utilisateurs :**
+
+Reelevant ne supporte pas actuellement le provisionnement JIT ni SCIM. Les comptes utilisateur sont gérés via l'[API de gestion des utilisateurs](/developer-docs/api-reference/introduction) de la plateforme ou via l'interface. Lorsque le SSO est activé, les utilisateurs doivent avoir un compte existant dans Reelevant qui correspond à leur identité IdP pour s'authentifier.
+
+<Info>
+La configuration SSO est gérée au niveau de l'organisation. Contactez votre équipe de compte Reelevant ou support@reelevant.com pour activer et configurer le SSO pour votre organisation.
+</Info>
+
+## Modèle d'autorisation
+
+Une fois authentifié, l'accès est contrôlé via **RBAC** et **ABAC** :
+
+### RBAC (contrôle d'accès basé sur les rôles)
+
+Chaque utilisateur se voit attribuer un [rôle](/fr/product-guide/account/roles) qui définit les actions autorisées sur les types de ressources :
+
+| Ressource | Actions |
+|-----------|---------|
+| Workflows | Créer, lire, mettre à jour, supprimer, publier |
+| Contents | Créer, lire, mettre à jour, supprimer |
+| Datasources | Créer, lire, mettre à jour, supprimer, configurer |
+| Analytics | Lire, exporter |
+| Rôles | Créer, lire, mettre à jour, supprimer |
+| Teams | Créer, lire, mettre à jour, supprimer, assigner des membres |
+| Paramètres | Lire, mettre à jour |
+
+### ABAC (contrôle d'accès basé sur les attributs)
+
+Les permissions sont affinées par des attributs :
+
+- **Entreprise** — L'isolation par tenant garantit que les utilisateurs n'accèdent qu'aux ressources de leur organisation
+- **Team** — Les ressources sont assignées à des Teams ; les utilisateurs ne voient que les ressources appartenant à leurs Teams
+
+Cela signifie qu'un utilisateur avec le rôle « Editor » dans « Team Marketing » peut modifier les Workflows assignés à cette Team, mais ne peut pas voir ou modifier les Workflows appartenant à « Team CRM ».
+
+Voir [Permissions](/fr/product-guide/account/permissions) pour le modèle d'accès complet.
+
+## Authentification API
+
+### API de la plateforme
+
+Reelevant traite ses API comme des citoyens de première classe au même titre que l'interface. Toutes les capacités de la plateforme sont accessibles programmatiquement via des API REST :
+
+- **Tokens Bearer OAuth 2.0** pour l'authentification
+- Les tokens sont scopés par environnement (staging / production)
+- Les tokens sont gérés dans la plateforme sous les paramètres du compte
+- Toutes les requêtes API nécessitent l'en-tête `Authorization: Bearer {token}`
+
+Voir [Authentification API](/developer-docs/api-reference/authentication) pour les flux OAuth 2.0 et la gestion des tokens, et la [référence API](/developer-docs/api-reference/introduction) pour la documentation complète des endpoints.
+
+## Prochaines étapes
+
+<CardGroup cols={2}>
+<Card title="Sécurité et conformité" icon="shield-check" href="/fr/why-reelevant/technical-evaluators/security">
+SOC 2, RGPD, chiffrement et tests de pénétration.
+</Card>
+<Card title="Guide des permissions" icon="users" href="/fr/product-guide/account/permissions">
+Configuration détaillée RBAC et ABAC.
+</Card>
+</CardGroup>
