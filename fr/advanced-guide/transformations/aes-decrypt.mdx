@@ -1,0 +1,31 @@
+---
+title: 'AES Decrypt'
+description: 'Déchiffrer des données chiffrées en AES'
+---
+
+## Présentation
+
+La transformation `aes-decrypt` déchiffre des données chiffrées en AES à l'aide d'une clé encodée en Base64.
+
+## Syntaxe
+
+```text
+aes-decrypt(<variable>, key="")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | string | Oui | Les données chiffrées à déchiffrer |
+| `key` | string | Oui | La clé de déchiffrement encodée en Base64 |
+
+## Exemples
+
+```text
+aes-decrypt(<variable>, key="your-base64-key")
+```
+
+<Warning>
+  Assurez-vous que la clé utilisée pour le déchiffrement correspond à celle utilisée pour le chiffrement.
+</Warning>
