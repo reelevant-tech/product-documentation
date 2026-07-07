@@ -1,121 +1,59 @@
 # Local setup with Claude Code
 
-This guide is for non-technical Reelevant teammates on macOS who want to edit docs locally. You will run Claude Code in your terminal, tell it what to change in plain English, and see a live Mintlify preview at <http://localhost:3000> as you work.
+This guide is for non-technical Reelevant teammates who want to edit docs with the Claude Code desktop app. You will work in a GUI, tell Claude what to change in plain English, and see a live preview when Mintlify is available.
 
 ## What you'll end up with
 
-Claude Code running in your terminal, making doc changes from plain-English instructions. A live Mintlify preview will open at <http://localhost:3000>, and it will start automatically when Claude Code launches in this repo.
+The Claude Code desktop app open on your computer, ready to edit docs from plain-English prompts. If you turn on the live preview, the docs will appear at <http://localhost:3000> and show inside the app's embedded browser.
 
-## Step 1 — Install Homebrew
+## Step 1 — Install the Claude Code desktop app
 
-Homebrew is the package manager we use to install the tools below.
+Download Claude Code from [claude.com/download](https://claude.com/download) and install it.
 
-Run this in Terminal:
+Open the app and sign in with your Anthropic account. It works on macOS, Windows, and Linux, and you do not need a terminal for the core flow.
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
+## Step 2 — Connect your GitHub account
 
-Follow the on-screen instructions. It may ask for your Mac password and then show a couple of PATH commands to copy and paste at the end.
+Inside the app, connect your GitHub account.
 
-If you're on Linux or WSL, Homebrew can still work, but the install steps are slightly different. See [brew.sh](https://brew.sh) for the right instructions.
+When you create your first PR, the app will prompt you to install `gh` if needed. Accept that prompt — it is what lets Claude work with GitHub, fork or clone the repo, and open PRs.
 
-## Step 2 — Install the tools
+If you prefer to pre-install `gh` on macOS, you can use Homebrew (`brew install gh`), but it is not required.
 
-Install GitHub CLI and Node.js with Homebrew:
+## Step 3 — Open the repo
 
-```bash
-brew install gh node
-```
+Use the app's GitHub picker to open `reelevant-tech/product-documentation`.
 
-- `gh` lets you sign in to GitHub, fork the repo, clone it, and open PRs.
-- `node` gives you `npm`, which installs the Mintlify preview tool.
+If you do not have write access, fork it first from inside the app and then open your fork. If you do have write access, you can open the main repo directly.
 
-Install Claude Code:
+## Step 4 — Ask Claude to make a change
 
-```bash
-brew install --cask claude-code
-```
-
-- `claude-code` is the app you will talk to in your terminal.
-
-If you prefer the native installer, this is the alternative:
-
-```bash
-curl -fsSL https://claude.ai/install.sh | bash
-```
-
-Install the Mintlify CLI:
-
-```bash
-npm i -g mint
-```
-
-- `mint` runs the local docs preview.
-
-## Step 3 — Sign in to GitHub
-
-Run:
-
-```bash
-gh auth login
-```
-
-Choose:
-
-1. GitHub.com
-2. HTTPS
-3. Login with a web browser
-
-Follow the prompts. This lets you clone the repo and open PRs without dealing with tokens.
-
-## Step 4 — Get the code
-
-If you do not have write access to the main repo, fork and clone it in one step:
-
-```bash
-gh repo fork reelevant-tech/product-documentation --clone
-```
-
-If you do have write access, you can clone the main repo directly:
-
-```bash
-gh repo clone reelevant-tech/product-documentation
-```
-
-Then go into the folder:
-
-```bash
-cd product-documentation
-```
-
-## Step 5 — Start Claude Code
-
-Run this inside the repo folder:
-
-```bash
-claude
-```
-
-The first time, it will help you sign in to your Anthropic account. Thanks to the launch config in this repo (`.claude/settings.json`), Claude Code automatically starts the docs preview as soon as it opens.
-
-Open <http://localhost:3000> in your browser to see your changes live while you edit. If the preview does not start, it is usually because `mint` is not installed yet — repeat the `npm i -g mint` step.
-
-## Step 6 — Ask Claude to make a change
-
-Try a prompt like this:
+Ask Claude for the change you want in plain English. For example:
 
 ```text
-Please add a new page about setting up local docs editing with Claude Code.
+Please add a short page explaining how to get started with Claude Code for local docs editing.
 Then open a PR to reelevant-tech/product-documentation.
 Follow the notes in CONTRIBUTING.md for the right prompts and rules.
 ```
 
 For more examples and team-specific guidance, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## Optional — turn on the live preview
+
+If you want the Mintlify preview to start automatically, install Homebrew, Node, and the Mintlify CLI on macOS:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install node
+npm i -g mint
+```
+
+The launch config in this repo (`.claude/settings.json`) will then start `mint dev` automatically when Claude Code opens, and you can view the preview at <http://localhost:3000> in the app's embedded browser.
+
+This step is optional. You can still use the desktop app without it; you just will not get the automatic live preview.
+
 ## Troubleshooting
 
-- `command not found: brew` — open a new terminal, or run the PATH commands Homebrew printed at the end of the install.
-- `command not found: mint` — run `npm i -g mint`.
-- Preview not loading — make sure you ran `claude` from inside the repo folder, then check `/tmp/mintlify-preview.log`.
+- Preview not loading — make sure Node and `mint` are installed (`npm i -g mint`) and that you opened the repo folder in the app.
+- Preview not loading — check `/tmp/mintlify-preview.log` for the Mintlify output.
 - Port 3000 busy — the preview may already be running in another tab.
