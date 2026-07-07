@@ -1,0 +1,28 @@
+---
+title: 'Template'
+description: 'Appliquer une transformation de template au format sprintf'
+---
+
+## Présentation
+
+La transformation `template` applique une chaîne de template avec substitution de variables en utilisant le format [sprintf](https://github.com/alexei/sprintf.js).
+
+## Syntaxe
+
+```text
+template(<variable>, template="")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | any | Oui | La variable à utiliser dans le template |
+| `template` | string | Oui | La chaîne de template au format sprintf (par ex., `%s` pour les chaînes, `%d` pour les entiers) |
+
+## Exemples
+
+```text
+template(<variable>, template="Hello %s!")
+template(<variable>, template="Value: %d items")
+```

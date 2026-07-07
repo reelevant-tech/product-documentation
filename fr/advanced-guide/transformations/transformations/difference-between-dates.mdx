@@ -1,0 +1,31 @@
+---
+title: 'Différence entre dates'
+description: 'Calculer la différence entre deux dates'
+---
+
+## Présentation
+
+La transformation `diff-dates` calcule la différence entre deux dates.
+
+## Syntaxe
+
+```text
+diff-dates(<variable 1>, <variable 2>, unit="days")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable 1` | date | Oui | Première date |
+| `variable 2` | date | Oui | Seconde date |
+| `unit` | string | Non | Unité de différence : `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, `"days"`, `"months"` ou `"years"` |
+| `inputLocale` | string | Non | Locale utilisée pour analyser les dates en entrée : `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"` ou `"fr"` |
+
+## Exemples
+
+```text
+diff-dates(<variable 1>, <variable 2>, unit="days")
+diff-dates(<variable 1>, <variable 2>, unit="hours")
+diff-dates(<variable 1>, <variable 2>, unit="seconds", inputLocale="fr")
+```
