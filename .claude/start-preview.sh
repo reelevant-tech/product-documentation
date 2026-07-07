@@ -15,7 +15,7 @@ if ! command -v mint >/dev/null 2>&1; then
   exit 0
 fi
 
-MINT_PORT="$PORT" nohup mint dev >"$LOG_FILE" 2>&1 &
+nohup mint dev --port "$PORT" >"$LOG_FILE" 2>&1 &
 disown >/dev/null 2>&1 || true
 
 echo "Started Mintlify preview at $URL (logs: $LOG_FILE)"
