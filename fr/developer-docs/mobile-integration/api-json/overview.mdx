@@ -1,0 +1,215 @@
+---
+title: 'Reelevant comme API (JSON)'
+description: 'Intégrez la personnalisation Reelevant dans votre application mobile à l''aide de l''API JSON headless'
+---
+
+## Pourquoi utiliser JSON pour le mobile ?
+
+Les applications mobiles affichent le contenu avec des **composants d'UI natifs** — pas d'injection HTML, pas d'iframes, pas de webviews nécessaires. L'approche par API JSON est la solution naturelle :
+
+<CardGroup cols={2}>
+  <Card title="Rendu natif" icon="mobile">
+    Recevez des données structurées et effectuez le rendu avec SwiftUI, Jetpack Compose, les widgets Flutter ou les composants React Native.
+  </Card>
+  <Card title="Léger" icon="feather">
+    Un seul appel HTTP renvoie exactement les champs dont votre application a besoin — aucun SDK à installer, aucune surcharge de runtime JavaScript.
+  </Card>
+  <Card title="Compatible hors ligne" icon="wifi-slash">
+    Mettez en cache les réponses JSON localement pour un affichage hors ligne. Rafraîchissez lorsque la connectivité revient.
+  </Card>
+  <Card title="Cross-platform" icon="layer-group">
+    Le même endpoint fonctionne pour iOS, Android, Flutter, React Native, KMP — tout client capable d'effectuer des requêtes HTTP.
+  </Card>
+</CardGroup>
+
+## Endpoint du Runner
+
+```
+GET https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}
+```
+
+| Paramètre | Type | Description |
+|-----------|------|-------------|
+| `workflowId` | path | L'ID du Workflow (visible dans l'URL de l'éditeur de Workflow ou dans la fenêtre modale d'intégration) |
+| `entrypointId` | path | L'ID de l'entrypoint au sein du Workflow |
+| `rlvt-u` | query | Identifiant de l'utilisateur pour la personnalisation — email, ID utilisateur interne ou ID d'appareil |
+
+## Format de réponse
+
+Le corps de la réponse correspond directement aux données du template résolu — pas d'enveloppe englobante. Les champs statiques sont renvoyés tels quels et les champs de dépendance sont remplacés par des valeurs réelles issues des Datasources :
+
+```json
+{
+  "headline": "Recommended for you",
+  "productName": "Running Shoes Pro",
+  "productPrice": 129.99,
+  "productImageUrl": "https://cdn.example.com/shoes-pro.jpg"
+}
+```
+
+### Codes de statut HTTP
+
+| Statut | Signification |
+|--------|---------|
+| **200** | Le Workflow s'est exécuté avec succès. Le corps contient le payload JSON. |
+| **204** | Le Workflow s'est exécuté mais aucun contenu n'a été produit (toutes les Branches étaient vides). |
+| **404** | Workflow introuvable ou non publié. |
+
+## Exemples de code
+
+### Swift (iOS)
+
+```swift
+import Foundation
+
+struct Recommendation: Codable {
+    let headline: String
+    let productName: String
+    let productPrice: Double
+    let productImageUrl: String
+    let productUrl: String
+}
+
+func fetchRecommendation(workflowId: String, userId: String) async throws -> Recommendation? {
+    let url = URL(string: "https://reelevant.run/\(workflowId)/0?rlvt-u=\(userId)")!
+    let (data, response) = try await URLSession.shared.data(from: url)
+    
+    guard let httpResponse = response as? HTTPURLResponse else { return nil }
+    guard httpResponse.statusCode == 200 else { return nil }
+    
+    return try JSONDecoder().decode(Recommendation.self, from: data)
+}
+```
+
+### Kotlin (Android)
+
+```kotlin
+import kotlinx.serialization.Serializable
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+
+@Serializable
+data class Recommendation(
+    val headline: String,
+    val productName: String,
+    val productPrice: Double,
+    val productImageUrl: String,
+    val productUrl: String
+)
+
+suspend fun fetchRecommendation(workflowId: String, userId: String): Recommendation? {
+    val client = HttpClient()
+    val response = client.get("https://reelevant.run/$workflowId/0") {
+        parameter("rlvt-u", userId)
+    }
+    return if (response.status.value == 200) response.body() else null
+}
+```
+
+### Flutter (Dart)
+
+```dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class Recommendation {
+  final String headline;
+  final String productName;
+  final double productPrice;
+  final String productImageUrl;
+  final String productUrl;
+
+  Recommendation.fromJson(Map<String, dynamic> json)
+      : headline = json['headline'],
+        productName = json['productName'],
+        productPrice = (json['productPrice'] as num).toDouble(),
+        productImageUrl = json['productImageUrl'],
+        productUrl = json['productUrl'];
+}
+
+Future<Recommendation?> fetchRecommendation(String workflowId, String userId) async {
+  final uri = Uri.parse(
+    'https://reelevant.run/$workflowId/0?rlvt-u=$userId',
+  );
+  final response = await http.get(uri);
+
+  if (response.statusCode == 200) {
+    return Recommendation.fromJson(jsonDecode(response.body));
+  }
+  return null;
+}
+```
+
+### React Native
+
+```tsx
+import { useEffect, useState } from 'react'
+import { View, Text, Image } from 'react-native'
+
+type Recommendation = {
+  headline: string
+  productName: string
+  productPrice: number
+  productImageUrl: string
+  productUrl: string
+}
+
+function RecommendationCard({ workflowId, userId }: { workflowId: string; userId: string }) {
+  const [data, setData] = useState<Recommendation | null>(null)
+
+  useEffect(() => {
+    fetch(`https://reelevant.run/${workflowId}/0?rlvt-u=${userId}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(setData)
+  }, [workflowId, userId])
+
+  if (!data) return null
+
+  return (
+    <View>
+      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{data.headline}</Text>
+      <Image source={{ uri: data.productImageUrl }} style={{ width: 200, height: 200 }} />
+      <Text>{data.productName} — ${data.productPrice}</Text>
+    </View>
+  )
+}
+```
+
+## Gestion de l'identité
+
+Transmettez un identifiant utilisateur stable dans le paramètre de requête `rlvt-u` :
+
+| Type d'identifiant | Quand l'utiliser |
+|-----------------|-------------|
+| ID utilisateur interne ou email | L'utilisateur est connecté — meilleure précision de personnalisation |
+| ID d'appareil (IDFV, Android ID) | Utilisateurs anonymes — maintient la continuité de session |
+| ID personnalisé | Tout identifiant stable généré par votre application |
+
+Le même système d'identité alimente tous les Channels Reelevant (web, email, push), la personnalisation est donc cohérente sur tous les points de contact.
+
+## Bonnes pratiques
+
+<AccordionGroup>
+  <Accordion title="Mettre en cache les réponses pour une utilisation hors ligne">
+    Stockez localement la dernière réponse JSON réussie (par exemple, UserDefaults, SharedPreferences ou une base de données locale). Affichez les données en cache lorsque vous êtes hors ligne et rafraîchissez lorsque la connectivité revient.
+  </Accordion>
+  <Accordion title="Gérer élégamment les réponses vides">
+    Une réponse `204` signifie qu'aucun contenu personnalisé n'est disponible. Affichez une valeur par défaut pertinente ou masquez entièrement la zone de personnalisation.
+  </Accordion>
+  <Accordion title="Appeler tôt, afficher quand c'est prêt">
+    Lancez l'appel à l'API le plus tôt possible (par exemple, au lancement de l'application ou à l'apparition de l'écran) afin que les données soient prêtes lorsque l'utilisateur fait défiler jusqu'à la zone personnalisée.
+  </Accordion>
+  <Accordion title="Utiliser des modèles typés">
+    Définissez une struct/classe correspondant au schéma de votre JSON Template. Cela détecte les incohérences de schéma à la compilation et rend le refactoring sûr.
+  </Accordion>
+</AccordionGroup>
+
+## Configuration du JSON Template
+
+Les JSON Templates se configurent dans la plateforme Reelevant. Consultez la page [Websites > API (JSON) > Intégration technique](/fr/developer-docs/web-integration/api-json/integration) pour tous les détails sur :
+
+- La définition du schéma de template
+- Les types de variables (scalaire ou tableau)
+- L'API de gestion des templates
+- La validation au moment de la publication

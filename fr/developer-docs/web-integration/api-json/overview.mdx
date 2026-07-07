@@ -1,0 +1,87 @@
+---
+title: 'Reelevant comme API (JSON)'
+description: 'Utilisez Reelevant comme API de personnalisation headless — obtenez des données JSON structurées et effectuez le rendu comme vous le souhaitez'
+---
+
+## Pourquoi utiliser une sortie JSON ?
+
+Le Client-Side Script et le Server-Side SDK diffusent tous deux du **HTML rendu** (ou des images) que vous injectez dans votre page. C'est idéal lorsque Reelevant contrôle à la fois la logique _et_ le rendu visuel.
+
+Mais parfois, vous souhaitez que Reelevant prenne en charge les **décisions de personnalisation** tandis que votre propre frontend gère le **rendu**. C'est ce que vous offre l'approche par API JSON.
+
+<CardGroup cols={2}>
+  <Card title="Contrôle total du rendu" icon="paintbrush">
+    Vous recevez des données structurées — noms de produits, prix, scores, URL — et vous les affichez avec vos propres composants, votre design system ou une UI native.
+  </Card>
+  <Card title="Agnostique au framework" icon="plug">
+    Fonctionne avec React, Vue, Svelte, Flutter, iOS, Android ou tout client capable d'effectuer une requête HTTP et d'analyser du JSON.
+  </Card>
+  <Card title="Typé et prévisible" icon="shield-check">
+    Les JSON Templates définissent un schéma en amont. Votre frontend sait exactement quels champs attendre — pas de suppositions, pas d'analyse de HTML.
+  </Card>
+  <Card title="Même moteur de personnalisation" icon="brain">
+    Toute la puissance des Workflows Reelevant — Datasources, conditions, splits, Real-Time Testing — mais avec une sortie JSON au lieu de contenu visuel.
+  </Card>
+</CardGroup>
+
+## Quand choisir cette approche
+
+| Scénario | Recommandé |
+|----------|-------------|
+| Vous avez un design system et souhaitez des _données_ personnalisées, pas du HTML | **API JSON** |
+| Application mobile qui effectue un rendu natif | **API JSON** |
+| CMS headless ou architecture composable | **API JSON** |
+| Vous voulez que Reelevant produise des visuels prêts à afficher | Client-Side Script ou Server-Side SDK |
+| Intégration rapide, sans effort de développement | Client-Side Script + Browser Extension |
+
+## Comment ça marche
+
+<Steps>
+  <Step title="Créer un JSON Template">
+    Dans la plateforme Reelevant, créez un JSON Template qui définit le schéma (champs et types) et déclare des variables nommées. Chaque variable correspond à une valeur de Datasource qui sera résolue au moment de l'exécution.
+  </Step>
+  <Step title="Construire un Workflow avec un Output Node JSON Template">
+    Ajoutez un Output Node **JSON Template** à votre Workflow. Sélectionnez le template que vous avez créé, puis liez chaque variable à un champ de Datasource — soit comme valeur scalaire, soit comme tableau (pour les listes de produits, les recommandations, etc.).
+  </Step>
+  <Step title="Publier le Workflow">
+    La publication vérifie que tous les Nodes JSON Template référencent le même template et que le template existe. Une fois publié, le Workflow est en ligne.
+  </Step>
+  <Step title="Appeler l'endpoint du Runner">
+    Votre application effectue une simple requête HTTP GET vers le Runner Reelevant. La réponse est un objet JSON correspondant au schéma de votre template — avec toutes les variables résolues en données personnalisées en temps réel.
+  </Step>
+</Steps>
+
+## Exemple
+
+Supposons que vous vouliez personnaliser une carte de recommandation produit. La définition de votre JSON Template pourrait ressembler à ceci :
+
+```json
+{
+  "headline": { "type": "static", "value": "Recommended for you" },
+  "productName": { "type": "dependency", "variable": "productName" },
+  "productPrice": { "type": "dependency", "variable": "productPrice" }
+}
+```
+
+Chaque champ est soit une valeur **static** (fixée au moment de la conception), soit une **dependency** (une variable nommée résolue à partir de vos Datasources au moment de l'exécution). À l'exécution, le moteur Reelevant résout chaque dependency — de sorte que chaque visiteur voit le produit le plus pertinent pour lui. La réponse est un objet JSON plat :
+
+```json
+{
+  "headline": "Recommended for you",
+  "productName": "Running Shoes Pro",
+  "productPrice": 129.99
+}
+```
+
+Votre frontend affiche simplement les champs JSON à l'aide de ses propres composants.
+
+## Étapes suivantes
+
+<CardGroup cols={2}>
+  <Card title="Intégration technique" icon="code" href="/fr/developer-docs/web-integration/api-json/integration">
+    Endpoints de l'API, format de requête, structure de réponse et exemples de code.
+  </Card>
+  <Card title="JSON Template (Output Node)" icon="file-code" href="/fr/product-guide/workflows/output-nodes/json-template">
+    Découvrez la configuration de l'Output Node JSON Template dans l'éditeur de Workflow.
+  </Card>
+</CardGroup>
