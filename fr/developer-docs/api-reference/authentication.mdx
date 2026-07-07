@@ -1,0 +1,216 @@
+---
+title: 'Authentification'
+description: 'Authentification OAuth 2.0 avec le flux Authorization Code + PKCE, le grant password et les refresh tokens'
+---
+
+## Vue d'ensemble
+
+L'API Reelevant utilise OAuth 2.0 pour l'authentification. Trois types de grant sont pris en charge :
+
+| Type de grant | Cas d'usage |
+|------------|----------|
+| `authorization_code` | Connexion via le navigateur avec PKCE (recommandé pour les applications web) |
+| `password` | Échange direct identifiant/mot de passe (comptes de service, scripts) |
+| `refresh_token` | Renouveler un token d'accès expiré sans se réauthentifier |
+
+Toutes les opérations sur les tokens utilisent l'endpoint `POST https://api.reelevant.com/v2/auth/token`.
+
+Un `client_id` est requis pour chaque grant. Contactez `[email protected]` pour en obtenir un.
+
+## Flux Authorization Code (PKCE)
+
+Il s'agit du flux recommandé pour les applications web. Il utilise une redirection du navigateur pour authentifier l'utilisateur, puis échange un code d'autorisation contre des tokens.
+
+### Étape 1 : Générer le challenge PKCE
+
+Générez un `code_verifier` aléatoire et dérivez-en le `code_challenge` :
+
+```typescript
+import { randomBytes, createHash } from 'crypto'
+
+const codeVerifier = randomBytes(32).toString('base64url')
+const codeChallenge = createHash('sha256')
+  .update(codeVerifier)
+  .digest('base64url')
+```
+
+### Étape 2 : Rediriger vers Authorize
+
+Redirigez le navigateur de l'utilisateur vers l'endpoint d'autorisation :
+
+```
+GET https://api.reelevant.com/v2/oauth/authorize
+  ?client_id=<client_id>
+  &redirect_uri=<redirect_uri>
+  &response_type=code
+  &code_challenge=<code_challenge>
+  &code_challenge_method=S256
+  &state=<random_state>
+  &lang=en
+```
+
+| Paramètre | Requis | Description |
+|-----------|----------|-------------|
+| `client_id` | Oui | Votre identifiant de client OAuth |
+| `redirect_uri` | Oui | Doit correspondre à une redirect URI enregistrée pour le client |
+| `response_type` | Oui | Doit valoir `code` pour le flux authorization code |
+| `code_challenge` | Oui | Hash SHA-256 du `code_verifier` encodé en base64url |
+| `code_challenge_method` | Non | Seul `S256` est pris en charge (par défaut) |
+| `state` | Recommandé | Valeur opaque servant à prévenir les attaques CSRF — renvoyée telle quelle dans le callback |
+| `lang` | Non | Langue de la page de connexion (`en` ou `fr`) |
+
+L'utilisateur voit une page de connexion. Après une authentification réussie, un écran de consentement s'affiche. Après approbation, le navigateur est redirigé vers votre `redirect_uri` avec un code d'autorisation :
+
+```
+https://your-app.com/callback?code=<authorization_code>&state=<state>
+```
+
+<Warning>
+Les codes d'autorisation sont à usage unique et expirent après **60 secondes**. Échangez-les immédiatement.
+</Warning>
+
+### Étape 3 : Échanger le code contre des tokens
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "<client_id>",
+    "grant_type": "authorization_code",
+    "code": "<authorization_code>",
+    "redirect_uri": "<redirect_uri>",
+    "code_verifier": "<code_verifier>"
+  }'
+```
+
+Le `code_verifier` doit correspondre au `code_challenge` envoyé à l'étape 2 (le serveur vérifie que `SHA256(code_verifier) == code_challenge`).
+
+**Réponse :**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+<Info>
+Certains clients OAuth sont configurés avec `requireAuthorizationCodeFlow: true`. Pour ces clients, les paramètres PKCE sont obligatoires — le flux implicite est entièrement désactivé.
+</Info>
+
+## Grant Password
+
+Pour les comptes de service et les scripts d'automatisation où la connexion via le navigateur n'est pas envisageable.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "[email protected]",
+    "password": "your-password",
+    "grant_type": "password",
+    "client_id": "<client_id>"
+  }'
+```
+
+**Réponse :**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+### Authentification à deux facteurs (OTP)
+
+Si l'utilisateur a activé l'OTP, incluez le champ `x-otp-code` :
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "[email protected]",
+    "password": "your-password",
+    "grant_type": "password",
+    "client_id": "<client_id>",
+    "x-otp-code": "123456"
+  }'
+```
+
+## Grant Refresh Token
+
+Échangez un refresh token valide contre un nouveau token d'accès sans vous réauthentifier :
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "grant_type": "refresh_token",
+    "client_id": "<client_id>"
+  }'
+```
+
+**Réponse :**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "refresh_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+## Utiliser les tokens d'accès
+
+Incluez le token d'accès dans chaque requête à l'API via l'en-tête `Authorization` :
+
+```
+Authorization: Bearer <access_token>
+```
+
+## Cycle de vie des tokens
+
+| Type de token | Durée de vie | Renouvellement |
+|------------|----------|---------|
+| Token d'accès | 1 heure | Utilisez le grant `refresh_token` pour en obtenir un nouveau |
+| Refresh token | 30 jours (glissant) | Renouvelé automatiquement à chaque utilisation pour générer un nouveau token d'accès |
+| Code d'autorisation | 60 secondes | Usage unique — échangez-le immédiatement après réception |
+
+<Info>
+Les refresh tokens utilisent une expiration glissante : la fenêtre de 30 jours est réinitialisée à chaque utilisation du refresh token. Si vous le rafraîchissez au moins une fois par mois, le token n'expire jamais.
+</Info>
+
+## Révoquer des tokens
+
+Révoquez un token d'accès ou un refresh token :
+
+```bash
+curl -XDELETE https://api.reelevant.com/v2/auth/token/<token_id>
+```
+
+Révoquer un refresh token révoque également tous les tokens d'accès qui en sont dérivés.
+
+## Authentification SSO
+
+Les entreprises ayant configuré le SSO sont automatiquement redirigées vers leur fournisseur d'identité pendant le flux d'autorisation OAuth. Si le SSO est obligatoire pour l'entreprise, la connexion par mot de passe est désactivée (sauf pour les comptes de service).
+
+## Gestion des erreurs
+
+| Erreur | Statut HTTP | Cause |
+|-------|-------------|-------|
+| `invalid_client` | 400 | `client_id` inconnu ou inactif |
+| `invalid_redirect_uri` | 400 | `redirect_uri` absente de la liste autorisée du client |
+| `invalid_request` | 400 | Paramètres requis manquants (par exemple, `code_challenge` pour PKCE) |
+| `invalid_credentials` | 401 | Identifiant ou mot de passe incorrect |
+| `too_many_attempts` | 429 | Trop de tentatives de connexion — patientez avant de réessayer |
+| `password_expired` | 401 | Le mot de passe doit être changé avant de se connecter |
+| `otp_required` | 401 | Code OTP requis mais non fourni |
+| `invalid_code` | 400 | Code d'autorisation invalide, expiré ou déjà utilisé |
+| `pkce_mismatch` | 400 | Le `code_verifier` ne correspond pas au `code_challenge` d'origine |

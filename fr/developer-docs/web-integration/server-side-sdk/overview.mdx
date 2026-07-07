@@ -1,0 +1,64 @@
+---
+title: 'Reelevant Server Side SDK'
+description: 'Récupérez du contenu personnalisé pendant le rendu serveur pour un décalage de mise en page nul, un affichage instantané et une visibilité SEO complète'
+---
+
+## Qu'est-ce que le Server Side SDK ?
+
+Le Reelevant Server Side SDK (`@rlvt/web-sdk`) vous permet de récupérer du contenu personnalisé **sur le serveur** — pendant le rendu de la page — afin qu'il arrive dans le payload HTML initial. Les visiteurs voient immédiatement le bon contenu, les moteurs de recherche l'indexent et il n'y a aucun décalage de mise en page visible.
+
+<CardGroup cols={2}>
+  <Card title="CLS nul" icon="gauge-high">
+    Le contenu est intégré dans la première réponse HTML. Pas de récupération côté client, pas de flash de contenu générique.
+  </Card>
+  <Card title="Visible pour le SEO" icon="magnifying-glass">
+    Le HTML personnalisé figure dans le code source de la page. Les moteurs de recherche et les aperçus sur les réseaux sociaux voient le contenu réel.
+  </Card>
+  <Card title="Natif au framework" icon="code">
+    Des adaptateurs de premier ordre pour Next.js, Nuxt, Remix et SvelteKit — ou utilisez le SDK core avec n'importe quel serveur Node.js.
+  </Card>
+  <Card title="Prêt pour l'Edge" icon="bolt">
+    Construit sur la Web Fetch API. Fonctionne avec Node.js 18+, Cloudflare Workers, Vercel Edge Functions et Deno.
+  </Card>
+</CardGroup>
+
+## Comment ça marche
+
+<Steps>
+  <Step title="Installer le SDK">
+    Ajoutez le package `@rlvt/web-sdk` à votre projet.
+  </Step>
+  <Step title="Créer un client">
+    Initialisez un `ReelevantClient` — aucune configuration n'est requise (le SDK utilise le Runner de production par défaut).
+  </Step>
+  <Step title="Appeler le Runner">
+    Dans votre route ou votre composant serveur, appelez `client.run()` avec l'ID du Workflow et l'entrypoint. Le SDK appelle le Runner Reelevant et renvoie du contenu typé (HTML, JSON ou image).
+  </Step>
+  <Step title="Effectuer le rendu du contenu">
+    Injectez le contenu renvoyé dans le template de votre page. Le SDK marque la sortie avec `data-rlvt-ssr` afin que le tracker côté client existant sache qu'il doit ignorer ces zones.
+  </Step>
+  <Step title="Suivre les clics">
+    Après l'affichage du contenu, configurez toujours le tracking des clics — utilisez soit `redirectionUrl` comme `<a href>`, soit appelez `result.trackClick()` côté serveur. Cela garantit que les données d'attribution sont capturées pour chaque interaction.
+  </Step>
+</Steps>
+
+## Choisissez votre intégration
+
+<CardGroup cols={2}>
+  <Card title="Next.js" icon="react" href="/fr/developer-docs/web-integration/server-side-sdk/nextjs">
+    React Server Components, middleware de l'App Router et le composant ReelevantZone.
+  </Card>
+  <Card title="Nuxt" icon="vuejs" href="/fr/developer-docs/web-integration/server-side-sdk/nuxt">
+    Helpers d'événements H3, middleware serveur et le composable useReelevant.
+  </Card>
+  <Card title="Remix" icon="r" href="/fr/developer-docs/web-integration/server-side-sdk/remix">
+    Helpers de loader, gestion des cookies et extraction du contexte de requête.
+  </Card>
+  <Card title="SvelteKit" icon="s" href="/fr/developer-docs/web-integration/server-side-sdk/sveltekit">
+    Fonctions de load serveur, hooks et helpers de contexte d'événement.
+  </Card>
+</CardGroup>
+
+<Card title="SDK core (tout serveur Node.js)" icon="server" href="/fr/developer-docs/web-integration/server-side-sdk/core">
+  Utilisez le SDK core directement avec Express, Fastify, Hono ou tout runtime serveur.
+</Card>

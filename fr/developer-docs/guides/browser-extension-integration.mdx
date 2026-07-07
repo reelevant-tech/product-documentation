@@ -1,0 +1,37 @@
+---
+title: 'Instructions d''intégration'
+description: 'Récupérez les URL d''image et de redirection d''un Channel de Workflow depuis l''extension de navigateur'
+---
+
+![Fenêtre modale des instructions d'intégration dans l'extension de navigateur](/images/browser-extension/integration-instructions-v2.png)
+
+## Vue d'ensemble
+
+L'extension de navigateur ne vous permet pas de configurer les intégrations de Workflow. À la place, elle fournit des **instructions d'intégration** — des URL prêtes à l'emploi que vous pouvez copier dans votre Channel ou votre site web.
+
+Ouvrez les instructions d'intégration depuis la liste des Channels d'un Workflow dans le panneau latéral. La fenêtre modale affiche le nom du Channel et la zone (par exemple, `QUALIFICATION V2 - ZONE #1`) ainsi que les URL nécessaires pour intégrer ce Workflow.
+
+<Tip>
+  Pour une vue d'ensemble complète du fonctionnement des intégrations côté client, consultez la documentation [Client Side Script](/fr/developer-docs/web-integration/client-side-script/overview).
+</Tip>
+
+## URL d'intégration
+
+Chaque Channel expose deux URL :
+
+| URL | Description |
+|-----|-------------|
+| **Copy image link** | URL qui renvoie la sortie du Workflow sous forme d'image. Utilisez-la lorsque votre Channel attend un asset image (par exemple, un email ou des display ads). |
+| **Copy redirection link** | URL qui gère la redirection au clic. Utilisez-la lorsque le Channel a besoin d'un lien traçable plutôt que de contenu intégré. |
+
+Cliquez sur le bouton de copie à côté de chaque champ pour copier l'URL dans votre presse-papiers. Les URL suivent le format `https://reelevant.run/{workflowId}/`.
+
+## Utiliser les URL
+
+Collez les URL copiées dans la configuration de votre Channel :
+
+- **Campagnes email ou push** — utilisez le lien image comme source du visuel et le lien de redirection comme cible du call-to-action.
+- **Outils tiers** — intégrez le lien image partout où votre plateforme accepte une URL d'image externe.
+- **Intégration HTML manuelle** — utilisez les URL avec le script de tracking Reelevant. Consultez [Client Side Script](/fr/developer-docs/web-integration/client-side-script/overview) pour l'intégration par balise de script et par zone.
+
+La fenêtre modale inclut un lien vers le guide d'intégration pour les détails de configuration spécifiques à chaque Channel. Cliquez sur **Close** lorsque vous avez terminé.

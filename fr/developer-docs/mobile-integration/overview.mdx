@@ -1,0 +1,51 @@
+---
+title: 'Personnalisation mobile'
+description: 'Diffusez du contenu personnalisé dans vos applications mobiles en utilisant Reelevant comme API de personnalisation headless'
+---
+
+## Vue d'ensemble
+
+Reelevant apporte à vos **applications mobiles natives** le même moteur de personnalisation qui alimente les expériences web. Comme les applications mobiles affichent leur propre UI avec des composants natifs, le modèle d'intégration est headless — Reelevant fournit les **données** personnalisées, et votre application gère le **rendu**.
+
+<CardGroup cols={2}>
+  <Card title="Reelevant Mobile SDK" icon="code" href="/fr/developer-docs/mobile-integration/sdk/overview">
+    SDK natifs pour Android, iOS et Flutter avec analytics et personnalisation unifiés. Réponses typées, identité automatique, tracking des clics.
+  </Card>
+  <Card title="Reelevant comme API (JSON)" icon="mobile" href="/fr/developer-docs/mobile-integration/api-json/overview">
+    Appelez le Runner Reelevant depuis votre application mobile et recevez des données JSON structurées. Effectuez le rendu avec vos composants natifs iOS, Android ou cross-platform.
+  </Card>
+</CardGroup>
+
+## Pourquoi personnaliser le mobile ?
+
+| Bénéfice | Description |
+|---------|-------------|
+| **Engagement accru** | Le contenu personnalisé génère plus de taps, de scrolls et de conversions que le contenu générique |
+| **Expérience cross-channel cohérente** | Même logique de personnalisation sur le web, l'email, le push et in-app — alimentée par les mêmes Workflows |
+| **Décisions en temps réel** | Reelevant évalue les conditions, les Datasources et les splits au moment de la requête — le contenu est toujours à jour |
+| **Aucune publication d'application requise** | Modifiez la logique de personnalisation dans l'éditeur de Workflow sans déployer une nouvelle version de l'application |
+
+## Comment ça marche
+
+Votre application mobile s'intègre à Reelevant de la même façon qu'un frontend web headless :
+
+<Steps>
+  <Step title="Créer un JSON Template">
+    Définissez le schéma et les variables dans la plateforme Reelevant. Le schéma décrit les champs que votre application attend (noms de produits, prix, URL d'images, etc.).
+  </Step>
+  <Step title="Construire un Workflow">
+    Connectez des Datasources, ajoutez des conditions et des splits, et utilisez un Output Node **JSON Template**. Liez chaque variable à un champ de Datasource.
+  </Step>
+  <Step title="Appeler le Runner depuis votre application">
+    Effectuez une simple requête HTTP GET depuis votre application iOS/Android/Flutter. Transmettez l'identité de l'utilisateur pour la personnalisation.
+  </Step>
+  <Step title="Effectuer le rendu nativement">
+    Analysez la réponse JSON et effectuez le rendu avec vos composants d'UI natifs — vues SwiftUI, composables Jetpack Compose, widgets Flutter ou composants React Native.
+  </Step>
+</Steps>
+
+## Étapes suivantes
+
+<Card title="Intégration technique" icon="code" href="/fr/developer-docs/mobile-integration/api-json/overview">
+  Endpoints de l'API, format de réponse et exemples de code spécifiques au mobile (Swift, Kotlin, Flutter, React Native).
+</Card>
