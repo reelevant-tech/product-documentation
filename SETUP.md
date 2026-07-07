@@ -40,11 +40,11 @@ For more examples and team-specific guidance, see [CONTRIBUTING.md](./CONTRIBUTI
 
 ## Optional — turn on the live preview
 
-If you want the Mintlify preview to start automatically, install Homebrew, Node (version 22 or later is required), and the Mintlify CLI on macOS:
+If you want the Mintlify preview to start automatically, install Homebrew, Node 22 (the Mintlify CLI requires exactly version 22), and the Mintlify CLI on macOS:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install node
+brew install node@22
 npm i -g mint
 ```
 
