@@ -1,0 +1,49 @@
+---
+title: 'Logs'
+description: 'Surveillez l''historique d''exécution des Datasources avec les logs de fetch, parse et save'
+---
+
+![Page de logs montrant les entrées d'exécution avec statut et détails](/images/datahub/logs-page-v2.png)
+
+## Présentation
+
+La page Logs affiche l'historique d'exécution des cycles d'actualisation de données d'une Datasource. Chaque opération d'actualisation (fetch, parse, save) est enregistrée avec son statut, sa durée et les éventuelles erreurs ou avertissements.
+
+## Entrées de log
+
+Chaque entrée de log affiche :
+
+| Champ | Description |
+|-------|-------------|
+| **Document** | Le document source ou le lot en cours de traitement. |
+| **Line** | Le numéro de ligne dans les données source (pour les problèmes au niveau de la ligne). |
+| **Level** | Info, Warning ou Error. |
+| **Message** | Une description de l'événement ou du problème. |
+
+## Filtres
+
+| Filtre | Description |
+|--------|-------------|
+| **Show only** | Filtrer par niveau de log — afficher uniquement les événements Warning ou supérieurs. |
+| **Last update** | Filtrer par la dernière version d'actualisation. |
+| **Levels** | Filtrer par niveaux de log spécifiques (Info, Warning, Error). |
+| **All versions** | Afficher les logs de tous les cycles d'actualisation, ou uniquement le dernier. |
+
+## Types de messages de log
+
+| Message | Description |
+|---------|-------------|
+| **Start Refresh** | Le cycle d'actualisation des données a démarré. |
+| **End Refresh** | Le cycle d'actualisation est terminé. |
+| **entries have been updated** | Affiche le nombre total d'entrées traitées. |
+| **Value is not a type** | Une valeur de champ ne correspond pas à son type attendu. |
+| **Impossible to locate address** | Le géocodage a échoué pour une entrée de localisation. |
+| **Unable to locate the country** | Le géocodage du pays a échoué. |
+| **Entries drop rate too high** | Un nombre significatif d'entrées a été perdu entre les actualisations. |
+| **Fields are missing** | Les valeurs de champs requis sont vides pour une entrée. |
+| **New field detected** | Un nouveau champ a été trouvé dans les données source. |
+| **Failed to pull data** | La source de données n'a pas pu être récupérée. |
+
+<Tip>
+  Vérifiez régulièrement vos logs après les mises à jour de Datasources. Les entrées Warning et Error vous aident à identifier les problèmes de qualité des données avant qu'ils n'affectent vos [Workflows](/fr/product-guide/workflows/overview).
+</Tip>

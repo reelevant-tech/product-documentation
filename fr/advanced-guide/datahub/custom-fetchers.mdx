@@ -1,0 +1,250 @@
+---
+title: 'Custom Fetchers'
+description: 'Couches de traitement génériques qui filtrent, restructurent ou enrichissent une Datasource au moment de la requête — par utilisateur, dépliage de lignes, exclusion de produits, durée de vie expirée, proxy lock et proxy aggregation'
+---
+
+## Présentation
+
+Un **custom fetcher** est une couche de traitement optionnelle appliquée au-dessus de la récupération standard d'une Datasource. Au lieu de renvoyer les lignes stockées telles quelles, la Datasource exécute les données à travers une logique supplémentaire à chaque requête — les filtrant pour un seul utilisateur, restructurant les colonnes en lignes, excluant des produits ou calculant une agrégation.
+
+Les custom fetchers s'exécutent au moment de la requête, ils reflètent donc toujours les dernières données stockées et le contexte d'exécution (comme l'utilisateur pour lequel la personnalisation est effectuée). Cette page documente les custom fetchers **génériques** — ceux disponibles pour tout compte. Certains custom fetchers implémentent une logique spécifique à un client et ne sont pas couverts ici.
+
+<Info>
+  Les custom fetchers ne disposent pas encore d'interface en libre-service. Ils sont configurés sur une Datasource par Reelevant. Contactez votre Technical Account Manager si vous souhaitez en activer un.
+</Info>
+
+## Modes de récupération
+
+Une Datasource récupère les données selon l'un des trois modes, et chaque custom fetcher est conçu pour un ou plusieurs d'entre eux :
+
+| Mode | Comment les données sont récupérées | Sources typiques |
+|------|-----------------------|-----------------|
+| **Pull-and-store** | Reelevant récupère la source selon un planning, la parse et la stocke pour interrogation. | URL, File, FTP/SFTP, BigQuery, Snowflake, GCS, S3 |
+| **Event ingestion** | Les enregistrements arrivent en continu sous forme d'événements et sont ajoutés au stockage. | Kafka, Website Events |
+| **Real-time proxy** | Reelevant appelle la source amont en direct à chaque requête et ne stocke pas le résultat. | URL configurée comme API temps réel |
+
+Le tableau récapitulatif ci-dessous indique quel mode s'applique à chaque custom fetcher générique.
+
+| Custom fetcher | Mode | Objectif |
+|----------------|------|---------|
+| [Per User](#per-user) | Tous les modes | Restreindre les résultats aux enregistrements d'un seul utilisateur. |
+| [Unwind Rows](#unwind-rows) | Pull-and-store | Pivoter une ligne large de colonnes en plusieurs lignes longues. |
+| [Product Exclusion](#product-exclusion) | Pull-and-store | Inclure ou exclure des produits listés dans une autre Datasource. |
+| [Expired Product Lifetime](#expired-product-lifetime) | Pull-and-store | Faire remonter les produits qu'un utilisateur doit racheter. |
+| [Proxy Lock](#proxy-lock) | Real-time proxy | Dédupliquer les appels amont identiques simultanés. |
+| [Proxy Aggregation](#proxy-aggregation) | Real-time proxy | Calculer une agrégation sur une réponse temps réel. |
+
+## Mise en place d'un custom fetcher
+
+Il n'existe pas encore d'interface en libre-service pour les custom fetchers, ils sont donc configurés via l'[API Datasources](/developer-docs/introduction) sur la version brouillon de la Datasource. La mise en place se fait en deux étapes : déclarer le fetcher avec l'étape `configure_fetcher`, puis promouvoir la version avec l'étape `validate`.
+
+Les deux appels nécessitent un jeton d'accès — consultez [Authentification](/developer-docs/api-reference/authentication) pour savoir comment en obtenir un.
+
+```bash
+# 1. Configurer le custom fetcher sur la version brouillon de la Datasource
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "configure_fetcher",
+    "payload": {
+      "name": "product-exclusion",
+      "params": {
+        "exclusionDatasourceId": "665f1c0b2a9d4e0008b3a1f2",
+        "exclusionIdField": "sku",
+        "productIdField": "reference",
+        "mode": "exclusion"
+      }
+    }
+  }'
+
+# 2. Valider pour promouvoir la version brouillon en version live
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "validate", "payload": {} }'
+```
+
+Le `payload.name` est l'identifiant du fetcher (par ex. `per-user`, `generic-unwind-rows`, `product-exclusion`), et `payload.params` contient les champs de configuration documentés pour chaque fetcher ci-dessous. Pour les fetchers qui ne prennent aucune configuration, envoyez un objet vide : `"params": {}`.
+
+<Info>
+  L'étape `validate` promeut la version brouillon en version live. Pour les Datasources pull-and-store, elle met également en file d'attente un job de vérification, de sorte que la nouvelle version ne passe en production qu'une fois ce job réussi.
+</Info>
+
+---
+
+## Per User
+
+Restreint la Datasource de manière à ce qu'une requête ne renvoie que les enregistrements appartenant à l'utilisateur en cours de personnalisation. Il fonctionne sur tous les modes de récupération et cible automatiquement le champ identifiant utilisateur défini dans le [Field Mapping](/fr/advanced-guide/datahub/field-mapping) (le champ utilisateur CRM, ou le champ utilisateur d'achat pour une Datasource d'achats).
+
+Lorsqu'une Datasource possède un champ timestamp, les résultats sont automatiquement triés du plus récent au plus ancien. Le fetcher expose également le champ locale résolu afin qu'un Workflow puisse lire la locale de l'utilisateur en plus des données.
+
+Ce custom fetcher ne nécessite aucune configuration.
+
+<Info>
+  Utilisez-le sur les Datasources partagées (comme un CRM, des achats ou un flux analytique) où un Workflow ne doit voir que les lignes propres à l'utilisateur actif.
+</Info>
+
+## Unwind Rows
+
+Restructure chaque ligne stockée en transformant ses colonnes en plusieurs lignes. Une colonne est conservée comme identifiant, et chaque autre colonne devient sa propre ligne, avec le nom de colonne original stocké dans un champ et la valeur de la cellule dans un autre.
+
+### Configuration
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| **source** | Oui | La colonne à conserver comme identifiant sur chaque ligne produite. |
+| **destination** | Oui | Le nom du champ qui contiendra la valeur de l'identifiant. |
+| **columnDestination** | Oui | Le nom du champ qui contiendra le nom de colonne original. |
+| **valueType** | Oui | Le type de données du champ valeur — `string` ou `number`. Lorsque `number`, le champ valeur est triable. |
+
+### Avant et après
+
+Considérons une ligne stockée qui liste trois affinités de catégorie pour un utilisateur :
+
+| user | category1 | category2 | category3 |
+|------|-----------|-----------|-----------|
+| user-42 | shoes | jackets | hats |
+
+Avec **source** = `user`, **destination** = `user`, et **columnDestination** = `category`, le fetcher la déplie en :
+
+| user | category | value |
+|------|----------|-------|
+| user-42 | category1 | shoes |
+| user-42 | category2 | jackets |
+| user-42 | category3 | hats |
+
+<Info>
+  Le tri par le champ valeur est appliqué après le dépliage, vous pouvez donc classer les lignes produites par leur valeur numérique lorsque **valueType** est `number`.
+</Info>
+
+## Product Exclusion
+
+Filtre une Datasource de produits par rapport à une seconde Datasource qui liste les éléments à conserver ou à supprimer. Un usage typique est de masquer les produits qu'un utilisateur a déjà achetés, ou de restreindre les recommandations à une liste autorisée.
+
+### Configuration
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| **exclusionDatasourceId** | Oui | La Datasource qui contient la liste des éléments de référence. |
+| **exclusionIdField** | Oui | Le champ dans la Datasource d'exclusion qui contient les IDs d'éléments. |
+| **productIdField** | Oui | Le champ dans la Datasource de produits à comparer avec ces IDs. |
+| **mode** | Oui | `exclusion` supprime les produits correspondants ; `inclusion` ne conserve que les produits correspondants. |
+
+### Fonctionnement
+
+1. Le fetcher lit les IDs correspondants depuis la Datasource d'exclusion, en respectant tout filtre de requête applicable aux deux Datasources.
+2. En mode `exclusion`, ces IDs sont retirés des résultats produits ; en mode `inclusion`, seuls ces IDs sont conservés.
+3. En mode `inclusion`, si la Datasource d'exclusion ne renvoie aucun ID, la requête produit ne retourne aucune ligne.
+
+<Info>
+  La liste d'exclusion est lue jusqu'à une limite configurée. Pour les listes très volumineuses, consultez votre Technical Account Manager concernant le seuil applicable.
+</Info>
+
+## Expired Product Lifetime
+
+Fait remonter les produits qu'un utilisateur doit racheter, en se basant sur son historique d'achats et une durée de vie attendue du produit. Il joint la Datasource de produits actuelle avec une Datasource d'achats, calcule quand chaque produit précédemment acheté devrait être épuisé, et ne renvoie que les produits dont la prochaine date d'achat tombe dans une fenêtre configurée.
+
+### Configuration
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| **purchaseDatasourceId** | Oui | La Datasource contenant les événements d'achat de l'utilisateur. |
+| **purchaseQuery** | Oui | Une requête de base appliquée à la Datasource d'achats. |
+| **purchaseReferenceIdField** | Oui | Le champ des achats contenant l'ID de référence du produit. |
+| **purchaseTimestampField** | Oui | Le champ des achats contenant la date d'achat. |
+| **purchaseClientField** | Oui | Le champ des achats contenant l'identifiant client (utilisateur). |
+| **temporalities** | Non | Une liste de règles décrivant les fenêtres de rachat (voir ci-dessous). |
+
+Chaque entrée dans **temporalities** décrit une fenêtre de rachat :
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| **maxLifetime** | Oui | La durée de vie maximale du produit, en jours, à laquelle cette règle s'applique. |
+| **windowStart** | Oui | Combien de jours avant la date prévue du prochain achat le produit devient éligible. |
+| **windowEnd** | Oui | Combien de jours après la date prévue du prochain achat le produit reste éligible. |
+| **minPurchaseCount** | Non | Le nombre minimum d'achats passés requis pour que cette règle s'applique. |
+
+### Fonctionnement
+
+Le fetcher examine chaque produit que l'utilisateur a précédemment acheté et prédit quand il en aura à nouveau besoin. La manière dont la durée de vie est dérivée dépend du **nombre de fois** où l'utilisateur a acheté ce produit.
+
+1. Il lit les achats de l'utilisateur (du plus récent au plus ancien) et regroupe les dates d'achat par référence produit.
+2. Pour chaque produit, il dérive une durée de vie attendue et une date de prochain achat attendue (voir les deux comportements ci-dessous).
+3. Il conserve le produit uniquement si la date du jour tombe dans la fenêtre de temporalité correspondante — de `windowStart` jours avant la date de prochain achat à `windowEnd` jours après.
+4. Les produits conservés sont enrichis avec `purchaseCount`, `lastPurchaseDate` et `nextPurchaseDate`, et peuvent être triés par n'importe lequel de ces champs.
+
+#### Comportement 1 — achat unique (consultation de la durée de vie)
+
+Lorsque le produit a été acheté **une seule fois**, le fetcher ne peut pas mesurer un véritable intervalle de rachat, il lit donc la durée de vie attendue à partir du champ durée de vie propre au produit dans le [Field Mapping](/fr/advanced-guide/datahub/field-mapping). La date de prochain achat est `lastPurchaseDate + durée de vie`.
+
+*Exemple* — un pack de capsules de café avec un champ durée de vie de **30 jours**, acheté une fois le **1er mars**, avec la fenêtre par défaut (`windowStart` 0, `windowEnd` 90) :
+
+| Signal | Valeur |
+|--------|-------|
+| Achats trouvés | 1er mars |
+| `purchaseCount` | 1 |
+| Champ durée de vie du produit | 30 jours |
+| `lastPurchaseDate` | 1er mars |
+| `nextPurchaseDate` | 31 mars (1er mars + 30 jours) |
+| Fenêtre d'éligibilité | 31 mars → 29 juin (date de prochain achat → +90 jours) |
+
+Le pack de capsules est renvoyé pour toute requête utilisateur exécutée entre le 31 mars et le 29 juin. Si le produit n'a pas de champ durée de vie, un produit à achat unique ne peut pas être évalué et est ignoré.
+
+#### Comportement 2 — achats multiples (moyenne calculée)
+
+Lorsque le produit a été acheté **plusieurs fois**, le fetcher ignore le champ durée de vie statique et calcule à la place l'**intervalle moyen** entre les achats consécutifs pour cet utilisateur spécifique. La date de prochain achat est `lastPurchaseDate + intervalleMoyen`.
+
+*Exemple* — le même pack de capsules acheté le **1er janvier**, le **1er février** et le **1er mars**, avec la fenêtre par défaut :
+
+| Signal | Valeur |
+|--------|-------|
+| Achats trouvés | 1er jan, 1er fév, 1er mars |
+| `purchaseCount` | 3 |
+| Intervalles | 31 jours (jan→fév), 28 jours (fév→mars) |
+| Intervalle moyen | ≈ 29,5 jours |
+| `lastPurchaseDate` | 1er mars |
+| `nextPurchaseDate` | ≈ 30 mars (1er mars + 29,5 jours) |
+| Fenêtre d'éligibilité | 30 mars → 28 juin (date de prochain achat → +90 jours) |
+
+Utiliser la cadence propre à l'utilisateur rend la prédiction bien plus précise qu'une durée de vie statique unique. Si la moyenne calculée est inférieure à un jour, le produit est ignoré.
+
+<Info>
+  Lorsqu'aucune **temporalities** n'est configurée, une règle par défaut est appliquée : les produits avec une durée de vie allant jusqu'à 365 jours qui sont attendus dans les 90 prochains jours (`maxLifetime` 365, `windowStart` 0, `windowEnd` 90).
+</Info>
+
+## Proxy Lock
+
+S'applique uniquement aux Datasources real-time proxy. Lorsque Reelevant reçoit de nombreuses requêtes simultanées qui déclencheraient le même appel amont, ce fetcher laisse le premier appel s'exécuter et fait attendre les autres brièvement, afin que le résultat puisse être servi depuis le cache au lieu de répéter l'appel.
+
+### Configuration
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| **ttl** | Oui | Combien de temps, en millisecondes, les requêtes identiques simultanées attendent que le premier appel se termine. |
+
+<Info>
+  Utilisez ceci pour protéger une API amont à débit limité ou coûteuse lorsqu'une seule diffusion génère de nombreux appels temps réel identiques.
+</Info>
+
+## Proxy Aggregation
+
+S'applique uniquement aux Datasources real-time proxy. Après avoir récupéré la réponse en direct, il calcule une agrégation unique sur un champ choisi et ajoute le résultat à chaque ligne renvoyée.
+
+### Configuration
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| **targetField** | Oui | Le champ à agréger. Supporte les champs imbriqués avec la notation pointée (par ex. `price.amount`). |
+| **aggregationType** | Oui | L'agrégation à calculer — `sum`, `avg`, `min` ou `max`. |
+| **outputField** | Oui | Le nom du champ sous lequel le résultat calculé est ajouté à chaque ligne. |
+
+<Info>
+  Les valeurs non numériques et manquantes sont ignorées. Si aucune valeur numérique n'est trouvée, le champ de sortie est vide.
+</Info>
+
+## Pages associées
+
+- [Datasource Reference](/fr/advanced-guide/datahub/source-types/datasource-reference) — construire des Datasources dérivées à partir de Datasources existantes.
+- [Configurations spéciales](/fr/advanced-guide/datahub/special-configurations) — autres types de Datasources calculées (Best Products, Merge, Cross-sell).
+- [Field Mapping](/fr/advanced-guide/datahub/field-mapping) — définir les champs qu'un custom fetcher lit et écrit.

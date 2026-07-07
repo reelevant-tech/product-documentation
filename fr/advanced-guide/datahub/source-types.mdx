@@ -1,0 +1,84 @@
+---
+title: 'Présentation'
+description: 'Découvrez chaque connecteur de source de données disponible pour importer des données dans le DataHub'
+---
+
+![Sélection du type de source montrant les connecteurs disponibles](/images/datahub/source-types-v2.png)
+
+## Présentation
+
+Lors de la [création d'une Datasource](/fr/product-guide/datahub/creating-a-datasource), vous sélectionnez un **type de source** qui définit comment Reelevant récupère les données. Chaque type de source possède ses propres champs de configuration et capacités.
+
+## Connecteurs disponibles
+
+<CardGroup cols={3}>
+  <Card title="URL" icon="link" href="/fr/advanced-guide/datahub/source-types/url">
+    Récupérez des données depuis n'importe quel endpoint HTTP/HTTPS — APIs, fichiers hébergés ou flux de données. Supporte les méthodes personnalisées, en-têtes, pagination, OAuth et variables d'exécution.
+  </Card>
+  <Card title="File Upload" icon="file-arrow-up" href="/fr/advanced-guide/datahub/source-types/file">
+    Uploadez un fichier de données directement depuis votre ordinateur. Supporte CSV, JSON, XML, Parquet, Avro et XLSX.
+  </Card>
+  <Card title="FTP & SFTP" icon="server" href="/fr/advanced-guide/datahub/source-types/ftp-sftp">
+    Connectez-vous aux serveurs FTP ou SFTP. Supporte l'authentification par mot de passe et clé privée, les chemins avec wildcards et plusieurs modes de traitement de fichiers.
+  </Card>
+  <Card title="BigQuery" icon="database" href="/fr/advanced-guide/datahub/source-types/bigquery">
+    Synchronisez des données depuis Google BigQuery. Supporte l'authentification par compte de service et OAuth, les requêtes SQL personnalisées et la synchronisation incrémentale.
+  </Card>
+  <Card title="Snowflake" icon="snowflake" href="/fr/advanced-guide/datahub/source-types/snowflake">
+    Synchronisez des tables depuis Snowflake. Supporte l'authentification par mot de passe et paire de clés, les requêtes SQL personnalisées et la synchronisation incrémentale.
+  </Card>
+  <Card title="Google Cloud Storage" icon="cloud" href="/fr/advanced-guide/datahub/source-types/gcs">
+    Récupérez des fichiers depuis des buckets GCS. Supporte les chemins avec wildcards, plusieurs modes de traitement de fichiers et tous les formats de fichiers courants.
+  </Card>
+  <Card title="Amazon S3" icon="bucket" href="/fr/advanced-guide/datahub/source-types/s3">
+    Récupérez des fichiers depuis S3 ou un stockage compatible S3 (MinIO, DigitalOcean Spaces, etc.). Supporte les chemins avec wildcards et tous les formats de fichiers courants.
+  </Card>
+  <Card title="Kafka" icon="bolt" href="/fr/advanced-guide/datahub/source-types/kafka">
+    Streamez des données depuis des topics Apache Kafka. Supporte l'authentification SASL, le Schema Registry (Avro) et la consommation par lots ou continue.
+  </Card>
+  <Card title="Datasource Reference" icon="arrows-rotate" href="/fr/advanced-guide/datahub/source-types/datasource-reference">
+    Référencez une autre Datasource existante comme source de données pour des calculs dérivés (merge, best products, cross-sell).
+  </Card>
+</CardGroup>
+
+## Formats de fichiers pris en charge
+
+Les connecteurs basés sur des fichiers (URL, File Upload, FTP/SFTP, GCS, S3) détectent automatiquement le format du fichier. Les formats suivants sont pris en charge sur toutes les sources basées sur des fichiers :
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Valeurs séparées par des virgules. Le délimiteur est détecté automatiquement (virgule, point-virgule, tabulation, pipe). Supporte les [noms de colonnes explicites](/fr/advanced-guide/datahub/csv-options) pour les fichiers sans en-tête. |
+| **JSON** | Fichiers JSON standards avec un tableau ou objet racine. |
+| **NDJSON** | JSON délimité par des retours à la ligne (un objet JSON par ligne). |
+| **XML** | Fichiers XML — le chemin de l'élément racine est détecté automatiquement. |
+| **Parquet** | Format columaire Apache Parquet. |
+| **Avro** | Format de sérialisation Apache Avro. |
+| **XLSX** | Fichiers Microsoft Excel. |
+
+<Info>
+  Les fichiers compressés (`.gz`, `.zip`) sont automatiquement décompressés avant le parsing pour toutes les sources basées sur des fichiers.
+</Info>
+
+<Info>
+  Les connecteurs basés sur des fichiers (URL, FTP/SFTP, GCS, S3) supportent également le [déchiffrement PGP](/fr/advanced-guide/datahub/pgp-decryption) — les fichiers chiffrés (`.asc`, `.pgp`, `.gpg`) sont déchiffrés de manière transparente lors de l'import lorsque `pgpPrivateKey` est configuré.
+</Info>
+
+## Sources multiples
+
+Certains types de Datasources supportent les **sources multiples**. Vous pouvez ajouter plusieurs configurations de source (par ex. plusieurs URLs ou chemins FTP) à une seule Datasource en utilisant le bouton **Add a source**. Chaque source est traitée indépendamment, et les résultats sont combinés.
+
+Utilisez **Delete the source** pour supprimer des configurations de source individuelles.
+
+## Tableau comparatif
+
+| Fonctionnalité | URL | File | FTP/SFTP | BigQuery | Snowflake | GCS | S3 | Kafka | Datasource Ref |
+||-----|------|----------|----------|-----------|-----|-----|-------|----------------|
+| Détection auto du format | Oui | Oui | Oui | — | — | Oui | Oui | — | — |
+| Chemins wildcards | — | — | Oui | — | — | Oui | Oui | — | — |
+| Requêtes SQL personnalisées | — | — | — | Oui | Oui | — | — | — | — |
+| Synchronisation incrémentale | — | — | — | Oui | Oui | — | — | Oui | — |
+| Pagination | Oui | — | — | — | — | — | — | — | — |
+| Support OAuth | Oui | — | — | Oui | — | — | — | — | — |
+| Authentification par paire de clés | — | — | Oui | — | Oui | — | — | — | — |
+| Sources multiples | Oui | — | Oui | — | — | Oui | Oui | — | — |
+| [Déchiffrement PGP](/fr/advanced-guide/datahub/pgp-decryption) | Oui | — | Oui | — | — | Oui | Oui | — | — |

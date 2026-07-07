@@ -1,0 +1,81 @@
+---
+title: 'Field Mapping'
+description: 'Configurez comment les champs de données bruts sont associés aux types standardisés de Reelevant'
+---
+
+![Tableau de Field Mapping montrant les champs source associés aux types Reelevant](/images/datahub/field-mapping-v2.png)
+
+## Présentation
+
+Le Field Mapping définit comment les champs de données bruts de votre source sont associés aux types de champs standardisés de Reelevant. Cette étape est essentielle — elle détermine quels champs sont disponibles pour utilisation dans les [Workflows](/fr/product-guide/workflows/overview) et les [templates de Content](/fr/product-guide/contents/data-binding).
+
+## Tableau de Field Mapping
+
+Le tableau de mapping affiche tous les champs détectés avec les colonnes suivantes :
+
+| Colonne | Description |
+|--------|-------------|
+| **Name** | Le nom du champ tel qu'il apparaîtra dans Reelevant. |
+| **Path** | Le chemin original depuis les données source. |
+| **Type** | Le type de champ assigné. |
+| **Selected** | Basculer pour inclure ou exclure le champ. |
+| **Example value** | Une valeur d'exemple issue des données source. |
+
+## Types de champs
+
+Selon la catégorie de la Datasource, différents types de champs sont disponibles :
+
+### Champs produit
+
+| Type | Description |
+|------|-------------|
+| **Reference ID** | Identifiant unique du produit. |
+| **Product ID** | ID du catalogue produit. |
+| **Name** | Nom du produit. |
+| **Description** | Description du produit. |
+| **Price** | Prix du produit. |
+| **URL** | URL de la page produit. |
+| **Image URL** | URL de l'image du produit. |
+| **Number** | Valeur numérique. |
+| **Text** | Chaîne de texte. |
+| **Video** | URL de la vidéo. |
+
+### Champs de localisation
+
+| Type | Description |
+|------|-------------|
+| **Address 1–4** | Lignes d'adresse. |
+| **City** | Nom de la ville. |
+| **Zipcode** | Code postal. |
+| **Country** | Nom ou code du pays. |
+| **Latitude** | Latitude géographique. |
+| **Longitude** | Longitude géographique. |
+
+## Règles de validation des champs
+
+| Règle | Description |
+|------|-------------|
+| Pas de caractères spéciaux | Les noms de champs ne peuvent pas contenir de caractères spéciaux. |
+| Pas d'espaces | Les noms de champs ne peuvent pas contenir d'espaces. |
+| Pas de lettres majuscules | Les noms de champs doivent être en minuscules. |
+| Pas de chiffre au début | Les noms de champs ne peuvent pas commencer par un chiffre. |
+| Maximum 64 champs | Une Datasource ne peut pas contenir plus de 64 champs. |
+| Titre max 50 caractères | Le nom de la Datasource ne doit pas dépasser 50 caractères. |
+
+<Warning>
+  Pour les Datasources de type **Location**, les champs requis dépendent de votre configuration. Vous pourriez avoir besoin de fournir address_1, country, city, zipcode, ou latitude/longitude.
+</Warning>
+
+## Ajout et modification de champs
+
+- Cliquez sur **Add field** pour mapper un champ source supplémentaire.
+- Utilisez le champ **Search a field** pour trouver des champs spécifiques dans les jeux de données volumineux.
+- Après la création, cliquez sur **Update fields** depuis les [actions de listing](/fr/product-guide/datahub/listing) pour modifier le mapping.
+
+## Configuration de la hiérarchie
+
+L'étape **Configure folder** vous permet d'organiser votre Datasource dans une hiérarchie de dossiers :
+
+| Champ | Description |
+|-------|-------------|
+| **Folder** | Sélectionnez un niveau de dossier ou créez un nouveau sous-dossier. |

@@ -1,0 +1,98 @@
+---
+title: 'Google Cloud Storage (GCS)'
+description: 'Récupérez des fichiers de données depuis des buckets Google Cloud Storage'
+---
+
+![Formulaire de configuration de la source GCS](/images/datahub/source-gcs-v2.png)
+
+## Présentation
+
+La source GCS (Google Cloud Storage) récupère des fichiers de données depuis un bucket GCS. Utilisez-la lorsque vos données sont stockées sous forme de fichiers dans Google Cloud et que vous souhaitez les importer dans Reelevant pour la personnalisation.
+
+## Configuration
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `projectId` | L'ID du projet Google Cloud. |
+| `clientEmail` | L'adresse e-mail du compte de service (par ex. `my-sa@project.iam.gserviceaccount.com`). |
+| `privateKey` | La clé privée du compte de service (issue du fichier de clé JSON). |
+| `bucket` | Le nom du bucket GCS. |
+| `path` | Le chemin du fichier ou le pattern dans le bucket (voir [Chemins wildcards](#chemins-wildcards) ci-dessous). |
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+
+<Tip>
+  Le rôle minimum requis est **Storage Object Viewer** (`roles/storage.objectViewer`) sur le bucket cible.
+</Tip>
+
+## Formats de fichiers pris en charge
+
+GCS détecte automatiquement le format du fichier. Les formats suivants sont pris en charge :
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Valeurs séparées par des virgules. Le délimiteur est détecté automatiquement (virgule, point-virgule, tabulation, pipe). |
+| **JSON** | Fichiers JSON standards avec un tableau ou objet racine. |
+| **NDJSON** | JSON délimité par des retours à la ligne (un objet JSON par ligne). |
+| **XML** | Fichiers XML — le chemin de l'élément racine est détecté automatiquement. |
+| **Parquet** | Format columaire Apache Parquet. |
+| **Avro** | Format de sérialisation Apache Avro. |
+| **XLSX** | Fichiers Microsoft Excel. |
+
+<Info>
+  Les fichiers compressés (`.gz`, `.zip`) sont automatiquement décompressés avant le parsing.
+</Info>
+
+## Déchiffrement PGP
+
+La source GCS prend en charge les **fichiers chiffrés PGP**. Lorsque `pgpPrivateKey` est configuré, les fichiers sont déchiffrés de manière transparente avant la décompression et le parsing.
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Oui | La clé privée PGP/GPG au format armored (ASCII). |
+| `pgpPassphrase` | Non | La phrase de passe de la clé privée, si elle est chiffrée. |
+
+Les fichiers chiffrés armored (`.asc`) et binary (`.pgp`, `.gpg`) sont pris en charge.
+
+<Info>
+  Consultez le [guide de déchiffrement PGP](/fr/advanced-guide/datahub/pgp-decryption) pour plus de détails sur la génération de clés, les formats pris en charge et la gestion des erreurs.
+</Info>
+
+## Chemins wildcards
+
+Vous pouvez utiliser un wildcard (`*`) dans le chemin du fichier pour correspondre à plusieurs fichiers. Cela est utile lorsque :
+
+- Un nouveau fichier est exporté périodiquement avec un nom différent (par ex. `exports/products_20240101.csv`, `exports/products_20240102.csv`)
+- Les données sont réparties sur plusieurs fichiers dans le même répertoire
+
+**Exemples de patterns :**
+- `exports/products_*.csv` — correspond à tous les fichiers CSV commençant par `products_` dans le dossier `exports/`
+- `data/*.json` — correspond à tous les fichiers JSON dans le dossier `data/`
+
+## Modes de traitement des fichiers
+
+Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière dont les fichiers sont sélectionnés via le champ `processType` :
+
+| Valeur `processType` | Description |
+|------|-------------|
+| `last_unprocess` *(par défaut)* | Traite uniquement le fichier le plus récent qui n'a pas encore été traité. Idéal pour les exports de datasets complets où seul le dernier fichier importe. |
+| `all_unprocess` | Traite tous les fichiers qui n'ont pas encore été traités. Utile pour les exports incrémentaux/delta. |
+| `all` | Traite tous les fichiers correspondants à chaque synchronisation, qu'ils aient été traités auparavant ou non. Utile pour les datasets complets répartis sur plusieurs fichiers avec les mêmes noms. |
+
+## Fonctionnement
+
+1. Reelevant s'authentifie avec les identifiants de compte de service fournis.
+2. Le bucket et le chemin spécifiés sont accédés. Si un wildcard est utilisé, les fichiers correspondants sont listés.
+3. Les fichiers sont téléchargés, décompressés si nécessaire, et parsés selon le format détecté.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+5. Lors des synchronisations suivantes, les fichiers sont rerécupérés selon le mode de traitement configuré.
+
+<Warning>
+  Assurez-vous que le compte de service dispose d'un accès en lecture au bucket et aux objets spécifiés. Le rôle minimum requis est **Storage Object Viewer**.
+</Warning>

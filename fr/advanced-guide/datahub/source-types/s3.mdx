@@ -1,0 +1,109 @@
+---
+title: 'Amazon S3'
+description: 'Récupérez des fichiers de données depuis des buckets Amazon S3 ou de stockage compatible S3'
+---
+
+## Présentation
+
+La source S3 récupère des fichiers de données depuis un bucket Amazon S3 ou tout service de stockage compatible S3 (par ex. MinIO, DigitalOcean Spaces, OVH Object Storage). Utilisez-la lorsque vos données sont stockées sous forme de fichiers dans S3 et que vous souhaitez les importer dans Reelevant pour la personnalisation.
+
+## Configuration
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `accessKey` | L'ID de la clé d'accès AWS (ou équivalent pour les services compatibles S3). |
+| `secretKey` | La clé d'accès secrète AWS (ou équivalent pour les services compatibles S3). |
+| `bucket` | Le nom du bucket S3. |
+| `path` | Le chemin du fichier ou le pattern dans le bucket (voir [Chemins wildcards](#chemins-wildcards) ci-dessous). |
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `endpoint` | URL d'endpoint personnalisée pour les services compatibles S3. Par défaut `https://s3.amazonaws.com` pour AWS S3 standard. |
+| `region` | La région AWS où se trouve le bucket (par ex. `eu-west-1`, `us-east-1`). |
+| `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+
+<Tip>
+  Pour AWS S3 standard, la `accessKey` doit appartenir à un utilisateur ou rôle IAM disposant au minimum des permissions `s3:GetObject` et `s3:ListBucket` sur le bucket cible.
+</Tip>
+
+### Services compatibles S3
+
+La source S3 fonctionne avec tout service implémentant l'API S3. Définissez `endpoint` sur l'URL de votre fournisseur :
+
+| Fournisseur | Exemple d'endpoint |
+||-----------------|
+| **AWS S3** | `https://s3.amazonaws.com` *(par défaut)* |
+| **MinIO** | `https://minio.example.com` |
+| **DigitalOcean Spaces** | `https://nyc3.digitaloceanspaces.com` |
+| **OVH Object Storage** | `https://s3.gra.io.cloud.ovh.net` |
+| **Scaleway** | `https://s3.fr-par.scw.cloud` |
+
+## Formats de fichiers pris en charge
+
+S3 détecte automatiquement le format du fichier. Les formats suivants sont pris en charge :
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Valeurs séparées par des virgules. Le délimiteur est détecté automatiquement (virgule, point-virgule, tabulation, pipe). |
+| **JSON** | Fichiers JSON standards avec un tableau ou objet racine. |
+| **NDJSON** | JSON délimité par des retours à la ligne (un objet JSON par ligne). |
+| **XML** | Fichiers XML — le chemin de l'élément racine est détecté automatiquement. |
+| **Parquet** | Format columaire Apache Parquet. |
+| **Avro** | Format de sérialisation Apache Avro. |
+| **XLSX** | Fichiers Microsoft Excel. |
+
+<Info>
+  Les fichiers compressés (`.gz`, `.zip`) sont automatiquement décompressés avant le parsing.
+</Info>
+
+## Déchiffrement PGP
+
+La source S3 prend en charge les **fichiers chiffrés PGP**. Lorsque `pgpPrivateKey` est configuré, les fichiers sont déchiffrés de manière transparente avant la décompression et le parsing.
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Oui | La clé privée PGP/GPG au format armored (ASCII). |
+| `pgpPassphrase` | Non | La phrase de passe de la clé privée, si elle est chiffrée. |
+
+Les fichiers chiffrés armored (`.asc`) et binary (`.pgp`, `.gpg`) sont pris en charge.
+
+<Info>
+  Consultez le [guide de déchiffrement PGP](/fr/advanced-guide/datahub/pgp-decryption) pour plus de détails sur la génération de clés, les formats pris en charge et la gestion des erreurs.
+</Info>
+
+## Chemins wildcards
+
+Vous pouvez utiliser un wildcard (`*`) dans le chemin du fichier pour correspondre à plusieurs fichiers. Cela est utile lorsque :
+
+- Un nouveau fichier est exporté périodiquement avec un nom différent (par ex. `exports/products_20240101.csv`, `exports/products_20240102.csv`)
+- Les données sont réparties sur plusieurs fichiers dans le même répertoire
+
+**Exemples de patterns :**
+- `exports/products_*.csv` — correspond à tous les fichiers CSV commençant par `products_` dans le préfixe `exports/`
+- `data/*.json` — correspond à tous les fichiers JSON sous le préfixe `data/`
+
+## Modes de traitement des fichiers
+
+Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière dont les fichiers sont sélectionnés via le champ `processType` :
+
+| Valeur `processType` | Description |
+|------|-------------|
+| `last_unprocess` *(par défaut)* | Traite uniquement le fichier le plus récent qui n'a pas encore été traité. Idéal pour les exports de datasets complets où seul le dernier fichier importe. |
+| `all_unprocess` | Traite tous les fichiers qui n'ont pas encore été traités. Utile pour les exports incrémentaux/delta. |
+| `all` | Traite tous les fichiers correspondants à chaque synchronisation, qu'ils aient été traités auparavant ou non. Utile pour les datasets complets répartis sur plusieurs fichiers avec les mêmes noms. |
+
+## Fonctionnement
+
+1. Reelevant s'authentifie auprès de S3 avec la clé d'accès et la clé secrète fournies.
+2. Le bucket et le chemin spécifiés sont accédés. Si un wildcard est utilisé, les objets correspondants sont listés.
+3. Les fichiers sont téléchargés, décompressés si nécessaire, et parsés selon le format détecté.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+5. Lors des synchronisations suivantes, les fichiers sont rerécupérés selon le mode de traitement configuré.
+
+<Warning>
+  Assurez-vous que l'utilisateur ou le rôle IAM dispose des permissions `s3:GetObject` et `s3:ListBucket` sur le bucket cible. Pour les services compatibles S3, assurez-vous que les permissions de lecture équivalentes sont accordées.
+</Warning>

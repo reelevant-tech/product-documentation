@@ -1,0 +1,108 @@
+---
+title: 'Déchiffrement PGP'
+description: 'Déchiffrez les fichiers chiffrés PGP/GPG lors de l''import sur toutes les sources basées sur des fichiers'
+---
+
+## Présentation
+
+Reelevant prend en charge le **déchiffrement PGP (Pretty Good Privacy)** pour les sources de données basées sur des fichiers. Si votre fournisseur de données livre des fichiers chiffrés, vous pouvez configurer votre Datasource avec une clé privée PGP afin que les fichiers soient déchiffrés de manière transparente lors de l'import — aucune étape de déchiffrement manuelle n'est requise.
+
+Le déchiffrement PGP est disponible sur les types de sources suivants :
+
+- [URL](/fr/advanced-guide/datahub/source-types/url)
+- [FTP & SFTP](/fr/advanced-guide/datahub/source-types/ftp-sftp)
+- [Amazon S3](/fr/advanced-guide/datahub/source-types/s3)
+- [Google Cloud Storage](/fr/advanced-guide/datahub/source-types/gcs)
+
+<Info>
+  Le déchiffrement PGP fonctionne avec les fichiers chiffrés **armored** (`.asc`) et **binary** (`.pgp`, `.gpg`). Le format est détecté automatiquement.
+</Info>
+
+## Configuration
+
+Pour activer le déchiffrement PGP, ajoutez les champs suivants dans la configuration de votre source :
+
+```typescript
+pgpPrivateKey?: string
+pgpPassphrase?: string
+```
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Oui | La clé privée PGP/GPG utilisée pour déchiffrer le fichier. Doit être au format armored (ASCII). |
+| `pgpPassphrase` | Non | La phrase de passe de la clé privée, si la clé est protégée par une phrase de passe. |
+
+<Warning>
+  Ces champs sont traités comme **sensibles** — ils sont chiffrés au repos et ne sont jamais exposés dans les réponses API ou les logs.
+</Warning>
+
+## Fonctionnement
+
+1. Reelevant récupère le fichier chiffré depuis la source configurée (URL, FTP, S3, etc.).
+2. Le fichier est **transmis en flux** à travers la couche de déchiffrement PGP — le fichier entier n'est jamais mis en mémoire tampon.
+3. Le flux déchiffré est ensuite décompressé (si `.gz` ou `.zip`) et parsé normalement.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+
+```
+Source → Déchiffrement PGP → Décompression (gzip/zip) → Parsing (CSV, JSON, XML…) → Field Mapping
+```
+
+<Info>
+  Le déchiffrement ne s'exécute que lorsque `pgpPrivateKey` est configuré. Si aucune clé n'est fournie, le fichier est traité normalement sans surcharge de déchiffrement.
+</Info>
+
+## Formats de chiffrement pris en charge
+
+| Format | Extension(s) | Description |
+|--------|-------------|-------------|
+| **Armored PGP** | `.asc` | Fichiers PGP en ASCII armored (basés sur du texte, commençant par `-----BEGIN PGP MESSAGE-----`). |
+| **Binary PGP** | `.pgp`, `.gpg` | Format OpenPGP binaire. Plus compact que le format armored. |
+
+Les deux formats sont détectés automatiquement — aucune configuration supplémentaire n'est nécessaire.
+
+## Combinaison avec la compression
+
+Le déchiffrement PGP est appliqué **avant** la décompression. Cela signifie que vous pouvez avoir des fichiers à la fois chiffrés et compressés :
+
+| Fichier | Pipeline de traitement |
+|------|-------------------|
+| `data.csv.pgp` | Déchiffrement → Parsing CSV |
+| `data.csv.gz.pgp` | Déchiffrement → Décompression gzip → Parsing CSV |
+| `data.json.asc` | Déchiffrement → Parsing JSON |
+| `data.xml.gz.asc` | Déchiffrement → Décompression gzip → Parsing XML |
+
+## Gestion des erreurs
+
+Si le déchiffrement échoue, le job de la Datasource signale une erreur claire. Scénarios d'échec courants :
+
+| Erreur | Cause | Résolution |
+|-------|-------|------------|
+| **Mauvaise clé** | La clé privée ne correspond pas à la clé publique utilisée pour chiffrer le fichier. | Vérifiez que vous utilisez la bonne clé privée. Contactez votre fournisseur de données pour confirmer quelle clé publique a été utilisée pour le chiffrement. |
+| **Phrase de passe invalide** | La phrase de passe fournie ne déverrouille pas la clé privée. | Revérifiez la phrase de passe. |
+| **Fichier corrompu** | Le fichier chiffré est endommagé ou incomplet. | Demandez à votre fournisseur de données de renvoyer le fichier. |
+| **Format de clé invalide** | La clé privée n'est pas dans un format PGP valide. | Assurez-vous que la clé est au format armored (ASCII), commençant par `-----BEGIN PGP PRIVATE KEY BLOCK-----`. |
+
+## Génération d'une paire de clés PGP
+
+Si votre fournisseur de données a besoin d'une clé publique pour chiffrer les fichiers pour vous, vous pouvez générer une paire de clés en utilisant GPG :
+
+```bash
+# Générer une nouvelle paire de clés
+gpg --full-generate-key
+
+# Exporter la clé publique (envoyez-la à votre fournisseur de données)
+gpg --armor --export your-email@example.com > public-key.asc
+
+# Exporter la clé privée (configurez-la comme pgpPrivateKey dans Reelevant)
+gpg --armor --export-secret-keys your-email@example.com > private-key.asc
+```
+
+<Warning>
+  Gardez votre clé privée en sécurité. Ne la partagez jamais avec qui que ce soit. Seule la **clé publique** doit être envoyée à votre fournisseur de données.
+</Warning>
+
+## Limitations
+
+- **Clé unique seulement** — chaque configuration source ne supporte qu'une seule clé privée. Si les fichiers sont chiffrés pour plusieurs destinataires, fournissez la clé privée correspondante.
+- **Déchiffrement uniquement** — Reelevant déchiffre les fichiers entrants mais ne chiffre pas les données sortantes.
+- **Source File Upload** — le déchiffrement PGP n'est pas pris en charge pour les fichiers uploadés directement via l'interface de la plateforme. Utilisez [URL](/fr/advanced-guide/datahub/source-types/url), [FTP/SFTP](/fr/advanced-guide/datahub/source-types/ftp-sftp), [S3](/fr/advanced-guide/datahub/source-types/s3) ou [GCS](/fr/advanced-guide/datahub/source-types/gcs) pour les fichiers chiffrés.

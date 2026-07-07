@@ -1,0 +1,160 @@
+---
+title: 'URL'
+description: 'Récupérez des données depuis une URL web — endpoints d''API, fichiers hébergés ou flux de données'
+---
+
+![Formulaire de configuration de la source URL](/images/datahub/source-url-v2.png)
+
+## Présentation
+
+Le type de source URL récupère des données depuis une adresse web. Utilisez-le pour les endpoints d'API, les fichiers CSV/JSON hébergés ou tout flux de données accessible via HTTP/HTTPS.
+
+## Configuration
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `url` | L'URL complète de la source de données (endpoint d'API ou URL de fichier hébergé). |
+
+### Options HTTP
+
+Ces champs sont imbriqués sous l'objet `options`.
+
+| Champ | Description |
+|-------|-------------|
+| `method` | La méthode HTTP à utiliser : `GET` *(par défaut)*, `POST`, `PUT` ou `PATCH`. |
+| `headers` | En-têtes HTTP personnalisés à inclure dans la requête (paires clé-valeur). Utile pour les clés API ou les tokens personnalisés. |
+| `query` | Paramètres de requête URL à ajouter à la requête (paires clé-valeur). |
+| `body` | Le corps de la requête (pour les méthodes `POST`, `PUT`, `PATCH`). |
+| `timeout` | Délai d'attente de la requête en millisecondes. |
+| `oauth` | DatasourceAuth ID pour les APIs protégées par OAuth. |
+
+### Authentification
+
+<Tabs>
+  <Tab title="Sans authentification">
+    Pour les URLs accessibles publiquement, aucune configuration supplémentaire n'est nécessaire.
+  </Tab>
+  <Tab title="En-têtes personnalisés">
+    Pour l'authentification par clé API ou token, ajoutez l'en-tête approprié dans la configuration `headers` :
+
+    | En-tête | Exemple |
+    |--------|---------|
+    | `Authorization` | `Bearer <your-token>` |
+    | `X-API-Key` | `<your-api-key>` |
+  </Tab>
+  <Tab title="OAuth">
+    Pour les APIs protégées par OAuth, connectez une intégration OAuth configurée dans Reelevant. La plateforme gère automatiquement le rafraîchissement des tokens.
+  </Tab>
+</Tabs>
+
+## Formats de fichiers pris en charge
+
+La source URL détecte automatiquement le format de la réponse. Les formats suivants sont pris en charge :
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Valeurs séparées par des virgules. Le délimiteur est détecté automatiquement (virgule, point-virgule, tabulation, pipe). Voir [Options de format CSV](/fr/advanced-guide/datahub/csv-options) pour la prise en charge des fichiers sans en-tête. |
+| **JSON** | Fichiers JSON standards avec un tableau ou objet racine. |
+| **NDJSON** | JSON délimité par des retours à la ligne (un objet JSON par ligne). |
+| **XML** | Fichiers XML — le chemin de l'élément racine est détecté automatiquement. |
+| **Parquet** | Format columaire Apache Parquet. |
+| **Avro** | Format de sérialisation Apache Avro. |
+| **XLSX** | Fichiers Microsoft Excel. |
+
+<Info>
+  Les réponses compressées (`.gz`, `.zip`) sont automatiquement décompressées avant le parsing.
+</Info>
+
+## Déchiffrement PGP
+
+La source URL prend en charge la récupération de **fichiers chiffrés PGP**. Lorsque `pgpPrivateKey` est configuré, la réponse est déchiffrée avant la décompression et le parsing.
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Oui | La clé privée PGP/GPG au format armored (ASCII). |
+| `pgpPassphrase` | Non | La phrase de passe de la clé privée, si elle est chiffrée. |
+
+Les fichiers chiffrés armored (`.asc`) et binary (`.pgp`, `.gpg`) sont pris en charge.
+
+<Info>
+  Consultez le [guide de déchiffrement PGP](/fr/advanced-guide/datahub/pgp-decryption) pour plus de détails sur la génération de clés, les formats pris en charge et la gestion des erreurs.
+</Info>
+
+## Pagination
+
+Pour les APIs qui paginent leurs réponses, la source URL prend en charge plusieurs stratégies de pagination :
+
+<Tabs>
+  <Tab title="Paramètre de requête">
+    Incrémente un paramètre de requête (numéro de page ou offset) à chaque requête.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `value` | Le nom du paramètre de requête (par ex. `page`, `offset`). |
+    | `startAt` | La valeur initiale (par défaut : `1`). Certaines APIs commencent à `0`. |
+    | `subtype` | `page` (numéro de page) ou `offset` (offset d'enregistrement). |
+  </Tab>
+  <Tab title="Paramètre de body">
+    Identique à la pagination par paramètre de requête, mais la valeur de page/offset est incluse dans le corps de la requête.
+  </Tab>
+  <Tab title="Attribut hypermedia">
+    Suit une URL trouvée dans le corps de la réponse (par ex. un attribut `next` dans la réponse JSON).
+
+    | Champ | Description |
+    |-------|-------------|
+    | `value` | Le chemin JSON vers l'URL de la page suivante dans la réponse (par ex. `next_page_url`). |
+  </Tab>
+  <Tab title="Token de page">
+    Utilise un token du corps de la réponse pour demander la page suivante.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `value` | Le chemin JSON vers le token dans le corps de la réponse. |
+    | `param` | Le paramètre de requête à utiliser pour le token dans les requêtes suivantes. |
+    | `removeParams` | Supprimer les autres paramètres d'URL lors de la pagination (optionnel). |
+  </Tab>
+  <Tab title="En-tête Link">
+    Suit les URLs de pagination depuis l'en-tête HTTP `Link` standard (tel que défini par [RFC 8288](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)).
+  </Tab>
+  <Tab title="Token d'entrée">
+    Utilise une valeur de la dernière entrée de la page courante pour demander la page suivante.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `value` | Le nom du champ dans chaque entrée qui sert de curseur. |
+    | `param` | Le paramètre de requête à utiliser pour le curseur dans les requêtes suivantes. |
+    | `removeParams` | Supprimer les autres paramètres d'URL lors de la pagination (optionnel). |
+  </Tab>
+</Tabs>
+
+<Info>
+  Vous pouvez optionnellement définir `maximumPage` pour limiter le nombre de pages récupérées lors d'une synchronisation.
+</Info>
+
+## Variables d'exécution
+
+Pour les endpoints d'API qui nécessitent des paramètres dynamiques (par ex. date actuelle, IDs spécifiques à l'utilisateur), vous pouvez définir des **variables** qui sont résolues au moment de la récupération.
+
+Chaque variable possède :
+
+| Champ | Description |
+|-------|-------------|
+| `name` | Le nom de la variable utilisé dans l'URL, les en-têtes, le body ou les paramètres de requête. |
+| `default` | Une valeur statique ou une expression dynamique évaluée à l'exécution. |
+| `primitive` | Le type de données (string, number, etc.). |
+
+Les variables peuvent être référencées dans l'URL, les en-têtes, le body et les paramètres de requête. Cela permet de construire des URLs dynamiques comme `https://api.example.com/products?since={{last_sync_date}}`.
+
+## Fonctionnement
+
+1. Reelevant envoie une requête HTTP à l'URL configurée avec la méthode, les en-têtes et le body spécifiés.
+2. Si la pagination est configurée, les pages suivantes sont récupérées automatiquement.
+3. La réponse est parsée selon le format détecté.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+5. Lors des synchronisations suivantes, l'URL est re-récupérée et les données sont mises à jour.
+
+<Tip>
+  Assurez-vous que votre URL renvoie des données dans un format pris en charge. La plateforme détecte automatiquement le format à partir du type de contenu et du contenu de la réponse.
+</Tip>

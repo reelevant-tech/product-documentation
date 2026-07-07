@@ -1,0 +1,113 @@
+---
+title: 'Snowflake'
+description: 'Synchronisez des tables depuis des entrepôts de données Snowflake dans Reelevant'
+---
+
+![Formulaire de configuration de la source Snowflake](/images/datahub/source-snowflake-v2.png)
+
+## Présentation
+
+La source Snowflake synchronise les données depuis une table ou vue Snowflake dans Reelevant. Utilisez-la pour intégrer les données de votre entrepôt dans vos Workflows de personnalisation.
+
+## Configuration
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `account` | L'identifiant de votre compte Snowflake (par ex. `xy12345.eu-west-1`). |
+| `username` | Nom d'utilisateur de connexion Snowflake. |
+| `warehouse` | L'entrepôt Snowflake à utiliser pour exécuter les requêtes. |
+| `database` | Le nom de la base de données. |
+| `schema` | Le nom du schéma. |
+| `table` | La table ou vue à synchroniser. |
+
+### Authentification
+
+Snowflake prend en charge deux méthodes d'authentification :
+
+<Tabs>
+  <Tab title="Mot de passe">
+    Authentification par nom d'utilisateur et mot de passe.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `password` | Mot de passe de connexion Snowflake. |
+  </Tab>
+  <Tab title="Paire de clés">
+    Authentification par paire de clés (authentification basée sur JWT). C'est la méthode recommandée pour les environnements de production.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `privateKey` | La clé privée RSA au format PEM. |
+
+    Lorsqu'une clé privée est fournie, Reelevant utilise l'authentification JWT (`SNOWFLAKE_JWT`) de Snowflake, et le champ mot de passe est ignoré.
+
+    <Tip>
+      Pour générer une paire de clés pour Snowflake :
+      ```bash
+      openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out rsa_key.p8 -nocrypt
+      openssl rsa -in rsa_key.p8 -pubout -out rsa_key.pub
+      ```
+      Puis assignez la clé publique à votre utilisateur Snowflake :
+      ```sql
+      ALTER USER my_user SET RSA_PUBLIC_KEY='<public_key_content>';
+      ```
+    </Tip>
+  </Tab>
+</Tabs>
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `query` | Une requête SQL personnalisée pour filtrer ou transformer les données avant l'import. Lorsqu'elle est fournie, la requête est exécutée au lieu de lire la table complète. |
+
+### Requêtes SQL personnalisées
+
+Lorsque vous fournissez une requête SQL personnalisée, Reelevant l'exécute sur Snowflake au lieu de lire la table entière. Cela est utile pour :
+
+- Filtrer des lignes (par ex. `SELECT * FROM my_table WHERE is_active = TRUE`)
+- Sélectionner des colonnes spécifiques
+- Joindre plusieurs tables
+- Appliquer des transformations
+
+<Warning>
+  La requête doit être en SQL Snowflake valide. Assurez-vous que l'utilisateur dispose du rôle et des permissions appropriés pour accéder aux tables référencées.
+</Warning>
+
+## Synchronisation incrémentale
+
+Snowflake prend en charge la synchronisation incrémentale lorsqu'il est utilisé avec le mode de mise à jour **Keep Previous Data**.
+
+| Champ | Description |
+|-------|-------------|
+| `timestampColumn` | Le nom de la colonne utilisée pour calculer le delta depuis la dernière récupération. |
+
+Lorsque cette option est configurée, Reelevant ajoute une clause `WHERE` à votre requête (ou en génère une automatiquement) pour ne récupérer que les lignes où la colonne timestamp est supérieure à la dernière valeur enregistrée.
+
+<Info>
+  La colonne timestamp est optionnelle même en mode Keep Previous Data — si votre vue Snowflake gère déjà la logique de delta en interne, vous pouvez l'omettre.
+</Info>
+
+## Gestion des types de données
+
+Les types de données Snowflake sont streamés avec les conversions suivantes :
+
+| Type Snowflake | Comportement |
+|----------------|----------|
+| `VARCHAR`, `NUMBER`, `FLOAT`, `BOOLEAN` | Transmis tels quels. |
+| `DATE`, `TIMESTAMP_*`, `TIME` | Récupérés sous forme de chaînes (via `fetchAsString`). |
+| `VARIANT`, `OBJECT`, `ARRAY` | Récupérés sous forme de chaînes JSON. |
+
+## Fonctionnement
+
+1. Reelevant se connecte à Snowflake avec les identifiants et l'entrepôt fournis.
+2. Si une requête personnalisée est fournie, elle est exécutée. Sinon, `SELECT * FROM <table>` est exécuté.
+3. Les résultats sont streamés ligne par ligne pour une utilisation efficace de la mémoire.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+5. Lors des synchronisations suivantes, les données sont relues (ou récupérées de manière incrémentale si une colonne timestamp est configurée).
+
+<Warning>
+  Assurez-vous que l'utilisateur Snowflake dispose du rôle approprié pour accéder à l'entrepôt, la base de données, le schéma et la table spécifiés.
+</Warning>

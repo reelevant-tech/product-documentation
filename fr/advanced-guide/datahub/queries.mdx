@@ -1,0 +1,76 @@
+---
+title: 'Requêtes'
+description: 'Recherchez, filtrez et parcourez les données stockées dans vos Datasources'
+---
+
+![Page de requêtes montrant les résultats de recherche et le panneau de filtres](/images/datahub/queries-page-v2.png)
+
+## Présentation
+
+La page Requêtes vous permet de rechercher et parcourir les données stockées dans une Datasource. Utilisez-la pour vérifier que vos données ont été importées correctement, tester des filtres ou explorer des enregistrements spécifiques.
+
+## Recherche
+
+Sélectionnez une Datasource dans le menu déroulant pour charger ses données. Utilisez les contrôles de recherche pour trouver des enregistrements spécifiques :
+
+| Contrôle | Description |
+|---------|-------------|
+| **Search a datasource** | Sélectionnez la Datasource à interroger. |
+| **Show results** | Charger les données de la Datasource. |
+| **Clear search** | Réinitialiser tous les filtres et critères de recherche. |
+
+## Filtres
+
+Cliquez sur **Add new filter** pour créer des règles de filtre :
+
+| Champ | Description |
+|-------|-------------|
+| **Criteria** | Sélectionnez le champ sur lequel filtrer. |
+| **Operator** | Choisissez un opérateur de comparaison (equals, contains, etc.). |
+| **Value** | Saisissez la valeur de filtrage. |
+
+Plusieurs filtres peuvent être combinés.
+
+## Recherche d'adresse
+
+Pour les Datasources de type **Location**, une recherche par adresse est disponible :
+
+| Champ | Description |
+|-------|-------------|
+| **Enter address** | Saisissez une adresse pour rechercher des emplacements à proximité. |
+| **Distance** | Le rayon de recherche. |
+
+## Résultats
+
+Les résultats sont affichés en vue tableau ou en vue carte :
+
+| Onglet | Description |
+|-----|-------------|
+| **Table** | Un tableau paginé affichant tous les enregistrements correspondants avec leurs valeurs de champs. |
+| **Map** | Une vue carte affichant les résultats géolocalisés (disponible pour les Datasources de localisation). |
+
+<Info>
+  Les résultats sont limités à 1 000 enregistrements. Si votre Datasource contient plus d'entrées, utilisez des filtres pour affiner les résultats.
+</Info>
+
+### Annotations des résultats
+
+Certains champs peuvent avoir des annotations spéciales :
+
+| Annotation | Description |
+|------------|-------------|
+| **Transformed** | La valeur du champ a été transformée par Reelevant (par ex. géocodage). |
+| **Renamed** | Le champ a été renommé depuis son nom source original. |
+| **Merge aggregation** | Le champ a été ajouté depuis une Datasource fusionnée. |
+| **Count aggregation** | Le champ a été calculé par Reelevant (par ex. nombre d'achats). |
+
+## Datasources éditables
+
+Pour les types de **Datasource éditable**, la page de requêtes inclut des contrôles supplémentaires :
+
+| Action | Description |
+|--------|-------------|
+| **Add row** | Ajouter manuellement une ligne de données. |
+| **Import file** | Uploader un fichier pour importer des données en masse dans la Datasource. |
+
+Le flux d'import de fichier comprend trois étapes : upload, vérification des données et envoi. Vous pouvez activer **Reset data** pour remplacer toutes les données existantes.
