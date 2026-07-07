@@ -1,0 +1,157 @@
+---
+title: 'Configurations spéciales'
+description: 'Configurations avancées de Datasources — tracking, merge, GTM, clés API et Datasources calculées'
+---
+
+![Étapes de configuration spéciale dans l'assistant de Datasource](/images/datahub/special-configurations-v2.png)
+
+## Présentation
+
+Certains types de Datasources nécessitent des étapes de configuration supplémentaires au-delà de la source standard et du Field Mapping. Cette page documente ces configurations spéciales.
+
+## Website Events (Reelevant Analytics)
+
+L'intégration website events suit le comportement des utilisateurs sur votre site web et le stocke dans Reelevant.
+
+### Configuration
+
+1. Dans l'assistant de configuration, l'étape **Configure Reelevant Script** fournit un extrait de code JavaScript.
+2. Ajoutez l'extrait à votre site web.
+3. Effectuez quelques navigations sur votre site web pour vérifier l'intégration.
+4. Cliquez sur **Validate** pour confirmer.
+
+## Google Tag Manager
+
+L'intégration GTM vous permet d'envoyer des événements de site web via votre configuration de gestion de tags existante.
+
+### Configuration
+
+L'étape **Setup Google Tag Manager** fournit :
+- Un **datasource id** à utiliser dans la configuration de votre tag GTM.
+- Un **company id** à utiliser dans la configuration de votre tag GTM.
+
+Après avoir configuré le tag dans GTM, naviguez sur votre site web et cliquez sur **Validate**.
+
+## Intégrations par clé API
+
+Les intégrations comme Partoo nécessitent une clé API :
+
+1. L'étape **Configure an API Key** fournit des instructions spécifiques à l'intégration.
+2. Saisissez votre clé API.
+3. Cliquez sur **Validate** pour vérifier la connexion.
+
+## Best Products
+
+La Datasource Best Products calcule quels produits performent le mieux en se basant sur les événements de tracking :
+
+<Steps>
+  <Step title="Configurer la Datasource produit">
+    Sélectionnez la Datasource produit qui contient votre catalogue de produits.
+  </Step>
+  <Step title="Configurer la Datasource de tracking">
+    Sélectionnez la Datasource analytique qui contient les événements de tracking.
+  </Step>
+  <Step title="Configurer les requêtes">
+    Définissez le type d'événement de tracking et la période pour le calcul :
+
+    | Champ | Description |
+    |-------|-------------|
+    | **Tracking event** | Le type d'événement à analyser (par ex. achats, pages vues). |
+    | **Timerange** | La période à considérer pour le calcul. |
+    | **Use product ids** | Basculer pour faire correspondre par IDs produit au lieu d'IDs de référence. |
+  </Step>
+  <Step title="Définir le champ Best Product">
+    Sélectionnez le champ dans lequel vous souhaitez ajouter le compteur calculé.
+  </Step>
+</Steps>
+
+## Merge Aggregation
+
+Une merge aggregation enrichit les lignes d'une Datasource avec des champs provenant d'une autre Datasource, en les faisant correspondre sur un identifiant partagé. Vous la configurez comme une agrégation sur la Datasource que vous souhaitez enrichir — vous ne construisez ni ne maintenez de Datasource combinée séparée, et vous interrogez directement la Datasource enrichie.
+
+La Datasource que vous enrichissez (la Datasource **principale**) conserve toutes ses lignes et son propre identifiant. Pour chaque ligne, la merge aggregation recherche l'enregistrement correspondant dans la Datasource de **dépendance** et copie les champs sélectionnés sur cette ligne. Les lignes sans correspondance conservent les champs fusionnés vides.
+
+<Info>
+  Une merge aggregation ajoute des champs **depuis** la Datasource de dépendance **dans** la Datasource principale. Elle ne supprime ni ne remplace jamais les propres lignes de la Datasource principale.
+</Info>
+
+<Steps>
+  <Step title="Sélectionner la Datasource principale">
+    La Datasource dont vous souhaitez enrichir les lignes. Son ensemble de lignes et son identifiant sont préservés.
+  </Step>
+  <Step title="Sélectionner la Datasource de dépendance">
+    La Datasource depuis laquelle extraire des champs supplémentaires. Ses champs deviennent des champs d'agrégation sur la Datasource principale, et vous choisissez lesquels conserver dans le Field Mapping.
+  </Step>
+  <Step title="Mapper la clé partagée">
+    Choisissez le champ de la Datasource principale et le champ correspondant de la Datasource de dépendance. Un enregistrement de la dépendance est fusionné lorsque sa clé est égale à celle de la Datasource principale.
+  </Step>
+</Steps>
+
+### Exemple concret
+
+Une Datasource de catalogue produit (la Datasource principale) contient un `id` produit et un `name`. Une Datasource de tarification (la dépendance) contient un `item_id` et une `value`. Le mapping de `id` vers `item_id` fusionne les champs de tarification sur chaque ligne produit :
+
+| id | name | item_id | value |
+|-----|-------|---------|-------|
+| A31 | Foo | A31 | 13 |
+| A22 | Bar | A22 | 232 |
+| A83 | Fobar | *(vide)* | *(vide)* |
+
+Le catalogue conserve les trois produits. `A83` n'a pas de prix correspondant, ses champs fusionnés restent donc vides.
+
+<Info>
+  La fusion est réexécutée chaque fois que la Datasource principale ou de dépendance est actualisée, de sorte que les champs enrichis restent à jour. Une Datasource de dépendance ne peut pas être supprimée tant qu'une merge aggregation en dépend encore.
+</Info>
+
+### Via l'API
+
+Vous pouvez ajouter la merge aggregation à une Datasource existante directement, sans créer de Datasource combinée séparée. `<datasource-id>` est la Datasource principale (le catalogue produit) tout au long de l'exemple.
+
+Déclarez d'abord le champ fusionné sur la Datasource avec l'étape `configure_fields`. Le champ provenant de la dépendance porte `"source": "aggregation"`, tandis que les propres champs de la Datasource conservent `"source": "user"` :
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource-id>/steps \
+  -d '{
+    "name": "configure_fields",
+    "payload": [
+      {
+        "name": "id",
+        "type": "string",
+        "source": "user",
+        "selected": true,
+        "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "id" } }] }
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "source": "aggregation",
+        "selected": true,
+        "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "value" } }] }
+      }
+    ]
+  }'
+```
+
+Attachez ensuite la merge aggregation avec l'étape `patch`. `datasourceId` à l'intérieur de l'agrégation est la Datasource de dépendance (la Datasource de tarification) :
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource-id>/steps \
+  -d '{
+    "name": "patch",
+    "payload": {
+      "aggregationPipeline": [
+        {
+          "name": "merge",
+          "params": {
+            "datasourceId": "<dependency-datasource-id>",
+            "fieldNames": ["value"],
+            "query": "{\"$and\":[{\"$or\":[{\"item_id\":{\"$eq\":{\"type\":\"path\",\"value\":\"id\"}}}]}]}"
+          }
+        }
+      ]
+    }
+  }'
+```
+
+- Chaque champ fusionné est déclaré avec `"source": "aggregation"` dans `configure_fields`, et son nom est listé dans `fieldNames` de l'étape `patch`. Son `rulesPerSources` path lit la valeur depuis l'enregistrement de dépendance correspondant.
+- `query` mappe la clé partagée : le champ de la dépendance (`item_id`) est mis en correspondance avec le champ de la Datasource principale, référencé avec `{ "type": "path", "value": "id" }`.

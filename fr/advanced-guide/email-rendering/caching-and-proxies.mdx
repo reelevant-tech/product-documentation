@@ -1,0 +1,57 @@
+---
+title: 'Cache et proxies des clients e-mail'
+description: 'Comprenez comment les proxies de boîtes de réception et le cache affectent le rendu au moment de l''ouverture'
+---
+
+## Présentation
+
+Les clients e-mail peuvent récupérer et mettre en cache les images avant qu'un destinataire n'ouvre l'e-mail.
+
+Cela signifie que le rendu au moment de l'ouverture peut refléter le moment de la récupération, et non celui de l'ouverture exacte.
+
+Cela est important pour des fonctionnalités telles que le Live Polling et le Countdown, où l'image elle-même porte du contenu dynamique.
+
+## Rendu au moment de l'envoi et au moment de l'ouverture
+
+Certaines boîtes de réception et certains proxies pré-récupèrent les images peu après la livraison.
+
+S'ils mettent l'image en cache, le destinataire peut voir ultérieurement une version figée.
+
+D'autres clients récupèrent au moment de l'ouverture, ce qui donne un résultat plus frais lorsque le Runner renvoie des réponses non-cacheable.
+
+## Comportement des clients
+
+| Client | Met en cache ou pré-récupère les images ? | Comportement | Comment Reelevant l'identifie |
+|---|---|---|---|
+| Gmail image proxy | Non | Achemine les images via le proxy de Google, mais respecte les en-têtes no-cache du Runner, donc le proxy re-récupère au lieu de servir une copie en cache. | `GmailImageProxy` dans le user agent. |
+| Apple Mail Privacy Protection | Oui | Proxifie et met en cache les images peu après la livraison, même avant une ouverture manuelle. | `Apple Mail Proxy`, `Apple Mail` ou un user agent `Mozilla/5.0` nu. |
+| Outlook web | Parfois | Webmail qui peut servir les images via un proxy de cache. | User agent `Outlook`, ou un referer `outlook`/`office`/`live`.com. |
+| Outlook desktop | Non | Récupère au moment de l'ouverture et respecte les en-têtes no-cache du Runner. | User agent `Outlook`. |
+| Outlook (entreprise) | Dépend de la configuration IT | Les outils de sécurité peuvent pré-récupérer ou mettre en cache les images selon la configuration de l'organisation. Reelevant l'identifie comme Outlook. | Détecté comme `Outlook` ; pas de signal dédié. |
+| Yahoo Mail | Souvent | Webmail qui peut servir les images via un proxy de cache. | Referer du webmail Yahoo. |
+| Orange Mail | Non | Webmail détecté par le referer ; récupère au moment de l'ouverture. | Referer du webmail Orange. |
+| SFR Mail | Non | Webmail détecté par le referer ; récupère au moment de l'ouverture. | Referer du webmail SFR. |
+
+## Ce que fait Reelevant
+
+Le Runner marque chaque réponse comme non-cacheable, envoyant `Cache-Control: no-cache, no-store, max-age=0`, `Pragma: no-cache` et `Expires: -1`.
+
+Cela encourage les clients qui respectent les en-têtes de cache, comme le Gmail image proxy, à demander une image fraîche. Certains clients, comme Apple Mail Privacy Protection, peuvent tout de même mettre l'image en cache malgré ces en-têtes.
+
+Lors d'une redirection de clic, Reelevant préserve le client précédemment identifié.
+
+Cela est important car certains proxies, comme Apple Mail Proxy, ne transmettent pas les mêmes en-têtes d'identification sur la requête de clic.
+
+## Impact sur les fonctionnalités au moment de l'ouverture
+
+| Fonctionnalité | Ce qui peut mal se passer | Atténuation |
+|---|---|---|
+| Live Polling | Le pourcentage peut se figer au moment de la pré-récupération, reflétant ainsi le moment de la récupération plutôt que la véritable ouverture. | Les réponses non-cacheable et une récupération fraîche réduisent l'obsolescence, mais un cache proxy agressif peut quand même fausser le chiffre. |
+| Countdown | Une image rendue en cache peut figer le minuteur et afficher un temps plus ancien. | Les réponses non-cacheable aident, mais le cache proxy peut quand même afficher du contenu obsolète. |
+| Toute valeur au moment de l'ouverture | L'image peut afficher des données plus anciennes que ce que le destinataire attend. | Considérez l'image comme un instantané récupéré lorsque des proxies de boîte de réception sont impliqués. |
+
+## Pages associées
+
+- [Live Polling](/fr/advanced-guide/workflows/data-nodes/live-polling)
+- [Data Nodes](/fr/advanced-guide/workflows/data-nodes)
+- [Composant Countdown](/fr/product-guide/contents/components/countdown)

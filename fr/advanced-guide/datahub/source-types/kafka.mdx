@@ -1,0 +1,92 @@
+---
+title: 'Kafka'
+description: 'Streamez des données depuis des topics Apache Kafka dans Reelevant'
+---
+
+## Présentation
+
+La source Kafka streame des données depuis un topic Apache Kafka dans Reelevant. Utilisez-la pour l'ingestion de données en temps réel ou quasi temps réel depuis des architectures événementielles, des plateformes de streaming ou des courtiers de messages qui exposent une interface compatible Kafka.
+
+## Configuration
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `brokers` | Une liste d'adresses de brokers Kafka (par ex. `broker1:9092`, `broker2:9092`). |
+| `topic` | Le topic Kafka depuis lequel consommer. |
+
+### Authentification
+
+<Tabs>
+  <Tab title="Sans authentification">
+    Pour les clusters Kafka sans authentification (environnements de développement), aucun champ supplémentaire n'est nécessaire.
+  </Tab>
+  <Tab title="SASL">
+    Pour les clusters Kafka utilisant l'authentification SASL :
+
+    | Champ | Description |
+    |-------|-------------|
+    | `username` | Nom d'utilisateur SASL. |
+    | `password` | Mot de passe SASL. |
+    | `ssl` | Activer SSL/TLS pour la connexion. |
+  </Tab>
+</Tabs>
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `groupPrefix` | Un préfixe pour le nom du consumer group. Utilisez-le si votre cluster Kafka impose des conventions de nommage pour les consumer groups. |
+
+### Schema Registry
+
+Si vos messages Kafka utilisent la sérialisation Avro avec un Confluent Schema Registry, configurez l'objet `registry` :
+
+| Champ | Description |
+|-------|-------------|
+| `registry.url` | L'URL de l'endpoint du Schema Registry. |
+| `registry.username` | Nom d'utilisateur d'authentification du Schema Registry. |
+| `registry.password` | Mot de passe d'authentification du Schema Registry. |
+
+Lorsque cette option est configurée, les messages sont automatiquement désérialisés en utilisant le schéma du registry.
+
+## Formats de messages pris en charge
+
+| Format | Description |
+|--------|-------------|
+| **JSON** | Les messages sont parsés comme des objets JSON. |
+| **Avro** | Les messages sont désérialisés en utilisant le Confluent Schema Registry. Nécessite la configuration du registry. |
+
+## Comportement du consumer
+
+### Mode Worker (par lots)
+
+Lorsqu'elle est utilisée avec une Datasource en **mode worker** (synchronisation périodique par lots), la source Kafka :
+
+1. Se connecte au topic et lit tous les messages disponibles jusqu'au dernier offset courant.
+2. Se déconnecte une fois que tous les messages ont été consommés.
+3. Lors des synchronisations suivantes, la lecture reprend là où elle s'était arrêtée (les offsets du consumer group sont préservés).
+
+### Mode Ingester (continu)
+
+Lorsqu'elle est utilisée avec une Datasource en **mode ingester** (streaming continu), la source Kafka :
+
+1. Se connecte au topic et consomme en continu les nouveaux messages à mesure qu'ils arrivent.
+2. Les messages sont traités et stockés en temps réel.
+
+## Fonctionnement
+
+1. Reelevant se connecte au cluster Kafka avec les adresses de brokers fournies.
+2. Un consumer group est créé (ou repris) pour la Datasource.
+3. Les messages sont consommés depuis le topic configuré.
+4. Si un Schema Registry est configuré, les messages sont désérialisés en utilisant le schéma Avro.
+5. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+
+<Warning>
+  Assurez-vous que l'utilisateur Kafka (si l'authentification est configurée) dispose d'un accès en lecture au topic spécifié et de la permission de créer/gérer des consumer groups.
+</Warning>
+
+<Info>
+  La source Kafka prend en charge nativement les messages compressés en LZ4.
+</Info>

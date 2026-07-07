@@ -1,0 +1,131 @@
+---
+title: 'Synchronisation avec la base Analytics'
+description: 'Comment les Datasources synchronisent les événements vers la base de données analytique utilisée pour les statistiques et le scoring'
+---
+
+## Présentation
+
+Reelevant peut synchroniser les événements collectés par vos Datasources dans une base de données analytique dédiée. Cette base alimente les tableaux de bord statistiques, les modèles de scoring et la déduplication — vous offrant un stockage fiable et interrogeable de toute l'activité d'achat et de navigation.
+
+La synchronisation est configurée par Datasource via des **destinations**. Lorsqu'une destination est configurée, chaque événement traité par cette Datasource est automatiquement écrit dans la base analytique en plus de son traitement habituel.
+
+## Modes de Datasource pris en charge
+
+La synchronisation avec la base analytique fonctionne quel que soit le mode d'ingestion :
+
+| Mode | Comportement |
+|------|-------------|
+| **Ingester** (suivi de navigation) | Les événements sont écrits dans la base analytique en temps réel à mesure qu'ils arrivent. |
+| **Pubsub** (Kafka / flux temps réel) | Les événements sont écrits dans la base analytique en temps réel à mesure qu'ils sont consommés. |
+| **Worker** (imports par lots) | Les événements sont écrits en masse via des opérations de chargement optimisées à la fin de chaque job d'import. |
+
+## Types de tables
+
+Deux types de tables sont pris en charge, déterminés par le sous-type de la Datasource :
+
+### Achats
+
+Stocke les événements transactionnels d'achat. Chaque ligne représente un produit unique acheté par un utilisateur. Toutes les colonnes sont toujours présentes dans la table ; les valeurs sont définies à null lorsqu'aucun type de Field Mapping correspondant n'existe.
+
+| Colonne | Type de Field Mapping source | Description |
+|--------|--------------------------|-------------|
+| **user** | `workflow_user` ou `workflow_purchase_user` | L'identifiant utilisateur. |
+| **price** | `price` | Le prix de l'article. |
+| **reference_id** | `reference_id` ou `reference_ids` | La référence produit achetée. |
+| **transaction_id** | `transaction_id` | L'identifiant de transaction regroupant les articles d'une même commande. |
+| **transaction_source** | `transaction_source` | L'origine de la transaction (par ex. en ligne, en magasin). |
+| **transaction_metadata** | `transaction_metadata` | Métadonnées supplémentaires de la transaction, stockées sous forme de chaîne structurée. |
+| **purchased_at** | `datetime` | La date de l'achat. |
+
+### Événements web
+
+Stocke les événements de navigation et comportementaux. Chaque ligne représente une interaction suivie unique.
+
+**Colonnes obligatoires** — toujours présentes dans la table, définies à null lorsqu'aucun champ correspondant n'existe :
+
+| Colonne | Type de Field Mapping source | Description |
+|--------|--------------------------|-------------|
+| **clientId** | `workflow_user` | L'identifiant utilisateur principal (par ex. ID CRM, utilisateur connecté). |
+| **userId** | `workflow_onsite_user` | Un identifiant utilisateur secondaire (par ex. ID de session basé sur un cookie ou anonyme). |
+| **name** | `event_name` | Le nom de l'événement (par ex. page_view, add_to_cart, purchase). |
+| **ids** | `reference_ids` ou `reference_id` | Les identifiants de référence associés à l'événement (par ex. IDs produits consultés). Toujours stocké sous forme de tableau. |
+| **timestamp** | `datetime` | La date de l'événement. |
+
+**Colonnes optionnelles** — incluses uniquement lorsque le [Field Mapping](/fr/advanced-guide/datahub/field-mapping) de la Datasource contient le type correspondant :
+
+| Colonne | Type de Field Mapping source | Description |
+|--------|--------------------------|-------------|
+| **tmpId** | `user_tmp_id` | Un identifiant temporaire d'appareil ou de session (par ex. empreinte ou cookie first-party). |
+| **url** | `url` | L'URL de la page où l'événement s'est produit. |
+| **eventId** | `event_id` | Un identifiant unique pour cette instance spécifique de l'événement. |
+| **value** | `price` | Une valeur numérique associée à l'événement (par ex. total panier, prix produit). |
+| **transId** | `transaction_id` | Un identifiant de transaction, si l'événement est transactionnel. |
+| **agent** | `user_agent` | Le user agent du navigateur, stocké sous forme d'enregistrement structuré avec les détails du navigateur, de l'OS et de l'appareil. |
+
+<Info>
+  Plusieurs Datasources peuvent écrire dans la **même** table analytique. Par exemple, un ingester Google Tag Manager et un ingester Reelevant Analytics peuvent tous deux alimenter la même table d'événements web. La plateforme associe les champs de chaque Datasource aux colonnes canoniques appropriées en se basant sur leurs types de Field Mapping.
+</Info>
+
+## Comment le Field Mapping détermine le schéma
+
+Le schéma de la base analytique est dérivé du [Field Mapping](/fr/advanced-guide/datahub/field-mapping) de votre Datasource. Vous n'avez pas besoin de définir manuellement les colonnes — la plateforme associe vos champs configurés aux colonnes analytiques appropriées en se basant sur leur **type sémantique** assigné.
+
+Chaque champ de votre Field Mapping possède un type assigné (par ex. User, Event Name, Datetime, URL). La plateforme fait correspondre ces types aux définitions de colonnes canoniques présentées dans les tables ci-dessus et écrit chaque valeur dans la colonne canonique correspondante.
+
+Par exemple, si votre Datasource possède un champ nommé `event_time` avec le type **Datetime**, sa valeur est écrite dans la colonne `timestamp` — quel que soit le nom original du champ.
+
+<Info>
+  Seuls les champs avec des types sémantiques reconnus (User, Event Name, Datetime, Reference ID, URL, Price, Transaction ID, User Agent, etc.) sont écrits dans les colonnes analytiques canoniques. Les champs assignés à des types génériques comme « Text » ou « Number » ne sont pas synchronisés vers la base analytique.
+</Info>
+
+## Configuration d'une destination
+
+Les destinations sont configurées dans les **options de stockage** de la Datasource. Chaque destination spécifie :
+
+| Paramètre | Description |
+|-----------|-------------|
+| **Dataset** | Le dataset cible (schéma de base de données) dans lequel la table réside. |
+| **Table name** | Le nom de la table. Supporte le placeholder `{COMPANY_ID}` pour l'isolation multi-tenant. |
+
+Une fois la destination configurée, la synchronisation démarre automatiquement lors de la prochaine exécution de la Datasource ou ingestion d'événements.
+
+## Déduplication
+
+Des événements en double peuvent survenir en raison de nouvelles tentatives, de retraitements ou de problèmes dans les données sources. Reelevant fournit un mécanisme optionnel de déduplication qui s'exécute périodiquement pour supprimer les doublons de la base analytique.
+
+### Fonctionnement
+
+Un job planifié inspecte toutes les Datasources avec la déduplication activée et supprime les lignes en double en se basant sur une clé de déduplication fixe par type de table :
+
+| Type de table | Clé de déduplication |
+|------------|-------------------|
+| **Achats** | `user` + `transaction_id` + `reference_id` — une seule ligne par combinaison utilisateur/transaction/produit est conservée. |
+| **Événements web** | `transId` + `ids` lorsqu'une transaction est présente, sinon `eventId` — garantit que chaque événement unique est stocké une seule fois. |
+
+Lorsque des doublons sont détectés, la ligne la plus récente (par temps de partition) est conservée et les doublons plus anciens sont supprimés.
+
+### Activation de la déduplication
+
+La déduplication est activée par destination via l'**option de déduplication** :
+
+| Paramètre | Description |
+|-----------|-------------|
+| **Enabled** | Activer ou désactiver la déduplication pour cette destination. |
+
+<Info>
+  La déduplication s'exécute selon un planning fixe (toutes les 12 heures). Elle n'est pas déclenchée en temps réel — de brèves périodes de données en double peuvent exister entre les exécutions.
+</Info>
+
+## Prérequis
+
+Avant d'activer la synchronisation avec la base analytique pour une Datasource :
+
+1. **Le Field Mapping doit utiliser des types sémantiques** — la Datasource doit avoir des champs associés aux types sémantiques corrects (User, Datetime, Reference ID, Event Name, etc.) pour que la plateforme puisse les mapper aux colonnes analytiques canoniques. Les champs avec des types génériques (Text, Number) ne sont pas synchronisés.
+2. **La Datasource doit être publiée** — seules les Datasources publiées (actives) écrivent dans la base analytique.
+3. **Une destination doit être configurée** — votre Technical Account Manager ou administrateur configurera le dataset et le nom de la table de destination pour votre Datasource.
+
+## Migration depuis l'ancien système de synchronisation
+
+Si vos Datasources étaient précédemment synchronisées vers la base analytique via un système relais intermédiaire, la nouvelle approche de synchronisation directe le remplace entièrement. Le comportement est identique — les événements sont écrits dans les mêmes tables avec le même schéma — mais avec une latence plus faible et une architecture plus simple.
+
+Aucune action n'est requise de votre côté. Votre administrateur mettra à jour la configuration de la Datasource pour utiliser la nouvelle approche basée sur les destinations, et la synchronisation continue de manière transparente.

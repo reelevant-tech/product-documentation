@@ -1,0 +1,78 @@
+---
+title: 'Options de format CSV'
+description: 'Options avancées de parsing CSV — délimiteurs personnalisés, noms de colonnes explicites pour les fichiers sans en-tête'
+---
+
+## Présentation
+
+Par défaut, la plateforme détecte automatiquement le délimiteur CSV et lit les noms de colonnes à partir de la première ligne du fichier. Pour la plupart des fichiers CSV, aucune configuration supplémentaire n'est nécessaire.
+
+Cependant, certains fournisseurs de données livrent des fichiers CSV **sans ligne d'en-tête** — chaque ligne contient des données, et il n'y a pas de première ligne définissant les noms de colonnes. Dans ces cas, vous pouvez spécifier des noms de colonnes explicites pour que la plateforme sache comment nommer chaque champ.
+
+## Options CSV
+
+Les options suivantes sont disponibles lorsque le format détecté (ou défini manuellement) est CSV :
+
+| Option | Obligatoire | Description |
+|--------|----------|-------------|
+| **csvDelimiter** | Non | Remplacer le délimiteur détecté automatiquement. Valeurs courantes : `,` (virgule), `;` (point-virgule), `\t` (tabulation), `\|` (pipe). |
+| **csvColumns** | Non | Une liste ordonnée de noms de colonnes pour les fichiers CSV sans en-tête. Lorsqu'elle est définie, chaque ligne — y compris la première — est traitée comme des données. |
+
+## Quand utiliser csvColumns
+
+Utilisez `csvColumns` lorsque votre fichier CSV n'a **pas de ligne d'en-tête**. Sans cette option, la plateforme lit la première ligne comme noms de colonnes, ce qui signifie :
+
+- La première ligne de données réelles est consommée comme en-tête au lieu d'être ingérée.
+- Les noms de colonnes changent de manière imprévisible à chaque actualisation du fichier, ce qui casse le Field Mapping.
+
+### Exemple
+
+Considérons un flux de stock livré sans en-tête :
+
+| Ligne | Contenu brut |
+|-----|-------------|
+| 1 | `ABC123,STORE01,42` |
+| 2 | `DEF456,STORE02,17` |
+
+**Sans csvColumns**, la plateforme traite `ABC123`, `STORE01` et `42` comme des noms de colonnes. La deuxième ligne devient la seule ligne de données, et les noms de colonnes changent à la prochaine livraison.
+
+**Avec csvColumns** défini à `["id", "store_code", "quantite"]`, les deux lignes sont ingérées comme données avec des noms de colonnes stables et significatifs :
+
+| id | store_code | quantite |
+|----|------------|----------|
+| ABC123 | STORE01 | 42 |
+| DEF456 | STORE02 | 17 |
+
+## Configuration de csvColumns
+
+<Info>
+  Il n'existe pas encore d'interface pour définir `csvColumns`. Cette option est actuellement configurée uniquement via l'API. Contactez votre Technical Account Manager si vous avez besoin d'aide pour la configurer sur une Datasource.
+</Info>
+
+Pour définir des noms de colonnes explicites, incluez `csvColumns` dans les options de format de la configuration source lors de l'appel à l'étape `configure_sources` via l'[API Datasources](/developer-docs/introduction) :
+
+| Champ | Valeur |
+|-------|-------|
+| **format.type** | `csv` |
+| **format.options.csvColumns** | Une liste ordonnée de noms de colonnes, par ex. `["id", "store_code", "quantite"]` |
+| **format.options.csvDelimiter** | *(optionnel)* Remplacer le délimiteur détecté automatiquement |
+
+Après la configuration de la Datasource, vérifiez que le [Field Mapping](/fr/advanced-guide/datahub/field-mapping) affiche les noms de colonnes attendus et que toutes les lignes sont ingérées comme données.
+
+<Warning>
+  Le nombre de noms dans `csvColumns` doit correspondre au nombre de colonnes du fichier CSV. Si une ligne possède plus ou moins de valeurs que prévu, elle est ignorée lors de l'ingestion.
+</Warning>
+
+<Info>
+  `csvColumns` est optionnel. Les Datasources existantes qui ne définissent pas cette option continuent de fonctionner comme avant — la première ligne est utilisée comme en-tête de colonnes.
+</Info>
+
+## Types de sources applicables
+
+L'option `csvColumns` est disponible sur tous les connecteurs basés sur des fichiers qui prennent en charge le CSV :
+
+- [URL](/fr/advanced-guide/datahub/source-types/url)
+- [File Upload](/fr/advanced-guide/datahub/source-types/file)
+- [FTP / SFTP](/fr/advanced-guide/datahub/source-types/ftp-sftp)
+- [Google Cloud Storage](/fr/advanced-guide/datahub/source-types/gcs)
+- [Amazon S3](/fr/advanced-guide/datahub/source-types/s3)
