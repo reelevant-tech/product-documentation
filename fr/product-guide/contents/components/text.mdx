@@ -1,0 +1,66 @@
+---
+title: 'Composant Text'
+description: 'Ajoutez et configurez des éléments de texte enrichi avec des variables dynamiques et des transformations'
+---
+
+![Composant Text sélectionné sur le canvas avec le panneau de configuration ouvert](/images/contents/component-text-v2.png)
+
+## Présentation
+
+Le composant Text vous permet d'ajouter du texte enrichi à vos templates de contenu. Le texte peut être statique ou **dynamique** — lié à des variables provenant de [Datasources](/fr/product-guide/contents/data-binding) qui se résolvent au moment du rendu.
+
+| Propriété | Valeur |
+|-----------|--------|
+| **Bouton de la barre d'outils** | Text |
+| **Prend en charge le Data binding** | Oui — contenu textuel, lien de redirection |
+| **Prend en charge les Conditions** | Oui |
+
+## Paramètres du Text
+
+Lorsqu'un composant Text est sélectionné, le panneau de configuration affiche :
+
+| Propriété | Description |
+|-----------|-------------|
+| **Content** | Le contenu textuel. Saisissez directement ou utilisez l'éditeur de texte enrichi. |
+| **Dynamic text** | Activer pour lier le contenu textuel à une variable de Datasource. |
+
+## Style
+
+La section de style du texte offre un contrôle typographique complet :
+
+| Propriété | Options |
+|-----------|---------|
+| **Font family** | Sélectionnez parmi les polices disponibles (y compris les polices personnalisées depuis les [Paramètres](/fr/product-guide/contents/settings)). |
+| **Font weight** | Thin, Extra light, Light, Regular, Medium, Semi bold, Bold, Extra bold, Black, Extra black. |
+| **Size** | Taille de la police en pixels. |
+| **Letter spacing** | Espacement entre les caractères. |
+| **Line height** | Espacement vertical entre les lignes. |
+| **Color** | Couleur de remplissage du texte. |
+| **Text decoration** | Uppercase, Lowercase, Underline, Crossed (barré), Superscript, Italic. |
+| **Alignment** | Left, Center, Right, Justify (horizontal). Top, Middle, Bottom (vertical). |
+
+<Tip>
+  Lorsque le texte a des styles mixtes (par exemple, une partie en gras, une partie en normal), les champs de style affichent **Mixed** et les modifications s'appliquent uniquement à la portion sélectionnée.
+</Tip>
+
+## Transformations
+
+Lorsqu'un champ de texte est lié à une variable de Datasource, vous pouvez appliquer des **Transformations** pour formater la valeur avant le rendu :
+
+| Catégorie | Exemples |
+|-----------|----------|
+| **Date et heure** | Date, Date text, Hour, Day, Month's name, etc. |
+| **Nombre** | Round, Absolute, Negative, Percentage, Round up to N decimal. |
+| **Devise** | Formatage avec symbole de devise, options d'arrondi. |
+
+Les Transformations nécessitent la sélection d'une **langue** et optionnellement d'une **devise** pour un formatage adapté à la locale.
+
+## Redirection
+
+| Propriété | Description |
+|-----------|-------------|
+| **Lien de redirection** | URL vers laquelle les utilisateurs sont redirigés au clic. Peut être une URL statique ou une variable de Datasource. |
+
+<Warning>
+  Si un Content est utilisé dans un [Workflow](/fr/product-guide/workflows/overview) qui nécessite un lien de redirection, vous devez en définir un — sinon la publication affichera une erreur.
+</Warning>

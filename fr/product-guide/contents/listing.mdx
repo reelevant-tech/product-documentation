@@ -1,0 +1,64 @@
+---
+title: 'Liste des Contents'
+description: 'Parcourez, recherchez et gérez tous vos templates de contenu depuis la page de listing'
+---
+
+![Page de liste des Contents affichant un tableau de templates de contenu](/images/contents/listing-page-v2.png)
+
+## Liste des Contents
+
+Lorsque vous ouvrez l'application **Content Editor** depuis la barre latérale, vous arrivez sur la page de liste des Contents. Ce tableau affiche tous vos templates de contenu avec les colonnes suivantes :
+
+| Colonne | Description |
+|---------|-------------|
+| **Content** | Le nom du Content. Cliquez pour l'ouvrir dans l'éditeur. |
+| **Statut** | Le statut du cycle de vie actuel — Draft, Published, Publishing ou Error. |
+| **Teams** | Les Teams auxquelles le Content appartient. |
+| **Dernière modification** | La date de dernière mise à jour du Content. |
+
+Utilisez la barre de recherche pour trouver des Contents par nom. Vous pouvez filtrer la liste par :
+- **Statut** — Draft, Published, Inactive, Publishing, Error.
+- **Teams** — Filtrer par Team.
+
+Le fil d'Ariane vous permet de naviguer entre les dossiers pour une gestion organisée des Contents.
+
+## Créer un Content
+
+<Steps>
+  <Step title="Ouvrir la fenêtre de création">
+    Cliquez sur le bouton **Create content** en haut à droite de la page de listing. Une fenêtre modale s'ouvre.
+  </Step>
+  <Step title="Remplir les détails du contenu">
+    Le formulaire de création comprend les champs suivants :
+
+    - **Content name** — Un nom descriptif pour votre template de contenu.
+    - **Description** — Une courte description optionnelle (50 caractères maximum).
+    - **Teams** — Sélectionnez une ou plusieurs Teams qui auront accès.
+    - **Configuration des dossiers** — Placez optionnellement le Content dans une hiérarchie de dossiers.
+    - **Import design** — Importez optionnellement un export JSON Figma ou un fichier PSD pour partir d'un design existant. Voir [Import de design](/fr/product-guide/contents/design-import) pour plus de détails.
+  </Step>
+  <Step title="Confirmer la création">
+    Cliquez sur **Create content** pour créer le template. Vous serez redirigé vers l'éditeur.
+  </Step>
+</Steps>
+
+## Modifier les propriétés d'un Content
+
+Pour mettre à jour les propriétés d'un Content après sa création :
+
+1. Ouvrez le **menu d'actions** du Content (trois points) dans le tableau de la liste.
+2. Sélectionnez **Settings**.
+3. Modifiez le nom, la description, les Teams ou le dossier selon vos besoins.
+4. Cliquez sur **Save changes** pour appliquer les modifications.
+
+## Archiver un Content
+
+Pour archiver un Content dont vous n'avez plus besoin :
+
+1. Ouvrez le **menu d'actions** du Content dans le tableau de la liste.
+2. Sélectionnez **Archive**.
+3. Une fenêtre de confirmation vous demande de saisir un mot de validation pour confirmer.
+
+<Warning>
+  Si le Content est utilisé par un ou plusieurs [Workflows](/fr/product-guide/workflows/overview), la fenêtre d'archivage affichera les Workflows qui le référencent. Vous devez retirer le Content de ces Workflows avant de l'archiver.
+</Warning>

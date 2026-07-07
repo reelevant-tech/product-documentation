@@ -1,0 +1,48 @@
+---
+title: 'Calques'
+description: 'Organisez les composants avec l'arborescence des calques — ordre, regroupement et contrôles de visibilité'
+---
+
+![Panneau des calques affichant une arborescence de composants avec des groupes et des boutons de visibilité](/images/contents/layers-panel-v2.png)
+
+## Présentation
+
+Le panneau des calques offre une arborescence hiérarchique de tous les composants de votre template de Content. Il apparaît sur le côté gauche de l'éditeur et vous permet de gérer l'ordre des composants, le regroupement et la visibilité.
+
+## Arborescence des calques
+
+Chaque composant sur le canvas apparaît comme un nœud dans l'arborescence des calques. La structure de l'arborescence reflète l'ordre d'empilement visuel — les composants plus haut dans l'arborescence s'affichent au premier plan.
+
+### Actions de l'arborescence
+
+| Action | Description |
+|--------|-------------|
+| **Développer / Réduire** | Développer ou réduire un nœud de groupe pour afficher ou masquer ses enfants. |
+| **Afficher / Masquer le calque** | Activer ou désactiver la visibilité d'un composant sur le canvas. Les composants masqués ne sont pas rendus dans la sortie finale. |
+| **Glisser-déposer** | Réorganiser les composants en les faisant glisser vers le haut ou le bas dans l'arborescence. |
+
+## Groupes
+
+Les groupes vous permettent d'organiser les composants associés ensemble. Un groupe agit comme un conteneur dans l'arborescence des calques.
+
+| Action | Description |
+|--------|-------------|
+| **Créer un groupe** | Sélectionnez un ou plusieurs composants et cliquez sur **Create group** pour les regrouper dans un nouveau groupe. |
+| **Dupliquer** | Crée une copie du composant ou du groupe sélectionné avec le suffixe « (Copy) ». |
+
+<Tip>
+  Les groupes sont utiles pour appliquer des [Conditions](/fr/product-guide/contents/conditions) à plusieurs composants à la fois — définissez une condition sur le groupe, et tous les enfants héritent de la règle de visibilité.
+</Tip>
+
+## Conditions dans l'arborescence des calques
+
+Les composants et les groupes peuvent avoir des [Conditions](/fr/product-guide/contents/conditions) attachées. Lorsqu'une condition est définie, l'arborescence affiche :
+
+- Un badge **Condition** sur le nœud.
+- Une action **Add condition** pour ajouter d'autres conditions.
+- Un menu déroulant pour choisir quel état de condition prévisualiser sur le canvas.
+
+## Sélection des calques
+
+- **Cliquez** sur un calque dans l'arborescence pour le sélectionner sur le canvas et ouvrir son panneau de configuration.
+- **Cliquez** sur un composant sur le canvas pour le mettre en surbrillance dans l'arborescence des calques.

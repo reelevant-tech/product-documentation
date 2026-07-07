@@ -1,0 +1,42 @@
+---
+title: 'Progress Bar & Progress Arc'
+description: 'Affichez des indicateurs visuels de progression avec des valeurs actuelles et maximales configurables'
+---
+
+![Composants Progress Bar et Progress Arc sur le canvas](/images/contents/component-progress-v2.png)
+
+## Présentation
+
+Les composants Progress Bar et Progress Arc affichent des indicateurs visuels de progression. Ils sont idéaux pour montrer un statut d'avancement, des niveaux de stock, des objectifs de campagne ou toute métrique avec une valeur actuelle et une valeur maximale.
+
+## Progress Bar
+
+| Propriété | Valeur |
+|-----------|--------|
+| **Bouton de la barre d'outils** | Progress bars |
+| **Prend en charge le Data binding** | Oui — valeur actuelle, valeur maximale |
+| **Prend en charge les Conditions** | Oui |
+
+### Paramètres de la Progress Bar
+
+| Propriété | Description |
+|-----------|-------------|
+| **Valeur actuelle** | La valeur de progression actuelle. Peut être statique ou liée à une variable de Datasource. |
+| **Valeur maximale** | La valeur maximale représentant 100 % d'achèvement. |
+
+<Info>
+  Les valeurs doivent être des nombres. Si une valeur non numérique est fournie, le composant affichera une erreur.
+</Info>
+
+## Progress Arc
+
+Le Progress Arc affiche la progression sous forme d'arc circulaire au lieu d'une barre horizontale.
+
+### Paramètres du Progress Arc
+
+| Propriété | Description |
+|-----------|-------------|
+| **Valeur actuelle** | La valeur de progression actuelle. |
+| **Valeur maximale** | La valeur maximale. |
+| **Angle** | L'angle de l'arc en degrés. |
+| **Forme** | Le style visuel de l'arc. |

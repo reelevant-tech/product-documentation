@@ -1,0 +1,51 @@
+---
+title: 'Présentation'
+description: 'Explorez tous les types de composants disponibles dans le Content Editor'
+---
+
+![Barre d'outils du Content Editor affichant les boutons des types de composants](/images/contents/components-toolbar-v2.png)
+
+## Types de composants
+
+Les composants sont les éléments de base de vos templates de Content. Chaque type de composant remplit un rôle spécifique et dispose de ses propres options de configuration.
+
+<CardGroup cols={2}>
+  <Card title="Text" icon="font" href="/fr/product-guide/contents/components/text">
+    Texte enrichi avec mise en forme, variables dynamiques et transformations.
+  </Card>
+  <Card title="Image" icon="image" href="/fr/product-guide/contents/components/image">
+    Images statiques ou liées aux données, depuis des URLs ou des Datasources.
+  </Card>
+  <Card title="Shapes" icon="shapes" href="/fr/product-guide/contents/components/shape">
+    Rectangle, Cercle et Triangle avec remplissage, contour et rayon de bordure.
+  </Card>
+  <Card title="Barcode" icon="barcode" href="/fr/product-guide/contents/components/barcode">
+    Codes-barres Code128 et EAN avec valeurs configurables.
+  </Card>
+  <Card title="Countdown" icon="clock" href="/fr/product-guide/contents/components/countdown">
+    Compteurs à rebours animés jusqu'à une date cible.
+  </Card>
+  <Card title="Map" icon="map" href="/fr/product-guide/contents/components/map">
+    Google Maps avec marqueurs, zoom et style configurables.
+  </Card>
+  <Card title="Progress Bar & Arc" icon="chart-simple" href="/fr/product-guide/contents/components/progress">
+    Indicateurs visuels de progression avec valeurs actuelles et maximales.
+  </Card>
+</CardGroup>
+
+## Configuration commune
+
+Tous les composants partagent ces propriétés de configuration communes :
+
+| Propriété | Description |
+|-----------|-------------|
+| **Disposition** | Position X, position Y, largeur, hauteur du composant sur le canvas. |
+| **Taille** | Largeur et hauteur avec un bouton optionnel **Conserver le ratio d'aspect**. |
+| **Rotation** | Angle de rotation en degrés. |
+| **Apparence** | Couleur d'arrière-plan, opacité et autres propriétés visuelles. |
+| **Lien de redirection** | Une URL vers laquelle les utilisateurs sont dirigés lorsqu'ils cliquent sur le composant. Peut être statique ou lié aux données. |
+| **Conditions** | Règles de visibilité basées sur les valeurs de données. Voir [Conditions](/fr/product-guide/contents/conditions). |
+
+<Tip>
+  Chaque propriété de composant qui accepte une valeur peut aussi accepter une **variable** provenant d'une [Datasource](/fr/product-guide/contents/data-binding) connectée. Cliquez sur l'icône du sélecteur de variables à côté d'un champ pour le lier à des données dynamiques.
+</Tip>

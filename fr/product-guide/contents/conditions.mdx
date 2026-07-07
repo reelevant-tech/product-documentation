@@ -1,0 +1,60 @@
+---
+title: 'Conditions'
+description: 'Contrôlez la visibilité des composants avec des règles basées sur les données issues des Datasources'
+---
+
+![Panneau de configuration des conditions affichant les règles de condition](/images/contents/conditions-panel-v2.png)
+
+## Présentation
+
+Les Conditions vous permettent d'afficher ou de masquer des composants en fonction des valeurs de données au moment du rendu. Utilisez les Conditions pour créer des templates personnalisés qui s'adaptent au contexte de chaque utilisateur — par exemple, afficher une image différente selon une catégorie de produit ou masquer une section lorsqu'un champ est vide.
+
+## Fonctionnement des Conditions
+
+Une Condition est attachée à un composant ou un [groupe](/fr/product-guide/contents/layers) dans l'arborescence des calques. Lorsque le Content est rendu :
+
+1. La plateforme évalue chaque Condition par rapport aux données résolues.
+2. Si une Condition est **remplie**, le composant est affiché dans l'état de cette Condition.
+3. Si **aucune Condition n'est remplie**, l'**état par défaut** est affiché.
+
+## Groupes de Conditions
+
+Un groupe de Conditions est un conteneur nommé pour une ou plusieurs règles de condition sur un composant. Chaque règle définit un test basé sur les données (par exemple, « catégorie de produit égale Chaussures »).
+
+| Propriété | Description |
+|-----------|-------------|
+| **Nom** | Un nom descriptif pour le groupe de Conditions. |
+| **Règles de condition** | Une ou plusieurs conditions de test sur les données. Chaque condition crée un état visuel distinct pour le composant. |
+| **État par défaut** | L'état de repli affiché lorsqu'aucune condition n'est remplie. |
+
+## Créer des Conditions
+
+<Steps>
+  <Step title="Sélectionner un composant ou un groupe">
+    Cliquez sur le composant dans l'[arborescence des calques](/fr/product-guide/contents/layers) ou sur le canvas.
+  </Step>
+  <Step title="Ajouter une condition">
+    Dans l'arborescence des calques, faites un clic droit sur le composant et sélectionnez **Add condition**, ou utilisez l'action de condition dans le panneau de configuration.
+  </Step>
+  <Step title="Configurer la règle de condition">
+    Définissez le test sur les données en sélectionnant une variable de [Datasource](/fr/product-guide/contents/data-binding) et un opérateur de comparaison.
+  </Step>
+  <Step title="Concevoir chaque état de condition">
+    Basculez entre les états de condition à l'aide du menu déroulant dans l'arborescence des calques. Personnalisez l'apparence du composant pour chaque état.
+  </Step>
+</Steps>
+
+## Option d'affichage masqué
+
+Vous pouvez activer **Display none if condition is false** pour masquer complètement le composant lorsqu'aucune condition n'est remplie, au lieu d'afficher un état par défaut.
+
+<Tip>
+  Appliquez des Conditions aux [groupes](/fr/product-guide/contents/layers) pour contrôler la visibilité de plusieurs composants à la fois.
+</Tip>
+
+## Prévisualisation des Conditions
+
+Utilisez le menu déroulant des états de condition dans l'arborescence des calques pour prévisualiser chaque état sur le canvas. Le menu déroulant affiche :
+
+- **Condition 1**, **Condition 2**, etc. — chaque état de condition nommé.
+- **default** — l'état de repli.

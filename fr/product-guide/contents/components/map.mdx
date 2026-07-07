@@ -1,0 +1,56 @@
+---
+title: 'Composant Map'
+description: 'Intégrez Google Maps avec des marqueurs, des sources de localisation et un style configurables'
+---
+
+![Composant Map sur le canvas affichant une carte avec des marqueurs](/images/contents/component-map-v2.png)
+
+## Présentation
+
+Le composant Map intègre une vue Google Maps dans votre template de Content. Il peut afficher une adresse statique, des coordonnées provenant d'une [Datasource de localisation](/fr/product-guide/datahub/overview) ou la géolocalisation de l'utilisateur depuis un [Workflow](/fr/product-guide/workflows/overview).
+
+| Propriété | Valeur |
+|-----------|--------|
+| **Bouton de la barre d'outils** | Map |
+| **Prend en charge le Data binding** | Oui — adresse, coordonnées |
+| **Prend en charge les Conditions** | Oui |
+
+## Paramètres de la Map
+
+| Propriété | Description |
+|-----------|-------------|
+| **Type** | Roadmap, Terrain, Hybrid ou Satellite. |
+| **Langue** | Langue des libellés de la carte. |
+| **Zoom** | Niveau de zoom (ou **Automatic** pour ajuster à tous les marqueurs). |
+| **Style** | Style visuel de la carte. |
+
+## Source de localisation
+
+La carte prend en charge trois sources de localisation :
+
+| Source | Description |
+|--------|-------------|
+| **Address** | Utiliser une adresse fixe ou une variable qui se résout en adresse. |
+| **Datasources** | Utiliser une Datasource de localisation. La carte lit les coordonnées depuis ses champs `rlvt_lat` et `rlvt_lng`. |
+| **Geolocation** | Utiliser les coordonnées de géolocalisation du Workflow. |
+
+## Options d'affichage
+
+| Propriété | Description |
+|-----------|-------------|
+| **Display** | Activer ou désactiver la visibilité des éléments de la carte. |
+| **Points d'intérêt** | Afficher ou masquer les points d'intérêt par type — Attraction, Commerce, Gouvernement, Médical, Parc, Lieu de culte, École, Complexe sportif. |
+
+## Marqueurs
+
+Vous pouvez ajouter plusieurs marqueurs à la carte :
+
+| Propriété | Description |
+|-----------|-------------|
+| **Location** | La position du marqueur (adresse ou coordonnées). |
+| **Label** | Libellé textuel sur le marqueur. |
+| **Color** | Couleur du marqueur. |
+| **Icon** | Image d'icône personnalisée (64×64 max). |
+| **Size** | Tiny, Small, Mid ou Large. |
+
+Cliquez sur **Add marker** pour ajouter des marqueurs supplémentaires, ou **Delete marker** pour en supprimer un.
