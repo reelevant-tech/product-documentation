@@ -1,0 +1,31 @@
+---
+title: 'Weather'
+description: 'Récupérer les données météo actuelles pour la localisation de l'utilisateur'
+---
+
+![Panneau de configuration du Node Weather montrant les options de timing, d'adresse et de température](/images/workflows/node-weather.png)
+
+## Vue d'ensemble
+
+Le Node Weather récupère les données météo actuelles pour la localisation de l'utilisateur. Il peut être utilisé pour personnaliser le contenu en fonction des conditions météorologiques.
+
+Ce Node utilise les données du Node [Geolocation](/fr/product-guide/workflows/data-nodes/geolocation) pour déterminer la localisation de l'utilisateur, puis récupère la météo actuelle.
+
+## Données de sortie
+
+Le Node Weather fournit :
+- **Temperature** — Température actuelle.
+- **Conditions** — Conditions météorologiques (ensoleillé, pluvieux, nuageux, etc.).
+- **Additional data** — Humidité, vitesse du vent et autres données météorologiques.
+
+## Cas d'usage courants
+
+- Afficher des **parapluies** quand il pleut et des **lunettes de soleil** quand il fait beau.
+- Promouvoir des **produits saisonniers** en fonction des plages de température.
+- Afficher des recommandations de **vêtements adaptés à la météo**.
+
+## Bonnes pratiques
+
+- Associez toujours le Node Weather à un Node [Geolocation](/fr/product-guide/workflows/data-nodes/geolocation) en amont.
+- Utilisez des [Nodes de condition](/fr/product-guide/workflows/logic-nodes/conditions) en aval pour créer des Branches basées sur les conditions météo ou les plages de température.
+- Tenez compte des fuseaux horaires — les données météo reflètent les conditions actuelles à la localisation de l'utilisateur.

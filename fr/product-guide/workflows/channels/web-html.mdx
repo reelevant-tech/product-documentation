@@ -1,0 +1,34 @@
+---
+title: 'Web HTML'
+description: 'Générer des fragments HTML responsive à intégrer dans des pages web'
+---
+
+![Sélecteur de Channels montrant le type Web HTML](/images/workflows/channel-picker.png)
+
+## Vue d'ensemble
+
+Le Channel Web HTML génère un fragment HTML responsive à intégrer dans des pages web. Contrairement à Web Image, la sortie est du HTML interactif qui s'adapte à la taille du conteneur.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Web |
+| **Format de sortie** | Fragment HTML web |
+| **Cas d'usage** | Blocs de contenu interactifs, grilles responsives, composants intégrés |
+
+## Comment ça fonctionne
+
+Lorsqu'un visiteur charge une page contenant une zone Reelevant Web HTML, le Workflow s'exécute et renvoie un snippet HTML responsive. Ce snippet est injecté dans la page via une balise JavaScript.
+
+La sortie HTML supporte les éléments cliquables, les effets au survol et les mises en page responsives — ce qui la rend adaptée à la personnalisation interactive.
+
+## Configuration
+
+1. Ajoutez un Node Channel Web HTML à votre canevas de Workflow.
+2. Connectez-le en aval à votre logique de personnalisation.
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir le code d'intégration JavaScript.
+
+## Bonnes pratiques
+
+- Utilisez Web HTML pour du contenu qui doit être responsive ou interactif (ex. carrousels de produits, grilles cliquables).
+- Pour des visuels statiques simples, [Web Image](/fr/product-guide/workflows/channels/web-image) peut être plus simple à intégrer.
+- Testez le comportement responsive sur différentes tailles de fenêtre avant de publier.

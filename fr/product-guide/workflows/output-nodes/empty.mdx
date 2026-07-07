@@ -1,0 +1,26 @@
+---
+title: 'Empty'
+description: 'Renvoyer une réponse vide pour les groupes de contrôle ou les Branches de repli'
+---
+
+![Sélecteur de contenu de sortie montrant l'option No content](/images/workflows/node-picker-content.png)
+
+## Vue d'ensemble
+
+La sortie Empty renvoie une **réponse vide**. Elle est utilisée pour les Branches où vous ne souhaitez intentionnellement afficher aucun contenu.
+
+## Cas d'usage
+
+- **Groupes de contrôle dans les tests A/B** — N'afficher aucun contenu pour mesurer l'impact de la personnalisation.
+- **Branches de repli** lorsqu'aucun contenu pertinent n'est disponible.
+- **Scénarios de test** où vous souhaitez mesurer l'engagement sans contenu.
+
+## Comment ça fonctionne
+
+Lorsque le Workflow s'exécute et atteint un Output Node Empty, aucun contenu n'est renvoyé. La zone visuelle reste vide ou affiche le contenu par défaut défini dans votre intégration (ex. une image statique de repli dans le template e-mail).
+
+## Bonnes pratiques
+
+- Utilisez les sorties Empty dans les Nodes [Split](/fr/product-guide/workflows/logic-nodes/split) pour créer des groupes de contrôle permettant de mesurer l'Uplift de la personnalisation.
+- Assurez-vous que votre intégration gère correctement les réponses vides — par exemple, en affichant une image de repli ou en masquant entièrement la zone.
+- Suivez la performance des Branches Empty dans Analytics pour les comparer aux Branches personnalisées.

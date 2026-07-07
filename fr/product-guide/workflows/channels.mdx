@@ -1,0 +1,62 @@
+---
+title: 'Vue d'ensemble'
+description: 'Définir où votre contenu personnalisé est affiché en ajoutant des Nodes Channel à votre Workflow'
+---
+
+![Panneau de sélection des Channels montrant tous les types de Channels disponibles](/images/workflows/channel-picker.png)
+
+## Que sont les Channels ?
+
+Les Channels sont les Nodes de départ d'un Workflow. Ils définissent **où** le contenu personnalisé sera affiché — dans un e-mail, sur un site web, dans une application mobile ou sur une Landing Page.
+
+Chaque Branch de Workflow commence par un Node Channel et se termine par un [Output Node](/fr/product-guide/workflows/output-nodes).
+
+<Tip>
+  Vous pouvez avoir **plusieurs Channels** dans un même Workflow. Par exemple, si votre newsletter comporte trois zones visuelles personnalisées, ajoutez simplement trois Nodes Email Channel — un pour chaque zone.
+</Tip>
+
+## Types de Channels disponibles
+
+<CardGroup cols={2}>
+  <Card title="Email" icon="envelope" href="/fr/product-guide/workflows/channels/email">
+    Génère un visuel personnalisé à intégrer dans des campagnes e-mail.
+  </Card>
+  <Card title="Web Image" icon="image" href="/fr/product-guide/workflows/channels/web-image">
+    Génère une image personnalisée à afficher sur des sites web.
+  </Card>
+  <Card title="Web HTML" icon="code" href="/fr/product-guide/workflows/channels/web-html">
+    Génère un fragment HTML responsive à intégrer dans des pages web.
+  </Card>
+  <Card title="Landing Page" icon="browser" href="/fr/product-guide/workflows/channels/landing-page">
+    Génère une expérience de Landing Page complète.
+  </Card>
+  <Card title="Push Notification Image" icon="bell" href="/fr/product-guide/workflows/channels/push-notification">
+    Génère une image personnalisée pour les notifications push.
+  </Card>
+  <Card title="In-App Popup" icon="window-maximize" href="/fr/product-guide/workflows/channels/in-app-popup">
+    Génère une image personnalisée pour les popups in-app.
+  </Card>
+  <Card title="In-App Inbox" icon="inbox" href="/fr/product-guide/workflows/channels/in-app-inbox">
+    Génère une image personnalisée pour la boîte de réception in-app.
+  </Card>
+</CardGroup>
+
+## Ajouter un Channel
+
+<Steps>
+  <Step title="Ouvrir le sélecteur de Channels">
+    Cliquez sur le bouton **Channel** (icône smartphone) dans la barre d'outils inférieure. Le panneau de sélection s'ouvre sur le côté.
+  </Step>
+  <Step title="Sélectionner un type de Channel">
+    Choisissez le type de Channel souhaité dans la liste. Vous pouvez cliquer pour l'ajouter directement ou le glisser-déposer sur le canevas.
+  </Step>
+  <Step title="Positionner et connecter">
+    Le Node Channel apparaît sur le canevas. Connectez-le en aval à des [Data Nodes](/fr/product-guide/workflows/data-nodes), des [Logic Nodes](/fr/product-guide/workflows/logic-nodes), et finalement à un [Output Node](/fr/product-guide/workflows/output-nodes) pour compléter la Branch.
+  </Step>
+</Steps>
+
+## Conseils
+
+- Chaque Node Channel représente une **zone visuelle** dans votre déploiement final. Si vous avez besoin de trois bannières dans un e-mail, ajoutez trois Channels Email.
+- Les Channels peuvent partager des Data Nodes et Logic Nodes en aval — vous n'avez pas besoin de dupliquer l'ensemble du flux pour chaque Channel.
+- Après la publication, chaque Channel génère son propre lien d'intégration dans la [modale d'intégration](/fr/product-guide/workflows/integration).

@@ -1,0 +1,32 @@
+---
+title: 'Push Notification Image'
+description: 'Générer des images personnalisées pour les notifications push'
+---
+
+![Sélecteur de Channels montrant le type Push Notification Image](/images/workflows/channel-picker.png)
+
+## Vue d'ensemble
+
+Le Channel Push Notification Image génère une image personnalisée pour les notifications push enrichies sur appareils mobiles.
+
+| Propriété | Valeur |
+|----------|-------|
+| **Type de Channel** | Mobile |
+| **Format de sortie** | Image de notification push |
+| **Cas d'usage** | Bannières de notifications push enrichies |
+
+## Comment ça fonctionne
+
+Lorsque votre application envoie une notification push incluant une zone visuelle Reelevant, le Workflow s'exécute et renvoie une image personnalisée. Cette image est affichée comme pièce jointe média enrichie dans la notification push.
+
+## Configuration
+
+1. Ajoutez un Node Channel Push Notification Image à votre canevas de Workflow.
+2. Connectez-le en aval à votre logique de personnalisation.
+3. Après la publication, utilisez la [modale d'intégration](/fr/product-guide/workflows/integration) pour obtenir l'URL de l'image pour votre service de notifications push.
+
+## Bonnes pratiques
+
+- Gardez les images de notification push concises et percutantes — elles sont consultées à de petites tailles sur les écrans mobiles.
+- Utilisez les [paramètres d'URL](/fr/product-guide/workflows/data-nodes/url-parameter) pour transmettre les identifiants utilisateur depuis votre service de notifications push vers le Workflow.
+- Testez le rendu de l'image sur les appareils iOS et Android, car les tailles d'affichage peuvent varier.

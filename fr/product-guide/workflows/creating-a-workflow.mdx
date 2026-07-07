@@ -1,0 +1,64 @@
+---
+title: 'Créer un Workflow'
+description: 'Comment créer, configurer et gérer des Workflows dans la plateforme Reelevant'
+---
+
+![Page de liste des Workflows montrant la barre latérale de la plateforme Reelevant](/images/workflows/workflow-sidebar.png)
+
+## Liste des Workflows
+
+Lorsque vous ouvrez l'application **Workflows** depuis la barre latérale, vous arrivez sur la **page de liste des Workflows**. Ce tableau affiche tous vos Workflows avec les colonnes suivantes :
+
+| Colonne | Description |
+|--------|-------------|
+| **Name** | Le nom du Workflow. Cliquez pour l'ouvrir dans l'éditeur. |
+| **Teams** | Les Teams auxquelles le Workflow appartient. |
+| **Last modification** | Date de la dernière modification du Workflow. |
+| **Status** | Statut actuel du cycle de vie (Draft, Published, Inactive, etc.). |
+
+Utilisez la barre de recherche pour trouver des Workflows par nom, et les fils d'Ariane hiérarchiques pour naviguer dans les dossiers.
+
+## Créer un nouveau Workflow
+
+<Steps>
+  <Step title="Ouvrir la modale de création">
+    Cliquez sur le bouton **Create** dans le coin supérieur droit de la page de liste. Une modale s'ouvre.
+  </Step>
+  <Step title="Remplir les détails du Workflow">
+    Le formulaire de création comporte les champs suivants :
+
+    - **Name** — Un nom descriptif pour votre Workflow (ex. « Campagne Email Soldes d'été »).
+    - **Description** — Une description optionnelle expliquant l'objectif du Workflow.
+    - **Teams** — Sélectionnez une ou plusieurs Teams qui doivent avoir accès à ce Workflow. Vous pouvez rechercher et sélectionner plusieurs Teams.
+    - **Folder** — Placez optionnellement le Workflow dans une hiérarchie de dossiers pour l'organisation.
+  </Step>
+  <Step title="Confirmer la création">
+    Cliquez sur **Create** pour créer le Workflow. Vous serez redirigé vers l'éditeur de Workflow où vous pourrez commencer à construire votre logique d'automatisation.
+  </Step>
+</Steps>
+
+## Modifier les propriétés d'un Workflow
+
+Une fois le Workflow créé, vous pouvez mettre à jour ses propriétés à tout moment depuis l'éditeur :
+
+1. Cliquez sur le bouton **Settings** (icône engrenage) dans l'en-tête de l'éditeur.
+2. La modale **Edit workflow** s'ouvre avec les mêmes champs que le formulaire de création.
+3. Modifiez le nom, la description, les Teams ou le dossier selon vos besoins.
+4. Cliquez sur **Save** pour appliquer les modifications.
+
+## Archiver un Workflow
+
+Pour archiver un Workflow qui n'est plus nécessaire :
+
+1. Ouvrez le **menu d'actions** (trois points) du Workflow dans le tableau de liste.
+2. Sélectionnez **Archive**.
+3. Une boîte de confirmation vous demande de saisir un mot de validation pour confirmer l'action.
+4. Une fois archivé, le statut du Workflow passe à **Inactive** et il cesse de diffuser du contenu.
+
+<Warning>
+  Archiver un Workflow publié arrêtera immédiatement la diffusion de contenu. Assurez-vous d'avoir une alternative en place avant d'archiver.
+</Warning>
+
+## Et ensuite ?
+
+Une fois votre Workflow créé, rendez-vous dans l'[éditeur de Workflow](/fr/product-guide/workflows/editor) pour commencer à ajouter des [Channels](/fr/product-guide/workflows/channels), des [Data Nodes](/fr/product-guide/workflows/data-nodes) et de la [logique](/fr/product-guide/workflows/logic-nodes).

@@ -1,0 +1,34 @@
+---
+title: 'Visual Content'
+description: 'Afficher un template visuel conçu dans le Content Editor'
+---
+
+![Node Visual Content montrant la bibliothèque de contenus avec la sélection de contenu](/images/workflows/node-visual-content.png)
+
+## Vue d'ensemble
+
+Le type de sortie le plus courant. Un Output Node Visual Content affiche un **template visuel** conçu dans le [Content Editor](/fr/product-guide/contents/overview).
+
+## Configuration
+
+1. Cliquez sur l'Output Node de contenu pour ouvrir son panneau de configuration.
+2. Sélectionnez un template de contenu depuis votre bibliothèque de contenus.
+3. Le système mappe automatiquement les données des Data Nodes en amont vers les variables dynamiques du contenu.
+
+<Info>
+  Si les Data Nodes en amont fournissent des champs qui correspondent aux variables dynamiques du template de contenu, ils sont automatiquement liés. En cas de décalages, l'éditeur les signale comme erreurs lors de la [publication](/fr/product-guide/workflows/editor#publier-un-workflow).
+</Info>
+
+## Comment ça fonctionne
+
+Lorsque le Workflow s'exécute et atteint un Output Node Visual Content, le moteur :
+1. Récupère le template de contenu sélectionné.
+2. Lie les données des Nodes en amont aux variables dynamiques du template.
+3. Rend le visuel final (image ou HTML selon le type de Channel).
+4. Renvoie le contenu rendu à l'utilisateur.
+
+## Bonnes pratiques
+
+- Concevez vos templates de contenu avec des noms de variables clairs qui correspondent aux champs de votre Datasource.
+- Utilisez la fonctionnalité de prévisualisation pour vérifier l'apparence du contenu avec des données réelles avant de publier.
+- Si le même template est utilisé dans plusieurs Branches, chaque Branch peut lier des données différentes aux mêmes variables.

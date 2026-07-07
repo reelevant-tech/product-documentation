@@ -1,0 +1,52 @@
+---
+title: 'Versions du Workflow'
+description: 'Suivre, parcourir et restaurer les versions précédentes de vos Workflows'
+---
+
+![Éditeur de Workflow avec bouton de publication et contrôles de version](/images/workflows/editor-canvas.png)
+
+## Historique des versions
+
+Chaque fois que vous publiez un Workflow, une **nouvelle version** est automatiquement créée. L'historique des versions fournit une piste d'audit complète de tous les états publiés de votre Workflow.
+
+## Accéder aux versions
+
+1. Cliquez sur le bouton **Versions** (icône horloge) dans la barre d'outils inférieure de l'éditeur de Workflow.
+2. Le **panneau des versions** s'ouvre sur le côté droit, listant toutes les versions de la plus récente à la plus ancienne.
+
+Chaque carte de version affiche :
+- **Numéro de version** — Identifiant séquentiel (Version 1, Version 2, etc.).
+- **Horodatage** — Date et heure de publication de cette version.
+- **Statut** — Indique s'il s'agit de la version actuellement active.
+
+## Parcourir une version précédente
+
+Cliquez sur n'importe quelle carte de version pour charger cette version dans l'éditeur. Lors de la consultation d'une version précédente :
+
+- Le canevas affiche le Workflow tel qu'il était à ce moment.
+- L'éditeur passe en **mode lecture seule** — vous ne pouvez pas modifier les Nodes ni les connexions.
+- Un indicateur visuel distinct montre que vous consultez une version historique, pas le brouillon actuel.
+
+## Restaurer une version précédente
+
+Si vous devez revenir à une version précédente :
+
+1. Ouvrez le panneau des versions et sélectionnez la version que vous souhaitez restaurer.
+2. Le Workflow se charge en mode lecture seule.
+3. Cliquez sur le bouton **Restore** pour faire de cette version le brouillon actif.
+4. Le Workflow repasse en mode édition avec le contenu de la version restaurée.
+5. Vous pouvez ensuite le modifier davantage ou le publier directement.
+
+<Info>
+  Restaurer une version crée un nouveau brouillon basé sur la version sélectionnée. Cela **ne supprime aucune** version existante — l'historique complet est préservé.
+</Info>
+
+## Enregistrer les métadonnées de version
+
+Lorsque vous consultez une version spécifique, vous pouvez enregistrer des métadonnées au niveau de la version (comme des paramètres d'analyse) en utilisant le bouton **Save version** dans l'en-tête. Cela met à jour les métadonnées de cette version spécifique sans affecter le brouillon actuel.
+
+## Conseils
+
+- Utilisez les versions pour expérimenter en toute sécurité — publiez une nouvelle version, et si elle ne performe pas bien, restaurez la précédente.
+- L'historique des versions est en lecture seule par conception. Vous pouvez toujours revenir en arrière et voir exactement ce qui était en production à un moment donné.
+- Combinez l'historique des versions avec [Analytics](/fr/product-guide/analytics/overview) pour corréler les changements de performance avec des mises à jour spécifiques du Workflow.

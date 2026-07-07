@@ -1,0 +1,28 @@
+---
+title: 'Website Events'
+description: 'Récupérer les données de comportement utilisateur issues du tracking de votre site web'
+---
+
+![Panneau de configuration du Node Website Events montrant la sélection de Datasource et les filtres](/images/workflows/node-website-events.png)
+
+## Vue d'ensemble
+
+Le Node Website Events récupère les données de comportement utilisateur issues du tracking de votre site web — pages visitées, produits consultés, achats effectués, et plus encore.
+
+**Configuration :**
+- **User identifier** — Le champ utilisé pour identifier les utilisateurs, avec l'identifiant client comme solution de repli.
+- **Events** — Sélectionnez les événements web à inclure (pages vues, produits consultés, achats, etc.).
+- **Exclude events** — Excluez optionnellement des événements spécifiques.
+- **Period** — La fenêtre temporelle de rétro-consultation pour les événements.
+
+## Cas d'usage courants
+
+- **Retargeting** — Afficher les produits que l'utilisateur a consultés mais pas achetés.
+- **Cross-selling** — Recommander des produits complémentaires basés sur l'historique d'achat.
+- **Segmentation comportementale** — Utiliser des conditions pour créer différentes expériences basées sur les habitudes de navigation.
+
+## Bonnes pratiques
+
+- Choisissez une période de rétro-consultation appropriée — trop courte risque de manquer des données pertinentes, trop longue risque d'inclure des comportements obsolètes.
+- Utilisez l'option d'exclusion d'événements pour filtrer les événements non pertinents et garder les données ciblées.
+- Combinez avec des [Nodes de condition](/fr/product-guide/workflows/logic-nodes/conditions) pour créer des segments basés sur le nombre d'événements ou leur récence.
