@@ -33,418 +33,844 @@
     "baseUrl": "https://api.reelevant.com/v2"
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Product Guide",
-        "groups": [
+        "language": "en",
+        "default": true,
+        "tabs": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "product-guide/introduction",
-              "product-guide/new-interface",
-              "glossary"
+            "tab": "Product Guide",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "product-guide/introduction",
+                  "product-guide/new-interface",
+                  "glossary"
+                ]
+              },
+              {
+                "group": "Workflows",
+                "pages": [
+                  "product-guide/workflows/overview",
+                  "product-guide/workflows/creating-a-workflow",
+                  "product-guide/workflows/editor",
+                  {
+                    "group": "Channels",
+                    "pages": [
+                      "product-guide/workflows/channels",
+                      "product-guide/workflows/channels/email",
+                      "product-guide/workflows/channels/web-image",
+                      "product-guide/workflows/channels/web-html",
+                      "product-guide/workflows/channels/landing-page",
+                      "product-guide/workflows/channels/push-notification",
+                      "product-guide/workflows/channels/in-app-popup",
+                      "product-guide/workflows/channels/in-app-inbox"
+                    ]
+                  },
+                  {
+                    "group": "Data Nodes",
+                    "pages": [
+                      "product-guide/workflows/data-nodes",
+                      "product-guide/workflows/data-nodes/datasources",
+                      "product-guide/workflows/data-nodes/url-parameter",
+                      "product-guide/workflows/data-nodes/geolocation",
+                      "product-guide/workflows/data-nodes/weather",
+                      "product-guide/workflows/data-nodes/website-events",
+                      "product-guide/workflows/data-nodes/live-polling",
+                      "product-guide/workflows/data-nodes/transform"
+                    ]
+                  },
+                  {
+                    "group": "Logic Nodes",
+                    "pages": [
+                      "product-guide/workflows/logic-nodes",
+                      "product-guide/workflows/logic-nodes/conditions",
+                      "product-guide/workflows/logic-nodes/split",
+                      "product-guide/workflows/logic-nodes/real-time-testing"
+                    ]
+                  },
+                  {
+                    "group": "Output Nodes",
+                    "pages": [
+                      "product-guide/workflows/output-nodes",
+                      "product-guide/workflows/output-nodes/visual-content",
+                      "product-guide/workflows/output-nodes/json-template",
+                      "product-guide/workflows/output-nodes/empty"
+                    ]
+                  },
+                  "product-guide/workflows/branches",
+                  "product-guide/workflows/versions",
+                  "product-guide/workflows/integration",
+                  "product-guide/workflows/settings"
+                ]
+              },
+              {
+                "group": "Content Editor",
+                "pages": [
+                  "product-guide/contents/overview",
+                  "product-guide/contents/listing",
+                  "product-guide/contents/editor",
+                  "product-guide/contents/design-import",
+                  {
+                    "group": "Components",
+                    "pages": [
+                      "product-guide/contents/components",
+                      "product-guide/contents/components/text",
+                      "product-guide/contents/components/image",
+                      "product-guide/contents/components/shape",
+                      "product-guide/contents/components/barcode",
+                      "product-guide/contents/components/countdown",
+                      "product-guide/contents/components/map",
+                      "product-guide/contents/components/progress"
+                    ]
+                  },
+                  "product-guide/contents/layers",
+                  "product-guide/contents/conditions",
+                  "product-guide/contents/data-binding",
+                  "product-guide/contents/frames",
+                  "product-guide/contents/settings"
+                ]
+              },
+              {
+                "group": "DataHub",
+                "pages": [
+                  "product-guide/datahub/overview",
+                  "product-guide/datahub/catalog",
+                  "product-guide/datahub/creating-a-datasource",
+                  "product-guide/datahub/listing"
+                ]
+              },
+              {
+                "group": "Analytics",
+                "pages": [
+                  "product-guide/analytics/overview",
+                  {
+                    "group": "Dashboards",
+                    "pages": [
+                      "product-guide/analytics/dashboards",
+                      "product-guide/analytics/dashboards/performance",
+                      "product-guide/analytics/dashboards/audience",
+                      "product-guide/analytics/dashboards/individualization",
+                      "product-guide/analytics/dashboards/conversions",
+                      "product-guide/analytics/dashboards/uplift",
+                      "product-guide/analytics/dashboards/usage"
+                    ]
+                  },
+                  "product-guide/analytics/data-exploration",
+                  "product-guide/analytics/measures-and-dimensions",
+                  "product-guide/analytics/saved-queries",
+                  "product-guide/analytics/settings"
+                ]
+              },
+              {
+                "group": "Account",
+                "pages": [
+                  "product-guide/account/overview",
+                  "product-guide/account/permissions",
+                  "product-guide/account/users",
+                  "product-guide/account/roles",
+                  "product-guide/account/teams"
+                ]
+              },
+              {
+                "group": "Browser Extension",
+                "pages": [
+                  "product-guide/browser-extension/overview",
+                  "product-guide/browser-extension/workflows"
+                ]
+              }
             ]
           },
           {
-            "group": "Workflows",
-            "pages": [
-              "product-guide/workflows/overview",
-              "product-guide/workflows/creating-a-workflow",
-              "product-guide/workflows/editor",
+            "tab": "Advanced Guide",
+            "groups": [
               {
-                "group": "Channels",
+                "group": "Getting Started",
                 "pages": [
-                  "product-guide/workflows/channels",
-                  "product-guide/workflows/channels/email",
-                  "product-guide/workflows/channels/web-image",
-                  "product-guide/workflows/channels/web-html",
-                  "product-guide/workflows/channels/landing-page",
-                  "product-guide/workflows/channels/push-notification",
-                  "product-guide/workflows/channels/in-app-popup",
-                  "product-guide/workflows/channels/in-app-inbox"
+                  "advanced-guide/introduction"
                 ]
               },
               {
-                "group": "Data Nodes",
+                "group": "DataHub Deep Dive",
                 "pages": [
-                  "product-guide/workflows/data-nodes",
-                  "product-guide/workflows/data-nodes/datasources",
-                  "product-guide/workflows/data-nodes/url-parameter",
-                  "product-guide/workflows/data-nodes/geolocation",
-                  "product-guide/workflows/data-nodes/weather",
-                  "product-guide/workflows/data-nodes/website-events",
-                  "product-guide/workflows/data-nodes/live-polling",
-                  "product-guide/workflows/data-nodes/transform"
+                  {
+                    "group": "Source Types",
+                    "pages": [
+                      "advanced-guide/datahub/source-types",
+                      "advanced-guide/datahub/source-types/url",
+                      "advanced-guide/datahub/source-types/file",
+                      "advanced-guide/datahub/source-types/ftp-sftp",
+                      "advanced-guide/datahub/source-types/bigquery",
+                      "advanced-guide/datahub/source-types/snowflake",
+                      "advanced-guide/datahub/source-types/gcs",
+                      "advanced-guide/datahub/source-types/s3",
+                      "advanced-guide/datahub/source-types/kafka",
+                      "advanced-guide/datahub/source-types/datasource-reference"
+                    ]
+                  },
+                  "advanced-guide/datahub/csv-options",
+                  "advanced-guide/datahub/field-mapping",
+                  "advanced-guide/datahub/pgp-decryption",
+                  "advanced-guide/datahub/queries",
+                  "advanced-guide/datahub/logs",
+                  "advanced-guide/datahub/special-configurations",
+                  "advanced-guide/datahub/oauth-debugging",
+                  "advanced-guide/datahub/custom-fetchers",
+                  "advanced-guide/datahub/analytics-database-sync"
                 ]
               },
               {
-                "group": "Logic Nodes",
+                "group": "Advanced Workflows",
                 "pages": [
-                  "product-guide/workflows/logic-nodes",
-                  "product-guide/workflows/logic-nodes/conditions",
-                  "product-guide/workflows/logic-nodes/split",
-                  "product-guide/workflows/logic-nodes/real-time-testing"
+                  {
+                    "group": "Data Nodes",
+                    "pages": [
+                      "advanced-guide/workflows/data-nodes",
+                      "advanced-guide/workflows/data-nodes/datasources",
+                      "advanced-guide/workflows/data-nodes/url-parameter",
+                      "advanced-guide/workflows/data-nodes/geolocation",
+                      "advanced-guide/workflows/data-nodes/weather",
+                      "advanced-guide/workflows/data-nodes/website-events",
+                      "advanced-guide/workflows/data-nodes/live-polling",
+                      "advanced-guide/workflows/data-nodes/transform"
+                    ]
+                  },
+                  {
+                    "group": "Logic Nodes",
+                    "pages": [
+                      "advanced-guide/workflows/logic-nodes",
+                      "advanced-guide/workflows/logic-nodes/conditions",
+                      "advanced-guide/workflows/logic-nodes/split",
+                      "advanced-guide/workflows/logic-nodes/real-time-testing"
+                    ]
+                  },
+                  "advanced-guide/workflows/settings"
                 ]
               },
               {
-                "group": "Output Nodes",
+                "group": "Email Rendering",
                 "pages": [
-                  "product-guide/workflows/output-nodes",
-                  "product-guide/workflows/output-nodes/visual-content",
-                  "product-guide/workflows/output-nodes/json-template",
-                  "product-guide/workflows/output-nodes/empty"
+                  "advanced-guide/email-rendering/caching-and-proxies"
                 ]
               },
-              "product-guide/workflows/branches",
-              "product-guide/workflows/versions",
-              "product-guide/workflows/integration",
-              "product-guide/workflows/settings"
-            ]
-          },
-          {
-            "group": "Content Editor",
-            "pages": [
-              "product-guide/contents/overview",
-              "product-guide/contents/listing",
-              "product-guide/contents/editor",
-              "product-guide/contents/design-import",
               {
-                "group": "Components",
+                "group": "Transformations",
                 "pages": [
-                  "product-guide/contents/components",
-                  "product-guide/contents/components/text",
-                  "product-guide/contents/components/image",
-                  "product-guide/contents/components/shape",
-                  "product-guide/contents/components/barcode",
-                  "product-guide/contents/components/countdown",
-                  "product-guide/contents/components/map",
-                  "product-guide/contents/components/progress"
+                  "advanced-guide/transformations/introduction",
+                  "advanced-guide/transformations/usage",
+                  "advanced-guide/transformations/list",
+                  {
+                    "group": "Strings",
+                    "pages": [
+                      "advanced-guide/transformations/truncate",
+                      "advanced-guide/transformations/case",
+                      "advanced-guide/transformations/replace",
+                      "advanced-guide/transformations/replace-variable",
+                      "advanced-guide/transformations/split",
+                      "advanced-guide/transformations/extract",
+                      "advanced-guide/transformations/template",
+                      "advanced-guide/transformations/length",
+                      "advanced-guide/transformations/pad",
+                      "advanced-guide/transformations/create-hash",
+                      "advanced-guide/transformations/aes-decrypt"
+                    ]
+                  },
+                  {
+                    "group": "Numbers",
+                    "pages": [
+                      "advanced-guide/transformations/parse-number",
+                      "advanced-guide/transformations/format-number",
+                      "advanced-guide/transformations/format-currency",
+                      "advanced-guide/transformations/format-currency-locale",
+                      "advanced-guide/transformations/format-currency-locale-currency",
+                      "advanced-guide/transformations/percentage",
+                      "advanced-guide/transformations/absolute",
+                      "advanced-guide/transformations/round"
+                    ]
+                  },
+                  {
+                    "group": "Maths",
+                    "pages": [
+                      "advanced-guide/transformations/divide",
+                      "advanced-guide/transformations/multiply",
+                      "advanced-guide/transformations/subtract",
+                      "advanced-guide/transformations/sum",
+                      "advanced-guide/transformations/aggregate-numbers"
+                    ]
+                  },
+                  {
+                    "group": "Dates",
+                    "pages": [
+                      "advanced-guide/transformations/format-date",
+                      "advanced-guide/transformations/format-date-locale-var",
+                      "advanced-guide/transformations/parse-date",
+                      "advanced-guide/transformations/difference-between-dates",
+                      "advanced-guide/transformations/add-to-date",
+                      "advanced-guide/transformations/subtract-to-date",
+                      "advanced-guide/transformations/get-date-occurrence"
+                    ]
+                  },
+                  {
+                    "group": "Arrays",
+                    "pages": [
+                      "advanced-guide/transformations/array-get",
+                      "advanced-guide/transformations/array-get-var",
+                      "advanced-guide/transformations/array-intersection",
+                      "advanced-guide/transformations/array-unique-rank",
+                      "advanced-guide/transformations/array-unique",
+                      "advanced-guide/transformations/array-concat"
+                    ]
+                  },
+                  {
+                    "group": "Records",
+                    "pages": [
+                      "advanced-guide/transformations/lookup"
+                    ]
+                  }
                 ]
               },
-              "product-guide/contents/layers",
-              "product-guide/contents/conditions",
-              "product-guide/contents/data-binding",
-              "product-guide/contents/frames",
-              "product-guide/contents/settings"
-            ]
-          },
-          {
-            "group": "DataHub",
-            "pages": [
-              "product-guide/datahub/overview",
-              "product-guide/datahub/catalog",
-              "product-guide/datahub/creating-a-datasource",
-              "product-guide/datahub/listing"
-            ]
-          },
-          {
-            "group": "Analytics",
-            "pages": [
-              "product-guide/analytics/overview",
               {
-                "group": "Dashboards",
+                "group": "Advanced Analytics",
                 "pages": [
-                  "product-guide/analytics/dashboards",
-                  "product-guide/analytics/dashboards/performance",
-                  "product-guide/analytics/dashboards/audience",
+                  "product-guide/analytics/data-exploration",
+                  "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/dashboards/individualization",
-                  "product-guide/analytics/dashboards/conversions",
                   "product-guide/analytics/dashboards/uplift",
-                  "product-guide/analytics/dashboards/usage"
-                ]
-              },
-              "product-guide/analytics/data-exploration",
-              "product-guide/analytics/measures-and-dimensions",
-              "product-guide/analytics/saved-queries",
-              "product-guide/analytics/settings"
-            ]
-          },
-          {
-            "group": "Account",
-            "pages": [
-              "product-guide/account/overview",
-              "product-guide/account/permissions",
-              "product-guide/account/users",
-              "product-guide/account/roles",
-              "product-guide/account/teams"
-            ]
-          },
-          {
-            "group": "Browser Extension",
-            "pages": [
-              "product-guide/browser-extension/overview",
-              "product-guide/browser-extension/workflows"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Advanced Guide",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "advanced-guide/introduction"
-            ]
-          },
-          {
-            "group": "DataHub Deep Dive",
-            "pages": [
-              {
-                "group": "Source Types",
-                "pages": [
-                  "advanced-guide/datahub/source-types",
-                  "advanced-guide/datahub/source-types/url",
-                  "advanced-guide/datahub/source-types/file",
-                  "advanced-guide/datahub/source-types/ftp-sftp",
-                  "advanced-guide/datahub/source-types/bigquery",
-                  "advanced-guide/datahub/source-types/snowflake",
-                  "advanced-guide/datahub/source-types/gcs",
-                  "advanced-guide/datahub/source-types/s3",
-                  "advanced-guide/datahub/source-types/kafka",
-                  "advanced-guide/datahub/source-types/datasource-reference"
-                ]
-              },
-              "advanced-guide/datahub/csv-options",
-              "advanced-guide/datahub/field-mapping",
-              "advanced-guide/datahub/pgp-decryption",
-              "advanced-guide/datahub/queries",
-              "advanced-guide/datahub/logs",
-              "advanced-guide/datahub/special-configurations",
-              "advanced-guide/datahub/oauth-debugging",
-              "advanced-guide/datahub/custom-fetchers",
-              "advanced-guide/datahub/analytics-database-sync"
-            ]
-          },
-          {
-            "group": "Advanced Workflows",
-            "pages": [
-              {
-                "group": "Data Nodes",
-                "pages": [
-                  "advanced-guide/workflows/data-nodes",
-                  "advanced-guide/workflows/data-nodes/datasources",
-                  "advanced-guide/workflows/data-nodes/url-parameter",
-                  "advanced-guide/workflows/data-nodes/geolocation",
-                  "advanced-guide/workflows/data-nodes/weather",
-                  "advanced-guide/workflows/data-nodes/website-events",
-                  "advanced-guide/workflows/data-nodes/live-polling",
-                  "advanced-guide/workflows/data-nodes/transform"
-                ]
-              },
-              {
-                "group": "Logic Nodes",
-                "pages": [
-                  "advanced-guide/workflows/logic-nodes",
-                  "advanced-guide/workflows/logic-nodes/conditions",
-                  "advanced-guide/workflows/logic-nodes/split",
-                  "advanced-guide/workflows/logic-nodes/real-time-testing"
-                ]
-              },
-              "advanced-guide/workflows/settings"
-            ]
-          },
-          {
-            "group": "Email Rendering",
-            "pages": [
-              "advanced-guide/email-rendering/caching-and-proxies"
-            ]
-          },
-          {
-            "group": "Transformations",
-            "pages": [
-              "advanced-guide/transformations/introduction",
-              "advanced-guide/transformations/usage",
-              "advanced-guide/transformations/list",
-              {
-                "group": "Strings",
-                "pages": [
-                  "advanced-guide/transformations/truncate",
-                  "advanced-guide/transformations/case",
-                  "advanced-guide/transformations/replace",
-                  "advanced-guide/transformations/replace-variable",
-                  "advanced-guide/transformations/split",
-                  "advanced-guide/transformations/extract",
-                  "advanced-guide/transformations/template",
-                  "advanced-guide/transformations/length",
-                  "advanced-guide/transformations/pad",
-                  "advanced-guide/transformations/create-hash",
-                  "advanced-guide/transformations/aes-decrypt"
-                ]
-              },
-              {
-                "group": "Numbers",
-                "pages": [
-                  "advanced-guide/transformations/parse-number",
-                  "advanced-guide/transformations/format-number",
-                  "advanced-guide/transformations/format-currency",
-                  "advanced-guide/transformations/format-currency-locale",
-                  "advanced-guide/transformations/format-currency-locale-currency",
-                  "advanced-guide/transformations/percentage",
-                  "advanced-guide/transformations/absolute",
-                  "advanced-guide/transformations/round"
-                ]
-              },
-              {
-                "group": "Maths",
-                "pages": [
-                  "advanced-guide/transformations/divide",
-                  "advanced-guide/transformations/multiply",
-                  "advanced-guide/transformations/subtract",
-                  "advanced-guide/transformations/sum",
-                  "advanced-guide/transformations/aggregate-numbers"
-                ]
-              },
-              {
-                "group": "Dates",
-                "pages": [
-                  "advanced-guide/transformations/format-date",
-                  "advanced-guide/transformations/format-date-locale-var",
-                  "advanced-guide/transformations/parse-date",
-                  "advanced-guide/transformations/difference-between-dates",
-                  "advanced-guide/transformations/add-to-date",
-                  "advanced-guide/transformations/subtract-to-date",
-                  "advanced-guide/transformations/get-date-occurrence"
-                ]
-              },
-              {
-                "group": "Arrays",
-                "pages": [
-                  "advanced-guide/transformations/array-get",
-                  "advanced-guide/transformations/array-get-var",
-                  "advanced-guide/transformations/array-intersection",
-                  "advanced-guide/transformations/array-unique-rank",
-                  "advanced-guide/transformations/array-unique",
-                  "advanced-guide/transformations/array-concat"
-                ]
-              },
-              {
-                "group": "Records",
-                "pages": [
-                  "advanced-guide/transformations/lookup"
+                  "product-guide/analytics/settings"
                 ]
               }
             ]
           },
           {
-            "group": "Advanced Analytics",
-            "pages": [
-              "product-guide/analytics/data-exploration",
-              "product-guide/analytics/measures-and-dimensions",
-              "product-guide/analytics/dashboards/individualization",
-              "product-guide/analytics/dashboards/uplift",
-              "product-guide/analytics/settings"
+            "tab": "Developer Docs",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "developer-docs/introduction",
+                  "developer-docs/api-reference/introduction",
+                  "developer-docs/api-reference/authentication"
+                ]
+              },
+              {
+                "group": "Web Integration",
+                "pages": [
+                  "developer-docs/web-integration/overview",
+                  {
+                    "group": "Server Side SDK",
+                    "pages": [
+                      "developer-docs/web-integration/server-side-sdk/overview",
+                      "developer-docs/web-integration/server-side-sdk/core",
+                      "developer-docs/web-integration/server-side-sdk/nextjs",
+                      "developer-docs/web-integration/server-side-sdk/nuxt",
+                      "developer-docs/web-integration/server-side-sdk/remix",
+                      "developer-docs/web-integration/server-side-sdk/sveltekit"
+                    ]
+                  },
+                  {
+                    "group": "Client Side Script",
+                    "pages": [
+                      "developer-docs/web-integration/client-side-script/overview"
+                    ]
+                  },
+                  {
+                    "group": "JSON API",
+                    "pages": [
+                      "developer-docs/web-integration/api-json/overview",
+                      "developer-docs/web-integration/api-json/integration"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Mobile Integration",
+                "pages": [
+                  "developer-docs/mobile-integration/overview",
+                  {
+                    "group": "Mobile SDK",
+                    "pages": [
+                      "developer-docs/mobile-integration/sdk/overview",
+                      "developer-docs/mobile-integration/sdk/android",
+                      "developer-docs/mobile-integration/sdk/ios",
+                      "developer-docs/mobile-integration/sdk/flutter"
+                    ]
+                  },
+                  {
+                    "group": "JSON API",
+                    "pages": [
+                      "developer-docs/mobile-integration/api-json/overview"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "developer-docs/guides/browser-extension-integration",
+                  "developer-docs/guides/browser-extension-content-script"
+                ]
+              },
+              {
+                "group": "Datasources API",
+                "openapi": "api-reference/openapi/datasources-api.json"
+              },
+              {
+                "group": "Contents API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/contents-api"
+              },
+              {
+                "group": "Workflow API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
+              },
+              {
+                "group": "Datasources Collector",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
+              }
+            ]
+          },
+          {
+            "tab": "Why Reelevant",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "why-reelevant/introduction"
+                ]
+              },
+              {
+                "group": "For Technical Evaluators",
+                "pages": [
+                  "why-reelevant/technical-evaluators/overview",
+                  "why-reelevant/technical-evaluators/architecture",
+                  "why-reelevant/technical-evaluators/data-ingestion",
+                  "why-reelevant/technical-evaluators/integrations",
+                  "why-reelevant/technical-evaluators/authentication",
+                  "why-reelevant/technical-evaluators/security",
+                  "why-reelevant/technical-evaluators/status-page",
+                  "why-reelevant/technical-evaluators/documentation"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "Developer Docs",
-        "groups": [
+        "language": "fr",
+        "tabs": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "developer-docs/introduction",
-              "developer-docs/api-reference/introduction",
-              "developer-docs/api-reference/authentication"
-            ]
-          },
-          {
-            "group": "Web Integration",
-            "pages": [
-              "developer-docs/web-integration/overview",
+            "tab": "Product Guide",
+            "groups": [
               {
-                "group": "Server Side SDK",
+                "group": "Getting Started",
                 "pages": [
-                  "developer-docs/web-integration/server-side-sdk/overview",
-                  "developer-docs/web-integration/server-side-sdk/core",
-                  "developer-docs/web-integration/server-side-sdk/nextjs",
-                  "developer-docs/web-integration/server-side-sdk/nuxt",
-                  "developer-docs/web-integration/server-side-sdk/remix",
-                  "developer-docs/web-integration/server-side-sdk/sveltekit"
+                  "fr/product-guide/introduction",
+                  "fr/product-guide/new-interface",
+                  "fr/glossary"
                 ]
               },
               {
-                "group": "Client Side Script",
+                "group": "Workflows",
                 "pages": [
-                  "developer-docs/web-integration/client-side-script/overview"
+                  "fr/product-guide/workflows/overview",
+                  "fr/product-guide/workflows/creating-a-workflow",
+                  "fr/product-guide/workflows/editor",
+                  {
+                    "group": "Channels",
+                    "pages": [
+                      "fr/product-guide/workflows/channels",
+                      "fr/product-guide/workflows/channels/email",
+                      "fr/product-guide/workflows/channels/web-image",
+                      "fr/product-guide/workflows/channels/web-html",
+                      "fr/product-guide/workflows/channels/landing-page",
+                      "fr/product-guide/workflows/channels/push-notification",
+                      "fr/product-guide/workflows/channels/in-app-popup",
+                      "fr/product-guide/workflows/channels/in-app-inbox"
+                    ]
+                  },
+                  {
+                    "group": "Data Nodes",
+                    "pages": [
+                      "fr/product-guide/workflows/data-nodes",
+                      "fr/product-guide/workflows/data-nodes/datasources",
+                      "fr/product-guide/workflows/data-nodes/url-parameter",
+                      "fr/product-guide/workflows/data-nodes/geolocation",
+                      "fr/product-guide/workflows/data-nodes/weather",
+                      "fr/product-guide/workflows/data-nodes/website-events",
+                      "fr/product-guide/workflows/data-nodes/live-polling",
+                      "fr/product-guide/workflows/data-nodes/transform"
+                    ]
+                  },
+                  {
+                    "group": "Logic Nodes",
+                    "pages": [
+                      "fr/product-guide/workflows/logic-nodes",
+                      "fr/product-guide/workflows/logic-nodes/conditions",
+                      "fr/product-guide/workflows/logic-nodes/split",
+                      "fr/product-guide/workflows/logic-nodes/real-time-testing"
+                    ]
+                  },
+                  {
+                    "group": "Output Nodes",
+                    "pages": [
+                      "fr/product-guide/workflows/output-nodes",
+                      "fr/product-guide/workflows/output-nodes/visual-content",
+                      "fr/product-guide/workflows/output-nodes/json-template",
+                      "fr/product-guide/workflows/output-nodes/empty"
+                    ]
+                  },
+                  "fr/product-guide/workflows/branches",
+                  "fr/product-guide/workflows/versions",
+                  "fr/product-guide/workflows/integration",
+                  "fr/product-guide/workflows/settings"
                 ]
               },
               {
-                "group": "JSON API",
+                "group": "Content Editor",
                 "pages": [
-                  "developer-docs/web-integration/api-json/overview",
-                  "developer-docs/web-integration/api-json/integration"
+                  "fr/product-guide/contents/overview",
+                  "fr/product-guide/contents/listing",
+                  "fr/product-guide/contents/editor",
+                  "fr/product-guide/contents/design-import",
+                  {
+                    "group": "Components",
+                    "pages": [
+                      "fr/product-guide/contents/components",
+                      "fr/product-guide/contents/components/text",
+                      "fr/product-guide/contents/components/image",
+                      "fr/product-guide/contents/components/shape",
+                      "fr/product-guide/contents/components/barcode",
+                      "fr/product-guide/contents/components/countdown",
+                      "fr/product-guide/contents/components/map",
+                      "fr/product-guide/contents/components/progress"
+                    ]
+                  },
+                  "fr/product-guide/contents/layers",
+                  "fr/product-guide/contents/conditions",
+                  "fr/product-guide/contents/data-binding",
+                  "fr/product-guide/contents/frames",
+                  "fr/product-guide/contents/settings"
+                ]
+              },
+              {
+                "group": "DataHub",
+                "pages": [
+                  "fr/product-guide/datahub/overview",
+                  "fr/product-guide/datahub/catalog",
+                  "fr/product-guide/datahub/creating-a-datasource",
+                  "fr/product-guide/datahub/listing"
+                ]
+              },
+              {
+                "group": "Analytics",
+                "pages": [
+                  "fr/product-guide/analytics/overview",
+                  {
+                    "group": "Dashboards",
+                    "pages": [
+                      "fr/product-guide/analytics/dashboards",
+                      "fr/product-guide/analytics/dashboards/performance",
+                      "fr/product-guide/analytics/dashboards/audience",
+                      "fr/product-guide/analytics/dashboards/individualization",
+                      "fr/product-guide/analytics/dashboards/conversions",
+                      "fr/product-guide/analytics/dashboards/uplift",
+                      "fr/product-guide/analytics/dashboards/usage"
+                    ]
+                  },
+                  "fr/product-guide/analytics/data-exploration",
+                  "fr/product-guide/analytics/measures-and-dimensions",
+                  "fr/product-guide/analytics/saved-queries",
+                  "fr/product-guide/analytics/settings"
+                ]
+              },
+              {
+                "group": "Account",
+                "pages": [
+                  "fr/product-guide/account/overview",
+                  "fr/product-guide/account/permissions",
+                  "fr/product-guide/account/users",
+                  "fr/product-guide/account/roles",
+                  "fr/product-guide/account/teams"
+                ]
+              },
+              {
+                "group": "Browser Extension",
+                "pages": [
+                  "fr/product-guide/browser-extension/overview",
+                  "fr/product-guide/browser-extension/workflows"
                 ]
               }
             ]
           },
           {
-            "group": "Mobile Integration",
-            "pages": [
-              "developer-docs/mobile-integration/overview",
+            "tab": "Advanced Guide",
+            "groups": [
               {
-                "group": "Mobile SDK",
+                "group": "Getting Started",
                 "pages": [
-                  "developer-docs/mobile-integration/sdk/overview",
-                  "developer-docs/mobile-integration/sdk/android",
-                  "developer-docs/mobile-integration/sdk/ios",
-                  "developer-docs/mobile-integration/sdk/flutter"
+                  "fr/advanced-guide/introduction"
                 ]
               },
               {
-                "group": "JSON API",
+                "group": "DataHub Deep Dive",
                 "pages": [
-                  "developer-docs/mobile-integration/api-json/overview"
+                  {
+                    "group": "Source Types",
+                    "pages": [
+                      "fr/advanced-guide/datahub/source-types",
+                      "fr/advanced-guide/datahub/source-types/url",
+                      "fr/advanced-guide/datahub/source-types/file",
+                      "fr/advanced-guide/datahub/source-types/ftp-sftp",
+                      "fr/advanced-guide/datahub/source-types/bigquery",
+                      "fr/advanced-guide/datahub/source-types/snowflake",
+                      "fr/advanced-guide/datahub/source-types/gcs",
+                      "fr/advanced-guide/datahub/source-types/s3",
+                      "fr/advanced-guide/datahub/source-types/kafka",
+                      "fr/advanced-guide/datahub/source-types/datasource-reference"
+                    ]
+                  },
+                  "fr/advanced-guide/datahub/csv-options",
+                  "fr/advanced-guide/datahub/field-mapping",
+                  "fr/advanced-guide/datahub/pgp-decryption",
+                  "fr/advanced-guide/datahub/queries",
+                  "fr/advanced-guide/datahub/logs",
+                  "fr/advanced-guide/datahub/special-configurations",
+                  "fr/advanced-guide/datahub/oauth-debugging",
+                  "fr/advanced-guide/datahub/custom-fetchers",
+                  "fr/advanced-guide/datahub/analytics-database-sync"
+                ]
+              },
+              {
+                "group": "Advanced Workflows",
+                "pages": [
+                  {
+                    "group": "Data Nodes",
+                    "pages": [
+                      "fr/advanced-guide/workflows/data-nodes",
+                      "fr/advanced-guide/workflows/data-nodes/datasources",
+                      "fr/advanced-guide/workflows/data-nodes/url-parameter",
+                      "fr/advanced-guide/workflows/data-nodes/geolocation",
+                      "fr/advanced-guide/workflows/data-nodes/weather",
+                      "fr/advanced-guide/workflows/data-nodes/website-events",
+                      "fr/advanced-guide/workflows/data-nodes/live-polling",
+                      "fr/advanced-guide/workflows/data-nodes/transform"
+                    ]
+                  },
+                  {
+                    "group": "Logic Nodes",
+                    "pages": [
+                      "fr/advanced-guide/workflows/logic-nodes",
+                      "fr/advanced-guide/workflows/logic-nodes/conditions",
+                      "fr/advanced-guide/workflows/logic-nodes/split",
+                      "fr/advanced-guide/workflows/logic-nodes/real-time-testing"
+                    ]
+                  },
+                  "fr/advanced-guide/workflows/settings"
+                ]
+              },
+              {
+                "group": "Email Rendering",
+                "pages": [
+                  "fr/advanced-guide/email-rendering/caching-and-proxies"
+                ]
+              },
+              {
+                "group": "Transformations",
+                "pages": [
+                  "fr/advanced-guide/transformations/introduction",
+                  "fr/advanced-guide/transformations/usage",
+                  "fr/advanced-guide/transformations/list",
+                  {
+                    "group": "Strings",
+                    "pages": [
+                      "fr/advanced-guide/transformations/truncate",
+                      "fr/advanced-guide/transformations/case",
+                      "fr/advanced-guide/transformations/replace",
+                      "fr/advanced-guide/transformations/replace-variable",
+                      "fr/advanced-guide/transformations/split",
+                      "fr/advanced-guide/transformations/extract",
+                      "fr/advanced-guide/transformations/template",
+                      "fr/advanced-guide/transformations/length",
+                      "fr/advanced-guide/transformations/pad",
+                      "fr/advanced-guide/transformations/create-hash",
+                      "fr/advanced-guide/transformations/aes-decrypt"
+                    ]
+                  },
+                  {
+                    "group": "Numbers",
+                    "pages": [
+                      "fr/advanced-guide/transformations/parse-number",
+                      "fr/advanced-guide/transformations/format-number",
+                      "fr/advanced-guide/transformations/format-currency",
+                      "fr/advanced-guide/transformations/format-currency-locale",
+                      "fr/advanced-guide/transformations/format-currency-locale-currency",
+                      "fr/advanced-guide/transformations/percentage",
+                      "fr/advanced-guide/transformations/absolute",
+                      "fr/advanced-guide/transformations/round"
+                    ]
+                  },
+                  {
+                    "group": "Maths",
+                    "pages": [
+                      "fr/advanced-guide/transformations/divide",
+                      "fr/advanced-guide/transformations/multiply",
+                      "fr/advanced-guide/transformations/subtract",
+                      "fr/advanced-guide/transformations/sum",
+                      "fr/advanced-guide/transformations/aggregate-numbers"
+                    ]
+                  },
+                  {
+                    "group": "Dates",
+                    "pages": [
+                      "fr/advanced-guide/transformations/format-date",
+                      "fr/advanced-guide/transformations/format-date-locale-var",
+                      "fr/advanced-guide/transformations/parse-date",
+                      "fr/advanced-guide/transformations/difference-between-dates",
+                      "fr/advanced-guide/transformations/add-to-date",
+                      "fr/advanced-guide/transformations/subtract-to-date",
+                      "fr/advanced-guide/transformations/get-date-occurrence"
+                    ]
+                  },
+                  {
+                    "group": "Arrays",
+                    "pages": [
+                      "fr/advanced-guide/transformations/array-get",
+                      "fr/advanced-guide/transformations/array-get-var",
+                      "fr/advanced-guide/transformations/array-intersection",
+                      "fr/advanced-guide/transformations/array-unique-rank",
+                      "fr/advanced-guide/transformations/array-unique",
+                      "fr/advanced-guide/transformations/array-concat"
+                    ]
+                  },
+                  {
+                    "group": "Records",
+                    "pages": [
+                      "fr/advanced-guide/transformations/lookup"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Advanced Analytics",
+                "pages": [
+                  "fr/product-guide/analytics/data-exploration",
+                  "fr/product-guide/analytics/measures-and-dimensions",
+                  "fr/product-guide/analytics/dashboards/individualization",
+                  "fr/product-guide/analytics/dashboards/uplift",
+                  "fr/product-guide/analytics/settings"
                 ]
               }
             ]
           },
           {
-            "group": "Guides",
-            "pages": [
-              "developer-docs/guides/browser-extension-integration",
-              "developer-docs/guides/browser-extension-content-script"
+            "tab": "Developer Docs",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "fr/developer-docs/introduction",
+                  "fr/developer-docs/api-reference/introduction",
+                  "fr/developer-docs/api-reference/authentication"
+                ]
+              },
+              {
+                "group": "Web Integration",
+                "pages": [
+                  "fr/developer-docs/web-integration/overview",
+                  {
+                    "group": "Server Side SDK",
+                    "pages": [
+                      "fr/developer-docs/web-integration/server-side-sdk/overview",
+                      "fr/developer-docs/web-integration/server-side-sdk/core",
+                      "fr/developer-docs/web-integration/server-side-sdk/nextjs",
+                      "fr/developer-docs/web-integration/server-side-sdk/nuxt",
+                      "fr/developer-docs/web-integration/server-side-sdk/remix",
+                      "fr/developer-docs/web-integration/server-side-sdk/sveltekit"
+                    ]
+                  },
+                  {
+                    "group": "Client Side Script",
+                    "pages": [
+                      "fr/developer-docs/web-integration/client-side-script/overview"
+                    ]
+                  },
+                  {
+                    "group": "JSON API",
+                    "pages": [
+                      "fr/developer-docs/web-integration/api-json/overview",
+                      "fr/developer-docs/web-integration/api-json/integration"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Mobile Integration",
+                "pages": [
+                  "fr/developer-docs/mobile-integration/overview",
+                  {
+                    "group": "Mobile SDK",
+                    "pages": [
+                      "fr/developer-docs/mobile-integration/sdk/overview",
+                      "fr/developer-docs/mobile-integration/sdk/android",
+                      "fr/developer-docs/mobile-integration/sdk/ios",
+                      "fr/developer-docs/mobile-integration/sdk/flutter"
+                    ]
+                  },
+                  {
+                    "group": "JSON API",
+                    "pages": [
+                      "fr/developer-docs/mobile-integration/api-json/overview"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "fr/developer-docs/guides/browser-extension-integration",
+                  "fr/developer-docs/guides/browser-extension-content-script"
+                ]
+              },
+              {
+                "group": "Datasources API",
+                "openapi": "api-reference/openapi/datasources-api.json"
+              },
+              {
+                "group": "Contents API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/contents-api"
+              },
+              {
+                "group": "Workflow API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
+              },
+              {
+                "group": "Datasources Collector",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
+              }
             ]
           },
           {
-            "group": "Datasources API",
-            "openapi": "api-reference/openapi/datasources-api.json"
-          },
-          {
-            "group": "Contents API",
-            "openapi": "https://openapi.production.reelevant.io/v1/render/contents-api"
-          },
-          {
-            "group": "Workflow API",
-            "openapi": "https://openapi.production.reelevant.io/v1/render/workflow-api"
-          },
-          {
-            "group": "Datasources Collector",
-            "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
-          }
-        ]
-      },
-      {
-        "tab": "Why Reelevant",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "why-reelevant/introduction"
-            ]
-          },
-          {
-            "group": "For Technical Evaluators",
-            "pages": [
-              "why-reelevant/technical-evaluators/overview",
-              "why-reelevant/technical-evaluators/architecture",
-              "why-reelevant/technical-evaluators/data-ingestion",
-              "why-reelevant/technical-evaluators/integrations",
-              "why-reelevant/technical-evaluators/authentication",
-              "why-reelevant/technical-evaluators/security",
-              "why-reelevant/technical-evaluators/status-page",
-              "why-reelevant/technical-evaluators/documentation"
+            "tab": "Why Reelevant",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "fr/why-reelevant/introduction"
+                ]
+              },
+              {
+                "group": "For Technical Evaluators",
+                "pages": [
+                  "fr/why-reelevant/technical-evaluators/overview",
+                  "fr/why-reelevant/technical-evaluators/architecture",
+                  "fr/why-reelevant/technical-evaluators/data-ingestion",
+                  "fr/why-reelevant/technical-evaluators/integrations",
+                  "fr/why-reelevant/technical-evaluators/authentication",
+                  "fr/why-reelevant/technical-evaluators/security",
+                  "fr/why-reelevant/technical-evaluators/status-page",
+                  "fr/why-reelevant/technical-evaluators/documentation"
+                ]
+              }
             ]
           }
         ]
