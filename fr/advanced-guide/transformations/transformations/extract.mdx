@@ -1,0 +1,28 @@
+---
+title: 'Extract'
+description: 'Extraire des données à l'aide d'un motif regex'
+---
+
+## Présentation
+
+La transformation `extract` extrait des données d'une chaîne de caractères à l'aide d'une expression régulière. Elle renvoie la première correspondance du groupe de capture.
+
+## Syntaxe
+
+```text
+extract(<variable>, search="")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | string | Oui | La chaîne depuis laquelle extraire |
+| `search` | string | Oui | Le motif d'expression régulière (renvoie le premier groupe de capture) |
+
+## Exemples
+
+```text
+extract(<variable>, search="(\\d+)")
+extract(<variable>, search="([A-Z]+)")
+```

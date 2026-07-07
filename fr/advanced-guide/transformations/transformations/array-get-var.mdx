@@ -1,0 +1,27 @@
+---
+title: 'Array Get (index variable)'
+description: 'Obtenir un élément d'un tableau à l'aide d'un index variable'
+---
+
+## Présentation
+
+La transformation `array-get-var` récupère un élément d'un tableau en utilisant un index fourni sous forme de variable. Elle est similaire à [Array Get](/api-reference/transformations/array-get), mais l'index provient d'une variable plutôt que d'une option statique.
+
+## Syntaxe
+
+```text
+array-get-var(<variable>, <index-variable>)
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | array | Oui | Le tableau dont on souhaite extraire un élément |
+| `index-variable` | variable | Oui | La variable contenant l'index de l'élément à récupérer |
+
+## Exemples
+
+```text
+array-get-var(<variable>, <index-variable>)
+```
