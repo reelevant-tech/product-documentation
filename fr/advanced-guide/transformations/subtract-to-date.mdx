@@ -1,0 +1,30 @@
+---
+title: 'Soustraire d'une date'
+description: 'Soustraire du temps à une date'
+---
+
+## Présentation
+
+La transformation `sub-to-date` soustrait une quantité de temps spécifiée à une date.
+
+## Syntaxe
+
+```text
+sub-to-date(<date-variable>, <amount-variable>, unit="days")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `date-variable` | date | Oui | La date à laquelle soustraire du temps |
+| `amount-variable` | number | Oui | La quantité de temps à soustraire |
+| `unit` | string | Non | Unité de temps : `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, `"days"`, `"months"` ou `"years"` |
+| `inputLocale` | string | Non | Locale utilisée pour analyser la date en entrée : `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"` ou `"fr"` |
+
+## Exemples
+
+```text
+sub-to-date(<date-variable>, <amount-variable>, unit="days")
+sub-to-date(<date-variable>, <amount-variable>, unit="hours", inputLocale="fr")
+```

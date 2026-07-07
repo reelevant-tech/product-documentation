@@ -1,0 +1,29 @@
+---
+title: 'Aggregate Numbers'
+description: 'Agréger un tableau de nombres'
+---
+
+## Présentation
+
+La transformation `aggregate-numbers` effectue des opérations d'agrégation sur un tableau de nombres.
+
+## Syntaxe
+
+```text
+aggregate-numbers(<variable>, type="sum")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | array | Oui | Tableau de nombres à agréger |
+| `type` | string | Oui | Type d'agrégation : `"sum"`, `"average"` ou `"median"` |
+
+## Exemples
+
+```text
+aggregate-numbers(<variable>, type="sum")
+aggregate-numbers(<variable>, type="average")
+aggregate-numbers(<variable>, type="median")
+```
