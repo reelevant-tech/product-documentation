@@ -30,8 +30,8 @@ worked before moving on:
 4. Fork and clone: fork this repository to my account and clone the fork locally in
    one step with `gh repo fork reelevant-tech/product-documentation --clone`.
 5. Enter the project: `cd product-documentation`.
-6. Preview tools: install Node with `brew install node`, then the Mintlify CLI with
-   `npm i -g mint`.
+6. Preview tools: install Node (version 22 or later is required) with
+   `brew install node`, then the Mintlify CLI with `npm i -g mint`.
 7. Launch the preview: start the docs preview server with `mint dev` and give me the
    link (http://localhost:3000) so I can see the docs in my browser.
 
