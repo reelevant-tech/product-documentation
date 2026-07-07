@@ -1,0 +1,92 @@
+---
+title: "Canaux d'intégration"
+description: "Comment le Content personnalisé est délivré sur les canaux email, web, mobile et headless — protocoles, effort et écosystème SDK."
+---
+
+## Vue d'ensemble des canaux
+
+| Canal | Méthode d'intégration | Effort | Authentification |
+|-------|----------------------|--------|------------------|
+| **Email** | Simple balise `<img>` ou HTML dans le template ESP | 5 minutes | Aucune (URL publique) |
+| **Web (SSR)** | SDK côté serveur (Node.js, Next.js, Nuxt, Remix, SvelteKit) | 1–2 heures | Aucune (URL publique) |
+| **Web (client)** | Snippet JavaScript côté client | 30 minutes | Aucune (URL publique) |
+| **Mobile** | SDK natif (iOS, Android, Flutter) | 1–2 jours | Aucune (URL publique) |
+| **Push / In-App** | Réponse JSON API | 1 jour | Aucune (URL publique) |
+
+<Warning>
+Les URL d'intégration sont accessibles publiquement — aucune authentification n'est requise au moment de la requête. Les identifiants client dans les paramètres d'URL sont **publics par conception** (visibles dans le HTML de l'email, l'historique du navigateur et les logs serveur). Utilisez des identifiants opaques, pas des adresses email ou d'autres données personnelles.
+</Warning>
+
+## Intégration email
+
+Insérez une simple balise image (ou un code d'intégration HTML) dans votre template ESP. L'URL de la balise encode l'ID du Workflow et un identifiant client en tant que paramètre de requête.
+
+```html
+<img src="https://reelevant.run/{workflowId}?uid={customerId}" />
+```
+
+Aucun code côté serveur requis. Fonctionne avec n'importe quel ESP (Salesforce Marketing Cloud, Braze, Selligent, Adobe Campaign, solutions personnalisées).
+
+**Fonctionnement :** Lorsque le destinataire ouvre l'email, le client email demande l'image. Reelevant rend le Content personnalisé à ce moment-là en utilisant les données actuelles du client — pas les données du moment de l'envoi.
+
+## Intégration web
+
+Deux options selon votre stratégie de rendu :
+
+### SDK côté serveur (recommandé pour le SEO / SSR)
+
+Disponible pour les frameworks Node.js. Le SDK appelle le Runner au moment du rendu de la page et injecte le Content personnalisé dans la réponse HTML.
+
+Frameworks supportés :
+- **Next.js** (App Router et Pages Router)
+- **Nuxt** (Nuxt 3)
+- **Remix**
+- **SvelteKit**
+- **Node.js générique** (Express, Fastify, ou tout serveur HTTP)
+
+### Script côté client
+
+Un snippet JavaScript léger qui récupère et rend le Content dans le navigateur. Adapté aux sites statiques, aux SPA, ou lorsque le SSR n'est pas disponible.
+
+## Intégration mobile
+
+Les SDK natifs gèrent l'initialisation, la récupération du Content, la gestion de l'identité et le cycle de vie des vues :
+
+| Plateforme | Package | Version min |
+|------------|---------|-------------|
+| **Android** | SDK Kotlin | Android 5.0+ |
+| **iOS** | SDK Swift | iOS 13+ |
+| **Flutter** | SDK Dart | Flutter 3.0+ |
+
+Un fallback JSON API est disponible pour les implémentations personnalisées ou les plateformes sans support SDK natif.
+
+## JSON API (headless)
+
+Pour les intégrations headless (notifications push, messages in-app, frontends personnalisés), l'API JSON retourne des payloads structurés correspondant à un schéma JSON Template défini dans la plateforme.
+
+La forme de la réponse est déterministe et typée — votre code client peut s'appuyer sur le schéma sans vérification de type à l'exécution.
+
+## Formats de diffusion du Content
+
+| Format | Délivré en tant que | Canal typique |
+|--------|---------------------|---------------|
+| **Visual Content** | Image PNG/GIF | Email, bannières web |
+| **Fragment HTML** | Chaîne HTML brute | Web, embeds in-app |
+| **Payload JSON** | JSON structuré | Applications mobiles, intégrations headless |
+
+## Prochaines étapes
+
+<CardGroup cols={2}>
+<Card title="Référence SDK Web" icon="cube" href="/developer-docs/web-integration/overview">
+Documentation complète du SDK côté serveur et côté client.
+</Card>
+<Card title="Référence SDK Mobile" icon="mobile" href="/developer-docs/mobile-integration/overview">
+Guides SDK iOS, Android et Flutter.
+</Card>
+<Card title="JSON API" icon="code" href="/developer-docs/web-integration/api-json/overview">
+Guide d'intégration JSON API headless.
+</Card>
+<Card title="Référence API" icon="book" href="/developer-docs/api-reference/introduction">
+Documentation complète de l'API REST.
+</Card>
+</CardGroup>

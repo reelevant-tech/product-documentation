@@ -1,0 +1,80 @@
+---
+title: "Ingestion de données"
+description: "Types de sources DataHub, modes d'ingestion et catégories de Datasources — comment les données entrent dans la plateforme Reelevant."
+---
+
+## Modes d'ingestion
+
+Reelevant supporte plusieurs patterns d'ingestion selon le volume de données, les exigences de fraîcheur et les capacités du système source.
+
+| Mode | Description | Fraîcheur | Cas d'usage |
+|------|-------------|-----------|-------------|
+| **Worker** (batch pull) | Job planifié qui récupère et traite les données depuis une source externe | Minutes à heures | Synchronisation complète du catalogue, mises à jour CRM quotidiennes |
+| **Ingester** (push temps réel) | API REST qui reçoit les événements poussés par vos systèmes | Secondes | Événements d'achat, changements de stock, données comportementales |
+| **PubSub** (streaming) | Consommation continue depuis un broker de messages | Sub-seconde | Flux d'événements à haut volume (ex. : topics Kafka) |
+| **Proxy** (requête en direct) | Données récupérées à la demande au moment de l'exécution du Workflow | Temps réel | API externes interrogées par requête |
+
+## Types de sources DataHub
+
+Le DataHub supporte les connecteurs source suivants pour l'ingestion batch (mode Worker) :
+
+| Source | Protocole | Formats supportés | Utilisation typique |
+|--------|-----------|-------------------|---------------------|
+| **URL** | HTTP/HTTPS | CSV, JSON, XML, Avro | Endpoints d'API publics ou authentifiés, fichiers de catalogue hébergés |
+| **FTP / SFTP** | FTP, SFTP | CSV, JSON, XML, Avro | Systèmes legacy, flux de données partenaires |
+| **Google Cloud Storage (GCS)** | API GCS | CSV, JSON, XML, Avro | Exports de data warehouse, dumps planifiés |
+| **Amazon S3** | API S3 | CSV, JSON, XML, Avro | Exports de data lake, flux cross-cloud |
+| **BigQuery** | API BigQuery | Résultats de requêtes structurées | Exports Analytics, segments CRM, tables calculées |
+| **Snowflake** | API Snowflake | Résultats de requêtes structurées | Tables et vues de data warehouse |
+| **Kafka** | Protocole Kafka (avec compression LZ4/Snappy) | JSON, Avro | Ingestion d'événements en streaming (achats, navigation, mises à jour de stock) |
+| **Référence de Datasource** | Interne | Dérivé d'une Datasource existante | Champs calculés, jointures cross-Datasource |
+| **Upload de fichier** | Upload direct | CSV, JSON, XML, Avro | Imports ponctuels, chargements de données manuels |
+
+<Info>
+Toutes les sources batch supportent le Field Mapping, la coercition de types, le déchiffrement PGP pour les fichiers chiffrés, et les options CSV configurables (délimiteurs personnalisés, fichiers sans en-tête avec définitions de colonnes).
+</Info>
+
+## Catégories de Datasources
+
+Les Datasources sont typées pour activer des comportements spécialisés (champs requis, stratégies d'indexation, capacités de requête) :
+
+| Catégorie | Objectif | Champs requis | Sous-types |
+|-----------|----------|---------------|------------|
+| **Product** | Catalogues produits, offres, recommandations | Reference ID | Défini par l'utilisateur, Localisé, Best Product, Bought Together |
+| **CRM** | Profils clients, segments, attributs | Workflow User (clé d'identité) | Défini par l'utilisateur |
+| **Location** | Magasins, points d'intérêt, données géographiques | Latitude, Longitude, Reference ID | Défini par l'utilisateur, Google My Business, Partoo, Weather |
+| **Analytics** | Événements comportementaux, données de tracking | Datetime | Événements Reelevant, Google Tag Manager, Workflow Events, Purchases |
+| **Generic** | Schéma flexible pour toute donnée structurée | Aucun | Défini par l'utilisateur, Top Attributes |
+
+
+## Stratégies de mise à jour des données
+
+Lorsque de nouvelles données arrivent, trois stratégies contrôlent la fusion avec les enregistrements existants :
+
+| Stratégie | Comportement | Cas d'usage |
+|-----------|-------------|-------------|
+| **Override** | Supprimer tous les enregistrements existants, remplacer par le nouveau jeu de données | Rafraîchissement complet du catalogue |
+| **Append** | Conserver les enregistrements existants, ajouter les nouvelles lignes | Événements en séries temporelles, historique d'achats |
+| **Upsert** | Fusionner par clé primaire — mettre à jour les existants, insérer les nouveaux | Profils CRM, niveaux de stock, changements de prix |
+
+## Effort d'intégration
+
+| Scénario | Votre effort | Support Reelevant |
+|----------|-------------|-------------------|
+| Connecter un flux URL CSV | Configurer l'URL source + Field Mapping dans l'interface | Synchronisation auto-planifiée |
+| Intégration BigQuery/Snowflake | Fournir la requête + les identifiants dans l'interface | Planification gérée |
+| Streaming Kafka | Fournir les détails du broker + topic + schéma | Ingestion continue |
+| SFTP avec chiffrement PGP | Uploader la clé PGP, configurer le pattern de chemin | Déchiffrement automatique à la récupération |
+
+Toutes les configurations de source sont gérées via l'interface de la plateforme — aucun code requis. Pour la gestion programmatique, voir la [référence API](/developer-docs/api-reference/introduction).
+
+## Prochaines étapes
+
+<CardGroup cols={2}>
+<Card title="Canaux d'intégration" icon="plug" href="/fr/why-reelevant/technical-evaluators/integrations">
+Comment le Content personnalisé est délivré à chaque canal.
+</Card>
+<Card title="Field Mapping" icon="map" href="/fr/advanced-guide/datahub/field-mapping">
+Règles avancées de Field Mapping et de coercition de types.
+</Card>
+</CardGroup>

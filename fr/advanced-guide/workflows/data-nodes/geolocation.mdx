@@ -1,0 +1,31 @@
+---
+title: 'Geolocation'
+description: 'Résolvez la localisation géographique de l'utilisateur à partir de son adresse IP'
+---
+
+![Panneau de configuration du Node Geolocation affichant les options d'adresse et de localisation](/images/workflows/node-geolocation.png)
+
+## Vue d'ensemble
+
+Le Node Geolocation résout la localisation géographique de l'utilisateur (ville, pays, coordonnées) à partir de son adresse IP ou d'autres signaux.
+
+Ce Node ne nécessite aucune configuration manuelle — il fournit automatiquement des données de localisation utilisables par les Nodes en aval.
+
+## Données de sortie
+
+Le Node Geolocation fournit :
+- **Ville** — Le nom de la ville de l'utilisateur.
+- **Pays** — Le pays de l'utilisateur.
+- **Coordonnées** — Latitude et longitude pour une logique de localisation précise.
+
+## Cas d'usage courants
+
+- **Store locator** — Combinez avec une [Datasource localisation](/fr/product-guide/workflows/data-nodes/datasources) pour trouver les magasins proches de l'utilisateur.
+- **Personnalisation basée sur la météo** — Associez avec un Node [Weather](/fr/product-guide/workflows/data-nodes/weather) pour afficher du contenu adapté à la météo.
+- **Contenu régional** — Utilisez des conditions pour afficher un contenu différent selon le pays ou la ville de l'utilisateur.
+
+## Bonnes pratiques
+
+- La précision de la géolocalisation dépend du réseau de l'utilisateur. La géolocalisation par IP est généralement précise au niveau de la ville.
+- Pour les canaux email, la localisation reflète l'endroit où l'email est ouvert, pas le lieu de résidence de l'utilisateur.
+- Pensez à ajouter des Branches de secours pour les cas où les données de géolocalisation ne sont pas disponibles.

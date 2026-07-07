@@ -1,0 +1,46 @@
+---
+title: 'Live Polling'
+description: 'Retournez la part de clics actuelle pour un Branch'
+---
+
+![Data Node Live Polling dans le catalogue du Workflow](/images/workflows/node-live-polling.png)
+
+## Vue d'ensemble
+
+Le Live Polling est un Data Node sans configuration.
+
+Il retourne le pourcentage actuel de clics attribués à son Branch.
+
+La valeur est calculée au moment de l'ouverture, elle reflète donc l'instant où l'image est récupérée.
+
+## Comportement
+
+| Élément | Description |
+|---|---|
+| Sortie | Un nombre. |
+| Configuration | Aucune. |
+| Comptage | Chaque utilisateur unique est compté une fois par Branch. |
+| Calcul | Clics sur ce Branch ÷ total des clics du sondage × 100. |
+| Libellé dans l'éditeur | Pourcentage actuel (en direct) de clics. |
+
+## Connexion au Content Editor
+
+Vous l'ajoutez dans le Content Editor via **Workflow → Live polling**.
+
+Le preset Live poll ajoute une image et un composant texte.
+
+Le composant texte est lié au pourcentage en direct et ajoute un signe de pourcentage.
+
+C'est un pattern courant pour les visuels de votes et sondages en direct dans les emails.
+
+<Info>
+  Voir [Data Nodes](/fr/advanced-guide/workflows/data-nodes) pour le catalogue complet des Data Nodes.
+</Info>
+
+<Info>
+  Certains clients email pré-chargent ou mettent en cache les images. La valeur peut donc refléter le moment du chargement plutôt que l'ouverture manuelle par le destinataire.
+</Info>
+
+<Info>
+  Voir [Mise en cache et proxys des clients email](/fr/advanced-guide/email-rendering/caching-and-proxies) pour les comportements des boîtes de réception les plus pertinents ici.
+</Info>

@@ -1,0 +1,86 @@
+---
+title: "État et monitoring"
+description: "État de la plateforme en temps réel sur status.reelevant.com — santé des composants, suivi SLA, communication des incidents et visibilité scopée par client."
+---
+
+## Vue d'ensemble
+
+Reelevant opère une page de statut dédiée sur **[status.reelevant.com](https://status.reelevant.com)** offrant une visibilité en temps réel sur la santé de la plateforme, l'historique des incidents et les métriques de disponibilité.
+
+La page de statut est disponible pour tous les clients et prospects sans authentification pour l'état global de la plateforme, avec des vues authentifiées fournissant des détails d'incidents spécifiques à l'entreprise.
+
+## Composants surveillés
+
+La plateforme surveille trois piliers principaux qui ensemble délivrent le pipeline de personnalisation :
+
+| Composant | Description | Ce qu'il couvre |
+|-----------|-------------|-----------------|
+| **Ingestion** | Pipeline d'ingestion des Datasources | Imports de données, synchronisations planifiées, ingestion streaming, Field Mapping |
+| **Personalisation Engine** | Exécution des Workflows et rendu du Content (Runner) | Évaluation du DAG, logique de Conditions, résolution des Data Nodes, réponses personnalisées |
+| **Web** | Application frontend | Interface de la plateforme (app.reelevant.com), tableau de bord, éditeur de Workflow, Content Editor |
+
+## Niveaux d'état
+
+Chaque composant rapporte l'un des trois états opérationnels :
+
+| État | Signification | Indicateur visuel |
+|------|---------------|-------------------|
+| **Operational** | Tous les systèmes fonctionnent normalement | Vert |
+| **Degraded** | Performance réduite ou fonctionnalité partielle | Jaune |
+| **Down** | Service indisponible ou gravement affecté | Rouge |
+
+L'état global de la plateforme est dérivé du composant le moins performant. Un seul composant en état « Down » marque l'ensemble de la plateforme comme rencontrant des problèmes.
+
+## Communication des incidents
+
+Lorsqu'un problème est détecté, la page de statut fournit :
+
+- **Mises à jour d'état en temps réel** — Les changements d'état des composants sont reflétés immédiatement
+- **Chronologie de l'incident** — Chaque incident inclut un journal chronologique des événements (ouvert, mis à jour, résolu)
+- **Classification de sévérité** — Les incidents sont catégorisés comme Critique, Avertissement ou Informatif
+- **Suivi de résolution** — Les incidents transitent entre les états : En cours → Résolu (ou Planifié pour la maintenance programmée)
+
+### Types d'incidents
+
+| Type | Description |
+|------|-------------|
+| **En cours** | Problème actif affectant actuellement la plateforme |
+| **Planifié** | Maintenance programmée ou changement à venir connu |
+| **Résolu** | Le problème a été corrigé et le service est rétabli |
+
+## SLA et disponibilité
+
+La page de statut affiche :
+
+- **Pourcentage de disponibilité sur 30 jours** (SLA) par composant
+- **Historique d'état quotidien et horaire** visualisé sous forme de barres de disponibilité
+- **Journal historique des incidents** avec durée et détails d'impact
+
+Reelevant s'engage sur un **SLA de disponibilité de 99,9 %** mesuré mensuellement sur tous les composants principaux.
+
+## Vues authentifiées
+
+Les clients connectés voient des détails supplémentaires scopés à leur compte :
+
+- **Incidents spécifiques à l'entreprise** — Problèmes affectant uniquement les Datasources ou Workflows de votre organisation
+- **État au niveau des ressources** — Indicateurs de santé sur les Datasources et Workflows individuels
+- **Notifications ciblées** — Alertes pertinentes pour votre configuration spécifique
+
+## Garanties de fraîcheur
+
+La page de statut implémente un système de détection d'obsolescence :
+
+- L'état des composants est réévalué selon un calendrier régulier (typiquement toutes les 30 secondes)
+- Si les données d'état sont plus anciennes que le seuil configuré, la page affiche un badge « delayed »
+- Cela garantit que « service down » n'est jamais confondu avec « la page de statut n'a pas pu vérifier »
+
+## Prochaines étapes
+
+<CardGroup cols={2}>
+<Card title="Sécurité et conformité" icon="shield-check" href="/fr/why-reelevant/technical-evaluators/security">
+Détails SOC 2, RGPD, chiffrement et tests de pénétration.
+</Card>
+<Card title="Architecture" icon="diagram-project" href="/fr/why-reelevant/technical-evaluators/architecture">
+Architecture système et cycle de vie des requêtes.
+</Card>
+</CardGroup>
