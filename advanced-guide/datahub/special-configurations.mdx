@@ -1,6 +1,6 @@
 ---
 title: 'Special Configurations'
-description: 'Advanced datasource configurations — tracking, merge, OAuth, GTM, API keys, and computed datasources'
+description: 'Advanced datasource configurations — tracking, merge, GTM, API keys, and computed datasources'
 ---
 
 ![Special configuration steps in the datasource wizard](/images/datahub/special-configurations-v2.png)
@@ -31,19 +31,6 @@ The **Setup Google Tag Manager** step provides:
 - A **company id** to use in your GTM tag configuration.
 
 After configuring the tag in GTM, navigate your website and click **Validate**.
-
-## OAuth Integrations
-
-Some integrations (Shopify, Google My Business, Instagram) require OAuth authorization:
-
-1. The wizard shows an authorization button (e.g., **Authorize Shopify**, **Connect to Facebook**, **Connect to Google My Business**).
-2. Click the button to open the OAuth flow in a new window.
-3. Grant Reelevant access to the requested data.
-4. Return to the wizard to continue configuration.
-
-### Shopify
-
-For Shopify integrations, you also need to provide your **shop name** in the **Configure shop name** step.
 
 ## API Key Integrations
 
@@ -77,23 +64,6 @@ The Best Products datasource computes which products perform best based on track
     Select the field in which you want to add the computed count.
   </Step>
 </Steps>
-
-## Top Product Attributes
-
-Computes preferred product attributes (brands, categories) for each user based on their behavior:
-
-| Field | Description |
-|-------|-------------|
-| **Timerange** | The period to consider. |
-
-## Cross Sell (Bought Together)
-
-Identifies products frequently purchased together:
-
-| Field | Description |
-|-------|-------------|
-| **Product field containing ids from tracking** | The field that links product IDs to tracking events. |
-| **Name of the event containing purchases** | The tracking event name for purchases. |
 
 ## Merge Aggregation
 
