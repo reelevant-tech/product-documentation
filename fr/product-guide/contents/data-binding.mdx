@@ -1,0 +1,81 @@
+---
+title: 'Data Binding'
+description: 'Connectez les composants de Content à des données dynamiques issues de Datasources, paramètres d'URL et plus encore'
+---
+
+![Sélecteur de variables affichant les champs de Datasource disponibles](/images/contents/data-binding-v2.png)
+
+## Présentation
+
+Le Data binding connecte les propriétés des composants à des valeurs dynamiques qui se résolvent au moment du rendu. Au lieu de coder en dur du texte, des images ou des URLs, vous les liez à des **variables** provenant de [Datasources](/fr/product-guide/datahub/overview), de paramètres d'URL ou d'autres sources de données configurées dans votre [Workflow](/fr/product-guide/workflows/overview).
+
+## Ajouter une Datasource
+
+Avant de lier des variables, vous devez rattacher une source de données à votre Content :
+
+<Steps>
+  <Step title="Ouvrir la configuration de la Datasource">
+    Cliquez sur **Add a datasource** dans l'éditeur ou accédez-y via le panneau de configuration lors de la liaison d'une variable.
+  </Step>
+  <Step title="Sélectionner le type de source">
+    Choisissez la provenance de vos données :
+
+    | Type de source | Description |
+    |----------------|-------------|
+    | **Datasource** | Se connecter à une [Datasource du DataHub](/fr/product-guide/datahub/overview) pour accéder à ses champs. |
+    | **Workflow** | Utiliser les données du Workflow parent — paramètres d'URL, live polling, géolocalisation ou météo. |
+    | **Custom** | Définir une variable personnalisée à l'aide de formules de transformation. |
+  </Step>
+  <Step title="Sélectionner la Datasource spécifique">
+    Pour le type **Datasource**, recherchez et sélectionnez parmi vos Datasources disponibles.
+
+    Pour le type **Workflow**, choisissez le sous-type :
+    - **Url parameter** — Un paramètre d'URL nommé transmis au moment du rendu.
+    - **[Live polling](/fr/product-guide/workflows/data-nodes/live-polling)** — Données de pourcentage de clics en temps réel.
+    - **Geolocation** — Coordonnées géographiques de l'utilisateur.
+    - **Weather** — Données météo à la position de l'utilisateur.
+  </Step>
+  <Step title="Configurer et valider">
+    Complétez la configuration supplémentaire (par exemple, nom du paramètre, valeur de prévisualisation) et cliquez sur **Validate**.
+  </Step>
+</Steps>
+
+## Sélecteur de variables
+
+Une fois une Datasource rattachée, vous pouvez lier ses champs aux propriétés des composants à l'aide du sélecteur **Variables** :
+
+1. Cliquez sur l'icône du sélecteur de variables à côté de tout champ modifiable dans le panneau de configuration.
+2. Le panneau des variables affiche tous les champs disponibles regroupés par Datasource.
+3. Sélectionnez un champ pour le lier.
+
+### Sélection de l'élément de la Datasource
+
+Lorsqu'une Datasource renvoie plusieurs résultats, vous pouvez choisir quel élément afficher :
+
+| Option | Description |
+|--------|-------------|
+| **Réutiliser l'élément affiché** | Utiliser le même élément (par défaut : élément n°1) que les autres liaisons de la même Datasource. |
+| **Afficher l'élément n°N de la Datasource** | Utiliser un index de résultat spécifique (par exemple, élément n°2 pour le deuxième produit). |
+
+<Tip>
+  Utilisez différents éléments de Datasource pour afficher plusieurs produits d'une même Datasource dans un seul template de Content — par exemple, un carrousel de produits.
+</Tip>
+
+## Variables personnalisées
+
+Les variables personnalisées vous permettent de définir des valeurs dérivées à l'aide de formules de transformation. Après avoir créé une variable personnalisée avec un **nom de variable**, vous configurez la formule dans l'éditeur de transformation.
+
+## Regroupement des résultats
+
+Pour les Datasources de produits, vous pouvez optionnellement regrouper les résultats par champ :
+
+| Option | Description |
+|--------|-------------|
+| **Données agrégées** | Agréger les valeurs à travers le groupe. |
+| **1er produit de chaque groupe** | Afficher un produit par valeur de groupe unique. |
+| **Tous les produits du 1er groupe** | Afficher tous les produits du premier groupe. |
+| **Tous les produits de tous les groupes** | Afficher tous les produits indépendamment du regroupement. |
+
+## Transformations
+
+Lorsqu'une variable est liée, vous pouvez appliquer des [Transformations](/api-reference/transformations/introduction) pour formater la valeur — par exemple, formater une date, arrondir un nombre ou convertir une devise. Voir le composant [Text](/fr/product-guide/contents/components/text) pour les détails sur les transformations.

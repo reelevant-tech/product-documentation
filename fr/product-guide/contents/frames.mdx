@@ -1,0 +1,58 @@
+---
+title: 'Frames'
+description: 'Créez des templates de contenu multi-pages et animés avec les Frames'
+---
+
+![Dock des Frames affichant le carrousel d'aperçu des pages en bas de l'éditeur](/images/contents/frames-dock-v2.png)
+
+## Présentation
+
+Les Frames permettent de créer des templates de contenu multi-pages ou animés. Chaque Frame représente une page distincte ou un état d'animation, et toutes les Frames partagent les mêmes dimensions de canvas.
+
+Les Frames sont couramment utilisées pour :
+- **Bannières animées** — Alterner entre différents états visuels avec des transitions temporisées.
+- **Contenu multi-pages** — Créer des templates avec plusieurs pages (par exemple, une landing page avec des sections).
+- **Variantes A/B** — Concevoir différentes options visuelles au sein du même Content.
+
+## Activer les Frames
+
+Pour activer les Frames sur un template de Content :
+
+1. Cliquez sur l'arrière-plan du canvas (désélectionnez tous les composants).
+2. Dans la section **Paramètres de l'éditeur** du panneau de configuration, activez **Contenu animé**.
+
+## Dock des Frames
+
+Lorsque les Frames sont activées, un **carrousel d'aperçu des pages** apparaît en bas de l'éditeur (le dock des Frames) :
+
+| Contrôle | Description |
+|----------|-------------|
+| **Frame précédente / Frame suivante** | Naviguer entre les Frames à l'aide des boutons fléchés. |
+| **Indicateur de page** | Affiche « Page X sur Y » pour la Frame actuellement sélectionnée. |
+| **Miniatures des Frames** | Cliquez sur une miniature pour passer à cette Frame et l'éditer. |
+
+## Gestion des Frames
+
+| Action | Description |
+|--------|-------------|
+| **Ajouter une Frame** | Cliquez sur **Add frame** dans le dock des Frames ou le panneau de configuration pour créer une nouvelle Frame. |
+| **Dupliquer une Frame** | Cloner la Frame actuelle avec tous ses composants et paramètres. |
+| **Supprimer une Frame** | Supprimer une Frame et son contenu. |
+
+## Configuration des Frames
+
+Chaque Frame possède ses propres paramètres :
+
+| Propriété | Description |
+|-----------|-------------|
+| **Titre de la Frame** | Un libellé pour la Frame (par exemple, « Frame 1 », « Frame 2 »). |
+| **Durée (ms)** | Durée d'affichage de la Frame en millisecondes (pour le contenu animé). |
+| **Couleur** | Couleur d'arrière-plan optionnelle pour la Frame. |
+
+## Lecture de l'animation
+
+Cliquez sur le bouton **Play animation** dans la barre d'outils pour prévisualiser la séquence animée. L'éditeur parcourt toutes les Frames selon leurs durées configurées.
+
+<Tip>
+  Chaque Frame peut avoir ses propres composants, data bindings et conditions — vous offrant un contrôle créatif total sur chaque état de l'animation.
+</Tip>

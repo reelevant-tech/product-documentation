@@ -1,0 +1,95 @@
+---
+title: 'Import de design'
+description: 'Importez des designs Figma ou Photoshop pour démarrer vos templates de contenu'
+---
+
+<Note>
+  L'import de design est actuellement disponible uniquement pour les **bêta-testeurs**. Si vous souhaitez y accéder, veuillez contacter votre responsable de compte.
+</Note>
+
+## Présentation
+
+L'import de design vous permet de convertir un design **Figma** ou **Adobe Photoshop** existant en template de Content Reelevant. Au lieu de recréer les mises en page à partir de zéro dans le [Content Editor](/fr/product-guide/contents/editor), vous pouvez importer un fichier de design et obtenir un template entièrement structuré avec du texte, des images et des formes positionnés, prêts à être édités.
+
+Formats pris en charge :
+
+| Format | Type de fichier | Comment l'obtenir |
+|--------|-----------------|-------------------|
+| **Figma** | Export JSON (`.json`) | Utilisez le plugin Figma **Reelevant Exporter** pour exporter le cadre sélectionné. |
+| **Photoshop** | Fichier PSD (`.psd`) | Enregistrez ou exportez votre design au format `.psd` depuis Adobe Photoshop. |
+
+## Importer un design
+
+L'import de design fait partie du flux de création de Content. Lorsque vous créez un nouveau Content, vous pouvez optionnellement joindre un fichier de design.
+
+![Fenêtre de création de contenu avec le champ Import design](/images/contents/design-import-modal.png)
+
+<Steps>
+  <Step title="Ouvrir la fenêtre de création de contenu">
+    Depuis la page de [liste des Contents](/fr/product-guide/contents/listing), cliquez sur le bouton **Create content**.
+  </Step>
+  <Step title="Remplir les détails du contenu">
+    Saisissez un nom, une description optionnelle, sélectionnez les Teams et configurez la hiérarchie des dossiers comme d'habitude.
+  </Step>
+  <Step title="Joindre un fichier de design">
+    Dans le champ **Import design** en bas du formulaire, glissez-déposez votre export JSON Figma ou votre fichier PSD — ou cliquez pour parcourir et sélectionner le fichier depuis votre ordinateur.
+
+    Seuls les fichiers `.json` (export Figma) et `.psd` (Photoshop) sont acceptés.
+  </Step>
+  <Step title="Créer le contenu">
+    Cliquez sur **Create content**. La plateforme analysera le fichier de design et le convertira en template de Content. Vous serez redirigé vers l'éditeur avec la mise en page importée prête à être modifiée.
+  </Step>
+</Steps>
+
+## Exporter depuis Figma
+
+Pour exporter un design depuis Figma en vue de l'importer dans Reelevant, utilisez le plugin Figma [**Reelevant Exporter**](https://www.figma.com/community/plugin/1624375833644668813/reelevant-exporter) :
+
+<Steps>
+  <Step title="Installer le plugin">
+    Installez le plugin [**Reelevant Exporter**](https://www.figma.com/community/plugin/1624375833644668813/reelevant-exporter) depuis la communauté Figma.
+  </Step>
+  <Step title="Sélectionner un cadre">
+    Dans votre fichier Figma, sélectionnez le cadre que vous souhaitez exporter. Le plugin exporte un cadre à la fois.
+  </Step>
+  <Step title="Lancer l'export">
+    Ouvrez le plugin et cliquez sur **Export selected frame**. Le plugin va :
+    - Exporter la structure JSON du cadre
+    - Capturer un instantané PNG du cadre
+    - Découper les éléments graphiques individuels de l'instantané
+    - Tout regrouper dans un seul fichier `.json`
+  </Step>
+  <Step title="Télécharger le fichier">
+    Le fichier `.json` se télécharge automatiquement. Utilisez ce fichier dans le champ **Import design** lors de la création d'un Content dans Reelevant.
+  </Step>
+</Steps>
+
+## Exporter depuis Photoshop
+
+Aucun plugin spécial n'est nécessaire pour Photoshop. Enregistrez votre design au format `.psd` standard et utilisez-le directement dans le flux d'import.
+
+<Info>
+  Pour de meilleurs résultats, gardez votre fichier Photoshop organisé avec des calques nommés. L'importeur lit la structure des calques pour créer les composants correspondants dans le template de Content.
+</Info>
+
+## Ce qui est importé
+
+L'importeur convertit les éléments de design en composants de Content Reelevant :
+
+| Élément de design | Composant Reelevant | Notes |
+|--------------------|---------------------|-------|
+| Calques de texte | [Text](/fr/product-guide/contents/components/text) | La famille de police, la taille, le poids, la couleur, l'alignement, l'espacement des lettres et la hauteur de ligne sont préservés. |
+| Rectangles et formes | [Shape](/fr/product-guide/contents/components/shape) | La couleur de remplissage et la position sont importées. |
+| Images | [Image](/fr/product-guide/contents/components/image) | Les images raster sont extraites, téléversées et liées. |
+| Positions des calques | Disposition du composant | Les positions absolues et les tailles sont mappées sur le canvas. |
+
+### Gestion des polices
+
+Les polices importées sont automatiquement mises en correspondance avec les polices disponibles dans votre compte Reelevant. Si une famille de polices du design n'est pas trouvée, une police de repli par défaut est utilisée. Vous pouvez mettre à jour la police après l'import via le panneau de configuration du composant [Text](/fr/product-guide/contents/components/text).
+
+## Limitations
+
+- Un seul cadre ou plan de travail est importé par fichier. Pour du contenu multi-frames, importez le cadre principal et ajoutez des [Frames](/fr/product-guide/contents/frames) supplémentaires manuellement.
+- Les tracés vectoriels complexes, les effets (ombres, flous) et les dégradés ne sont pas importés — seuls les remplissages unis sont pris en charge.
+- Les composants imbriqués et les symboles sont aplatis en leur représentation visuelle.
+- Après l'import, le template peut nécessiter des ajustements mineurs de mise en page. Utilisez le [Content Editor](/fr/product-guide/contents/editor) pour affiner les positions et le style.

@@ -1,0 +1,49 @@
+---
+title: 'Composant Countdown'
+description: 'Ajoutez des compteurs à rebours animés jusqu'à une date cible dans vos templates de contenu'
+---
+
+![Composant Countdown affichant les jours, heures, minutes et secondes](/images/contents/component-countdown-v2.png)
+
+## Présentation
+
+Le composant Countdown affiche un compteur à rebours en temps réel qui décompte jusqu'à une date cible. Il est idéal pour les promotions à durée limitée, les lancements d'événements et les ventes flash.
+
+| Propriété | Valeur |
+|-----------|--------|
+| **Bouton de la barre d'outils** | Countdown |
+| **Prend en charge le Data binding** | Oui — date cible |
+| **Prend en charge les Conditions** | Oui |
+
+## Paramètres du Countdown
+
+| Propriété | Description |
+|-----------|-------------|
+| **Date fixe** | La date et l'heure cibles pour le compte à rebours. Peut être statique ou liée à une variable de Datasource. |
+| **Espace entre les nombres** | Espacement horizontal entre les groupes de chiffres. |
+| **Utiliser le fuseau horaire local de l'utilisateur** | Lorsque cette option est activée, la date de fin du compte à rebours s'ajuste automatiquement au fuseau horaire local de chaque visiteur. |
+
+## Fuseau horaire local
+
+Activez **Use user's local timezone** pour ajuster automatiquement la date de fin du compte à rebours pour chaque visiteur.
+
+Sans cette option, un compte à rebours réglé sur « 15 janv. à 18:00 UTC » se termine à 19:00 pour un utilisateur à Paris (UTC+1) et à 03:00 le lendemain matin à Tokyo (UTC+9). Avec l'option activée, le compte à rebours se termine à 18:00 heure locale pour tout le monde — ainsi les utilisateurs français et japonais le voient expirer à 18h dans leur propre fuseau horaire.
+
+<Tip>C'est idéal pour les campagnes multi-pays où une promotion doit se terminer à la même heure locale dans chaque pays.</Tip>
+
+<Info>
+  Certains clients e-mail pré-chargent ou mettent en cache les images. Cela peut figer le compte à rebours au moment du chargement. Voir [Mise en cache et proxies des clients e-mail](/advanced-guide/email-rendering/caching-and-proxies).
+</Info>
+
+## Configuration des chiffres
+
+Chaque unité de temps (Jours, Heures, Minutes, Secondes) a sa propre configuration :
+
+| Propriété | Description |
+|-----------|-------------|
+| **Afficher les chiffres** | Activer ou désactiver l'affichage de ce groupe de chiffres. |
+| **Espacement autour des chiffres** | Ajouter un espacement autour de l'affichage des chiffres. |
+
+## Style
+
+Le Countdown hérite du style de texte du composant [Text](/fr/product-guide/contents/components/text) — la famille de police, la taille, le poids, la couleur et l'alignement peuvent tous être personnalisés.
