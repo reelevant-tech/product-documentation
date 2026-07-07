@@ -1,0 +1,71 @@
+---
+title: 'Présentation du Content Editor'
+description: 'Concevez des templates visuels dynamiques avec un éditeur canvas glisser-déposer connecté à vos données'
+---
+
+![Canvas du Content Editor affichant un template avec du texte, des images et des composants liés aux données](/images/contents/editor-canvas-v2.png)
+
+## Qu'est-ce que le Content Editor ?
+
+Le Content Editor (ContentHub) est l'outil de conception visuelle de la plateforme Reelevant pour créer des templates dynamiques — bannières, sections d'e-mail, landing pages, et plus encore. Grâce à un canvas glisser-déposer, vous créez des mises en page avec du texte, des images, des formes et des composants pilotés par les données, puis vous les connectez à des [Datasources](/fr/product-guide/datahub/overview) pour personnaliser chaque élément au moment du rendu.
+
+Chaque template de Content est utilisé par les [Output Nodes de Workflow](/fr/product-guide/workflows/output-nodes/visual-content) pour délivrer l'expérience visuelle finale à votre audience.
+
+## Concepts clés
+
+| Concept | Description |
+|---------|-------------|
+| **Content** | Un template visuel composé de composants disposés sur un canvas. |
+| **Composant** | Un élément individuel sur le canvas — Text, Image, Shape, Map, Barcode, Countdown, Progress Bar ou Progress Arc. |
+| **Calque** | Chaque composant est un calque dans l'arborescence des calques. Les calques peuvent être réorganisés, groupés et masqués. |
+| **Frame** | Une page ou variante au sein d'un template de Content. Les Contents multi-frames prennent en charge les mises en page animées ou multi-pages. |
+| **Condition** | Une règle de visibilité qui affiche ou masque des composants en fonction des valeurs de données au moment du rendu. |
+| **Data binding** | La connexion d'une propriété de composant (texte, URL d'image, etc.) à une variable provenant d'une [Datasource](/fr/product-guide/datahub/overview) ou d'un paramètre d'URL. |
+| **Dépendance** | Une source de données (Datasource, paramètre d'URL, géolocalisation, météo) rattachée au Content pour un rendu dynamique. |
+
+## Cycle de vie du Content
+
+| Statut | Description |
+|--------|-------------|
+| **Draft** | Le Content est en cours d'édition et n'a pas encore été publié. |
+| **Publishing** | Le Content est en cours de validation par la plateforme. |
+| **Published** | Le Content est prêt à être utilisé dans un [Workflow](/fr/product-guide/workflows/overview). |
+| **Error** | Le Content a rencontré un problème lors de la publication. |
+
+<Info>
+  Un Content doit être **Published** avant de pouvoir être assigné à un [Output Node de contenu visuel](/fr/product-guide/workflows/output-nodes/visual-content) dans un Workflow.
+</Info>
+
+## Organisation de l'éditeur
+
+Le Content Editor est organisé en plusieurs zones :
+
+1. **En-tête** — Affiche le nom du Content, le statut et les boutons d'action (Preview, Publish, Settings).
+2. **Canvas** — La zone de conception principale où vous placez et agencez les composants.
+3. **Barre d'outils** — Une barre avec les outils pour ajouter des composants (Text, Shapes, Images, Barcode, Map, Countdown, Progress bars), le zoom, annuler/rétablir et les guides de mise en page.
+4. **Panneau des calques** — Une arborescence affichant tous les composants et leur hiérarchie.
+5. **Panneau de configuration** — S'ouvre lorsqu'un composant est sélectionné, affichant ses propriétés (position, taille, apparence, data binding).
+6. **Dock des Frames** — Un carrousel d'aperçu des pages en bas pour naviguer entre les Frames.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Liste des Contents" icon="list" href="/fr/product-guide/contents/listing">
+    Parcourez, créez et gérez vos templates de Content.
+  </Card>
+  <Card title="Éditeur" icon="pen-to-square" href="/fr/product-guide/contents/editor">
+    Découvrez l'organisation de l'éditeur, la barre d'outils et les contrôles du canvas.
+  </Card>
+  <Card title="Composants" icon="shapes" href="/fr/product-guide/contents/components">
+    Explorez tous les types de composants disponibles.
+  </Card>
+  <Card title="Calques" icon="layer-group" href="/fr/product-guide/contents/layers">
+    Organisez les composants avec l'arborescence des calques.
+  </Card>
+  <Card title="Data Binding" icon="link" href="/fr/product-guide/contents/data-binding">
+    Connectez votre Content à des sources de données dynamiques.
+  </Card>
+  <Card title="Conditions" icon="code-branch" href="/fr/product-guide/contents/conditions">
+    Contrôlez la visibilité des composants avec des règles basées sur les données.
+  </Card>
+</CardGroup>

@@ -1,0 +1,130 @@
+---
+title: 'Content Editor'
+description: 'Naviguez et utilisez l'éditeur de contenu visuel pour concevoir des templates dynamiques'
+---
+
+![Éditeur de contenu avec canvas, barre d'outils, panneau des calques et panneau de configuration](/images/contents/editor-overview-v2.png)
+
+## Organisation de l'éditeur
+
+L'éditeur de contenu est un espace de travail visuel plein écran pour concevoir des templates. Il se compose de cinq zones principales :
+
+1. **Barre d'en-tête** — Affiche le nom du Content, le badge de statut et les boutons d'action (Preview, Publish, Settings).
+2. **Canvas** — La zone centrale de conception où les composants sont rendus. Vous pouvez naviguer, zoomer et sélectionner des composants.
+3. **Barre d'outils** — Une barre horizontale avec les outils pour ajouter des composants, régler le zoom, annuler/rétablir et activer les guides de mise en page.
+4. **Panneau des calques** — Une arborescence à gauche affichant tous les composants avec leur hiérarchie, regroupement et options de visibilité. Voir [Calques](/fr/product-guide/contents/layers).
+5. **Panneau de configuration** — S'ouvre à droite lorsqu'un composant est sélectionné, affichant ses propriétés. Voir les pages des [composants](/fr/product-guide/contents/components) individuels.
+6. **Dock des Frames** — Un carrousel d'aperçu des pages en bas pour les Contents multi-frames. Voir [Frames](/fr/product-guide/contents/frames).
+
+## Barre d'outils
+
+La barre d'outils offre un accès rapide à tous les types de composants et aux contrôles du canvas :
+
+### Ajout de composants
+
+| Outil | Description |
+|-------|-------------|
+| **Move** (pointeur) | Outil de sélection et de déplacement par défaut. |
+| **Text** | Ajouter un composant [Text](/fr/product-guide/contents/components/text) sur le canvas. |
+| **Shapes** | Ouvrir le menu des formes — [Rectangle, Cercle, Triangle](/fr/product-guide/contents/components/shape). |
+| **Images** | Ajouter un composant [Image](/fr/product-guide/contents/components/image). |
+| **Barcode** | Ajouter un composant [Barcode](/fr/product-guide/contents/components/barcode). |
+| **Map** | Ajouter un composant [Map](/fr/product-guide/contents/components/map). |
+| **Countdown** | Ajouter un composant [Countdown](/fr/product-guide/contents/components/countdown). |
+| **Progress bars** | Ajouter un composant [Progress Bar ou Progress Arc](/fr/product-guide/contents/components/progress). |
+
+### Contrôles du canvas
+
+| Outil | Description |
+|-------|-------------|
+| **Zoom arrière / Zoom avant** | Ajuster le niveau de zoom du canvas. |
+| **Annuler** | Annuler la dernière action. |
+| **Rétablir** | Réappliquer la dernière action annulée. |
+
+### Guides de mise en page
+
+Les guides de mise en page sont des aides visuelles d'alignement superposées au canvas. Ils ne sont pas inclus dans le rendu final.
+
+| Paramètre | Description |
+|------------|-------------|
+| **Afficher / Masquer les guides** | Activer ou désactiver la visibilité des guides. |
+| **Type** | Grille, Colonnes ou Lignes. |
+| **Taille** | L'espacement du guide. |
+| **Nombre** | Nombre de colonnes ou de lignes. |
+| **Couleur** | Couleur de la superposition du guide. |
+| **Alignement** | Étiré, Gauche, Centre ou Haut. |
+| **Marge / Gouttière** | Espacement extérieur et espacement intérieur. |
+
+## Paramètres de l'éditeur
+
+Lorsqu'aucun composant n'est sélectionné, le panneau de configuration affiche les paramètres au niveau du Content :
+
+| Paramètre | Description |
+|------------|-------------|
+| **Taille du Content** | Largeur et hauteur du canvas en pixels. |
+| **Couleur de fond du canvas** | Le remplissage d'arrière-plan de la zone de conception. |
+| **Contenu animé** | Activer pour autoriser les [Frames](/fr/product-guide/contents/frames) pour les templates animés ou multi-pages. |
+| **Titre du Content** | Un titre affiché uniquement sur les landing pages. |
+
+## Raccourcis clavier
+
+L'éditeur de contenu prend en charge les raccourcis clavier pour les actions courantes :
+
+| Raccourci | Action |
+|-----------|--------|
+| **Ctrl+C** / **⌘+C** | Copier les composants, groupes ou conditions sélectionnés dans le presse-papiers. |
+| **Ctrl+V** / **⌘+V** | Coller les éléments précédemment copiés dans le Content actuel. |
+| **Ctrl+Z** / **⌘+Z** | Annuler la dernière action. |
+| **Ctrl+Shift+Z** / **⌘+Shift+Z** | Rétablir la dernière action annulée. |
+| **Delete** / **Backspace** | Supprimer les composants sélectionnés. |
+
+### Copier / Coller
+
+Vous pouvez copier et coller des composants, des groupes de composants et des groupes de conditions au sein du même Content ou entre différents Contents.
+
+**Copier :**
+1. Sélectionnez un ou plusieurs éléments dans le [panneau des calques](/fr/product-guide/contents/layers) ou directement sur le canvas.
+2. Appuyez sur **Ctrl+C** (ou **⌘+C** sur Mac).
+3. Une notification de succès confirme le nombre d'éléments copiés.
+
+**Coller :**
+1. Appuyez sur **Ctrl+V** (ou **⌘+V** sur Mac) dans l'éditeur de contenu cible.
+2. Tous les éléments copiés sont recréés avec de nouveaux identifiants, y compris leurs enfants imbriqués, les data bindings et les dépendances de Datasources.
+3. Une notification de succès confirme le nombre d'éléments collés.
+
+<Info>
+  Le copier/coller fonctionne entre différents Contents au sein du même compte. Si un élément collé fait référence à une Datasource qui n'existe pas dans le compte cible, une notification d'erreur s'affiche et les éléments restants sont tout de même collés.
+</Info>
+
+<Tip>
+  Les composants collés conservent leur position d'origine sur le canvas, ce qui facilite la reproduction de mises en page entre Contents.
+</Tip>
+
+## Travailler avec les composants
+
+### Ajouter des composants
+
+Cliquez sur un outil dans la barre d'outils, puis cliquez sur le canvas pour placer le composant. Vous pouvez aussi sélectionner un outil et glisser sur le canvas pour définir la taille.
+
+### Sélectionner et déplacer
+
+Cliquez sur un composant sur le canvas ou dans l'[arborescence des calques](/fr/product-guide/contents/layers) pour le sélectionner. Glissez pour le repositionner. Utilisez les poignées de redimensionnement pour modifier les dimensions.
+
+### Panneau de configuration
+
+Lorsqu'un composant est sélectionné, le panneau de configuration affiche :
+
+- **Disposition** — Position X, position Y, largeur, hauteur.
+- **Position** — Coordonnées sur le canvas.
+- **Taille** — Dimensions avec verrouillage optionnel du ratio d'aspect.
+- **Rotation** — Angle de rotation.
+- **Apparence** — Style spécifique au composant (remplissage, contour, rayon de bordure, etc.).
+- **Redirection** — Une URL de [lien de redirection](/fr/product-guide/contents/components/text) vers laquelle les utilisateurs sont dirigés lorsqu'ils cliquent sur le composant.
+
+### Publication
+
+Cliquez sur **Publish** dans l'en-tête pour valider et publier le Content. Une fois publié, le Content peut être utilisé dans les [Output Nodes de Workflow](/fr/product-guide/workflows/output-nodes/visual-content).
+
+<Info>
+  L'action Publish valide la structure du Content. S'il y a des erreurs de dépendance (par exemple, un [Workflow](/fr/product-guide/workflows/overview) référencé manque une variable), une fenêtre d'erreur listera les problèmes.
+</Info>

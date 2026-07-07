@@ -1,0 +1,283 @@
+---
+title: 'Présentation de la nouvelle interface'
+description: 'Résumé de toutes les nouveautés et améliorations introduites avec la refonte de l'interface de la plateforme Reelevant'
+---
+
+La plateforme Reelevant a été entièrement repensée avec une interface moderne et rafraîchie disponible sur `next.reelevant.com`. Chaque application — Workflows, Contents, DataHub, Analytics et Account — a été migrée indépendamment pour garantir une transition fluide sans interruption de vos campagnes.
+
+<Note>
+La nouvelle interface est principalement une **migration visuelle**. Sauf si une fonctionnalité est explicitement listée sur cette page, le changement est purement cosmétique — tous vos champs de saisie, boutons et Workflows restent au même endroit et fonctionnent de la même manière. Vous n'avez pas besoin de réapprendre la plateforme.
+</Note>
+
+Cette page liste chaque **nouvelle fonctionnalité et amélioration** introduite avec la refonte.
+
+## Fonctionnalités transversales
+
+Ces changements s'appliquent à toutes les applications de la plateforme.
+
+<Note>
+Pour rappel, si un écran ou une fonctionnalité que vous utilisez n'est pas listé ici, cela signifie qu'il a été migré tel quel — même disposition, mêmes boutons, même comportement, avec juste un look rafraîchi.
+</Note>
+
+### Thème / Mode couleur
+
+*Décembre 2025*
+
+Personnalisez l'apparence de la plateforme selon vos préférences avec trois modes de couleur :
+
+- **Light** — l'interface lumineuse classique
+- **Dark** — plus agréable pour les yeux lors de longues sessions de travail
+- **System** — suit automatiquement le réglage clair/sombre de votre ordinateur
+
+Changez de thème instantanément depuis le menu de la barre latérale — pas besoin d'aller dans les paramètres. Votre préférence est enregistrée dans votre profil et reste cohérente sur tous vos appareils et onglets de navigateur.
+
+<Frame>
+  <img src="/images/new-ui/theme-color-picker.png" alt="Sélecteur de mode couleur du thème" />
+</Frame>
+
+### Dossiers dans les listes
+
+*Mars 2026*
+
+Toutes les pages de listing — Workflows, Contents et Datasources — prennent désormais en charge l'**organisation par dossiers**. Cette fonctionnalité est exclusive à la nouvelle interface.
+
+- Créez des dossiers et sous-dossiers pour organiser vos éléments par campagne, client, Team ou toute structure adaptée à votre workflow
+- Naviguez entre les dossiers grâce au fil d'Ariane en haut de la liste, avec un accès rapide aux dossiers voisins via un menu déroulant
+- Attribuez des éléments à des dossiers lors de la création ou de la modification, et créez de nouveaux dossiers à la volée
+
+C'est un changement majeur pour les équipes gérant un grand nombre de Workflows, Contents ou Datasources — fini le défilement dans des listes plates pour trouver ce dont vous avez besoin.
+
+<Frame>
+  <img src="/images/new-ui/folders-in-lists.png" alt="Dossiers dans les pages de listing" />
+</Frame>
+
+### Pages de paramètres
+
+*Mars 2026*
+
+Trois nouvelles pages de paramètres sont désormais intégrées directement dans la plateforme, remplaçant les anciens outils de configuration externes :
+
+- **Workflows → Settings : Variable Profiles** — créez et gérez des ensembles réutilisables de paramètres d'URL pour vos intégrations de Workflows. C'est particulièrement utile si vous gérez plusieurs marques ou clients, chacun avec ses propres paramètres de tracking — configurez un profil une fois et réutilisez-le dans vos Workflows
+
+- **Contents → Settings : Custom Fonts** — téléversez et gérez vos polices de marque directement dans la plateforme. Ces polices sont disponibles dans le Content Editor et sont automatiquement mises en correspondance lors de l'import de designs depuis Figma ou Photoshop
+
+- **Analytics → Settings : Attribution Period** — configurez le nombre de jours après un point de contact de campagne pendant lequel une conversion doit être attribuée à cette campagne. Cela affecte directement vos rapports de conversion, vous permettant de l'aligner avec le modèle d'attribution de votre entreprise
+
+<Frame>
+  <img src="/images/new-ui/settings-pages-1.png" alt="Paramètres Workflow - Variable Profiles" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/settings-pages-2.png" alt="Paramètres Content - polices personnalisées" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/settings-pages-3.png" alt="Paramètres Analytics - attribution" />
+</Frame>
+
+## Workflows
+
+L'application Workflows a été la première à recevoir la nouvelle interface. Toutes les fonctionnalités existantes (configuration des Nodes, déclencheurs, conditions, splits, Channels) **fonctionnent exactement de la même manière** — la migration est purement visuelle. Les fonctionnalités listées ci-dessous sont de véritables nouveautés.
+
+### Éditeur de Workflow redessiné
+
+*Septembre 2025*
+
+L'éditeur de Workflow a bénéficié d'une refonte visuelle complète, le rendant plus rapide et plus intuitif pour construire vos flux d'automatisation.
+
+Ce qui a été amélioré :
+- **Configuration des Nodes plus claire** — la configuration des conditions, splits et Data Nodes se fait désormais via des panneaux latéraux organisés au lieu de menus surchargés
+- **Meilleur listing des Workflows** — retrouvez vos Workflows plus rapidement grâce à une recherche améliorée, un tri par dernière mise à jour et l'organisation par dossiers (voir [Dossiers dans les listes](#dossiers-dans-les-listes))
+- **Vues partageables** — les filtres et paramètres de l'éditeur sont sauvegardés dans l'URL, vous pouvez donc partager une vue spécifique avec un collègue en copiant simplement le lien
+
+### Branch Qualification depuis les connexions
+
+*Mars 2026*
+
+Qualifier les Branches est désormais beaucoup plus rapide. Au lieu de chercher dans le menu du Logic Node, il suffit de **survoler n'importe quelle ligne de connexion** dans votre Workflow et de cliquer sur **« Qualify branch »** pour ouvrir le panneau de qualification.
+
+Cela facilite :
+- **Nommer vos Branches** pour qu'elles soient reconnaissables dans les rapports (par exemple, « Clients VIP », « Nouveaux Abonnés »)
+- **Attribuer des catégories** de votre nomenclature pour structurer vos Analytics par segment métier
+- **Voir en un coup d'œil** quelles connexions appartiennent à la Branch que vous éditez — elles sont mises en surbrillance sur le canvas lorsque le panneau est ouvert
+
+Vous pouvez toujours zoomer et naviguer sur le canvas pendant que le panneau est ouvert, vous ne perdez donc jamais le contexte.
+
+<Frame>
+  <img src="/images/new-ui/branch-qualification-1.png" alt="Menu de qualification de Branch au survol" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/branch-qualification-2.png" alt="Panneau latéral de qualification de Branch avec le chemin mis en surbrillance" />
+</Frame>
+
+### Annuler / Rétablir
+
+*Avril 2026*
+
+Vous avez fait une erreur ? Appuyez simplement sur **Ctrl+Z** pour annuler et **Ctrl+Shift+Z** pour rétablir. Cela fonctionne dans l'éditeur de Workflow et le Content Editor, couvrant tous les types de modifications — déplacement de Nodes, édition de texte, ajustement des guides de mise en page, et plus encore. Plus besoin de craindre de casser quelque chose accidentellement.
+
+## Content Editor
+
+Le Content Editor a bénéficié d'une refonte visuelle complète. Tous vos outils existants — édition de texte, placement d'images, Data binding, Conditions — **restent au même endroit et se comportent de la même manière**. Les fonctionnalités ci-dessous sont de nouvelles capacités ajoutées en plus de la migration.
+
+### Refonte du Content Editor
+
+*Avril 2026*
+
+Le Content Editor a été entièrement redessiné pour un workflow créatif plus fluide :
+
+- **Panneaux redimensionnables** — ajustez la taille du panneau de configuration et de l'arborescence des calques pour s'adapter à votre écran et à vos préférences
+- **Édition modulaire** — chaque type d'élément (texte, image, barcode, map, countdown, etc.) dispose de sa propre configuration dédiée, réduisant l'encombrement
+- **Aperçu instantané** — visualisez vos modifications en temps réel pendant l'édition, vous savez donc toujours exactement à quoi ressemblera votre Content
+
+### Aperçu du Content dans le listing
+
+*Janvier 2026*
+
+Vous pouvez désormais voir une **miniature visuelle** de chaque Content directement dans la page de listing. Plus besoin d'ouvrir les Contents un par un pour trouver le bon — parcourez toute votre bibliothèque en un coup d'œil.
+
+<Frame>
+  <img src="/images/new-ui/content-preview-listing.png" alt="Aperçu du Content dans la page de listing" />
+</Frame>
+
+### Couleur de fond du canvas
+
+*Mai 2026*
+
+Vous pouvez désormais définir une **couleur de fond personnalisée** pour le canvas du Content Editor. C'est purement une aide visuelle — cela vous aide à prévisualiser l'apparence de votre Content sur différents arrière-plans (par exemple, un template d'e-mail sombre) sans affecter le rendu final. L'arrière-plan s'adapte automatiquement lorsque vous basculez entre les modes clair et sombre.
+
+<Frame>
+  <img src="/images/new-ui/content-canvas-background.png" alt="Configuration de la couleur de fond du canvas" />
+</Frame>
+
+### Guides de mise en page
+
+*Mai 2026*
+
+Les guides de mise en page vous aident à **aligner précisément les éléments** en superposant des grilles visuelles sur votre Content. C'est particulièrement utile pour maintenir un espacement cohérent dans les templates de recommandation de produits ou les mises en page multi-colonnes.
+
+Vous pouvez ajouter trois types de guides :
+- **Grid** — une grille carrée uniforme pour placer les éléments avec précision
+- **Columns** — des colonnes verticales avec un nombre, un espacement et des marges personnalisables (idéal pour les grilles de produits)
+- **Rows** — des lignes horizontales pour aligner les éléments verticalement
+
+Chaque guide peut être affiché/masqué, renommé, recoloré et personnalisé individuellement. Vous pouvez avoir plusieurs guides actifs en même temps.
+
+**Où le trouver :** Cliquez sur l'icône de grille dans la barre d'outils en bas du canvas.
+
+<Frame>
+  <img src="/images/new-ui/content-layout-guides.png" alt="Guides de mise en page dans le Content Editor" />
+</Frame>
+
+### Copier / Coller
+
+*Juin 2026*
+
+Vous pouvez désormais **copier et coller** des composants, groupes et conditions dans le Content Editor en utilisant les raccourcis clavier standard (**Ctrl+C** / **Ctrl+V**, ou **⌘+C** / **⌘+V** sur Mac).
+
+Cela fonctionne :
+- Au sein du même Content — dupliquez rapidement des arborescences d'éléments complexes sans les recréer manuellement
+- **Entre différents Contents** — copiez un composant entièrement configuré (avec tous ses data bindings et dépendances de Datasources) d'un Content et collez-le dans un autre
+
+Lors du collage, tous les éléments reçoivent de nouveaux identifiants et leurs dépendances de données sont automatiquement résolues. Si une dépendance ne peut pas être ajoutée (par exemple, une Datasource qui n'existe pas dans le compte cible), une notification d'erreur s'affiche et le reste des éléments est tout de même collé.
+
+Une notification de succès confirme le nombre d'éléments copiés ou collés.
+
+### Sélecteur d'élément de Datasource
+
+*Mai 2026*
+
+Lorsque vous créez des templates de recommandation de produits, vous avez souvent besoin d'afficher le même champ (par exemple, nom du produit, prix, image) pour **plusieurs produits**. Le nouveau sélecteur d'éléments vous permet de choisir à quelle position de produit chaque champ fait référence — produit n°1, n°2, n°3, et ainsi de suite, jusqu'à 20.
+
+- Lorsque vous insérez un champ déjà utilisé, une fenêtre vous demande si vous souhaitez réutiliser le même produit ou en choisir un autre
+- Un badge sur chaque variable indique à quel élément elle fait référence (par exemple, « element #2 »)
+- Vous pouvez modifier l'attribution de l'élément à tout moment depuis les paramètres de la variable
+
+Cela rend la construction de mises en page multi-produits beaucoup plus rapide et moins sujette aux erreurs.
+
+<Frame>
+  <img src="/images/new-ui/content-datasource-element.png" alt="Sélecteur d'élément de Datasource dans le Content Editor" />
+</Frame>
+
+## DataHub
+
+L'application DataHub a été migrée vers la nouvelle interface avec la même navigation, le même assistant de création de sources de données et la même configuration des champs auxquels vous êtes habitué. **Tout fonctionne de la même manière** — les améliorations ci-dessous sont de nouveaux ajouts pour vous aider à travailler plus efficacement.
+
+### Interface DataHub redessinée
+
+*Février 2026*
+
+Le DataHub a bénéficié d'une interface plus propre et plus efficace pour vous aider à gérer vos sources de données avec moins de friction :
+
+- **Logs plus clairs** — le bruit des « champs manquants » a été déplacé vers une étape de configuration dédiée, vos logs n'affichent donc que l'essentiel
+- **Colonne de dernière mise à jour** — voyez instantanément quand chaque Datasource a été rafraîchie pour la dernière fois, facilitant la détection des données obsolètes
+- **Indicateurs de statut en temps réel** — un indicateur de chargement apparaît à côté du nom de chaque Datasource lorsqu'une mise à jour est en cours, vous savez donc toujours ce qui est en progression
+- **Catalogue simplifié** — la création d'une nouvelle Datasource est plus directe avec un sélecteur de templates simplifié
+- **Détails de log extensibles** — cliquez sur n'importe quel avertissement ou erreur pour voir les détails complets, accélérant le dépannage
+- **Organisation par dossiers** — organisez vos Datasources dans des dossiers, comme les Workflows et les Contents
+
+<Frame>
+  <img src="/images/new-ui/datahub-new-ui.png" alt="Interface DataHub redessinée" />
+</Frame>
+
+## Analytics
+
+L'application Analytics a été migrée vers la nouvelle interface. Vos tableaux de bord existants, requêtes enregistrées et rapports **sont tous toujours accessibles de la même manière**. Les fonctionnalités ci-dessous sont de nouvelles capacités ajoutées avec la refonte visuelle.
+
+### Page d'exploration des statistiques
+
+*Décembre 2025*
+
+La nouvelle page d'exploration de données vous offre un puissant **constructeur de requêtes** pour exécuter des analyses ad-hoc sur vos données de campagne. Sélectionnez vos Workflows, campagnes, mesures, dimensions et période — puis visualisez les résultats instantanément.
+
+Vos paramètres de requête sont sauvegardés dans l'URL, vous pouvez donc **ajouter en favoris** une analyse spécifique ou la **partager** avec un collègue en lui envoyant le lien. Vous pouvez également filtrer par catégorie de Branch si vous avez configuré des nomenclatures pour vos Workflows.
+
+<Frame>
+  <img src="/images/new-ui/stats-exploration.png" alt="Page d'exploration des statistiques" />
+</Frame>
+
+### Refonte des tableaux de bord Analytics
+
+*Janvier 2026*
+
+Tous les tableaux de bord Analytics ont été redessinés avec de nouvelles capacités pour vous aider à mieux comprendre la performance de vos campagnes :
+
+- **Période de comparaison** — voyez comment vos métriques se comparent à une période précédente (par exemple, cette semaine vs. la semaine dernière) pour repérer rapidement les tendances
+- **Granularité temporelle** — basculez entre les vues quotidienne, hebdomadaire ou mensuelle pour analyser la performance au bon niveau de détail
+- **Export de données** — exportez les données de n'importe quelle carte KPI, graphique ou tableau pour les utiliser dans vos propres rapports et présentations
+- **Filtrage par catégorie de Branch** — concentrez votre analyse sur des segments métier spécifiques en filtrant les tableaux de bord par vos catégories de Branch
+
+<Frame>
+  <img src="/images/new-ui/analytics-dashboards-revamp.png" alt="Tableaux de bord Analytics redessinés" />
+</Frame>
+
+### Tableau de bord d'utilisation (Consommation)
+
+*Janvier 2026*
+
+Suivez la consommation de votre compte grâce à un tableau de bord dédié qui affiche la part de votre quota contractuel utilisée. Le tableau de bord comprend :
+
+- **Vue d'ensemble de la consommation** — un résumé clair affichant votre utilisation totale (ouvertures ou ouvreurs uniques, selon votre plan) par rapport à votre quota, avec un statut coloré : vert lorsque vous êtes sous le quota, jaune lorsque vous approchez de la limite, et rouge lorsque vous êtes significativement au-dessus
+- **Répartition par Team** — voyez quelles Teams génèrent le plus de consommation
+- **Répartition par Channel** — comprenez la consommation par canal e-mail, web, mobile et landing page
+
+Accessible via **Analytics → Consumption** ou **Account → Consumption**.
+
+<Frame>
+  <img src="/images/new-ui/analytics-usage-dashboard-1.png" alt="Vue d'ensemble du tableau de bord d'utilisation" />
+</Frame>
+
+<Frame>
+  <img src="/images/new-ui/analytics-usage-dashboard-2.png" alt="Tableaux détaillés du tableau de bord d'utilisation" />
+</Frame>
+
+### Dimension Workflow ID
+
+*Mai 2026*
+
+Vous pouvez désormais utiliser **Workflow ID** comme dimension dans vos requêtes Analytics. Cela résout la confusion qui survenait lorsque plusieurs Workflows partageaient le même nom (par exemple, des variantes de test A/B ou des campagnes dupliquées) — l'ID vous offre un moyen unique et stable d'identifier chaque Workflow dans vos rapports.
+
+<Frame>
+  <img src="/images/new-ui/workflow-id-dimension.png" alt="Dimension Workflow ID dans Analytics" />
+</Frame>
