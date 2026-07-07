@@ -28,6 +28,11 @@ and complex business logic — but they are NOT developers.
 - Include `<Info>` blocks for edge cases and gotchas
 - Link to product-guide pages for UI basics
 
+## Translation
+- When editing any English page in this directory, check if `fr/advanced-guide/<same-path>.mdx` exists.
+  If it does, apply the same content change to the French file so it stays in sync.
+- See the root `AGENTS.md` → "Translation / Internationalisation" section for full rules.
+
 ## What NOT to include
 - Code in any programming language
 - API request/response examples

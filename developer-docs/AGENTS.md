@@ -34,6 +34,11 @@ They have full technical knowledge: APIs, SDKs, servers, CI/CD.
 - Use realistic variable names (not `foo`, `bar`)
 - Show error handling in at least one example per page
 
+## Translation
+- When editing any English page in this directory, check if `fr/developer-docs/<same-path>.mdx` exists.
+  If it does, apply the same content change to the French file so it stays in sync.
+- See the root `AGENTS.md` → "Translation / Internationalisation" section for full rules.
+
 ## What NOT to include
 - UI screenshots (link to product-guide instead)
 - Step-by-step UI instructions

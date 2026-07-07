@@ -59,6 +59,19 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 - Cross-directory links are encouraged
 - Images go in `/images/{section}/` with descriptive alt text
 
+## Translation / Internationalisation
+
+Translated pages live under language-prefixed directories (currently `fr/` for French)
+mirroring the English tree. English is the source of truth.
+
+**When editing English pages, always check whether a translated counterpart exists
+(e.g., `fr/<same-path>.mdx`). If it does, apply the same content change to the
+translated file so it stays in sync.** See the root `AGENTS.md` for the full
+translation rules (what to translate, what to keep unchanged, link rewriting).
+
+If a translated file does not exist yet, you do NOT need to create it — translations
+are added in batches. But never leave an existing translation out of date.
+
 ## Directory Rules (read the full AGENTS.md in each directory)
 
 ### `product-guide/` — Low-maturity marketers

@@ -36,6 +36,11 @@ Two sub-personas:
 - Include integration effort estimates (time, team size)
 - Link to developer-docs for full implementation details
 
+## Translation
+- When editing any English page in this directory, check if `fr/why-reelevant/<same-path>.mdx` exists.
+  If it does, apply the same content change to the French file so it stays in sync.
+- See the root `AGENTS.md` → "Translation / Internationalisation" section for full rules.
+
 ## What NOT to include
 - Platform UI instructions (link to product-guide)
 - Code snippets longer than 5 lines (link to developer-docs)

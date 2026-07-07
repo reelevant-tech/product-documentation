@@ -28,6 +28,11 @@ They use the Reelevant platform UI. They do not write code.
 - End pages with "What's Next?" cards linking to logical next steps
 - Use `<Tip>` for pro-tips, `<Warning>` for destructive actions
 
+## Translation
+- When editing any English page in this directory, check if `fr/product-guide/<same-path>.mdx` exists.
+  If it does, apply the same content change to the French file so it stays in sync.
+- See the root `AGENTS.md` → "Translation / Internationalisation" section for full rules.
+
 ## What NOT to include
 - Code snippets (none, ever)
 - API endpoints or HTTP methods
