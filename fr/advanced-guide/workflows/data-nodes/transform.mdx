@@ -1,0 +1,33 @@
+---
+title: 'Transform'
+description: 'Appliquez des transformations de données aux valeurs provenant d'autres Nodes'
+---
+
+![Panneau de configuration du Node Transform affichant l'éditeur de transformation](/images/workflows/node-transform.png)
+
+## Vue d'ensemble
+
+Le Node Transform applique des transformations de données aux valeurs provenant d'autres Nodes. Les Transforms vous permettent de manipuler, combiner ou reformater les données au sein du Workflow.
+
+## Fonctionnement
+
+1. Ajoutez un Node Transform en aval des données que vous souhaitez manipuler.
+2. Sélectionnez une transformation dans la liste disponible.
+3. Configurez les paramètres de la transformation — choisissez le champ d'entrée et les options souhaitées.
+4. La valeur transformée devient disponible pour les Nodes en aval via le Variable Picker.
+
+## Transformations disponibles
+
+Consultez la section [Transformations](/api-reference/transformations/introduction) de la référence API pour la liste complète des transformations disponibles, incluant :
+
+- **Texte** — Conversion de casse, remplacement, découpage, template
+- **Nombres** — Opérations mathématiques, formatage, arrondi
+- **Dates** — Formatage, analyse, différence, ajout/soustraction
+- **Tableaux** — Obtenir, intersection, unique, concaténation
+- **Chiffrement** — Déchiffrement AES, création de hash
+
+## Bonnes pratiques
+
+- Chaînez plusieurs Nodes Transform pour des manipulations de données complexes.
+- Utilisez les Transforms pour formater les données avant qu'elles n'atteignent les Output Nodes — par exemple, formater les prix ou les dates.
+- Consultez la [référence des Transformations](/api-reference/transformations/list) pour la liste complète des opérations disponibles.

@@ -1,0 +1,39 @@
+---
+title: 'Vue d'ensemble'
+description: 'Contrôlez le flux de votre Workflow avec des conditions, des splits et le Real-Time Testing'
+---
+
+![Sélecteur de types de Branches affichant les options Conditions, Split et Real-Time Testing](/images/workflows/node-picker-branches.png)
+
+## Que sont les Logic Nodes ?
+
+Les Logic Nodes contrôlent **quel chemin** un utilisateur emprunte dans le Workflow. Ils créent des Branches basées sur des conditions, des répartitions aléatoires ou des règles de Real-Time Testing. C'est ainsi que vous proposez des expériences différentes à différents segments d'audience.
+
+## Types de Logic Nodes
+
+<CardGroup cols={3}>
+  <Card title="Conditions" icon="code-branch" href="/fr/product-guide/workflows/logic-nodes/conditions">
+    Évaluez des règles pour décider quel Branch un utilisateur emprunte.
+  </Card>
+  <Card title="Split (A/B Testing)" icon="chart-pie" href="/fr/product-guide/workflows/logic-nodes/split">
+    Répartissez le trafic en Branches selon des pourcentages de population.
+  </Card>
+  <Card title="Real-Time Testing" icon="flask" href="/fr/product-guide/workflows/logic-nodes/real-time-testing">
+    Distribution automatique du trafic qui s'optimise au fil du temps.
+  </Card>
+</CardGroup>
+
+## Créer des Branches
+
+Lorsque vous ajoutez un Logic Node, il crée automatiquement des Branches de sortie. Vous pouvez :
+
+1. **Ajouter des Branches** en cliquant sur « Add » dans la configuration de condition ou de split.
+2. **Qualifier les Branches** en faisant un clic droit sur une arête et en sélectionnant « Qualify branch » pour attribuer une [catégorie de Branch](/fr/product-guide/workflows/branches).
+3. **Nommer les Branches** pour rendre le Workflow plus facile à comprendre.
+
+## Bonnes pratiques
+
+- **Gardez les conditions simples** — Les conditions imbriquées complexes sont plus difficiles à déboguer. Utilisez plutôt plusieurs Nodes de conditions en séquence.
+- **Ayez toujours un Branch par défaut** — Assurez-vous que chaque utilisateur reçoit une réponse, même s'il ne correspond à aucune condition.
+- **Utilisez les splits pour tester** — Lancez des tests A/B avec des Nodes de split avant de vous engager dans une stratégie de personnalisation unique.
+- **Documentez votre logique** — Utilisez le menu contextuel (clic droit) pour ajouter des notes de documentation aux Logic Nodes complexes.

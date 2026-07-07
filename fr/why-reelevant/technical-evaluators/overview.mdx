@@ -1,0 +1,43 @@
+---
+title: "Vue d'ensemble technique"
+description: "Évaluez la complexité d'intégration de Reelevant — architecture, flux de données, écosystème SDK et effort d'implémentation pour le moteur de personnalisation content-first."
+---
+
+## Ce qu'est Reelevant
+
+Reelevant est un **moteur de personnalisation content-first** qui rend du Content individualisé au moment de l'interaction utilisateur — pas au moment de l'envoi. Une seule définition de Content produit des millions de variantes uniques basées sur les données client en temps réel, la logique du Workflow et l'état des Datasources en direct.
+
+La plateforme gère l'ensemble du pipeline : ingestion de données, décision en temps réel, rendu du Content, diffusion, capture d'événements et mesure de l'incrémentalité.
+
+## Composants principaux
+
+| Composant | Rôle |
+|-----------|------|
+| **Workflow** | Graphe acyclique dirigé (DAG) de Data Nodes, Logic Nodes et Output Nodes — définit la logique de personnalisation |
+| **Datasource** | Store de données typé (Product, CRM, Location, Analytics, Generic) alimenté par ingestion batch ou streaming |
+| **Content** | Template visuel avec des liaisons de données — rendu au moment de la requête avec des données individuelles |
+| **Runner** | Moteur d'exécution sur `reelevant.run` — résout les Workflows et retourne des réponses personnalisées |
+| **DataHub** | Couche d'ingestion supportant les sources URL, S3, GCS, BigQuery, Snowflake, Kafka, FTP/SFTP |
+
+## Contenu de cette section
+
+<CardGroup cols={2}>
+<Card title="Architecture et cycle de vie" icon="diagram-project" href="/fr/why-reelevant/technical-evaluators/architecture">
+Architecture système, flux de données et cycle de vie des requêtes avec diagramme de séquence.
+</Card>
+<Card title="Ingestion de données" icon="database" href="/fr/why-reelevant/technical-evaluators/data-ingestion">
+Types de sources DataHub, modes d'ingestion et catégories de Datasources.
+</Card>
+<Card title="Canaux d'intégration" icon="plug" href="/fr/why-reelevant/technical-evaluators/integrations">
+Patterns d'intégration email, web, mobile et JSON API.
+</Card>
+<Card title="Authentification et SSO" icon="lock" href="/fr/why-reelevant/technical-evaluators/authentication">
+Contrôle d'accès à la plateforme, configuration SSO et authentification API.
+</Card>
+<Card title="Sécurité et conformité" icon="shield-check" href="/fr/why-reelevant/technical-evaluators/security">
+SOC 2, RGPD, chiffrement, tests de pénétration et portail de confiance.
+</Card>
+<Card title="État et monitoring" icon="signal" href="/fr/why-reelevant/technical-evaluators/status-page">
+État de la plateforme en temps réel, suivi SLA et communication des incidents.
+</Card>
+</CardGroup>
