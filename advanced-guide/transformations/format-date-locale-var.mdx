@@ -5,7 +5,7 @@ description: 'Format a date with locale from a variable'
 
 ## Overview
 
-The `format-date-locale-var` transformation formats a date value using a locale provided as a variable. This is similar to [Format Date](/api-reference/transformations/format-date), but the output locale comes from a variable instead of a static option.
+The `format-date-locale-var` transformation formats a date value using a locale provided as a variable. This is similar to [Format Date](/advanced-guide/transformations/format-date), but the output locale comes from a variable instead of a static option.
 
 ## Syntax
 
@@ -19,7 +19,7 @@ format-date-locale-var(<variable>, <locale-variable>, format="DATE_SHORT")
 |-----------|------|----------|-------------|
 | `variable` | date | Yes | The date value to format |
 | `locale-variable` | variable | Yes | The locale variable (e.g., `"en-US"`, `"fr-FR"`) |
-| `format` | string | Yes | The predefined format key (see [Format Date](/api-reference/transformations/format-date) for available formats) |
+| `format` | string | Yes | The predefined format key (see [Format Date](/advanced-guide/transformations/format-date) for available formats) |
 | `timezone` | string | No | The timezone to use (e.g., `"UTC"`, `"Europe/Paris"`). Defaults to `"UTC"` |
 | `inputLocale` | string | No | Locale used to parse the input date: `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"`, or `"fr"` |
 
