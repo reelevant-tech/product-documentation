@@ -1,0 +1,29 @@
+---
+title: 'Case'
+description: 'Changer la casse du texte (majuscules, minuscules, capitaliser)'
+---
+
+## Présentation
+
+La transformation `case` modifie la casse du texte (majuscules, minuscules ou capitaliser).
+
+## Syntaxe
+
+```text
+case(<variable>, type="upper")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | string | Oui | Le texte à transformer |
+| `type` | string | Oui | Type de casse : `"upper"`, `"lower"` ou `"capitalize"` |
+
+## Exemples
+
+```text
+case(<variable>, type="upper")
+case(<variable>, type="lower")
+case(<variable>, type="capitalize")
+```

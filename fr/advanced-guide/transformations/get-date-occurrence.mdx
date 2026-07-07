@@ -1,0 +1,30 @@
+---
+title: 'Get Date Occurrence'
+description: 'Obtenir la prochaine occurrence annuelle ou la plus proche d'une date'
+---
+
+## Présentation
+
+La transformation `get-date-occurence` trouve la prochaine occurrence (ou la plus proche) d'une date dans l'année en cours ou l'année suivante. Elle est utile pour les événements récurrents comme les anniversaires.
+
+## Syntaxe
+
+```text
+get-date-occurence(<variable>)
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | date | Oui | La date de référence |
+| `inputLocale` | string | Non | Locale utilisée pour analyser la date d'entrée : `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"` ou `"fr"` |
+| `useNearest` | boolean | Non | Lorsque true, renvoie l'occurrence la plus proche (passée ou future) au lieu de toujours la prochaine |
+
+## Exemples
+
+```text
+get-date-occurence(<variable>)
+get-date-occurence(<variable>, useNearest=true)
+get-date-occurence(<variable>, inputLocale="fr")
+```

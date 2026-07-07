@@ -1,0 +1,31 @@
+---
+title: 'Format Date (Variable Locale)'
+description: 'Formater une date avec la locale provenant d'une variable'
+---
+
+## Présentation
+
+La transformation `format-date-locale-var` formate une valeur de date en utilisant une locale fournie sous forme de variable. Elle est similaire à [Format Date](/api-reference/transformations/format-date), mais la locale de sortie provient d'une variable au lieu d'une option statique.
+
+## Syntaxe
+
+```text
+format-date-locale-var(<variable>, <locale-variable>, format="DATE_SHORT")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | date | Oui | La valeur de date à formater |
+| `locale-variable` | variable | Oui | La variable de locale (par ex. `"en-US"`, `"fr-FR"`) |
+| `format` | string | Oui | La clé de format prédéfinie (voir [Format Date](/api-reference/transformations/format-date) pour les formats disponibles) |
+| `timezone` | string | Non | Le fuseau horaire à utiliser (par ex. `"UTC"`, `"Europe/Paris"`). Par défaut `"UTC"` |
+| `inputLocale` | string | Non | Locale utilisée pour analyser la date d'entrée : `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"` ou `"fr"` |
+
+## Exemples
+
+```text
+format-date-locale-var(<variable>, <locale-variable>, format="DATE_SHORT")
+format-date-locale-var(<variable>, <locale-variable>, format="DATETIME", timezone="Europe/Paris")
+```
