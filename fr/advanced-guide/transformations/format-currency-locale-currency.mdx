@@ -1,0 +1,31 @@
+---
+title: 'Format Currency (Variables Locale et Devise)'
+description: 'Formater une devise avec la locale et la devise provenant de variables'
+---
+
+## Présentation
+
+La transformation `format-currency-locale-currency-var` formate un nombre en devise en utilisant la locale et le code devise fournis sous forme de variables.
+
+## Syntaxe
+
+```text
+format-currency-locale-currency-var(<variable>, <locale-variable>, <currency-variable>)
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `variable` | number | Oui | Le nombre à formater en devise |
+| `locale-variable` | variable | Oui | La variable de locale (par ex. `"en-US"`, `"fr-FR"`) |
+| `currency-variable` | variable | Oui | La variable de code devise (par ex. `"USD"`, `"EUR"`) |
+| `minDecimal` | number | Non | Nombre minimum de décimales |
+| `maxDecimal` | number | Non | Nombre maximum de décimales |
+
+## Exemples
+
+```text
+format-currency-locale-currency-var(<variable>, <locale-variable>, <currency-variable>)
+format-currency-locale-currency-var(<variable>, <locale-variable>, <currency-variable>, minDecimal=2, maxDecimal=2)
+```
