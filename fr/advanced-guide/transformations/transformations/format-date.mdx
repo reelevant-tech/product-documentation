@@ -1,0 +1,59 @@
+---
+title: 'Format Date'
+description: 'Formater une valeur de date'
+---
+
+## Vue d'ensemble
+
+La transformation `format-date` formate une valeur de date selon un modèle de
+format prédéfini.
+
+## Syntaxe
+
+```text
+format-date(<variable>, format="DATE_SHORT")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|----------|-------------|
+| `variable` | date | Oui | La valeur de date à formater |
+| `format` | string | Oui | La clé de format prédéfinie (voir les formats disponibles ci-dessous) |
+| `locale` | string | Non | La locale de formatage (p. ex. `"en-US"`, `"fr-FR"`). Par défaut `"fr-FR"` |
+| `timezone` | string | Non | Le fuseau horaire à utiliser (p. ex. `"UTC"`, `"Europe/Paris"`). Par défaut `"UTC"` |
+| `inputLocale` | string | Non | Locale utilisée pour analyser la valeur de date d'entrée : `"pt"`, `"nl"`, `"en"`, `"de"`, `"ja"`, `"zh"` ou `"fr"` |
+
+## Formats disponibles
+
+| Clé de format | Description |
+|------------|-------------|
+| `DATE_SHORT` | Date courte (p. ex. 01/31/2024) |
+| `DATE_MEDIUM` | Date moyenne (p. ex. January 31, 2024) |
+| `DATE_LONG` | Date longue avec jour de la semaine (p. ex. Wednesday, January 31, 2024) |
+| `TIME` | Heure avec secondes (p. ex. 14:30:00) |
+| `TIME_WITHOUT_SECONDS` | Heure sans secondes (p. ex. 14:30) |
+| `HOUR` | Heure avec remplissage (p. ex. 02) |
+| `HOUR_WITHOUT_PADDING` | Heure sans remplissage (p. ex. 2) |
+| `MINUTES_AND_SECONDS` | Minutes et secondes (p. ex. 30:00) |
+| `DAY` | Jour du mois (p. ex. 31) |
+| `MONTH` | Numéro du mois (p. ex. 01) |
+| `DAY_MONTH` | Jour et mois (p. ex. 31/01) |
+| `MONTH_NAME` | Nom du mois (p. ex. January) |
+| `YEAR` | Année (p. ex. 2024) |
+| `WEEKDAY` | Nom du jour de la semaine (p. ex. Wednesday) |
+| `DATETIME` | Date et heure (p. ex. January 31, 2024, 14:30) |
+| `DATETIME_MEDIUM` | Date et heure moyennes (p. ex. Wed, Jan 31, 14:30) |
+| `DATETIME_LONG` | Date et heure longues avec jour de la semaine (p. ex. Wednesday, January 31, 2024, 14:30) |
+| `ISO` | Format ISO 8601 (p. ex. 2024-01-31T14:30:00.000Z) |
+| `TIMESTAMP` | Timestamp Unix en millisecondes |
+| `TIMESTAMP_SECONDS` | Timestamp Unix en secondes |
+| `TIMESTAMP_MILISECONDS` | Timestamp Unix en millisecondes (alias de TIMESTAMP) |
+
+## Exemples
+
+```text
+format-date(<variable>, format="DATE_SHORT")
+format-date(<variable>, format="DATETIME", locale="fr-FR", timezone="Europe/Paris")
+format-date(<variable>, format="ISO")
+```
