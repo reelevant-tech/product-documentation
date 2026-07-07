@@ -75,8 +75,6 @@ The Datasource you enrich (the **main** Datasource) keeps all of its rows and it
   A merge aggregation adds fields **from** the dependency Datasource **into** the main Datasource. It never removes or replaces the main Datasource's own rows.
 </Info>
 
-### Configuration
-
 <Steps>
   <Step title="Select the main datasource">
     The Datasource whose rows you want to enrich. Its row set and identifier are preserved.
@@ -105,9 +103,36 @@ The catalogue keeps all three products. `A83` has no matching price, so its merg
   The merge re-runs whenever the main or dependency Datasource refreshes, so the enriched fields stay up to date. A dependency Datasource cannot be deleted while a merge aggregation still depends on it.
 </Info>
 
-### Configuring via the API
+### Via the API
 
-You can add the merge aggregation to an existing Datasource directly, without creating a separate combined Datasource. Send the aggregation to the Datasource you want to enrich — `<datasource-id>` is the main Datasource (the product catalogue), and `datasourceId` inside the aggregation is the dependency Datasource (the pricing Datasource):
+You can add the merge aggregation to an existing Datasource directly, without creating a separate combined Datasource. `<datasource-id>` is the main Datasource (the product catalogue) throughout.
+
+First declare the merged field on the Datasource with the `configure_fields` step. The field pulled from the dependency carries `"source": "aggregation"`, while the Datasource's own fields keep `"source": "user"`:
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource-id>/steps \
+  -d '{
+    "name": "configure_fields",
+    "payload": [
+      {
+        "name": "id",
+        "type": "string",
+        "source": "user",
+        "selected": true,
+        "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "id" } }] }
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "source": "aggregation",
+        "selected": true,
+        "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "value" } }] }
+      }
+    ]
+  }'
+```
+
+Then attach the merge aggregation with the `patch` step. `datasourceId` inside the aggregation is the dependency Datasource (the pricing Datasource):
 
 ```bash
 curl -XPOST https://api.reelevant.com/v2/datasources/<datasource-id>/steps \
@@ -128,5 +153,5 @@ curl -XPOST https://api.reelevant.com/v2/datasources/<datasource-id>/steps \
   }'
 ```
 
-- `fieldNames` lists the dependency fields copied onto each row — they must exist on the main Datasource as aggregation fields.
+- Each merged field is declared with `"source": "aggregation"` in `configure_fields`, and its name listed in the `patch` step's `fieldNames`. Its `rulesPerSources` path reads the value from the matched dependency record.
 - `query` maps the shared key: the dependency field (`item_id`) is matched against the main Datasource's field, referenced with `{ "type": "path", "value": "id" }`.
