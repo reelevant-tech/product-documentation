@@ -95,18 +95,42 @@ Identifies products frequently purchased together:
 | **Product field containing ids from tracking** | The field that links product IDs to tracking events. |
 | **Name of the event containing purchases** | The tracking event name for purchases. |
 
-## Merge Datasources
+## Merge Aggregation
 
-Combines two datasources into one using a common identifier:
+A merge aggregation enriches the rows of one Datasource with fields taken from another Datasource, matched on a shared identifier. You configure it as an aggregation on the Datasource you want to enrich — you do not build or maintain a separate combined Datasource, and you query the enriched Datasource directly.
+
+The Datasource you enrich (the **main** Datasource) keeps all of its rows and its own identifier. For each row, the merge aggregation looks up the matching record in the **dependency** Datasource and copies the selected fields onto that row. Rows with no match keep the merged fields empty.
+
+<Info>
+  A merge aggregation adds fields **from** the dependency Datasource **into** the main Datasource. It never removes or replaces the main Datasource's own rows.
+</Info>
+
+### Configuration
 
 <Steps>
-  <Step title="Configure main datasource">
-    Select the primary datasource.
+  <Step title="Select the main datasource">
+    The Datasource whose rows you want to enrich. Its row set and identifier are preserved.
   </Step>
-  <Step title="Configure dependency datasource">
-    Select the secondary datasource to merge from.
+  <Step title="Select the dependency datasource">
+    The Datasource to pull additional fields from. Its fields become aggregation fields on the main Datasource, and you choose which to keep in the field mapping.
   </Step>
-  <Step title="Configure merge mapping">
-    Define which fields from the main datasource match fields from the dependency datasource.
+  <Step title="Map the shared key">
+    Choose the field on the main Datasource and the matching field on the dependency Datasource. A record from the dependency is merged when its key equals the main Datasource's key.
   </Step>
 </Steps>
+
+### Worked example
+
+A product catalogue Datasource (the main Datasource) holds a product `id` and `name`. A pricing Datasource (the dependency) holds an `item_id` and a `value`. Mapping `id` to `item_id` merges the pricing fields onto each product row:
+
+| id | name | item_id | value |
+|-----|-------|---------|-------|
+| A31 | Foo | A31 | 13 |
+| A22 | Bar | A22 | 232 |
+| A83 | Fobar | *(empty)* | *(empty)* |
+
+The catalogue keeps all three products. `A83` has no matching price, so its merged fields stay empty.
+
+<Info>
+  The merge re-runs whenever the main or dependency Datasource refreshes, so the enriched fields stay up to date. A dependency Datasource cannot be deleted while a merge aggregation still depends on it.
+</Info>
