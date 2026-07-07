@@ -2,6 +2,12 @@
 
 Mintlify documentation site for the Reelevant API, including authentication, transformations, and OpenAPI references.
 
+## Editing with Claude Code (recommended for most contributors)
+
+Most contributors — including non-technical teammates — edit these docs by asking Claude Code in plain English. Start with [SETUP.md](./SETUP.md) for the one-time local install, and use [CONTRIBUTING.md](./CONTRIBUTING.md) for team-specific prompts and rules.
+
+This repo also ships a launch config (`.claude/settings.json`) that starts the Mintlify preview automatically when Claude Code opens, so you can see changes live as you work.
+
 ## Development
 
 Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview changes locally:

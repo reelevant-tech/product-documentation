@@ -15,6 +15,12 @@ This guide helps each team member set up Claude Code to edit documentation and o
 
 That's it for setup. Now follow the section for your role below.
 
+### Prefer working locally?
+
+If you'd rather run Claude Code in your own terminal instead of the cloud or desktop app, follow [SETUP.md](./SETUP.md) for a step-by-step local install with Homebrew, gh, Node, and Claude Code.
+
+It also auto-starts a live preview of the docs. Everything else in this guide — prompts, rules, and PR flow — still applies.
+
 ---
 
 ## Customer Success (CS)
