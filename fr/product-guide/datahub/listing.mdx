@@ -1,0 +1,81 @@
+---
+title: 'Listing des Datasources'
+description: 'Parcourez, recherchez et gérez toutes vos Datasources enregistrées'
+---
+
+![Page de listing du DataHub présentant les Datasources enregistrées avec des indicateurs de statut](/images/datahub/listing-page-v2.png)
+
+## Listing des Datasources
+
+La page de listing affiche toutes vos Datasources enregistrées dans un tableau. Accédez-y depuis la navigation latérale **DataHub**.
+
+### Colonnes du tableau
+
+| Colonne | Description |
+|--------|-------------|
+| **Name** | Le nom de la Datasource. Cliquez pour ouvrir sa configuration. |
+| **Type** | La catégorie de la Datasource — Generic, Product, Location, Analytics, Customer Data. |
+| **Status** | Statut actuel avec un indicateur coloré et une infobulle. |
+| **Format** | Le format des données (CSV, JSON, etc.). |
+| **Teams** | Les Teams assignés à la Datasource. |
+| **Last data update** | La dernière actualisation des données. |
+| **Last modification** | La dernière modification de la configuration. |
+
+### Filtres
+
+| Filtre | Description |
+|--------|-------------|
+| **Search** | Recherchez une Datasource par nom. |
+| **Filter by status** | Ok, Warning, Error, Inactive. |
+| **Filter by type** | Generic, Product, Location, Analytics, Customer Data. |
+| **Filter by teams** | Filtrez par Team. |
+| **Display archived data sources** | Activez pour inclure les Datasources archivées. |
+
+Le fil d'Ariane de la hiérarchie vous permet de naviguer entre les niveaux de dossiers.
+
+## Indicateurs de statut
+
+| Statut | Description |
+|--------|-------------|
+| **Draft** | La Datasource n'a pas encore été importée. |
+| **Publishing** | Import des données pour la première fois. |
+| **Published** | Les données sont à jour et prêtes à être utilisées. |
+| **Updating** | La Datasource est en cours d'actualisation de ses données. |
+| **Paused** | L'actualisation des données est en pause. |
+| **Error** | L'import ou la mise à jour a échoué — consultez les [logs](/fr/advanced-guide/datahub/logs). |
+| **Warning** | Certaines entrées n'ont pas pu être importées — consultez les [logs](/fr/advanced-guide/datahub/logs). |
+
+<Info>
+  Survolez un indicateur de statut pour voir une infobulle détaillée expliquant l'état actuel.
+</Info>
+
+## Actions
+
+Le menu d'actions (trois points) sur chaque ligne propose :
+
+| Action | Description |
+|--------|-------------|
+| **Edit** | Ouvrir l'assistant de configuration pour modifier la Datasource. |
+| **Queries** | Ouvrir la [page des requêtes](/fr/advanced-guide/datahub/queries) pour rechercher dans les données de la Datasource. |
+| **Logs** | Ouvrir la [page des logs](/fr/advanced-guide/datahub/logs) pour voir l'historique d'exécution. |
+| **Preview** | Aperçu rapide des données de la Datasource. |
+| **Update fields** | Mettre à jour la configuration du field mapping. |
+| **Update source** | Changer l'URL ou le fichier de la source de données. |
+| **Launch update** | Déclencher manuellement une actualisation des données. |
+| **Reimport** | Réimporter la Datasource depuis zéro. |
+| **Retry** | Réessayer un import ayant échoué. |
+| **Repair** | Tenter de réparer une Datasource défectueuse. |
+| **Enable synchronisation / Stop synchronisation** | Activer ou mettre en pause l'actualisation automatique des données. |
+| **Archive** | Archiver la Datasource. |
+| **Delete** | Supprimer la Datasource (disponible uniquement si elle n'est utilisée par aucun [Workflow](/fr/product-guide/workflows/overview) ni [Content](/fr/product-guide/contents/overview)). |
+
+<Warning>
+  Vous ne pouvez pas supprimer une Datasource utilisée dans un Workflow ou un Content. L'action de suppression indiquera quelles ressources y font référence.
+</Warning>
+
+## Alertes d'erreur
+
+Lorsque des Datasources rencontrent des problèmes, des bannières d'alerte apparaissent en haut du listing :
+
+- **Datasources in error** — Indique combien de Datasources ont échoué, avec un lien pour consulter les erreurs.
+- **Missing fields** — Champs détectés qui ne sont pas présents dans la Datasource, avec une action rapide pour les ajouter.

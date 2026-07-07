@@ -1,0 +1,69 @@
+---
+title: 'Créer une Datasource'
+description: 'Guide étape par étape pour créer et configurer une nouvelle Datasource'
+---
+
+![Assistant de création de Datasource présentant les étapes de configuration](/images/datahub/creation-wizard-v2.png)
+
+## Assistant de création
+
+Lorsque vous cliquez sur **Connect** sur une carte du [catalog](/fr/product-guide/datahub/catalog), l'assistant de création vous guide à travers le processus de configuration. Les étapes varient selon le type de Datasource, mais suivent ce déroulement général :
+
+<Steps>
+  <Step title="Choisir le nom de la Datasource">
+    Saisissez un nom pour votre Datasource. Le nom apparaît dans le [listing](/fr/product-guide/datahub/listing) et dans le sélecteur de Datasource lors de la connexion à des [Workflows](/fr/product-guide/workflows/overview) ou à des [Content templates](/fr/product-guide/contents/data-binding).
+
+    <Tip>
+      Choisissez un nom descriptif — cela vous aide, vous et votre Team, à retrouver rapidement la bonne Datasource.
+    </Tip>
+  </Step>
+  <Step title="Configurer les sources">
+    Sélectionnez et configurez la source de données. Les options disponibles dépendent du type d'intégration. Consultez [Source Types](/fr/advanced-guide/datahub/source-types) pour plus de détails sur chaque connecteur.
+  </Step>
+  <Step title="Field mapping">
+    Mappez les champs bruts de vos données vers les types de champs standardisés de Reelevant. Consultez [Field Mapping](/fr/advanced-guide/datahub/field-mapping) pour plus de détails.
+  </Step>
+  <Step title="Configurer les champs">
+    Définissez des propriétés de champ supplémentaires :
+    - **Locale** — La locale de la source de données (le cas échéant).
+    - **Located in** — Pour les Datasources de type location, sélectionnez le pays ou « specified for each entry » pour des données multi-pays.
+  </Step>
+  <Step title="Assigner à un Team">
+    Sélectionnez le Team propriétaire de cette Datasource. Votre Team est assigné par défaut.
+  </Step>
+  <Step title="Configurer le dossier">
+    Placez éventuellement la Datasource dans une hiérarchie de dossiers pour l'organisation.
+  </Step>
+  <Step title="Valider">
+    Vérifiez la configuration et cliquez sur **Validate** pour créer la Datasource. La plateforme commencera à importer et à traiter les données.
+  </Step>
+</Steps>
+
+## Étapes de configuration supplémentaires
+
+Selon le type de Datasource, vous pourrez rencontrer des étapes supplémentaires :
+
+| Étape | Quand elle apparaît |
+|------|-----------------|
+| **Configure an API Key** | Pour les intégrations nécessitant une authentification par clé API (par exemple, Partoo). |
+| **Authorize Reelevant access** | Pour les intégrations basées sur OAuth (par exemple, Shopify, Google My Business, Instagram). |
+| **Setup Google Tag Manager** | Pour l'intégration GTM — fournit le snippet et les IDs à configurer dans GTM. |
+| **Configure Reelevant Script** | Pour l'intégration website events — fournit le snippet de tracking. |
+| **Configure product datasource** | Pour Best Products et Top attributes — sélectionnez la Datasource produits source. |
+| **Configure tracking datasource** | Pour Best Products — sélectionnez la Datasource analytics pour le tracking des événements. |
+| **Configure merge mapping** | Pour les Datasources fusionnées — définissez quels champs correspondent entre la Datasource principale et la Datasource de dépendance. |
+| **Configure cross sell** | Pour les Datasources d'achats conjoints — configurez le champ de référence produit et l'événement d'achat. |
+| **Define Best Product field** | Sélectionnez le champ où le décompte calculé doit être stocké. |
+
+## Modifier une Datasource
+
+Après la création, vous pouvez modifier n'importe quelle étape de la configuration :
+
+1. Ouvrez la Datasource depuis la [page de listing](/fr/product-guide/datahub/listing).
+2. Cliquez sur **Edit** pour ouvrir le sélecteur d'étapes.
+3. Sélectionnez l'étape que vous souhaitez modifier.
+4. Effectuez vos modifications et cliquez sur **Validate** pour enregistrer.
+
+<Warning>
+  Si la Datasource a été récemment mise à jour, enregistrer vos modifications écrasera les données les plus récentes. Vous pouvez choisir **Cancel my changes** ou **Save anyway**.
+</Warning>

@@ -1,0 +1,152 @@
+---
+title: 'Permissions'
+description: "Comprenez comment le système de permissions contrôle l'accès aux ressources de la plateforme"
+---
+
+## Comment fonctionnent les permissions
+
+La plateforme Reelevant utilise un système de **contrôle d'accès basé sur les rôles** (RBAC). Chaque utilisateur se voit attribuer exactement un [rôle](/fr/product-guide/account/roles) qui définit ce qu'il peut faire et avec quelles ressources il peut interagir. Les ressources sont en outre délimitées par les [Teams](/fr/product-guide/account/teams), de sorte que les utilisateurs ne voient que ce qui appartient à leurs Teams.
+
+L'évaluation des permissions suit trois couches :
+
+1. **Rôle** — Définit quelles actions l'utilisateur peut effectuer sur quels types de ressources.
+2. **Entreprise** — Chaque règle de permission est automatiquement limitée à l'entreprise de l'utilisateur, garantissant une isolation complète entre locataires.
+3. **Team** — Pour les ressources délimitées par Team, l'utilisateur ne peut accéder qu'aux ressources appartenant à l'un de ses Teams.
+
+<Note>
+  Chaque utilisateur a automatiquement la permission de lire et de mettre à jour son propre profil, quelle que soit la configuration de son rôle. Ces règles intégrées ne peuvent pas être supprimées.
+</Note>
+
+## Ressources
+
+Les ressources représentent les différentes entités que vous pouvez gérer sur la plateforme. Chaque ressource prend en charge un ensemble spécifique d'[actions](#actions).
+
+| Ressource | Description | Délimitation |
+|----------|-------------|---------|
+| **Workflow** | Création et gestion de [Workflows](/fr/product-guide/workflows/overview). | Entreprise + Team |
+| **Workflow Settings** | Configuration globale des Workflows (variable profiles, etc.). | Entreprise |
+| **Content** | Création et gestion de [Content templates](/fr/product-guide/contents/overview). | Entreprise + Team |
+| **Datasource** | Création et gestion de [Datasources](/fr/product-guide/datahub/overview). | Entreprise + Team |
+| **Statistics** | Accès aux données [Analytics](/fr/product-guide/analytics/overview) et export. | Entreprise |
+| **User** | Gestion des comptes utilisateurs (inviter, modifier, supprimer). | Entreprise |
+| **Role** | Création et gestion des rôles. | Entreprise |
+| **Teams** | Création et gestion des Teams. | Entreprise |
+| **Company** | Paramètres et configuration au niveau de l'entreprise. | Entreprise |
+| **Billing** | Accès à la facturation et à l'abonnement. | Entreprise |
+| **Invitation** | Gestion des invitations d'utilisateurs. | Entreprise |
+| **Datagraph Schema** | Définition et gestion du schéma Datagraph. | Entreprise + Team |
+| **Datagraph Entity** | Accès et gestion des données d'entité Datagraph. | Entreprise + Team |
+
+### Délimitation des ressources
+
+Les ressources se répartissent en deux catégories selon la façon dont l'accès est contrôlé :
+
+<AccordionGroup>
+  <Accordion title="Ressources délimitées par entreprise">
+    Ces ressources sont partagées dans toute l'entreprise. Tout utilisateur disposant de la permission de rôle appropriée peut y accéder, quel que soit le Team auquel il appartient.
+
+    **Ressources délimitées par entreprise :** User, Role, Teams, Company, Billing, Invitation, Workflow Settings, Statistics.
+  </Accordion>
+
+  <Accordion title="Ressources délimitées par Team">
+    Ces ressources appartiennent à un ou plusieurs Teams. Un utilisateur ne peut accéder à une ressource délimitée par Team que s'il est membre (ou hérite l'accès) de l'un des Teams de la ressource.
+
+    **Ressources délimitées par Team :** Workflow, Content, Datasource, Datagraph Schema, Datagraph Entity.
+
+    Par exemple, si un Workflow est assigné au Team « Marketing », seuls les utilisateurs membres de « Marketing » (ou de l'un de ses Teams ancêtres) peuvent interagir avec ce Workflow — à condition que leur rôle leur accorde l'action requise.
+  </Accordion>
+</AccordionGroup>
+
+## Actions
+
+Les actions définissent les opérations qu'un utilisateur peut effectuer sur une ressource donnée. Toutes les actions ne sont pas disponibles pour toutes les ressources — la [matrice des permissions](#permissions-matrix) présente l'ensemble des correspondances.
+
+| Action | Description |
+|--------|-------------|
+| **Access** | Permission de voir la section de la ressource dans la navigation. |
+| **Create** | Permission de créer de nouvelles instances de la ressource. |
+| **Read** | Permission de consulter les détails de la ressource. |
+| **Query** | Permission de rechercher et de lister les ressources. |
+| **Update** | Permission de modifier les ressources existantes. |
+| **Delete** | Permission de supprimer les ressources. |
+| **Export** | Permission d'exporter les données de la ressource. |
+
+## Matrice des permissions
+
+Le tableau ci-dessous indique quelles actions sont disponibles pour chaque ressource. Lors de la configuration d'un [rôle](/fr/product-guide/account/roles), vous pouvez activer chaque action disponible individuellement.
+
+| Ressource | Access | Create | Read | Query | Update | Delete | Export |
+|----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|
+| **Datasource** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| **Workflow** | | ✓ | ✓ | | ✓ | ✓ | |
+| **Content** | | ✓ | ✓ | | ✓ | ✓ | |
+| **Workflow Settings** | | ✓ | ✓ | | ✓ | ✓ | |
+| **Statistics** | ✓ | | | | | | ✓ |
+| **User** | | ✓ | ✓ | | ✓ | ✓ | |
+| **Role** | | ✓ | ✓ | | ✓ | ✓ | |
+| **Teams** | | ✓ | ✓ | | ✓ | ✓ | |
+| **Company** | | | ✓ | | ✓ | | |
+| **Billing** | ✓ | | | | | | |
+| **Invitation** | | ✓ | ✓ | | | ✓ | |
+| **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
+| **Datagraph Entity** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
+
+<Tip>
+  L'action **Access** détermine si la section apparaît dans la navigation de la plateforme. Par exemple, accorder **Statistics → Access** rend la section Analytics visible pour l'utilisateur.
+</Tip>
+
+## Évaluation des permissions
+
+Lorsqu'un utilisateur tente d'effectuer une action, le système vérifie les conditions suivantes dans l'ordre :
+
+<Steps>
+  <Step title="Vérification du rôle">
+    Le rôle de l'utilisateur inclut-il une règle accordant l'action demandée sur le type de ressource ciblé ?
+  </Step>
+  <Step title="Vérification de l'entreprise">
+    La ressource ciblée appartient-elle à la même entreprise que l'utilisateur ? Cette vérification est automatique et garantit une isolation complète entre locataires.
+  </Step>
+  <Step title="Vérification du Team (ressources délimitées par Team uniquement)">
+    L'utilisateur est-il membre d'au moins un Team auquel appartient la ressource ciblée ? L'appartenance à un Team inclut l'accès hérité de la [hiérarchie des Teams](/fr/product-guide/account/teams#team-hierarchy).
+  </Step>
+</Steps>
+
+Si l'une des vérifications échoue, l'action est refusée avec une erreur **403 Forbidden**.
+
+## Ressources synchronisées
+
+Certaines ressources sont automatiquement liées afin que leurs permissions restent synchronisées :
+
+| Lorsque vous accordez une permission sur… | La même permission est aussi accordée sur… |
+|----------------------------------|----------------------------------------|
+| **Content** | Content Font Resources |
+| **Datasource** | OAuth Clients |
+
+Ces ressources synchronisées ne sont pas affichées dans l'éditeur de rôles — elles sont gérées automatiquement.
+
+## Règles intégrées
+
+Chaque rôle inclut deux règles qui ne peuvent pas être supprimées :
+
+| Règle | Effet |
+|------|--------|
+| **Read own profile** | Chaque utilisateur peut consulter son propre profil utilisateur. |
+| **Update own profile** | Chaque utilisateur peut modifier son propre profil (nom, mot de passe, 2FA, préférences). |
+
+Ces règles sont limitées à l'utilisateur concerné et n'accordent pas l'accès aux profils des autres utilisateurs.
+
+## Configurations courantes
+
+<AccordionGroup>
+  <Accordion title="Rôle administrateur">
+    Un rôle administrateur accorde généralement toutes les actions sur toutes les ressources. Cela donne un contrôle total sur la plateforme, y compris la gestion des utilisateurs, la facturation et les paramètres de l'entreprise.
+  </Accordion>
+
+  <Accordion title="Rôle éditeur">
+    Un rôle éditeur accorde généralement les actions créer, lire, mettre à jour et supprimer sur **Workflow**, **Content** et **Datasource** — ainsi qu'un accès en lecture aux **Statistics**. Cela permet à l'utilisateur de construire et de gérer des campagnes sans accéder à l'administration du compte.
+  </Accordion>
+
+  <Accordion title="Rôle lecteur">
+    Un rôle lecteur accorde généralement uniquement les actions de lecture et d'accès. Les utilisateurs peuvent parcourir les Workflows, les Contents et les tableaux de bord Analytics, mais ne peuvent apporter aucune modification.
+  </Accordion>
+</AccordionGroup>

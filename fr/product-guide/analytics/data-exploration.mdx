@@ -1,0 +1,79 @@
+---
+title: 'Data Exploration'
+description: 'Construisez des requêtes analytiques personnalisées avec des mesures, des dimensions, des filtres et une granularité temporelle'
+---
+
+![Page Data Exploration présentant le constructeur de requêtes et le tableau de résultats](/images/analytics/data-exploration-v2.png)
+
+## Vue d'ensemble
+
+La page Data Exploration vous permet de construire des requêtes analytiques personnalisées pour explorer vos données au-delà des [tableaux de bord](/fr/product-guide/analytics/dashboards) prêts à l'emploi. Combinez des mesures, des dimensions et des filtres pour répondre à des questions métier précises.
+
+## Constructeur de requêtes
+
+Le constructeur de requêtes comporte plusieurs sections de configuration :
+
+### Mesures
+
+Sélectionnez les métriques que vous souhaitez analyser :
+
+| Contrôle | Description |
+|---------|-------------|
+| **Measures** | Recherchez et sélectionnez une ou plusieurs mesures dans la liste disponible. |
+
+Les mesures disponibles incluent des métriques issues des événements de Workflow (affichages, clics, ouvreurs) et des événements d'achat (conversions, chiffre d'affaires, nombre d'acheteurs). Consultez la liste complète dans la [référence des mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions).
+
+### Dimensions
+
+Regroupez vos données selon un ou plusieurs attributs :
+
+| Contrôle | Description |
+|---------|-------------|
+| **Dimensions** | Recherchez et sélectionnez des dimensions pour regrouper les résultats. |
+
+Les dimensions disponibles incluent :
+
+| Dimension | Description |
+|-----------|-------------|
+| **Workflow Name** | Regrouper par Workflow. |
+| **Content Name** | Regrouper par Content template. |
+| **Device Type** | Regrouper par appareil (desktop, mobile, tablette). |
+| **Device OS** | Regrouper par système d'exploitation. |
+| **Email client** | Regrouper par client de messagerie. |
+| **Is Individualized Content** | Distinguer le Content personnalisé du Content par défaut. |
+| **Visual Zone Number** | Regrouper par position de zone visuelle. |
+| **Visual Zone Type** | Regrouper par type de Channel. |
+| **Workflow Branch** | Regrouper par chemin de Branch de Workflow. |
+| **Category** | Regrouper par catégorie de Branch. |
+| **URL Parameter Value** | Regrouper par valeurs de paramètre d'URL. |
+| **Workflow Team** / **Content Team** | Regrouper par Team. |
+
+### Granularité temporelle
+
+| Contrôle | Description |
+|---------|-------------|
+| **Temporal granularity** | Sélectionnez le regroupement temporel — Day, Week, Month ou Quarter. |
+
+### Filtres
+
+Tous les [filtres du tableau de bord](/fr/product-guide/analytics/dashboards) sont disponibles — Workflows, Campaigns, URL Parameters, Category et Analysis period.
+
+## Exécuter une requête
+
+Cliquez sur **Execute query** pour lancer la requête. Les résultats apparaissent dans un tableau sous le constructeur.
+
+<Warning>
+  Si votre requête a changé depuis la dernière exécution, une bannière d'avertissement apparaît : « Your query has changed since these results were generated. Run it again to refresh the data. »
+</Warning>
+
+### Avertissements de résultats
+
+Le tableau de résultats peut afficher des avertissements contextuels :
+
+- **Dimension Workflow Branch** — « Don't forget to use other dimensions such as 'Content Name' or 'Workflow Name' if pertinent in your analysis. »
+- **Mélange de types d'événements** — « You are mixing workflow events measures and from purchase events dimensions. This should be avoided. »
+- **URL Parameter Value sans filtre** — « You are using the dimension 'URL Parameter Value' without filtering on a specific parameter. »
+
+## Enregistrer une requête
+
+Cliquez sur **Save query** pour enregistrer la configuration actuelle de la requête en vue de la réutiliser. Consultez [Saved Queries](/fr/product-guide/analytics/saved-queries) pour plus de détails sur la planification et l'envoi par email.

@@ -1,0 +1,158 @@
+---
+title: 'Teams'
+description: "Organisez les utilisateurs en Teams hiérarchiques pour le contrôle d'accès aux ressources"
+---
+
+![Page Teams présentant la visualisation hiérarchique en graphe des Teams](/images/account/teams-graph-v2.png)
+
+## Vue d'ensemble
+
+Les Teams contrôlent quels utilisateurs peuvent accéder à quels [Workflows](/fr/product-guide/workflows/overview), [Contents](/fr/product-guide/contents/overview) et [Datasources](/fr/product-guide/datahub/overview). Ils constituent la **couche de délimitation par Team** du [système de permissions](/fr/product-guide/account/permissions) — le [rôle](/fr/product-guide/account/roles) d'un utilisateur définit _ce qu'il peut faire_, tandis que ses Teams définissent _sur quelles ressources_ il peut le faire.
+
+Chaque utilisateur doit appartenir à au moins un Team. Les Teams peuvent être organisés en une hiérarchie avec des relations parent-enfant, permettant l'héritage automatique des accès.
+
+## Comment fonctionne la délimitation par Team
+
+Les [ressources délimitées par Team](/fr/product-guide/account/permissions#resource-scoping) (Workflows, Contents, Datasources, Datagraph schemas, Datagraph entities) sont assignées à un ou plusieurs Teams lors de leur création. Un utilisateur ne peut interagir avec une ressource délimitée par Team que si :
+
+1. Son [rôle](/fr/product-guide/account/roles) lui accorde l'action requise sur ce type de ressource.
+2. Il est membre d'au moins un Team auquel appartient la ressource (directement ou par [héritage](#team-hierarchy)).
+
+<Info>
+  Les [ressources délimitées par entreprise](/fr/product-guide/account/permissions#resource-scoping) (utilisateurs, rôles, paramètres de l'entreprise, facturation, etc.) ne sont pas affectées par l'appartenance aux Teams — elles sont accessibles à tout utilisateur dont le rôle autorise l'action.
+</Info>
+
+## Listing des Teams
+
+La page Teams affiche tous les Teams avec une **visualisation hiérarchique en graphe** et une vue liste. Vous pouvez basculer entre deux algorithmes de rendu du graphe :
+
+| Algorithme | Description |
+|-----------|-------------|
+| **Hierarchical render** | Affiche les Teams selon une disposition arborescente descendante. |
+| **Grouped render** | Affiche les Teams selon une disposition groupée. |
+
+Utilisez la barre de recherche pour trouver des Teams spécifiques.
+
+### Informations sur le Team
+
+Chaque nœud de Team dans le graphe affiche :
+
+| Champ | Description |
+|-------|-------------|
+| **Nom du Team** | Le nom du Team. |
+| **Utilisateurs directs** | Nombre d'utilisateurs directement assignés à ce Team. |
+| **Total des utilisateurs** | Total des utilisateurs, y compris ceux des sous-Teams. |
+
+## Créer un Team
+
+<Steps>
+  <Step title="Ouvrir la fenêtre de création">
+    Cliquez sur **Create team** pour ouvrir le formulaire de création.
+  </Step>
+  <Step title="Renseigner les détails du Team">
+    | Champ | Description |
+    |-------|-------------|
+    | **Nom du Team** | Un nom descriptif pour le Team. |
+    | **Utilisateurs** | Recherchez et sélectionnez les utilisateurs à inclure dans le Team. |
+  </Step>
+  <Step title="Créer">
+    Cliquez sur **Create** pour enregistrer le nouveau Team. Le Team démarre sans relations parent-enfant — vous pourrez les ajouter plus tard.
+  </Step>
+</Steps>
+
+### Créer un sous-Team
+
+Pour créer un Team en tant qu'enfant d'un Team existant :
+
+1. Cliquez sur le menu d'actions d'un Team et sélectionnez **Create sub-team**.
+2. Le formulaire pré-remplit le Team parent.
+3. Saisissez le nom du sous-Team et les utilisateurs.
+4. Cliquez sur **Create**.
+
+## Hiérarchie des Teams
+
+Les Teams prennent en charge des relations parent-enfant qui forment une hiérarchie. Cette hiérarchie contrôle la façon dont l'accès est hérité entre les Teams.
+
+### Comment fonctionne l'héritage
+
+Lorsqu'un utilisateur est assigné à un Team, il obtient automatiquement l'accès aux ressources de tous les **Teams descendants** (enfants, petits-enfants, etc.) situés en dessous.
+
+Par exemple, considérez cette hiérarchie :
+
+```
+Engineering
+├── Backend Team
+│   └── API Team
+└── Frontend Team
+```
+
+- Un utilisateur assigné à **Engineering** peut accéder aux ressources d'Engineering, Backend Team, API Team et Frontend Team.
+- Un utilisateur assigné à **Backend Team** peut accéder aux ressources de Backend Team et API Team, mais **pas** à Engineering ni Frontend Team.
+- Un utilisateur assigné à **API Team** ne peut accéder qu'aux ressources d'API Team.
+
+<Tip>
+  Assignez les utilisateurs au Team le plus spécifique correspondant à leur rôle. Le système gère automatiquement l'accès plus large grâce à la hiérarchie.
+</Tip>
+
+<Warning>
+  N'assignez pas un utilisateur à la fois à un Team parent et à l'un de ses Teams enfants. L'assignation au parent fournit déjà l'accès au Team enfant par héritage.
+</Warning>
+
+### Exclure de l'héritage ascendant
+
+Par défaut, l'héritage entre Teams ne se propage que **vers le bas** (du parent vers l'enfant). Le paramètre **Exclude from ancestor inheritance** modifie ce comportement :
+
+| Paramètre | Comportement |
+|---------|----------|
+| **Désactivé** (par défaut) | Comportement standard — les utilisateurs assignés à un Team parent peuvent accéder aux ressources de ce Team et de tous ses descendants. |
+| **Activé** | En plus de l'héritage descendant standard, les utilisateurs assignés à ce Team obtiennent aussi l'accès aux ressources de tous les **Teams ancêtres** (parents, grands-parents, etc.) situés au-dessus — jusqu'à (mais sans inclure) tout ancêtre ayant également ce paramètre activé. |
+
+<Warning>
+  Activer l'héritage ascendant élargit considérablement l'accès. Ne l'utilisez que lorsque les utilisateurs d'un Team enfant ont réellement besoin d'accéder aux ressources gérées à des niveaux supérieurs de la hiérarchie.
+</Warning>
+
+### Protection contre les références circulaires
+
+Le système empêche les références circulaires dans la hiérarchie des Teams. Si le Team A est parent du Team B, alors le Team B ne peut pas être défini comme parent du Team A. Cette vérification s'applique de manière transitive à toute la hiérarchie.
+
+## Modifier un Team
+
+Cliquez sur le menu d'actions et sélectionnez **Edit** pour mettre à jour :
+
+| Champ | Description |
+|-------|-------------|
+| **Nom du Team** | Mettez à jour le nom du Team. |
+| **Exclude from ancestor inheritance** | Activez pour contrôler si ce Team hérite de l'accès des Teams ancêtres. |
+| **Teams parents** | Ajoutez ou supprimez des relations parentes. |
+| **Teams enfants** | Ajoutez ou supprimez des relations enfants. |
+
+Cliquez sur **Save** pour appliquer.
+
+## Gérer les membres d'un Team
+
+Cliquez sur le menu d'actions et sélectionnez **Members** pour ouvrir le panneau des membres :
+
+| Action | Description |
+|--------|-------------|
+| **Add user** | Recherchez et sélectionnez un utilisateur à ajouter au Team. |
+| **Remove** | Retirez un utilisateur du Team. |
+
+## Détacher des Teams
+
+Pour supprimer une relation parent-enfant sans supprimer aucun des deux Teams :
+
+1. Ouvrez le formulaire de modification du Team ou la vue de gestion des relations.
+2. Supprimez le lien parent ou enfant.
+3. Cliquez sur **Save**.
+
+Le Team continue d'exister de façon indépendante — seule la relation hiérarchique est supprimée.
+
+## Supprimer un Team
+
+1. Cliquez sur le menu d'actions et sélectionnez **Delete team**.
+2. Une boîte de dialogue de confirmation vous demande de confirmer.
+3. Cliquez sur **Delete** pour supprimer le Team.
+
+<Warning>
+  Avant de supprimer un Team, vous devez d'abord retirer ou réassigner tous les Teams enfants et ressources (Workflows, Contents, etc.) qui lui appartiennent. Le système applique ces exigences pour éviter toute perte de données accidentelle. Les utilisateurs du Team perdront l'accès aux ressources qui étaient délimitées uniquement à ce Team.
+</Warning>
