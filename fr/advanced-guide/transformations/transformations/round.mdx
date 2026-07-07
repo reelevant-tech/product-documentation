@@ -1,0 +1,30 @@
+---
+title: 'Round'
+description: 'Arrondir un nombre'
+---
+
+## Vue d'ensemble
+
+La transformation `round` arrondit un nombre à un nombre de décimales spécifié en utilisant un mode d'arrondi donné.
+
+## Syntaxe
+
+```text
+round(<variable>, mode="round", decimal=0)
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|----------|-------------|
+| `variable` | number | Oui | Le nombre à arrondir |
+| `mode` | string | Oui | Mode d'arrondi : `"round"`, `"up"` (plafond) ou `"down"` (plancher) |
+| `decimal` | number | Oui | Nombre de décimales |
+
+## Exemples
+
+```text
+round(<variable>, mode="round", decimal=2)
+round(<variable>, mode="up", decimal=0)
+round(<variable>, mode="down", decimal=1)
+```
