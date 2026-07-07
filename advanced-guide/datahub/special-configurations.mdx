@@ -134,3 +134,29 @@ The catalogue keeps all three products. `A83` has no matching price, so its merg
 <Info>
   The merge re-runs whenever the main or dependency Datasource refreshes, so the enriched fields stay up to date. A dependency Datasource cannot be deleted while a merge aggregation still depends on it.
 </Info>
+
+### Configuring via the API
+
+You can add the merge aggregation to an existing Datasource directly, without creating a separate combined Datasource. Send the aggregation to the Datasource you want to enrich — `<datasource-id>` is the main Datasource (the product catalogue), and `datasourceId` inside the aggregation is the dependency Datasource (the pricing Datasource):
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource-id>/steps \
+  -d '{
+    "name": "patch",
+    "payload": {
+      "aggregationPipeline": [
+        {
+          "name": "merge",
+          "params": {
+            "datasourceId": "<dependency-datasource-id>",
+            "fieldNames": ["value"],
+            "query": "{\"$and\":[{\"$or\":[{\"item_id\":{\"$eq\":{\"type\":\"path\",\"value\":\"id\"}}}]}]}"
+          }
+        }
+      ]
+    }
+  }'
+```
+
+- `fieldNames` lists the dependency fields copied onto each row — they must exist on the main Datasource as aggregation fields.
+- `query` maps the shared key: the dependency field (`item_id`) is matched against the main Datasource's field, referenced with `{ "type": "path", "value": "id" }`.
