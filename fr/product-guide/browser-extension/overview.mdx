@@ -1,0 +1,56 @@
+---
+title: "Vue d'ensemble de l'extension navigateur"
+description: "Installez et utilisez l'extension navigateur Reelevant pour intégrer des Workflows à votre site web"
+---
+
+![Panneau latéral de l'extension navigateur présentant la liste des Workflows](/images/browser-extension/workflow-list-v2.png)
+
+## Qu'est-ce que l'extension navigateur ?
+
+L'extension navigateur Reelevant est une extension Chrome et Edge qui vous aide à intégrer des [Workflows](/fr/product-guide/workflows/overview) à votre site web. Elle fournit un panneau latéral pour parcourir les Workflows, récupérer les URLs d'intégration et configurer des intégrations on-site via un content script qui s'exécute sur vos pages.
+
+## Fonctionnalités clés
+
+| Fonctionnalité | Description |
+|---------|-------------|
+| **Panneau latéral** | Parcourez votre liste de Workflows, consultez les détails d'un Workflow et ouvrez les instructions d'intégration. |
+| **Instructions d'intégration** | Copiez les URLs d'image et de redirection d'un Channel de Workflow sans quitter l'extension. |
+| **Intégration on-site** | Configurez des intégrations côté client directement sur votre site web à l'aide de l'interface du content script. |
+
+## Installation & configuration
+
+<Steps>
+  <Step title="Installer l'extension">
+    Installez l'extension Reelevant depuis le store de votre navigateur :
+
+    - [Chrome Web Store](https://chromewebstore.google.com/detail/reelevant/lgacfbhgdhamkljnljckjhogkmifijla?hl=en)
+    - [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/aocpmahppepplambefpfnbnifdgolncb)
+
+    Une fois installée, l'icône Reelevant apparaît dans la barre d'outils de votre navigateur.
+  </Step>
+  <Step title="Se connecter">
+    Cliquez sur l'icône de l'extension pour ouvrir le panneau latéral. Connectez-vous avec les mêmes identifiants que ceux que vous utilisez dans l'[application Reelevant](https://app.reelevant.com) :
+
+    - **Email et mot de passe** — saisissez l'email et le mot de passe de votre compte Reelevant.
+    - **SSO** — si votre organisation utilise l'authentification unique, suivez le même flux SSO que dans l'application.
+
+    Cliquez sur **Sign in** pour vous authentifier.
+  </Step>
+  <Step title="Commencer à utiliser l'extension">
+    Une fois connecté, le panneau latéral affiche votre liste de Workflows. Rendez-vous sur le site web cible pour configurer des intégrations on-site, ou ouvrez un Workflow pour récupérer les URLs d'intégration.
+  </Step>
+</Steps>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Workflows" icon="diagram-project" href="/fr/product-guide/browser-extension/workflows">
+    Parcourez et consultez les détails des Workflows depuis le panneau latéral.
+  </Card>
+  <Card title="Instructions d'intégration" icon="link" href="/fr/developer-docs/guides/browser-extension-integration">
+    Récupérez les URLs d'image et de redirection d'un Channel de Workflow.
+  </Card>
+  <Card title="Intégration on-site" icon="crosshairs" href="/fr/developer-docs/guides/browser-extension-content-script">
+    Configurez des intégrations côté client sur votre site web.
+  </Card>
+</CardGroup>

@@ -1,0 +1,48 @@
+---
+title: "Vue d'ensemble de la gestion du compte"
+description: 'Gérez les utilisateurs, les rôles et les Teams pour contrôler les accès et les permissions sur la plateforme'
+---
+
+![Page de gestion du compte présentant les sections utilisateurs, rôles et Teams](/images/account/overview-v2.png)
+
+## Qu'est-ce que la gestion du compte ?
+
+La gestion du compte est le centre d'administration de la plateforme Reelevant. Elle fournit des outils pour gérer qui peut accéder à la plateforme, ce que chacun peut faire et comment les ressources sont organisées entre les Teams.
+
+## Concepts clés
+
+| Concept | Description |
+|---------|-------------|
+| **Utilisateur** | Une personne ayant accès à la plateforme. Chaque utilisateur possède un rôle et appartient à un ou plusieurs Teams. |
+| **Rôle** | Un ensemble de permissions qui définit les actions qu'un utilisateur peut effectuer (créer, lire, mettre à jour, supprimer) et sur quelles ressources. |
+| **Team** | Une unité organisationnelle qui regroupe des utilisateurs et contrôle l'accès aux [Workflows](/fr/product-guide/workflows/overview), aux [Contents](/fr/product-guide/contents/overview) et aux [Datasources](/fr/product-guide/datahub/overview). Les Teams peuvent être organisés de façon hiérarchique. |
+| **Permission** | Une règle qui autorise une action précise sur un type de ressource précis. Les permissions sont configurées dans les rôles et délimitées par l'entreprise et l'appartenance aux Teams. |
+| **Invitation** | Une URL envoyée à un nouvel utilisateur pour qu'il s'inscrive et accède à la plateforme. |
+| **Authentification à deux facteurs (2FA)** | Une couche de sécurité optionnelle utilisant une application de mot de passe à usage unique basé sur le temps (TOTP). |
+
+## Comment tout s'articule
+
+Le système de permissions fonctionne sur trois couches :
+
+1. Les **rôles** définissent _quelles_ actions un utilisateur peut effectuer (par exemple, créer des Workflows, lire les statistiques).
+2. Les **Teams** définissent _quelles_ ressources un utilisateur peut consulter (par exemple, uniquement les ressources du Team « Marketing »).
+3. L'isolation par **entreprise** garantit que les utilisateurs ne peuvent accéder qu'aux données de leur propre organisation.
+
+Consultez la page [Permissions](/fr/product-guide/account/permissions) pour une explication détaillée de la façon dont ces couches interagissent.
+
+## Sections
+
+<CardGroup cols={2}>
+  <Card title="Permissions" icon="lock" href="/fr/product-guide/account/permissions">
+    Comprenez comment le système de permissions contrôle l'accès aux ressources de la plateforme.
+  </Card>
+  <Card title="Utilisateurs" icon="users" href="/fr/product-guide/account/users">
+    Invitez, modifiez et gérez les utilisateurs de la plateforme.
+  </Card>
+  <Card title="Rôles" icon="shield" href="/fr/product-guide/account/roles">
+    Créez et configurez des rôles avec des permissions granulaires.
+  </Card>
+  <Card title="Teams" icon="sitemap" href="/fr/product-guide/account/teams">
+    Organisez les utilisateurs en Teams hiérarchiques pour le contrôle des accès.
+  </Card>
+</CardGroup>

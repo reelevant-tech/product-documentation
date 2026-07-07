@@ -1,0 +1,44 @@
+---
+title: 'Tableau de bord Uplift'
+description: "Mesurez l'Incremental Value générée par le Content personnalisé"
+---
+
+![Tableau de bord Uplift présentant le tableau de décomposition de l'Uplift et les formules](/images/analytics/dashboard-uplift-v2.png)
+
+## Vue d'ensemble
+
+Le tableau de bord Uplift mesure l'Incremental Value que la personnalisation apporte par rapport à ce qui se serait produit avec uniquement du Content par défaut (non personnalisé). Il répond à la question : **« Quelle valeur additionnelle l'individualisation a-t-elle générée ? »**
+
+## Métriques clés
+
+| Métrique | Description |
+|--------|-------------|
+| **Click Uplift by Individualized Content** | Clics additionnels générés par la personnalisation — clics moins ce que seul le Content par défaut aurait apporté. |
+| **Conversions Uplift by Individualized Content** | Conversions additionnelles moins celles qui auraient eu lieu avec uniquement du Content par défaut. |
+| **Revenue Uplift by Individualized Content** | Chiffre d'affaires additionnel moins ce que le Content par défaut aurait généré. |
+
+## Décomposition de l'Uplift
+
+Le tableau de bord inclut un tableau de décomposition comparant les résultats réels à une ligne d'estimation **« Without individualization »** :
+
+| Colonne | Description |
+|--------|-------------|
+| **Type** | Individualized, Default ou Total. |
+| **Metrics** | Les valeurs réellement mesurées pour chaque type. |
+| **Without individualization** | Valeurs estimées si aucune personnalisation n'avait été appliquée. |
+
+## Comment l'Uplift est-il calculé ?
+
+La plateforme estime ce qui se serait produit sans personnalisation en appliquant les taux de performance observés sur le Content par défaut à la même audience ayant vu du Content personnalisé :
+
+| Formule | Calcul |
+|---------|-------------|
+| **Estimated clicks** | Taux de clic (default) × Impressions (personnalisé) |
+| **Estimated conversions** | Taux de conversion (default) × Estimated clicks |
+| **Estimated revenue** | Valeur moyenne des commandes (default) × Estimated conversions |
+
+L'Uplift est la différence entre les résultats réels et cette estimation.
+
+<Info>
+  Les calculs d'Uplift nécessitent des données suffisantes à la fois dans les Branches individualisées et par défaut. Si vos [Workflows](/fr/product-guide/workflows/overview) ont un trafic très faible sur les Branches par défaut, l'estimation peut être moins fiable.
+</Info>

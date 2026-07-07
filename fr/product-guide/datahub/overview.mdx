@@ -1,0 +1,67 @@
+---
+title: "Vue d'ensemble du DataHub"
+description: 'Importez, configurez et gérez vos sources de données pour alimenter du Content personnalisé'
+---
+
+![Page de listing du DataHub présentant le tableau des Datasources](/images/datahub/listing-page-v2.png)
+
+## Qu'est-ce que le DataHub ?
+
+Le DataHub est le centre de gestion des données de la plateforme Reelevant. Il vous permet d'importer, de configurer et de maintenir des flux de données externes — catalogues de produits, emplacements de magasins, enregistrements CRM, événements de site web, et plus encore — afin qu'ils puissent être utilisés dans des [Workflows](/fr/product-guide/workflows/overview) et des [Content templates](/fr/product-guide/contents/overview) pour personnaliser chaque expérience.
+
+## Concepts clés
+
+| Concept | Description |
+|---------|-------------|
+| **Datasource** | Une connexion à un flux de données externe que Reelevant récupère, analyse et stocke pour la personnalisation. |
+| **Catalog** | Une galerie de types de Datasource disponibles (Product, Location, Generic, Analytics, etc.) que vous pouvez connecter. |
+| **Source** | L'origine des données — une URL, un fichier téléversé, un serveur FTP/SFTP, BigQuery, Snowflake, GCS, S3, Kafka ou une autre Datasource. |
+| **Field mapping** | La configuration qui mappe les champs de données bruts vers des types standardisés (reference ID, prix, URL, etc.). |
+| **Queries** | Un outil pour rechercher et parcourir les données stockées dans une Datasource. |
+| **Logs** | Historique d'exécution montrant les opérations de récupération, d'analyse et d'enregistrement avec le statut et les détails d'erreur. |
+
+## Types de Datasource
+
+Le DataHub prend en charge plusieurs catégories de Datasource :
+
+| Catégorie | Description |
+|----------|-------------|
+| **Product** | Catalogues de produits avec des champs comme reference ID, nom, prix, URL d'image. |
+| **Location** | Listes de magasins ou de points d'intérêt avec adresse et coordonnées. |
+| **Generic** | Flux de données arbitraires pour tout cas d'usage. |
+| **Analytics** | Suivi des événements de site web (vues de page, clics, achats). |
+| **Customer Data** | Données CRM synchronisées depuis des systèmes externes. |
+
+## Cycle de vie d'une Datasource
+
+| Statut | Description |
+|--------|-------------|
+| **Draft** | La Datasource a été créée mais pas encore importée. |
+| **Publishing** | La Datasource est en cours de traitement pour la première fois. |
+| **Published** | La Datasource est en ligne et ses données sont disponibles à l'usage. |
+| **Updating** | La Datasource s'actualise avec de nouvelles données. |
+| **Paused** | L'actualisation des données a été mise en pause. |
+| **Error** | La Datasource a rencontré un problème lors de l'import ou de la mise à jour. |
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Catalog" icon="grid-2" href="/fr/product-guide/datahub/catalog">
+    Parcourez les types de Datasource disponibles et connectez de nouvelles sources.
+  </Card>
+  <Card title="Créer une Datasource" icon="plus" href="/fr/product-guide/datahub/creating-a-datasource">
+    Guide étape par étape pour créer votre première Datasource.
+  </Card>
+  <Card title="Listing" icon="list" href="/fr/product-guide/datahub/listing">
+    Gérez vos Datasources enregistrées.
+  </Card>
+  <Card title="Source Types" icon="plug" href="/fr/advanced-guide/datahub/source-types">
+    Découvrez chaque connecteur de source de données.
+  </Card>
+  <Card title="Field Mapping" icon="arrows-left-right" href="/fr/advanced-guide/datahub/field-mapping">
+    Configurez la façon dont les champs bruts sont mappés vers les types Reelevant.
+  </Card>
+  <Card title="Queries" icon="magnifying-glass" href="/fr/advanced-guide/datahub/queries">
+    Recherchez et parcourez les données de votre Datasource.
+  </Card>
+</CardGroup>
