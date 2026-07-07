@@ -4,7 +4,7 @@ This guide is for non-technical Reelevant teammates who want to edit docs with t
 
 ## What you'll end up with
 
-The Claude Code desktop app open on your computer, ready to edit docs from plain-English prompts. If you turn on the live preview, the docs will appear at <http://localhost:3000> and show inside the app's embedded browser.
+The Claude Code desktop app open on your computer, ready to edit docs from plain-English prompts. If you turn on the live preview, the docs will appear at `http://localhost:3000` and show inside the app's embedded browser.
 
 ## Step 1 — Install the Claude Code desktop app
 
@@ -48,7 +48,7 @@ brew install node
 npm i -g mint
 ```
 
-The launch config in this repo (`.claude/settings.json`) will then start `mint dev` automatically when Claude Code opens, and you can view the preview at <http://localhost:3000> in the app's embedded browser.
+The launch config in this repo (`.claude/settings.json`) will then start `mint dev` automatically when Claude Code opens, and you can view the preview at `http://localhost:3000` in the app's embedded browser.
 
 This step is optional. You can still use the desktop app without it; you just will not get the automatic live preview.
 
