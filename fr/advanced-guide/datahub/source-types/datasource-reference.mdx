@@ -1,0 +1,41 @@
+---
+title: 'Datasource Reference'
+description: 'Utilisez une autre Datasource existante comme source de données pour une nouvelle Datasource'
+---
+
+![Configuration Datasource Reference montrant le sélecteur de Datasource](/images/datahub/source-datasource-v2.png)
+
+## Présentation
+
+Le type de source Datasource Reference vous permet de créer une nouvelle Datasource qui lit les données d'une autre Datasource existante. C'est la base des Datasources dérivées qui calculent ou combinent des données provenant de plusieurs sources.
+
+## Configuration
+
+| Champ | Description |
+|-------|-------------|
+| `id` | L'ID d'une Datasource existante en mode worker à utiliser comme source de données. |
+
+<Info>
+  Seules les Datasources en **mode worker** (Datasources qui récupèrent et stockent des données) peuvent être utilisées comme références. La Datasource référencée doit avoir une version live avec des données.
+</Info>
+
+## Cas d'usage
+
+Les références de Datasource sont utilisées dans plusieurs configurations spéciales :
+
+| Configuration | Description |
+|---------------|-------------|
+| **Merged Datasources** | Combiner deux Datasources en les joignant sur un champ commun. Voir [Configurations spéciales](/fr/advanced-guide/datahub/special-configurations). |
+| **Best Products** | Calculer les produits les plus performants en combinant une Datasource de catalogue produit avec une Datasource analytique. |
+| **Top Attributes** | Identifier les attributs produit préférés (marques, catégories) par utilisateur en se basant sur les données comportementales. |
+| **Bought Together (Cross-sell)** | Identifier les produits fréquemment achetés ensemble. |
+
+## Fonctionnement
+
+1. La nouvelle Datasource lit les données depuis le stockage live de la Datasource référencée au lieu d'une source externe.
+2. Les champs de la Datasource référencée sont disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping) dans la nouvelle Datasource.
+3. Lorsque la Datasource référencée est mise à jour, la Datasource dépendante peut automatiquement se rafraîchir (selon le planning d'actualisation configuré).
+
+<Tip>
+  Vous pouvez chaîner les références de Datasource pour construire des pipelines de données en plusieurs étapes — par exemple, fusionner un catalogue produit avec des données CRM, puis calculer les best products sur le résultat fusionné.
+</Tip>

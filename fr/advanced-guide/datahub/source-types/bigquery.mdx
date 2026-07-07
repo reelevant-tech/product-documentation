@@ -1,0 +1,102 @@
+---
+title: 'BigQuery'
+description: 'Synchronisez des données depuis des tables Google BigQuery dans Reelevant'
+---
+
+![Formulaire de configuration de la source BigQuery](/images/datahub/source-bigquery-v2.png)
+
+## Présentation
+
+La source BigQuery synchronise les données depuis une table Google BigQuery directement dans Reelevant. C'est idéal pour les équipes qui centralisent leurs données dans BigQuery et souhaitent les exploiter pour la personnalisation.
+
+## Configuration
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `projectId` | L'ID du projet Google Cloud qui contient votre dataset BigQuery. |
+| `dataset` | Le nom du dataset BigQuery. |
+| `table` | Le nom de la table à synchroniser. |
+
+### Authentification
+
+BigQuery prend en charge deux méthodes d'authentification :
+
+<Tabs>
+  <Tab title="Service Account">
+    Authentification à l'aide d'une clé de compte de service Google Cloud.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `clientEmail` | L'adresse e-mail du compte de service (par ex. `my-sa@project.iam.gserviceaccount.com`). |
+    | `privateKey` | La clé privée du compte de service (issue du fichier de clé JSON). |
+
+    <Tip>
+      Le rôle minimum requis est **BigQuery Data Viewer** (`roles/bigquery.dataViewer`) sur le dataset cible. Si vous utilisez une requête SQL personnalisée, le compte de service a également besoin du rôle **BigQuery Job User** (`roles/bigquery.jobUser`) sur le projet.
+    </Tip>
+  </Tab>
+  <Tab title="OAuth">
+    Authentification via une connexion OAuth configurée dans Reelevant. Utile lorsque vous devez accéder aux ressources BigQuery au nom d'un utilisateur plutôt que d'un compte de service.
+  </Tab>
+</Tabs>
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `query` | Une requête SQL personnalisée pour filtrer ou transformer les données avant l'import. Lorsqu'elle est fournie, la requête est exécutée au lieu de lire la table complète. |
+| `tableProjectId` | Si la table appartient à un projet GCP différent de celui du compte de service, spécifiez ici l'ID du projet de la table. |
+| `customOAuthClientId` | DatasourceAuth ID pour l'authentification par OAuth (alternative au compte de service). |
+
+### Requêtes SQL personnalisées
+
+Lorsque vous fournissez une requête SQL personnalisée, Reelevant l'exécute sur BigQuery au lieu de lire la table entière. Cela est utile pour :
+
+- Filtrer des lignes (par ex. `SELECT * FROM my_table WHERE active = true`)
+- Sélectionner des colonnes spécifiques
+- Joindre plusieurs tables
+- Appliquer des transformations
+
+<Warning>
+  La requête doit être en SQL standard BigQuery valide. Assurez-vous que le compte de service a la permission d'exécuter des jobs dans le projet.
+</Warning>
+
+## Synchronisation incrémentale
+
+BigQuery prend en charge la synchronisation incrémentale lorsqu'il est utilisé avec le mode de mise à jour **Keep Previous Data**. Pour l'activer :
+
+| Champ | Description |
+|-------|-------------|
+| `timestampField` | La colonne utilisée pour suivre les lignes nouvelles ou modifiées depuis la dernière synchronisation. |
+| `timestampFieldType` | Si le champ est de type `datetime` ou `timestamp` dans BigQuery. |
+
+Lorsque cette option est configurée, Reelevant ne récupère que les lignes dont le champ timestamp est supérieur à la dernière valeur enregistrée, en ajoutant les nouvelles données au dataset existant.
+
+<Info>
+  Si votre Datasource utilise le mode de mise à jour **Override Previous Data** (par défaut), le champ timestamp n'est pas nécessaire — la table entière ou le résultat de la requête est réimporté à chaque synchronisation.
+</Info>
+
+## Types de données pris en charge
+
+Les types de données BigQuery sont automatiquement convertis :
+
+| Type BigQuery | Comportement |
+||----------|
+| `STRING`, `INT64`, `FLOAT64`, `BOOL` | Transmis tels quels. |
+| `DATE`, `DATETIME`, `TIME`, `TIMESTAMP` | Convertis en leur représentation textuelle. |
+| `NUMERIC`, `BIGNUMERIC` | Convertis en nombres JavaScript. |
+| `STRUCT` (enregistrements imbriqués) | Aplatis en champs individuels. |
+| `ARRAY` (champs répétés) | Préservés sous forme de tableaux. |
+
+## Fonctionnement
+
+1. Reelevant s'authentifie auprès de BigQuery avec les identifiants fournis.
+2. Si une requête personnalisée est fournie, elle est exécutée. Sinon, la table complète est exportée.
+3. Pour les tables volumineuses, Reelevant utilise un pipeline d'export vers GCS optimisé pour de meilleures performances.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+5. Lors des synchronisations suivantes, la requête ou la table est relue (ou récupérée de manière incrémentale si configuré).
+
+<Warning>
+  Assurez-vous que le compte de service dispose d'un accès en lecture au dataset et à la table spécifiés. Le rôle minimum requis est **BigQuery Data Viewer**. Pour les requêtes personnalisées, le compte de service a également besoin du rôle **BigQuery Job User**.
+</Warning>

@@ -1,0 +1,476 @@
+---
+title: 'Débogage des clients OAuth'
+description: 'Diagnostiquez et résolvez les configurations de clients OAuth utilisées par les Datasources — vérifications de statut, tests de token en dry-run, gestion du cache et aperçu des requêtes'
+---
+
+## Présentation
+
+Les Datasources qui se connectent à des plateformes externes (Shopify, Salesforce, Google, Instagram, etc.) s'authentifient via des configurations de clients OAuth. Lorsqu'une Datasource ne parvient pas à récupérer des données, la cause racine est souvent un problème OAuth — identifiants expirés, URL de token mal configurée ou chaîne d'authentification interrompue.
+
+Les endpoints de débogage OAuth vous permettent d'inspecter la santé d'un client OAuth, de tester l'acquisition de token sans affecter les données en production, de purger les tokens en cache obsolètes et de prévisualiser la requête d'authentification sortante. Chaque endpoint est conçu pour une utilisation sûre et non destructive en production.
+
+Tous les appels nécessitent un jeton d'accès — consultez [Authentification](/developer-docs/api-reference/authentication) pour savoir comment en obtenir un.
+
+<Info>
+  Ces endpoints de diagnostic ne stockent jamais de tokens. Chaque test est strictement un dry run — il vérifie le flux et rejette le résultat. La configuration live de votre Datasource n'est jamais modifiée.
+</Info>
+
+---
+
+## Statut du client OAuth
+
+La vérification de statut vous donne un aperçu de la santé actuelle d'un client OAuth. Utilisez-la comme première étape de diagnostic lorsqu'une Datasource signale des erreurs d'authentification.
+
+```bash
+curl -XGET https://api.reelevant.com/v2/datasources/oauth/<auth_id>/status \
+  -H "Authorization: Bearer <access_token>"
+```
+
+### Exemple de réponse
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "665f1c0b2a9d4e0008b3a1f2",
+    "mode": "refresh_token",
+    "hasRefreshToken": true,
+    "hasAccessToken": false,
+    "hasPassword": false,
+    "tokenUrl": "https://accounts.google.com/o/oauth2/token",
+    "scopes": ["offline_access", "https://www.googleapis.com/auth/analytics.readonly"],
+    "cachedToken": {
+      "exists": true,
+      "ttlSeconds": 1842
+    },
+    "chain": {
+      "hasNext": false
+    },
+    "configuration": {
+      "type": "company-scoped",
+      "clientId": "123456789.apps.googleusercontent.com"
+    }
+  }
+}
+```
+
+### Champs de la réponse
+
+| Champ | Description |
+|-------|-------------|
+| **id** | L'identifiant unique du client OAuth. |
+| **mode** | Le mode d'authentification — `password`, `client_credentials`, `refresh_token`, `access_token`, `custom_payload` ou `jwt_bearer`. |
+| **hasRefreshToken** | Si un refresh token est stocké (booléen). |
+| **hasAccessToken** | Si un access token est stocké (booléen). |
+| **hasPassword** | Si un mot de passe est stocké (booléen). |
+| **tokenUrl** | L'URL utilisée pour demander des tokens à la plateforme externe. |
+| **scopes** | La liste des scopes de permission demandés lors de l'autorisation. |
+| **cachedToken** | Si un token en cache existe et son temps restant avant expiration en secondes. |
+| **chain** | Si ce client est chaîné à un autre client OAuth, et le cas échéant, l'identifiant et le mode du client chaîné. |
+| **configuration.type** | Si la configuration est `company-scoped` ou `global`. |
+| **configuration.clientId** | L'identifiant du client OAuth enregistré auprès de la plateforme externe. |
+
+### Interprétation des résultats
+
+Commencez par vérifier les booléens d'identifiants. Les valeurs attendues dépendent du mode d'authentification :
+
+| Mode | Identifiants attendus |
+|------|---------------------|
+| `refresh_token` | **hasRefreshToken** = true |
+| `access_token` | **hasAccessToken** = true |
+| `password` | **hasPassword** = true |
+| `client_credentials` | Les identifiants sont dans la configuration elle-même (clientId + clientSecret). |
+| `custom_payload` | Les identifiants sont intégrés dans le template de payload personnalisé. |
+| `jwt_bearer` | La clé de signature est stockée dans le champ clientSecret de la configuration. |
+
+Si le booléen d'identifiant attendu est `false`, le callback OAuth ne s'est probablement pas terminé avec succès. Relancez le flux d'autorisation pour cette Datasource.
+
+<Info>
+  Les booléens **hasRefreshToken**, **hasAccessToken** et **hasPassword** apparaissent également dans le listing standard des clients OAuth. Vous n'avez pas besoin de l'endpoint de statut pour les voir — toute réponse incluant un client OAuth affichera ces champs.
+</Info>
+
+---
+
+## Test de token (dry-run)
+
+L'endpoint de test de token exécute le flux complet d'acquisition de token et rapporte chaque étape avec son résultat, sa durée et ses détails de diagnostic. C'est l'outil de débogage le plus puissant — il vous indique exactement quelle étape a échoué et pourquoi.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/oauth/<auth_id>/test-token \
+  -H "Authorization: Bearer <access_token>"
+```
+
+### Fonctionnement
+
+L'endpoint parcourt jusqu'à sept étapes, s'arrêtant à la première erreur :
+
+| Étape | Ce qu'elle vérifie |
+|------|----------------|
+| **resolve_auth** | Vérifie que la configuration du client OAuth est renseignée. Rapporte le mode, le type de configuration et l'existence éventuelle d'une chaîne. |
+| **check_credentials** | Valide que les identifiants requis sont présents pour le mode d'authentification (voir le tableau ci-dessus). |
+| **build_request** | Construit la requête de token. Rapporte l'URL cible, la méthode et les champs du body qui seront envoyés. |
+| **send_request** | Envoie la requête de token à la plateforme externe. Rapporte si un token a été reçu. |
+| **parse_response** | Valide que la réponse contient un access token utilisable. |
+| **resolve_chain** | *(Uniquement pour les configurations chaînées.)* Recherche le client OAuth suivant dans la chaîne et vérifie son existence. |
+| **chain_request** | *(Uniquement pour les configurations chaînées.)* Exécute le flux complet de test de token de manière récursive sur le client chaîné, en imbriquant sa propre trace d'étapes dans cette étape. |
+
+### Exemple de réponse — flux client_credentials réussi
+
+```json
+{
+  "status": "success",
+  "data": {
+    "success": true,
+    "steps": [
+      {
+        "name": "resolve_auth",
+        "status": "success",
+        "durationMs": 1,
+        "detail": {
+          "mode": "client_credentials",
+          "configType": "company-scoped",
+          "hasChain": false
+        }
+      },
+      {
+        "name": "check_credentials",
+        "status": "success",
+        "durationMs": 0,
+        "detail": {
+          "hasClientId": true,
+          "hasClientSecret": true
+        }
+      },
+      {
+        "name": "build_request",
+        "status": "success",
+        "durationMs": 0,
+        "detail": {
+          "method": "GET",
+          "url": "https://api.partner.com/oauth/token",
+          "bodyFields": ["grant_type", "client_id", "client_secret"]
+        }
+      },
+      {
+        "name": "send_request",
+        "status": "success",
+        "durationMs": 245,
+        "detail": {
+          "hasTokenAcquired": true
+        }
+      },
+      {
+        "name": "parse_response",
+        "status": "success",
+        "durationMs": 0,
+        "detail": {
+          "tokenFound": true
+        }
+      }
+    ]
+  }
+}
+```
+
+### Exemple de réponse — refresh token expiré
+
+```json
+{
+  "status": "success",
+  "data": {
+    "success": false,
+    "steps": [
+      {
+        "name": "resolve_auth",
+        "status": "success",
+        "durationMs": 1,
+        "detail": {
+          "mode": "refresh_token",
+          "configType": "company-scoped",
+          "hasChain": false
+        }
+      },
+      {
+        "name": "check_credentials",
+        "status": "success",
+        "durationMs": 0,
+        "detail": {
+          "hasRefreshToken": true
+        }
+      },
+      {
+        "name": "build_request",
+        "status": "success",
+        "durationMs": 0,
+        "detail": {
+          "method": "GET",
+          "url": "https://accounts.google.com/o/oauth2/token",
+          "bodyFields": ["grant_type", "refresh_token", "client_id", "client_secret"]
+        }
+      },
+      {
+        "name": "send_request",
+        "status": "failed",
+        "durationMs": 312,
+        "detail": {
+          "httpStatus": 401,
+          "responseBody": "{\"error\": \"invalid_grant\"}"
+        },
+        "error": "Token request failed with status 401"
+      }
+    ]
+  }
+}
+```
+
+Le refresh token a été révoqué ou a expiré. Réautorisez la Datasource pour obtenir un nouveau refresh token.
+
+### Exemple de réponse — échec de configuration chaînée
+
+Certaines configurations OAuth utilisent une **authentification chaînée**, où le token du premier client OAuth est injecté dans un second client. L'endpoint de test de token gère cela automatiquement — la trace d'étapes du client chaîné est imbriquée dans l'étape `chain_request`.
+
+```json
+{
+  "status": "success",
+  "data": {
+    "success": false,
+    "steps": [
+      {
+        "name": "resolve_auth",
+        "status": "success",
+        "durationMs": 1,
+        "detail": {
+          "mode": "client_credentials",
+          "hasChain": true
+        }
+      },
+      {
+        "name": "check_credentials",
+        "status": "success",
+        "durationMs": 0,
+        "detail": { "hasClientId": true, "hasClientSecret": true }
+      },
+      {
+        "name": "build_request",
+        "status": "success",
+        "durationMs": 0,
+        "detail": { "method": "GET", "url": "https://auth.partner.com/token" }
+      },
+      {
+        "name": "send_request",
+        "status": "success",
+        "durationMs": 198,
+        "detail": { "hasTokenAcquired": true }
+      },
+      {
+        "name": "parse_response",
+        "status": "success",
+        "durationMs": 0,
+        "detail": { "tokenFound": true }
+      },
+      {
+        "name": "resolve_chain",
+        "status": "success",
+        "durationMs": 2,
+        "detail": {
+          "chainedAuthId": "665f1c0b2a9d4e0008b3a1f3",
+          "chainedMode": "custom_payload"
+        }
+      },
+      {
+        "name": "chain_request",
+        "status": "failed",
+        "durationMs": 450,
+        "detail": {
+          "chainedSteps": [
+            {
+              "name": "resolve_auth",
+              "status": "success",
+              "durationMs": 1,
+              "detail": { "mode": "custom_payload", "hasChain": false }
+            },
+            {
+              "name": "build_request",
+              "status": "failed",
+              "durationMs": 0,
+              "error": "Missing required variable in custom payload template"
+            }
+          ]
+        },
+        "error": "Chained token acquisition failed at build_request"
+      }
+    ]
+  }
+}
+```
+
+Le client principal s'est authentifié correctement, mais le client chaîné a échoué à l'étape `build_request`. Inspectez les `chainedSteps` imbriquées pour identifier l'échec exact dans le second client.
+
+<Info>
+  Les configurations chaînées sont courantes avec les plateformes qui nécessitent un processus d'authentification en deux étapes — par exemple, obtenir d'abord un token de plateforme, puis l'échanger contre un token d'accès aux données auprès d'un autre fournisseur.
+</Info>
+
+---
+
+## Invalidation du cache
+
+Reelevant met en cache les access tokens pour éviter de demander un nouveau token à chaque actualisation de Datasource. Le cache utilise un temps de vie basé sur l'expiration du token. Dans certains cas, le token en cache peut devenir invalide avant l'expiration de son TTL — par exemple, lorsque la plateforme externe le révoque.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/oauth/<auth_id>/invalidate-cache \
+  -H "Authorization: Bearer <access_token>"
+```
+
+### Exemple de réponse — le cache existait
+
+```json
+{
+  "status": "success",
+  "data": {
+    "cacheKey": "test-client-id-a1b2c3d4-665f1c0b2a9d4e0008b3a1f2-access-token",
+    "deleted": true
+  }
+}
+```
+
+### Exemple de réponse — pas de cache
+
+```json
+{
+  "status": "success",
+  "data": {
+    "cacheKey": "test-client-id-a1b2c3d4-665f1c0b2a9d4e0008b3a1f2-access-token",
+    "deleted": false
+  }
+}
+```
+
+| Champ | Description |
+|-------|-------------|
+| **cacheKey** | La clé de cache interne ciblée. |
+| **deleted** | `true` si un token en cache a été trouvé et supprimé ; `false` si aucun token en cache n'existait. |
+
+Après l'invalidation, la prochaine actualisation de Datasource demandera un nouveau token à la plateforme externe.
+
+<Info>
+  Cet endpoint nécessite la permission **update** sur le client OAuth (pas seulement read). Si vous recevez une erreur 404, vérifiez que votre jeton d'accès dispose d'un accès en écriture à la Datasource.
+</Info>
+
+---
+
+## Aperçu de la requête
+
+Pour les clients OAuth utilisant le mode `custom_payload` ou `jwt_bearer`, la requête d'authentification est construite dynamiquement à partir d'un template avec substitution de variables. L'endpoint d'aperçu de requête vous montre la requête entièrement interpolée — exactement ce qui serait envoyé à la plateforme externe — sans l'envoyer réellement.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/oauth/<auth_id>/preview-request \
+  -H "Authorization: Bearer <access_token>"
+```
+
+### Exemple de réponse
+
+```json
+{
+  "status": "success",
+  "data": {
+    "method": "POST",
+    "url": "https://auth.partner.com/oauth2/token",
+    "headers": {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Basic ****"
+    },
+    "body": {
+      "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "assertion": "****"
+    },
+    "mode": "jwt_bearer"
+  }
+}
+```
+
+| Champ | Description |
+|-------|-------------|
+| **method** | La méthode de requête (`GET` ou `POST`). |
+| **url** | L'URL de token entièrement construite. |
+| **headers** | Les en-têtes de la requête après substitution des variables, avec les valeurs secrètes masquées par `****`. |
+| **body** | Le corps de la requête après substitution des variables, avec les valeurs secrètes masquées par `****`. |
+| **mode** | Le mode d'authentification (`custom_payload` ou `jwt_bearer`). |
+
+Utilisez ceci pour vérifier que les placeholders de variables (tels que `{{clientId}}` ou `{{jwt}}`) sont correctement remplacés et que la structure de la requête correspond aux exigences de la plateforme externe.
+
+<Info>
+  L'endpoint d'aperçu ne fonctionne qu'avec les modes `custom_payload` et `jwt_bearer`. Pour les autres modes, il renvoie une erreur 400, car ces modes utilisent des flux OAuth standards qui ne construisent pas de requête personnalisée.
+</Info>
+
+---
+
+## Diagnostics du callback
+
+Lorsqu'un utilisateur complète le flux d'autorisation OAuth (en cliquant sur « Autoriser » dans l'assistant de la Datasource), la page de callback affiche désormais des informations de diagnostic en cas de problème.
+
+### Succès
+
+En cas de callback réussi, la page affiche un message de confirmation et peut être fermée.
+
+### Échec
+
+En cas d'échec, la page de callback affiche :
+
+| Champ | Description |
+|-------|-------------|
+| **Error** | Le type d'échec — par exemple, `token_mismatch` lorsque le type de token attendu n'a pas été renvoyé. |
+| **Mode** | Le mode d'authentification du client OAuth. |
+| **Hint** | Une suggestion lisible pour résoudre le problème. |
+
+Une erreur `token_mismatch` signifie généralement que la plateforme externe a renvoyé un access token alors qu'un refresh token était attendu (ou inversement). Vérifiez que les scopes OAuth incluent `offline_access` ou l'équivalent spécifique à la plateforme pour obtenir des refresh tokens.
+
+---
+
+## Processus de débogage
+
+Une séquence recommandée pour diagnostiquer une authentification de Datasource en échec :
+
+<Steps>
+  <Step title="Vérifier le statut">
+    Appelez `GET /oauth/<auth_id>/status` pour vérifier que les identifiants sont présents et vérifier si un token en cache existe.
+
+    Si `hasRefreshToken`, `hasAccessToken` ou `hasPassword` est à `false` de manière inattendue, réautorisez la Datasource.
+  </Step>
+  <Step title="Exécuter un test en dry-run">
+    Appelez `POST /oauth/<auth_id>/test-token` pour exécuter le flux complet d'acquisition de token. Lisez la trace des étapes pour identifier la première étape en échec.
+
+    Échecs courants :
+    - `send_request` avec statut 401 → identifiants expirés ou révoqués
+    - Échec de `build_request` → template de requête mal configuré
+    - Échec de `chain_request` → problème dans le client OAuth chaîné
+  </Step>
+  <Step title="Invalider le cache si nécessaire">
+    Si le test de token réussit mais que la Datasource échoue toujours, le problème peut être un token en cache obsolète. Appelez `POST /oauth/<auth_id>/invalidate-cache` pour le purger.
+  </Step>
+  <Step title="Prévisualiser la requête (modes personnalisés)">
+    Pour les modes `custom_payload` ou `jwt_bearer`, appelez `POST /oauth/<auth_id>/preview-request` pour inspecter la requête entièrement interpolée et la comparer avec la documentation de la plateforme externe.
+  </Step>
+</Steps>
+
+---
+
+## Problèmes courants et solutions
+
+| Symptôme | Cause probable | Action recommandée |
+|---------|-------------|-------------------|
+| La Datasource échoue avec « authentication error » | Token expiré ou révoqué | Exécutez **test-token** pour identifier l'étape en échec. Si `send_request` échoue avec un 401, réautorisez la Datasource. |
+| **hasRefreshToken** est false après autorisation | Le callback OAuth n'a pas reçu de refresh token | Vérifiez les scopes — assurez-vous que `offline_access` (ou l'équivalent de la plateforme) est inclus. Réautorisez. |
+| Le test de token réussit mais la Datasource échoue toujours | Token en cache obsolète | **Invalidez le cache**, puis déclenchez une actualisation de la Datasource. |
+| Le mode `custom_payload` renvoie des erreurs inattendues | Substitution de variables incorrecte dans le template de requête | Utilisez **preview-request** pour inspecter la requête interpolée et la comparer avec la documentation de la plateforme. |
+| La configuration chaînée échoue à `chain_request` | Le second client OAuth dans la chaîne a un problème de configuration | Développez les `chainedSteps` imbriquées dans l'étape `chain_request` pour trouver l'échec. Corrigez le client chaîné, puis retestez. |
+| La page de callback affiche `token_mismatch` | La plateforme a renvoyé un type de token différent de celui attendu | Vérifiez les scopes OAuth et le comportement d'échange de tokens de la plateforme. Certaines plateformes nécessitent des scopes spécifiques pour renvoyer des refresh tokens. |
+| 404 sur `invalidate-cache` | Permissions insuffisantes | Cet endpoint nécessite la permission **update**. Vérifiez que votre jeton d'accès dispose d'un accès en écriture à la Datasource. |
+
+---
+
+## Pages associées
+
+- [Authentification](/developer-docs/api-reference/authentication) — obtenir un jeton d'accès pour appeler l'API Datasources.
+- [Configurations spéciales](/fr/advanced-guide/datahub/special-configurations) — configuration d'intégration OAuth, clés API et autres configurations avancées de Datasources.
+- [Logs](/fr/advanced-guide/datahub/logs) — surveillance de l'historique d'exécution des Datasources.
+- [Types de sources](/fr/advanced-guide/datahub/source-types) — configuration des différents types de sources de Datasources.

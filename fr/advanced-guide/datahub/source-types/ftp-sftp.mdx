@@ -1,0 +1,140 @@
+---
+title: 'FTP & SFTP'
+description: 'Connectez-vous à des serveurs FTP ou SFTP pour récupérer des fichiers de données pour votre Datasource'
+---
+
+![Formulaire de configuration de la source FTP montrant les champs de connexion](/images/datahub/source-ftp-v2.png)
+
+## Présentation
+
+Les sources FTP et SFTP vous permettent de récupérer des fichiers de données depuis des serveurs de fichiers distants. Cela est utile pour les flux planifiés provenant de partenaires, de systèmes existants ou de toute infrastructure qui publie des données via FTP/SFTP.
+
+## Configuration FTP
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `host` | Le nom d'hôte ou l'adresse IP du serveur FTP. |
+| `port` | Le port FTP (par défaut : `21`). |
+| `username` | Nom d'utilisateur de connexion FTP. |
+| `password` | Mot de passe de connexion FTP. |
+| `path` | Le chemin du fichier sur le serveur (voir [Chemins wildcards](#chemins-wildcards) ci-dessous). |
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `secure` | Activer FTPS (FTP over TLS) pour les connexions chiffrées. |
+| `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+| `disableProxy` | Désactiver le proxy SOCKS5 pour la connexion FTP (optionnel). |
+
+## Configuration SFTP
+
+### Champs obligatoires
+
+| Champ | Description |
+|-------|-------------|
+| `host` | Le nom d'hôte ou l'adresse IP du serveur SFTP. |
+| `port` | Le port SFTP (par défaut : `22`). |
+| `username` | Nom d'utilisateur de connexion SFTP. |
+| `path` | Le chemin du fichier sur le serveur (voir [Chemins wildcards](#chemins-wildcards) ci-dessous). |
+
+### Authentification
+
+SFTP prend en charge deux méthodes d'authentification :
+
+<Tabs>
+  <Tab title="Mot de passe">
+    Authentification par nom d'utilisateur et mot de passe.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `password` | Mot de passe de connexion SFTP. |
+  </Tab>
+  <Tab title="Clé privée">
+    Authentification par clé privée SSH.
+
+    | Champ | Description |
+    |-------|-------------|
+    | `privateKey` | La clé privée SSH au format PEM. |
+    | `passphrase` *(optionnel)* | La phrase de passe de la clé privée, si elle est chiffrée. |
+
+    Lorsqu'une clé privée est fournie, l'authentification par mot de passe est désactivée.
+  </Tab>
+</Tabs>
+
+<Tip>
+  Utilisez SFTP lorsque la sécurité est une préoccupation — il chiffre la connexion et tous les transferts de données. Si votre serveur SFTP prend en charge l'authentification par clé, préférez-la aux mots de passe.
+</Tip>
+
+## Formats de fichiers pris en charge
+
+FTP/SFTP détecte automatiquement le format du fichier. Les formats suivants sont pris en charge :
+
+| Format | Description |
+|--------|-------------|
+| **CSV** | Valeurs séparées par des virgules. Le délimiteur est détecté automatiquement (virgule, point-virgule, tabulation, pipe). |
+| **JSON** | Fichiers JSON standards avec un tableau ou objet racine. |
+| **NDJSON** | JSON délimité par des retours à la ligne (un objet JSON par ligne). |
+| **XML** | Fichiers XML — le chemin de l'élément racine est détecté automatiquement. |
+| **Parquet** | Format columaire Apache Parquet. |
+| **Avro** | Format de sérialisation Apache Avro. |
+| **XLSX** | Fichiers Microsoft Excel. |
+
+<Info>
+  Les fichiers compressés (`.gz`, `.zip`) sont automatiquement décompressés avant le parsing.
+</Info>
+
+## Déchiffrement PGP
+
+Les sources FTP et SFTP prennent en charge la récupération de **fichiers chiffrés PGP**. Lorsque `pgpPrivateKey` est configuré, les fichiers sont déchiffrés de manière transparente avant la décompression et le parsing.
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| `pgpPrivateKey` | Oui | La clé privée PGP/GPG au format armored (ASCII). |
+| `pgpPassphrase` | Non | La phrase de passe de la clé privée, si elle est chiffrée. |
+
+Les fichiers chiffrés armored (`.asc`) et binary (`.pgp`, `.gpg`) sont pris en charge.
+
+<Info>
+  Consultez le [guide de déchiffrement PGP](/fr/advanced-guide/datahub/pgp-decryption) pour plus de détails sur la génération de clés, les formats pris en charge et la gestion des erreurs.
+</Info>
+
+## Chemins wildcards
+
+Vous pouvez utiliser un wildcard (`*`) dans le nom de fichier pour correspondre à plusieurs fichiers. Cela est utile lorsque :
+
+- Un nouveau fichier est exporté périodiquement avec un nom différent (par ex. `/exports/products_20240101.csv`, `/exports/products_20240102.csv`)
+- Les données sont réparties sur plusieurs fichiers dans le même répertoire
+
+**Exemples de patterns :**
+- `/exports/products_*.csv` — correspond à tous les fichiers CSV commençant par `products_` dans le répertoire `/exports/`
+- `/data/*.json` — correspond à tous les fichiers JSON dans le répertoire `/data/`
+
+## Modes de traitement des fichiers
+
+Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière dont les fichiers sont sélectionnés via le champ `processType` :
+
+| Valeur `processType` | Description |
+|------|-------------|
+| `last_unprocess` *(par défaut)* | Traite uniquement le fichier le plus récent qui n'a pas encore été traité. Idéal pour les exports de datasets complets où seul le dernier fichier importe. |
+| `all_unprocess` | Traite tous les fichiers qui n'ont pas encore été traités. Utile pour les exports incrémentaux/delta. |
+| `all` | Traite tous les fichiers correspondants à chaque synchronisation, qu'ils aient été traités auparavant ou non. Utile pour les datasets complets répartis sur plusieurs fichiers avec les mêmes noms. |
+
+## SFTP hébergé par Reelevant
+
+Pour les Datasources configurées via la plateforme, Reelevant peut également fournir un endpoint SFTP où vos systèmes peuvent envoyer des fichiers directement. Cela est utile lorsque :
+
+- Votre infrastructure préfère pousser les données plutôt qu'elles soient tirées
+- Vous souhaitez mettre à jour les fichiers de données sans accéder à la plateforme Reelevant
+
+Les identifiants SFTP (host, username, password) sont générés automatiquement lors de la création de la Datasource.
+
+## Fonctionnement
+
+1. Reelevant se connecte au serveur FTP/SFTP avec les identifiants fournis.
+2. Le fichier au chemin configuré est localisé. Si un wildcard est utilisé, les fichiers correspondants sont listés.
+3. Les fichiers sont téléchargés, décompressés si nécessaire, et parsés selon le format détecté.
+4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
+5. Lors des synchronisations suivantes, les fichiers sont rerécupérés selon le mode de traitement configuré.
