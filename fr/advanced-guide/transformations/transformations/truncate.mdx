@@ -1,0 +1,32 @@
+---
+title: 'Truncate'
+description: 'Tronquer un texte à une longueur spécifique'
+---
+
+## Vue d'ensemble
+
+La transformation `truncate` tronque l'entrée à une taille spécifique, avec une position de départ et des points de suspension facultatifs.
+
+## Syntaxe
+
+```text
+truncate(<variable>, start=0, end=10, ellipsis=false, smart=false)
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Par défaut | Description |
+|-----------|------|----------|---------|-------------|
+| `variable` | string | Oui | - | Le texte à tronquer |
+| `start` | number | Oui | - | Position de départ de la troncature |
+| `end` | number | Non | - | Longueur maximale en caractères |
+| `ellipsis` | boolean | Oui | - | Indique s'il faut ajouter des points de suspension (...) à la fin |
+| `smart` | boolean | Non | - | Lorsque true, tronque au dernier espace avant la position de fin |
+
+## Exemples
+
+```text
+truncate(<variable>, start=0, end=10, ellipsis=false)
+truncate(<variable>, 0, 20, true)
+truncate(<variable>, start=0, end=50, ellipsis=true, smart=true)
+```

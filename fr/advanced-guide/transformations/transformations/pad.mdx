@@ -1,0 +1,30 @@
+---
+title: 'Pad'
+description: 'Compléter une chaîne jusqu''à une longueur cible'
+---
+
+## Vue d'ensemble
+
+La transformation `pad` complète une chaîne jusqu'à une longueur cible en ajoutant un caractère de remplissage au début ou à la fin.
+
+## Syntaxe
+
+```text
+pad(<variable>, type="start", expectedLength=10, fill="0")
+```
+
+## Paramètres
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|----------|-------------|
+| `variable` | string | Oui | La chaîne à compléter |
+| `type` | string | Oui | Sens du remplissage : `"start"` ou `"end"` |
+| `expectedLength` | number | Oui | La longueur cible de la chaîne de sortie |
+| `fill` | string | Oui | Le ou les caractères utilisés pour compléter la chaîne |
+
+## Exemples
+
+```text
+pad(<variable>, type="start", expectedLength=5, fill="0")
+pad(<variable>, type="end", expectedLength=20, fill=" ")
+```

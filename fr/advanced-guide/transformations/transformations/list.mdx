@@ -1,0 +1,152 @@
+---
+title: 'Liste des transformations'
+description: 'Liste complète des transformations disponibles dans Reelevant'
+---
+
+## Transformations disponibles
+
+Reelevant fournit un ensemble complet de transformations pour manipuler et formater les données. Les transformations peuvent être chaînées entre elles pour créer des pipelines de traitement de données complexes.
+
+### Chaînes de caractères
+
+<CardGroup cols={2}>
+  <Card title="Truncate" icon="scissors" href="/api-reference/transformations/truncate">
+    Tronquer un texte à une longueur spécifique
+  </Card>
+  <Card title="Case" icon="text-height" href="/api-reference/transformations/case">
+    Modifier la casse du texte (majuscules, minuscules, capitalisation)
+  </Card>
+  <Card title="Replace" icon="find-replace" href="/api-reference/transformations/replace">
+    Remplacer du texte dans une chaîne
+  </Card>
+  <Card title="Replace with Variable" icon="code" href="/api-reference/transformations/replace-variable">
+    Remplacer du texte à l'aide d'une valeur de variable
+  </Card>
+  <Card title="Split" icon="code-branch" href="/api-reference/transformations/split">
+    Diviser une chaîne en tableau
+  </Card>
+  <Card title="Extract" icon="wrench" href="/api-reference/transformations/extract">
+    Extraire des données à l'aide d'un motif regex
+  </Card>
+  <Card title="Template" icon="file-code" href="/api-reference/transformations/template">
+    Appliquer une transformation de template au format sprintf
+  </Card>
+  <Card title="Length" icon="ruler" href="/api-reference/transformations/length">
+    Obtenir la longueur d'une chaîne
+  </Card>
+  <Card title="Pad" icon="arrows-left-right" href="/api-reference/transformations/pad">
+    Compléter une chaîne jusqu'à une longueur cible
+  </Card>
+  <Card title="Create Hash" icon="key" href="/api-reference/transformations/create-hash">
+    Créer un hash à partir d'une valeur
+  </Card>
+  <Card title="AES Decrypt" icon="lock" href="/api-reference/transformations/aes-decrypt">
+    Déchiffrer des données chiffrées en AES
+  </Card>
+</CardGroup>
+
+### Nombres
+
+<CardGroup cols={2}>
+  <Card title="Parse Number" icon="hashtag" href="/api-reference/transformations/parse-number">
+    Convertir une chaîne en nombre
+  </Card>
+  <Card title="Format Number" icon="0" href="/api-reference/transformations/format-number">
+    Formater un nombre avec une mise en forme adaptée à la locale
+  </Card>
+  <Card title="Format Currency" icon="dollar-sign" href="/api-reference/transformations/format-currency">
+    Formater un nombre en devise
+  </Card>
+  <Card title="Format Currency (Locale Variable)" icon="language" href="/api-reference/transformations/format-currency-locale">
+    Formater une devise avec une locale issue d'une variable
+  </Card>
+  <Card title="Format Currency (Locale & Currency Variables)" icon="globe" href="/api-reference/transformations/format-currency-locale-currency">
+    Formater une devise avec une locale et une devise issues de variables
+  </Card>
+  <Card title="Percentage" icon="percent" href="/api-reference/transformations/percentage">
+    Formater une valeur en pourcentage
+  </Card>
+  <Card title="Absolute" icon="arrows-up-down-left-right" href="/api-reference/transformations/absolute">
+    Obtenir la valeur absolue d'un nombre
+  </Card>
+  <Card title="Round" icon="circle" href="/api-reference/transformations/round">
+    Arrondir un nombre
+  </Card>
+</CardGroup>
+
+### Calculs
+
+<CardGroup cols={2}>
+  <Card title="Divide" icon="divide" href="/api-reference/transformations/divide">
+    Diviser deux nombres
+  </Card>
+  <Card title="Multiply" icon="xmark" href="/api-reference/transformations/multiply">
+    Multiplier deux nombres
+  </Card>
+  <Card title="Subtract" icon="minus" href="/api-reference/transformations/subtract">
+    Soustraire deux nombres
+  </Card>
+  <Card title="Sum" icon="plus" href="/api-reference/transformations/sum">
+    Additionner deux nombres
+  </Card>
+  <Card title="Aggregate Numbers" icon="calculator" href="/api-reference/transformations/aggregate-numbers">
+    Agréger un tableau de nombres (somme, moyenne, médiane)
+  </Card>
+</CardGroup>
+
+### Dates
+
+<CardGroup cols={2}>
+  <Card title="Format Date" icon="calendar" href="/api-reference/transformations/format-date">
+    Formater une valeur de date
+  </Card>
+  <Card title="Format Date (Locale Variable)" icon="language" href="/api-reference/transformations/format-date-locale-var">
+    Formater une date avec une locale issue d'une variable
+  </Card>
+  <Card title="Parse Date" icon="calendar-days" href="/api-reference/transformations/parse-date">
+    Analyser une chaîne de date en date ISO
+  </Card>
+  <Card title="Difference Between Dates" icon="calendar-minus" href="/api-reference/transformations/difference-between-dates">
+    Calculer la différence entre deux dates
+  </Card>
+  <Card title="Add to Date" icon="calendar-plus" href="/api-reference/transformations/add-to-date">
+    Ajouter du temps à une date
+  </Card>
+  <Card title="Subtract from Date" icon="calendar-xmark" href="/api-reference/transformations/subtract-to-date">
+    Soustraire du temps à une date
+  </Card>
+  <Card title="Get Date Occurrence" icon="calendar-check" href="/api-reference/transformations/get-date-occurrence">
+    Obtenir la prochaine ou la plus proche occurrence annuelle d'une date
+  </Card>
+</CardGroup>
+
+### Tableaux
+
+<CardGroup cols={2}>
+  <Card title="Array Get" icon="list" href="/api-reference/transformations/array-get">
+    Obtenir un élément d'un tableau par son index
+  </Card>
+  <Card title="Array Get (Variable Index)" icon="list-ol" href="/api-reference/transformations/array-get-var">
+    Obtenir un élément d'un tableau à l'aide d'un index variable
+  </Card>
+  <Card title="Array Intersection" icon="intersection" href="/api-reference/transformations/array-intersection">
+    Trouver les éléments communs entre deux tableaux
+  </Card>
+  <Card title="Array Unique Rank" icon="ranking-star" href="/api-reference/transformations/array-unique-rank">
+    Obtenir les valeurs uniques triées par fréquence
+  </Card>
+  <Card title="Array Unique" icon="filter" href="/api-reference/transformations/array-unique">
+    Obtenir les valeurs uniques d'un tableau
+  </Card>
+  <Card title="Array Concat" icon="link" href="/api-reference/transformations/array-concat">
+    Concaténer deux tableaux
+  </Card>
+</CardGroup>
+
+### Enregistrements
+
+<CardGroup cols={2}>
+  <Card title="Lookup" icon="magnifying-glass" href="/api-reference/transformations/lookup">
+    Rechercher la valeur d'une propriété dans un enregistrement
+  </Card>
+</CardGroup>
