@@ -1,0 +1,67 @@
+---
+title: 'Saved Queries'
+description: 'Enregistrez, planifiez et automatisez des requêtes Analytics récurrentes avec envoi par email'
+---
+
+![Page de listing des requêtes enregistrées présentant le tableau des requêtes](/images/analytics/saved-queries-v2.png)
+
+## Vue d'ensemble
+
+Les Saved Queries vous permettent de conserver vos requêtes de [data exploration](/fr/product-guide/analytics/data-exploration) et, éventuellement, de les planifier pour qu'elles s'exécutent automatiquement avec des résultats envoyés par email.
+
+## Listing des requêtes
+
+La page de listing des requêtes affiche toutes les requêtes enregistrées :
+
+| Colonne | Description |
+|--------|-------------|
+| **Saved Query** | Le nom de la requête. |
+| **Schedule** | La planification configurée (Daily, Weekly, Monthly, Custom ou aucune). |
+| **Next Scheduled Run** | Quand la requête s'exécutera automatiquement pour la prochaine fois. |
+| **Last Update** | La dernière modification de la requête. |
+
+Cliquez sur **Explore data** pour accéder à la page [Data Exploration](/fr/product-guide/analytics/data-exploration).
+
+## Enregistrer une requête
+
+Depuis la page Data Exploration, cliquez sur **Save query** pour ouvrir la fenêtre d'enregistrement :
+
+<Steps>
+  <Step title="Nommer la requête">
+    Saisissez un **Saved query name** pour l'identifier dans le listing.
+  </Step>
+  <Step title="Configurer la planification (optionnel)">
+    Activez **Schedule automatic runs and email results to selected recipients** pour activer la planification.
+
+    | Champ | Description |
+    |-------|-------------|
+    | **Frequency** | Choisissez la fréquence d'exécution : Daily, Weekly, Monthly ou Custom. |
+    | **Weekdays** (Weekly) | Sélectionnez les jours de la semaine où la requête doit s'exécuter. |
+    | **Days** (Monthly) | Sélectionnez les jours du calendrier où la requête doit s'exécuter. |
+    | **CRON Expression** (Custom) | Syntaxe CRON avancée pour les planifications personnalisées. |
+    | **Email recipients** | Personnes qui recevront les résultats par email. |
+  </Step>
+  <Step title="Enregistrer">
+    Cliquez sur **Save** pour créer la requête enregistrée.
+  </Step>
+</Steps>
+
+## Modifier une requête
+
+Cliquez sur le menu d'actions d'une requête enregistrée et sélectionnez **Edit** pour mettre à jour :
+
+- Le nom de la requête.
+- La configuration de la planification.
+- Les destinataires des emails.
+
+Cliquez sur **Update** pour enregistrer les modifications.
+
+## Supprimer une requête
+
+1. Cliquez sur le menu d'actions et sélectionnez **Delete**.
+2. Une boîte de dialogue de confirmation vous demande de saisir le nom de la requête pour confirmer.
+3. Cliquez sur **Delete** pour supprimer définitivement la requête.
+
+<Warning>
+  Supprimer une requête est irréversible. Toutes les exécutions planifiées et les envois par email s'arrêteront immédiatement.
+</Warning>

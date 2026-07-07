@@ -1,0 +1,99 @@
+---
+title: 'Rôles'
+description: 'Créez et configurez des rôles avec des permissions granulaires au niveau des ressources'
+---
+
+![Page de listing des rôles présentant le tableau des rôles avec les permissions](/images/account/roles-listing-v2.png)
+
+## Vue d'ensemble
+
+Un rôle est un ensemble nommé de [règles de permission](/fr/product-guide/account/permissions) qui contrôle ce qu'un utilisateur peut faire sur la plateforme. Chaque utilisateur se voit attribuer exactement un rôle. Les rôles définissent les permissions au niveau de la ressource et de l'action — par exemple, « peut créer des Workflows » ou « peut lire les statistiques ».
+
+<Info>
+  Consultez la page [Permissions](/fr/product-guide/account/permissions) pour une explication complète du fonctionnement du système de permissions, y compris la délimitation des ressources, les contraintes de Team et la matrice complète des permissions.
+</Info>
+
+## Listing des rôles
+
+La page Rôles affiche tous les rôles configurés pour votre entreprise :
+
+| Colonne | Description |
+|--------|-------------|
+| **Nom** | Le nom du rôle. |
+| **Utilisateurs** | Nombre d'utilisateurs actuellement assignés à ce rôle. |
+| **Permissions** | Nombre total de règles de permission dans le rôle. |
+
+Utilisez la barre de recherche pour trouver des rôles par nom.
+
+## Créer un rôle
+
+<Steps>
+  <Step title="Ouvrir la fenêtre de création">
+    Cliquez sur **Create role** dans le coin supérieur droit.
+  </Step>
+  <Step title="Saisir un nom de rôle">
+    Choisissez un nom descriptif qui reflète l'objectif du rôle (par exemple, « Marketing Editor », « Data Analyst », « Admin »).
+  </Step>
+  <Step title="Configurer les permissions">
+    L'éditeur de permissions affiche une matrice de **ressources** (lignes) et d'**actions** (colonnes). Activez chaque case pour accorder ou refuser la permission.
+
+    Seules les actions applicables à chaque ressource sont affichées. Par exemple, **Statistics** ne prend en charge que **Access** et **Export**, tandis que **Workflow** prend en charge **Create**, **Read**, **Update** et **Delete**.
+
+    Consultez la [matrice des permissions](/fr/product-guide/account/permissions#permissions-matrix) pour la liste complète des combinaisons disponibles.
+  </Step>
+  <Step title="Créer">
+    Cliquez sur **Create** pour enregistrer le nouveau rôle. Les utilisateurs assignés à ce rôle recevront immédiatement les permissions configurées.
+  </Step>
+</Steps>
+
+### Permissions synchronisées
+
+Certaines permissions sont automatiquement maintenues synchronisées — vous n'avez pas besoin de les configurer séparément :
+
+| Permission de ressource | Accorde automatiquement |
+|---------------------|---------------------|
+| **Content** (toute action) | La même action sur Content Font Resources |
+| **Datasource** (toute action) | La même action sur OAuth Clients |
+
+Par exemple, accorder « Create » sur Content accorde aussi « Create » sur Content Font Resources. Ces permissions synchronisées ne sont pas affichées dans l'éditeur de rôles.
+
+### Règles intégrées
+
+Chaque rôle inclut automatiquement deux règles qui ne peuvent pas être supprimées :
+
+- **Read own profile** — Chaque utilisateur peut consulter ses propres informations utilisateur.
+- **Update own profile** — Chaque utilisateur peut modifier son propre nom, mot de passe, paramètres 2FA et préférences.
+
+Ces règles s'appliquent uniquement à l'utilisateur lui-même et n'accordent pas l'accès aux profils des autres utilisateurs.
+
+## Modifier un rôle
+
+1. Cliquez sur le menu d'actions (⋮) sur la ligne d'un rôle et sélectionnez **Edit**.
+2. Mettez à jour le nom du rôle ou activez des permissions dans la matrice.
+3. Cliquez sur **Save** pour appliquer.
+
+<Warning>
+  Les modifications prennent effet immédiatement pour tous les utilisateurs assignés à ce rôle. Vérifiez l'impact avant d'enregistrer.
+</Warning>
+
+## Supprimer un rôle
+
+1. Cliquez sur le menu d'actions (⋮) et sélectionnez **Delete**.
+2. Une boîte de dialogue de confirmation avertit que l'action est irréversible.
+3. Cliquez sur **Delete** pour supprimer le rôle.
+
+<Warning>
+  Supprimer un rôle assigné à des utilisateurs retirera ces permissions. Réassignez les utilisateurs concernés à un autre rôle avant de supprimer.
+</Warning>
+
+## Exporter les rôles
+
+Cliquez sur le bouton **Export CSV** dans la barre d'outils pour télécharger un fichier CSV contenant tous les rôles et leurs règles de permission. L'export inclut :
+
+| Colonne | Description |
+|--------|-------------|
+| **Role name** | Le nom du rôle. |
+| **Resource** | Le type de ressource. |
+| **Action** | L'action (create, read, update, etc.). |
+| **Conditions** | Toute condition supplémentaire sur la règle. |
+| **Must Match** | Les contraintes de délimitation (entreprise, Team). |

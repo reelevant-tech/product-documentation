@@ -1,0 +1,114 @@
+---
+title: 'Utilisateurs'
+description: 'Invitez, modifiez et gérez les utilisateurs de la plateforme et leurs profils'
+---
+
+![Page de listing des utilisateurs présentant le tableau des utilisateurs avec les rôles et les Teams](/images/account/users-listing-v2.png)
+
+## Listing des utilisateurs
+
+La page Utilisateurs affiche tous les utilisateurs de la plateforme dans un tableau :
+
+| Colonne | Description |
+|--------|-------------|
+| **Prénom** | Le prénom de l'utilisateur. |
+| **Nom** | Le nom de l'utilisateur. |
+| **Email** | L'adresse email de l'utilisateur. |
+| **Rôle** | Le rôle assigné. |
+| **Teams** | Les Teams auxquels l'utilisateur appartient. |
+| **Permissions** | Aperçu rapide du niveau de permission de l'utilisateur. |
+| **Dernière connexion** | La dernière fois que l'utilisateur s'est connecté. |
+
+Utilisez la barre de recherche pour trouver des utilisateurs par email.
+
+## Inviter un utilisateur
+
+<Steps>
+  <Step title="Ouvrir la fenêtre d'invitation">
+    Cliquez sur le bouton **Invite users** dans le coin supérieur droit.
+  </Step>
+  <Step title="Renseigner le formulaire d'invitation">
+    | Champ | Description |
+    |-------|-------------|
+    | **Email** | L'adresse email de l'utilisateur à inviter. |
+    | **Rôle** | Sélectionnez un rôle parmi les rôles disponibles. |
+    | **Teams** | Sélectionnez un ou plusieurs Teams pour l'utilisateur. |
+  </Step>
+  <Step title="Créer l'invitation">
+    Cliquez sur **Create** pour générer l'invitation. La fenêtre affichera l'un des éléments suivants :
+
+    - **Registration URL** — Partagez cette URL avec l'utilisateur pour qu'il finalise son inscription (pour les comptes email/mot de passe).
+    - **SSO Login URL** — Partagez cette URL avec l'utilisateur pour qu'il se connecte via SSO (si le SSO est configuré).
+
+    Cliquez sur **Copy and close** pour copier l'URL dans votre presse-papiers.
+  </Step>
+</Steps>
+
+## Modifier un utilisateur
+
+Cliquez sur le menu d'actions sur la ligne d'un utilisateur et sélectionnez **Edit** pour ouvrir la fenêtre de modification :
+
+| Champ | Description |
+|-------|-------------|
+| **Prénom** | Le prénom de l'utilisateur. |
+| **Nom** | Le nom de l'utilisateur. |
+| **Rôle** | Modifiez le rôle de l'utilisateur. |
+| **Teams** | Mettez à jour les assignations de Teams. |
+
+Cliquez sur **Save** pour appliquer les modifications.
+
+## Modifier votre propre profil
+
+Cliquez sur votre propre ligne d'utilisateur ou sur votre avatar pour ouvrir la fenêtre **Edit my profile** avec des options supplémentaires :
+
+### Profil
+
+| Champ | Description |
+|-------|-------------|
+| **Prénom** | Votre prénom. |
+| **Nom** | Votre nom. |
+| **Langue** | Langue de l'interface — anglais ou français. |
+| **Thème** | Clair, Sombre ou Système. |
+
+### Changer le mot de passe
+
+| Champ | Description |
+|-------|-------------|
+| **Mot de passe actuel** | Votre mot de passe actuel. |
+| **Nouveau mot de passe** | Le nouveau mot de passe. |
+| **Confirmer le nouveau mot de passe** | Ressaisissez le nouveau mot de passe. |
+
+Cliquez sur **Change password** pour mettre à jour.
+
+### Authentification à deux facteurs
+
+Activez la 2FA pour renforcer la sécurité de votre compte :
+
+<Steps>
+  <Step title="Configurer une application d'authentification">
+    Installez une application d'authentification comme Google Authenticator ou Authy sur votre téléphone.
+  </Step>
+  <Step title="Scanner le QR code">
+    Utilisez votre application d'authentification pour scanner le QR code affiché dans la fenêtre. Vous pouvez aussi saisir manuellement la clé **Secret**.
+  </Step>
+  <Step title="Saisir le code de vérification">
+    Saisissez le code à 6 chiffres de votre application d'authentification.
+  </Step>
+  <Step title="Terminer la configuration">
+    Cliquez sur **Complete setup** pour activer la 2FA. Un message de confirmation « Two-factor authentication enabled » apparaîtra.
+  </Step>
+</Steps>
+
+## Supprimer un utilisateur
+
+1. Cliquez sur le menu d'actions et sélectionnez **Delete**.
+2. Une boîte de dialogue de confirmation vous demande de saisir un mot de confirmation.
+3. Cliquez sur **Delete** pour supprimer définitivement l'utilisateur.
+
+<Warning>
+  Supprimer un utilisateur est irréversible. L'utilisateur perdra immédiatement tout accès à la plateforme.
+</Warning>
+
+## Exporter les utilisateurs
+
+Cliquez sur **Export users** pour télécharger la liste de tous les utilisateurs sous forme de fichier.

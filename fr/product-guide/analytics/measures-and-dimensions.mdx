@@ -1,0 +1,159 @@
+---
+title: 'Référence des mesures et dimensions'
+description: "Consultez l'ensemble des mesures et dimensions Analytics disponibles dans Data Exploration"
+---
+
+![Référence des mesures et dimensions Analytics](/images/analytics/data-exploration-v2.png)
+
+## Vue d'ensemble
+
+Cette référence liste les mesures et dimensions que vous pouvez utiliser dans Data Exploration.
+
+## Mesures
+
+### Mesures des événements de Workflow
+
+| Mesure | Description |
+|---|---|
+| Average Content Generation Duration | Temps moyen pour afficher un Content. |
+| Unique Opener Count | Ouvreurs uniques. |
+| Total Opening Count | Nombre d'ouvertures contenant au moins un Content Reelevant. |
+| Repeat Content Exposition Per User | Nombre d'ouvertures par ouvreur, en moyenne. |
+| Total Display Count | Nombre d'éléments de Content Reelevant qui ont été affichés. |
+| Total Click Count | Nombre de clics sur du Content Reelevant. |
+| Unique Clicker Count | Nombre de cliqueurs uniques ayant interagi avec du Content Reelevant. |
+| Average Click Per User | Indique combien de fois une même personne clique, en moyenne. |
+| Individualized Opening Count | Nombre d'ouvreurs ayant vu au moins un Content individualisé. |
+| Individualized Display Count | Pour l'instant, un Content est considéré comme individualisé s'il résulte d'interactions de navigation. |
+| Individualized Display Rate | Part du Content individualisé parmi l'ensemble du Content. |
+| Unique Individualized Opener | Nombre d'ouvreurs ayant vu au moins un Content individualisé. |
+| Unique Individualized Opener Rate | Ratio entre les ouvreurs exposés et le total des ouvreurs. |
+| Click To Open Rate | Obtenu en rapportant l'ensemble des clics au total des ouvertures. |
+| Clicker to Opener Rate | Click-to-Opens-Rate. |
+
+### Mesures des événements d'achat
+
+| Mesure | Description |
+|---|---|
+| Total Conversion Count | Nombre de conversions ayant suivi un clic sur un Content Reelevant. |
+| Unique Buyer Count | Nombre de personnes différentes ayant acheté au moins une fois. |
+| Average Order Value | Valeur moyenne des commandes pour les conversions. |
+| Total Revenue | Chiffre d'affaires généré par les conversions. |
+| Average Revenue Per Buyer | Chiffre d'affaires moyen généré par acheteur. |
+| Order Count Per Buyer | Nombre de fois où une personne répète ses achats, en moyenne. |
+| Time To Purchase From Click | Temps moyen entre un clic sur un Content Reelevant et l'achat. |
+| Reference Count | Nombre total de références produits dans les transactions. |
+| Average Reference Count Per Basket | Nombre moyen de références produits par transaction. |
+
+### Mesures dérivées
+
+| Mesure | Description |
+|---|---|
+| Conversion Rate | Conversions par clic. |
+| Unique Conversion Rate | Taux de conversion pour les individus uniques. |
+| Click Uplift by Individualized Content | Clics moins ce que seul le Content par défaut aurait apporté. |
+| Conversions Uplift by Individualized Content | Conversions moins celles qui auraient été apportées si seul le Content par défaut avait été affiché. |
+| Revenue Uplift by Individualized Content | Chiffre d'affaires moins celui qui aurait été apporté si seul le Content par défaut avait été affiché. |
+
+## Dimensions
+
+### Dimensions des événements de Workflow
+
+| Dimension | Description |
+|---|---|
+| Workflow Name | Regrouper par Workflow. |
+| Workflow Version Id | Regrouper par version de Workflow. |
+| Is Individualized Content | Distinguer le Content personnalisé et par défaut. |
+| Device Type | Regrouper par appareil. |
+| Email client | Regrouper par client de messagerie. |
+| Message (rlvt-m) | Regrouper par l'identifiant de message. |
+| Visual Zone Number | Regrouper par position de zone. |
+| Visual Zone Type | Regrouper par type de zone. |
+| User is anonymous | Indiquer si l'utilisateur est anonyme. |
+| Interaction type | Regrouper par type d'interaction. |
+| Workflow Branch | Regrouper par la Branch utilisée. |
+| Datasource Id | Regrouper par identifiant de Datasource. |
+| Product reference | Regrouper par la référence produit. |
+| Workflow Language | Regrouper par langue de Workflow. |
+| Device OS | Regrouper par système d'exploitation de l'appareil. |
+| Used branches identifiers | Afficher les identifiants de Branch qui ont été utilisés. |
+| Last branch identifier | Afficher le dernier identifiant de Branch. |
+| Execution return code | Afficher le code de retour du Workflow. |
+| User identifier | Regrouper par l'identifiant utilisateur. |
+| UTM Source Parameter | Regrouper par la valeur UTM source. |
+| UTM Campaign Parameter | Regrouper par la valeur UTM campaign. |
+| UTM Medium Parameter | Regrouper par la valeur UTM medium. |
+
+### Dimensions des événements d'achat
+
+| Dimension | Description |
+|---|---|
+| Buyer Device Type | Regrouper par appareil de l'acheteur. |
+| Buyer OS Type | Regrouper par système d'exploitation de l'acheteur. |
+| Conversion ID | Regrouper par identifiant de conversion. |
+| Conversion source | Regrouper par la source de conversion. |
+
+### Dimensions de catégorie
+
+| Dimension | Description |
+|---|---|
+| Category ID | Regrouper par identifiant de catégorie. |
+| Category | Regrouper par nom de catégorie. |
+| `Category (Level {n})` | Regrouper par un niveau de catégorie. |
+
+### Dimensions de tag
+
+| Dimension | Description |
+|---|---|
+| `Tag: {name}` | Une dimension par clé de tag référencée. |
+
+### Dimensions d'URL et de Workflow
+
+| Dimension | Description |
+|---|---|
+| URL Parameter Value | Regrouper par une valeur de paramètre d'URL. |
+| Workflow ID | Regrouper par identifiant de Workflow. |
+| Workflow Team | Regrouper par Team. |
+| Content Name | Regrouper par nom de Content. |
+| Content Team | Regrouper par Team. |
+
+## Granularité temporelle
+
+| Option | Description |
+|---|---|
+| Day | Regrouper les résultats par jour. |
+| Week | Regrouper les résultats par semaine. |
+| Month | Regrouper les résultats par mois. |
+| Quarter | Regrouper les résultats par trimestre. |
+
+## Combiner mesures et dimensions
+
+<Warning>
+  Évitez de mélanger les mesures des événements de Workflow avec les dimensions des événements d'achat. Elles décrivent des parties différentes de vos données.
+</Warning>
+
+<Info>
+  Lorsque vous utilisez Workflow Branch, ajoutez aussi Content Name ou Workflow Name. Cela rend le résultat plus facile à lire.
+</Info>
+
+<Info>
+  Lorsque vous utilisez URL Parameter Value, ajoutez un filtre de paramètre d'URL. Cela permet de garder les résultats centrés sur un seul paramètre.
+</Info>
+
+<Info>
+  Pour une vue plus complète du comportement au moment de l'ouverture, consultez [Mise en cache et proxys des clients de messagerie](/fr/advanced-guide/email-rendering/caching-and-proxies).
+</Info>
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
+    Construisez des analyses personnalisées avec des mesures, des dimensions et des filtres.
+  </Card>
+  <Card title="Saved Queries" icon="floppy-disk" href="/fr/product-guide/analytics/saved-queries">
+    Enregistrez et réutilisez des configurations de rapports pour les analyses récurrentes.
+  </Card>
+  <Card title="Dashboards" icon="chart-pie" href="/fr/product-guide/analytics/dashboards">
+    Comparez ces chiffres avec vos tableaux de bord prêts à l'emploi.
+  </Card>
+</CardGroup>
