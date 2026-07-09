@@ -1,0 +1,152 @@
+---
+title: 'Configurer les destinations BigQuery'
+description: 'Répliquez un Datasource de tracking vers BigQuery en configurant ses options de stockage via l''API datasources'
+---
+
+## Vue d'ensemble
+
+Les Datasources de tracking (événements web et achats) stockent leurs événements dans Reelevant et peuvent aussi les répliquer vers une table BigQuery pour un usage en aval (par exemple, le scoring). Vous configurez cette réplication — et les options de stockage sous-jacentes — avec l'étape `patch` de l'API datasources.
+
+<Warning>
+  Ceci n'est supporté que pour les deux Datasources de tracking : **événements web** et **achats**. L'API accepte techniquement l'appel sur n'importe quel Datasource exposant `storageOptions`, mais la réplication n'est câblée que pour les Datasources de tracking, et le `dataset` de destination est restreint à votre dataset d'événements de tracking Reelevant (`tracking_events_production_eu`). Tout autre `dataset` est rejeté.
+</Warning>
+
+## Configurer les destinations
+
+Envoyez une étape `patch` au Datasource. Seules les sous-options que vous incluez sont mises à jour ; le reste est laissé intact.
+
+<CodeGroup>
+
+```bash cURL
+curl -XPOST https://api.reelevant.com/v2/datasources/6718ad69056acb425fbecf1a/steps \
+  -H "Authorization: Bearer ${access_token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "patch",
+    "payload": {
+      "storageOptions": {
+        "destinations": [
+          {
+            "type": "bigquery",
+            "dataset": "tracking_events_production_eu",
+            "tableName": "tracking_events_{COMPANY_ID}",
+            "deduplicateOptions": { "enabled": true }
+          }
+        ]
+      }
+    }
+  }'
+```
+
+```typescript TypeScript
+const datasourceId = '6718ad69056acb425fbecf1a'
+
+const response = await fetch(
+  `https://api.reelevant.com/v2/datasources/${datasourceId}/steps`,
+  {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: 'patch',
+      payload: {
+        storageOptions: {
+          destinations: [
+            {
+              type: 'bigquery',
+              dataset: 'tracking_events_production_eu',
+              tableName: 'tracking_events_{COMPANY_ID}',
+              deduplicateOptions: { enabled: true },
+            },
+          ],
+        },
+      },
+    }),
+  },
+)
+
+if (!response.ok) {
+  const error = await response.json()
+  throw new Error(`Failed to configure destinations: ${error.message}`)
+}
+```
+
+</CodeGroup>
+
+Un appel réussi retourne l'étape courante et les suivantes :
+
+```json
+{
+  "status": "success",
+  "data": {
+    "current": { "name": "patch" },
+    "next": []
+  }
+}
+```
+
+## Référence du payload
+
+L'objet `payload.storageOptions` accepte les sous-options suivantes. Chaque champ est optionnel — n'envoyez que ce que vous voulez modifier.
+
+| Champ | Type | Requis | Défaut | Description |
+|-------|------|--------|--------|-------------|
+| `destinations` | `Destination[]` | Non | `[]` | Tables BigQuery vers lesquelles le Datasource réplique. Remplace la liste actuelle. |
+| `partitionCount` | `number` | Non | `1` | Nombre de partitions du stockage sous-jacent. Entier positif. |
+| `segments.offlineSize` | `number` | Non | `390000` | Taille des segments offline. Entier positif. |
+| `segments.realtimeSize` | `number` | Non | `390000` | Taille des segments realtime. Entier positif. |
+| `segments.offlineReplication` | `number` | Non | `2` | Facteur de réplication des segments offline. Entier positif. |
+| `segments.realtimeReplication` | `number` | Non | `1` | Facteur de réplication des segments realtime. Entier positif. |
+| `retention.value` | `number` | Non | `90` | Durée de rétention. Entier positif. |
+| `retention.unit` | `"DAYS"` | Non | `"DAYS"` | Unité de rétention. Seul `"DAYS"` est supporté. |
+
+Chaque entrée de `destinations` est une table BigQuery :
+
+| Champ | Type | Requis | Description |
+|-------|------|--------|-------------|
+| `type` | `"bigquery"` | Oui | Type de destination. Seul `"bigquery"` est supporté. |
+| `dataset` | `string` | Oui | Dataset cible. Doit être votre dataset d'événements de tracking (`tracking_events_production_eu`). |
+| `tableName` | `string` | Oui | Table cible. Peut contenir les placeholders `{COMPANY_ID}` et `{DATASOURCE_ID}`, substitués au moment de l'écriture. Sinon, uniquement lettres, chiffres et underscores. |
+| `deduplicateOptions.enabled` | `boolean` | Non | Si `true`, un job périodique déduplique les lignes de la table (la clé de dédup dépend de la table : achats ou événements web). |
+
+<Note>
+  `partitionCount`, `segments` et `retention` sont appliqués à la table sous-jacente lors de la prochaine étape `validate`. Les `destinations` sont persistées immédiatement.
+</Note>
+
+## Lire la configuration actuelle
+
+Récupérez les étapes du Datasource pour relire les `storageOptions` stockées depuis la valeur de l'étape `patch` :
+
+```bash cURL
+curl https://api.reelevant.com/v2/datasources/6718ad69056acb425fbecf1a/steps \
+  -H "Authorization: Bearer ${access_token}"
+```
+
+## Gestion des erreurs
+
+Des options de stockage invalides sont rejetées avec un HTTP `400` et le code d'erreur `1028` (`InvalidStorageOptions`). Le champ `data.reason` explique ce qui a échoué.
+
+```json
+{
+  "status": "fail",
+  "error_code": 1028,
+  "message": "The storage options are invalid",
+  "data": {
+    "reason": "`destinations[0].dataset` must be \"tracking_events_production_eu\""
+  }
+}
+```
+
+Raisons fréquentes :
+
+- `dataset` n'est pas le dataset d'événements de tracking.
+- `tableName` est vide ou contient des caractères autres que lettres, chiffres, underscores et les placeholders autorisés.
+- `partitionCount`, une valeur `segments.*` ou `retention.value` n'est pas un entier positif.
+- `destinations` contient deux entrées avec le même `dataset.tableName`.
+
+## Liens connexes
+
+- [Authentification](/fr/developer-docs/api-reference/authentication)
+- [Référence de l'API datasources](/fr/api-reference/introduction)
