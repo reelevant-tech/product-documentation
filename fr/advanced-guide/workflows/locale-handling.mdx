@@ -1,0 +1,143 @@
+---
+title: 'Gestion de la locale et du multi-pays'
+description: "Comment la locale circule de DataHub au Runner, pilote le filtrage automatique des produits et devient obligatoire à l'intégration"
+---
+
+## Vue d'ensemble
+
+Reelevant traite la **locale** comme une dimension de premier plan pour la personnalisation multi-pays. Une locale identifie à la fois une langue et un pays, au format canonique `lang_COUNTRY` (par exemple `fr_FR`, `fr_CH`, `en_US`, `pt_PT`).
+
+La locale circule à travers trois couches :
+
+1. **DataHub** — vous mappez un field locale sur votre Datasource, et les valeurs sont normalisées au format `lang_COUNTRY` à l'ingestion.
+2. **Exécution du Workflow** — le Runner résout une seule locale par exécution et l'utilise pour filtrer automatiquement les Datasources produit.
+3. **Intégration** — lorsqu'un Workflow utilise la locale de façon multi-pays certaine, le panneau d'intégration rend la sélection de locale obligatoire avant d'afficher les liens.
+
+Cette page décrit chaque couche et la façon dont elles s'articulent.
+
+## Le format de la locale
+
+| Propriété | Détail |
+|---|---|
+| **Format** | `lang_COUNTRY` — deux lettres minuscules pour la langue, un underscore, deux lettres majuscules pour le pays. |
+| **Exemples** | `fr_FR`, `fr_CH`, `fr_BE`, `en_US`, `en_GB`, `pt_PT`, `de_DE`. |
+| **Pourquoi le pays compte** | Une même langue peut cibler plusieurs pays (`fr_FR` vs `fr_CH`). La locale les distingue pour le filtrage et l'analyse. |
+
+<Info>
+  À l'ingestion, DataHub normalise les valeurs brutes au format `lang_COUNTRY`. Un code pays (`FR`), un code alpha-3 (`FRA`) ou un nom de pays (`France`) est converti vers la locale correspondante lorsque c'est possible. Une valeur déjà au format `lang_COUNTRY` est conservée telle quelle.
+</Info>
+
+## Couche 1 — Mapper la locale dans DataHub
+
+La locale est un type de field que vous assignez lors du [field mapping](/fr/advanced-guide/datahub/field-mapping). Deux catégories de Datasource portent la locale :
+
+- **Datasource produit** — le field locale indique à quel pays appartient une ligne produit. C'est ce qui alimente le filtrage automatique (voir Couche 2).
+- **Datasource CRM** — le field locale indique le pays du destinataire. Le Workflow connaît ainsi la locale de chaque utilisateur sans paramètre d'URL.
+
+### Catalogues produit localisés
+
+Un Datasource produit **localisé** est un catalogue où un même produit existe dans plusieurs pays, une ligne par locale. Pour ce sous-type, mapper un **field locale est obligatoire** — vous ne pouvez pas terminer la configuration sans lui.
+
+Lors de la configuration d'un Datasource produit localisé, une étape dédiée vous demande d'assigner la valeur de locale pour chaque source. Cela garantit que chaque ligne résout vers une valeur `lang_COUNTRY` valide.
+
+<Warning>
+  Un Datasource produit localisé sans field locale mappé ne peut pas être enregistré. Si votre catalogue mélange plusieurs pays dans un seul flux, mappez la colonne qui identifie le pays ; si vous chargez un flux par pays, assignez la locale de chaque flux dans l'étape de configuration.
+</Warning>
+
+### Exemple concret
+
+Un distributeur importe un catalogue de chaussures couvrant trois pays. Après le mapping, le field locale contient :
+
+| product_id | name | price | locale |
+|---|---|---|---|
+| SKU-100 | Running Shoe | 89.90 | `fr_FR` |
+| SKU-100 | Running Shoe | 95.00 | `fr_CH` |
+| SKU-100 | Running Shoe | 79.90 | `pt_PT` |
+| SKU-200 | Trail Shoe | 120.00 | `fr_FR` |
+| SKU-200 | Trail Shoe | 110.00 | `pt_PT` |
+
+Le même produit (`SKU-100`) apparaît trois fois, une par locale, chacune avec son propre prix. C'est la locale qui permet au Runner de ne renvoyer que la ligne correspondant au pays du destinataire.
+
+## Couche 2 — Filtrage automatique à l'exécution
+
+Lorsqu'un Workflow s'exécute, le Runner résout **une** locale pour l'exécution, puis l'applique automatiquement.
+
+### Comment le Runner résout la locale
+
+Le Runner examine ces sources dans l'ordre et utilise la première qui fournit une valeur :
+
+| Priorité | Source | Description |
+|---|---|---|
+| 1 | **Node Context** | Si un node Context est sur la Branch exécutée, sa sortie `user.locale` est utilisée. |
+| 2 | **Datasource CRM** | Le field locale mappé sur un node Datasource CRM fournit la locale du destinataire. |
+| 3 | **Paramètre `rlvt-l`** | La locale passée sur le lien d'intégration (voir Couche 3). |
+| 4 | **Aucune** | Si rien ne résout, la locale reste vide. |
+
+<Info>
+  Le node Context lit lui-même le field locale du CRM lorsqu'il est présent, si bien que les sources 1 et 2 concordent généralement. La distinction ne compte que lorsque le node Context n'est pas sur la Branch exécutée — le Runner lit alors directement le node CRM.
+</Info>
+
+### Comment les Datasources produit l'utilisent
+
+Un node Datasource produit ajoute automatiquement un filtre de locale à sa query — vous ne le configurez pas. Le node ne conserve que les lignes dont le field locale est égal à la locale résolue.
+
+Avec le catalogue ci-dessus, si la locale résolue est `pt_PT`, le node ne renvoie que les lignes portugaises :
+
+| product_id | name | price | locale |
+|---|---|---|---|
+| SKU-100 | Running Shoe | 79.90 | `pt_PT` |
+| SKU-200 | Trail Shoe | 110.00 | `pt_PT` |
+
+<Warning>
+  Si aucune locale ne résout, un node Datasource produit se rabat sur le filtre `fr_FR`. Un catalogue localisé sans ligne `fr_FR` ne renverrait alors rien. Assurez-vous toujours que la locale est fournie — via un Datasource CRM, un node Context ou le paramètre `rlvt-l` — pour tout Workflow qui lit un catalogue localisé.
+</Warning>
+
+### Le paramètre `rlvt-l`
+
+`rlvt-l` est le paramètre d'URL réservé qui transporte la locale du visiteur dans le Workflow. Il accepte une valeur `lang_COUNTRY` (`rlvt-l=pt_PT`) ; un simple code pays comme `rlvt-l=PT` est converti vers la locale correspondante lorsque c'est possible.
+
+`rlvt-l` participe aussi au cache : le Runner inclut la locale dans la clé de cache de rendu, de sorte qu'un affichage construit pour un pays n'est jamais servi à un autre.
+
+## Couche 3 — Sélection de locale obligatoire à l'intégration
+
+Le [panneau d'intégration](/fr/product-guide/workflows/integration) génère les liens que vous collez dans votre canal. Pour les Workflows multi-pays, il impose la sélection de la locale afin que les liens ne soient jamais livrés sans pays.
+
+### Quand la sélection de locale est requise
+
+Le panneau inspecte le Workflow et marque la locale comme **obligatoire** dans l'un ou l'autre de ces cas :
+
+| Cas | Condition | Sélecteur de locale affiché |
+|---|---|---|
+| **Locale de Datasource** | Un Datasource produit ou CRM expose un field locale avec **plus d'une** valeur distincte. | Une liste des valeurs de locale réellement présentes dans les données (par ex. `fr_FR`, `pt_PT`). |
+| **Dépendance au Context** | Le Workflow lit `context.user.locale` (la sortie locale du node Context). | Un sélecteur de pays complet, car les pays possibles sont ouverts. |
+
+Une valeur de locale unique sur un Datasource ne déclenche **pas** l'obligation — avec un seul pays, il n'y a rien à choisir.
+
+### Ce que voit l'utilisateur
+
+Tant que la sélection de locale est requise et qu'aucune locale n'est choisie, le panneau masque les liens d'intégration et affiche un message invitant l'utilisateur à choisir une locale. Une fois la locale sélectionnée, les liens apparaissent avec `rlvt-l` ajouté automatiquement.
+
+<Info>
+  Ce verrouillage existe pour que chaque lien intégré soit attribuable à un pays dans vos statistiques. Sans lui, un Workflow multi-pays pourrait être intégré sans locale, et ses ouvertures ne seraient pas taguées par pays.
+</Info>
+
+### Exemple concret
+
+Reprenez le catalogue localisé ci-dessus, utilisé par une campagne Portugal. Le Datasource produit expose trois locales (`fr_FR`, `fr_CH`, `pt_PT`), donc le panneau considère la locale comme obligatoire. L'utilisateur sélectionne `pt_PT`, et chaque lien généré se termine par `&rlvt-l=pt_PT`. À l'exécution, le Runner lit `rlvt-l`, filtre le catalogue sur les lignes portugaises et tague l'ouverture comme `pt_PT` dans l'analyse.
+
+## Résumé de bout en bout
+
+| Étape | Ce qui se passe |
+|---|---|
+| **Import** | Field locale mappé dans DataHub ; valeurs normalisées en `lang_COUNTRY`. Obligatoire pour les catalogues produit localisés. |
+| **Intégration** | Le panneau détecte l'usage multi-pays, impose la sélection de locale et ajoute `rlvt-l` aux liens. |
+| **Exécution** | Le Runner résout la locale (node Context → Datasource CRM → `rlvt-l`), filtre les lignes produit et met en cache par locale. |
+| **Analyse** | La locale résolue est attachée à l'ouverture, de sorte que les statistiques sont ventilées par pays. |
+
+## Pages associées
+
+- [Field Mapping](/fr/advanced-guide/datahub/field-mapping)
+- [Nodes Datasource](/fr/advanced-guide/workflows/data-nodes/datasources)
+- [URL Parameter](/fr/advanced-guide/workflows/data-nodes/url-parameter)
+- [Intégration du Workflow](/fr/product-guide/workflows/integration)
+- [Cache et proxies des clients email](/fr/advanced-guide/email-rendering/caching-and-proxies)
