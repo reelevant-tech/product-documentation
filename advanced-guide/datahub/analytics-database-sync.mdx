@@ -80,12 +80,19 @@ For example, if your Datasource has a field named `event_time` with type **Datet
 
 ## Configuring a Destination
 
-Destinations are configured in the Datasource's **storage options**. Each destination specifies:
+Destinations are configured in the Datasource's **storage options**. Each destination targets a single table in the analytics database:
 
 | Parameter | Description |
 |-----------|-------------|
-| **Dataset** | The target dataset (database schema) where the table resides. |
-| **Table name** | The table name. Supports the `{COMPANY_ID}` placeholder for multi-tenant isolation. |
+| **Dataset** | The target dataset (database schema). Destinations can only target Reelevant's tracking events dataset — any other dataset is rejected. |
+| **Table name** | The table name. Supports the `{COMPANY_ID}` and `{DATASOURCE_ID}` placeholders, which are substituted per company and Datasource. Otherwise limited to letters, numbers, and underscores. |
+| **Deduplication** | Optional. Enables periodic deduplication for this destination (see [Deduplication](#deduplication)). |
+
+Only the sub-options you provide are updated; the rest of the storage options are left unchanged. Two destinations cannot point at the same dataset and table name.
+
+<Info>
+  Destinations are only supported for the two tracking table types — **purchases** and **website events**. While the storage options technically accept a destination on any Datasource, synchronisation is only wired up for tracking Datasources.
+</Info>
 
 Once a destination is configured, synchronisation begins automatically on the next Datasource execution or event ingestion.
 

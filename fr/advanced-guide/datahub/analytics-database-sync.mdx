@@ -80,12 +80,19 @@ Par exemple, si votre Datasource possède un champ nommé `event_time` avec le t
 
 ## Configuration d'une destination
 
-Les destinations sont configurées dans les **options de stockage** de la Datasource. Chaque destination spécifie :
+Les destinations sont configurées dans les **options de stockage** de la Datasource. Chaque destination cible une seule table dans la base analytique :
 
 | Paramètre | Description |
 |-----------|-------------|
-| **Dataset** | Le dataset cible (schéma de base de données) dans lequel la table réside. |
-| **Table name** | Le nom de la table. Supporte le placeholder `{COMPANY_ID}` pour l'isolation multi-tenant. |
+| **Dataset** | Le dataset cible (schéma de base de données). Les destinations ne peuvent cibler que le dataset d'événements de tracking de Reelevant — tout autre dataset est rejeté. |
+| **Table name** | Le nom de la table. Supporte les placeholders `{COMPANY_ID}` et `{DATASOURCE_ID}`, substitués par company et par Datasource. Sinon limité aux lettres, chiffres et underscores. |
+| **Déduplication** | Optionnel. Active la déduplication périodique pour cette destination (voir [Déduplication](#déduplication)). |
+
+Seules les sous-options que vous fournissez sont mises à jour ; le reste des options de stockage est laissé inchangé. Deux destinations ne peuvent pas pointer vers le même couple dataset / nom de table.
+
+<Info>
+  Les destinations ne sont supportées que pour les deux types de table de tracking — **achats** et **événements web**. Bien que les options de stockage acceptent techniquement une destination sur n'importe quelle Datasource, la synchronisation n'est câblée que pour les Datasources de tracking.
+</Info>
 
 Une fois la destination configurée, la synchronisation démarre automatiquement lors de la prochaine exécution de la Datasource ou ingestion d'événements.
 
