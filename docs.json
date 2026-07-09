@@ -409,7 +409,8 @@
                 "group": "Guides",
                 "pages": [
                   "developer-docs/guides/browser-extension-integration",
-                  "developer-docs/guides/browser-extension-content-script"
+                  "developer-docs/guides/browser-extension-content-script",
+                  "developer-docs/guides/configure-bigquery-destinations"
                 ]
               },
               {
@@ -830,7 +831,8 @@
                 "group": "Guides",
                 "pages": [
                   "fr/developer-docs/guides/browser-extension-integration",
-                  "fr/developer-docs/guides/browser-extension-content-script"
+                  "fr/developer-docs/guides/browser-extension-content-script",
+                  "fr/developer-docs/guides/configure-bigquery-destinations"
                 ]
               },
               {
