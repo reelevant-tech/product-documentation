@@ -94,6 +94,29 @@ Seules les sous-options que vous fournissez sont mises à jour ; le reste des op
   Les destinations ne sont supportées que pour les deux types de table de tracking — **achats** et **événements web**. Bien que les options de stockage acceptent techniquement une destination sur n'importe quelle Datasource, la synchronisation n'est câblée que pour les Datasources de tracking.
 </Info>
 
+Les destinations sont définies via l'étape `patch` de la Datasource. L'exemple ci-dessous configure une destination BigQuery unique pour la Datasource `6718ad69056acb425fbecf1a` (remplacez le bearer token par votre access token — voir [Authentification](/fr/developer-docs/api-reference/authentication)) :
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/6718ad69056acb425fbecf1a/steps \
+  -H "Authorization: Bearer ${access_token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "patch",
+    "payload": {
+      "storageOptions": {
+        "destinations": [
+          {
+            "type": "bigquery",
+            "dataset": "tracking_events_production_eu",
+            "tableName": "tracking_events_{COMPANY_ID}",
+            "deduplicateOptions": { "enabled": true }
+          }
+        ]
+      }
+    }
+  }'
+```
+
 Une fois la destination configurée, la synchronisation démarre automatiquement lors de la prochaine exécution de la Datasource ou ingestion d'événements.
 
 ## Déduplication
