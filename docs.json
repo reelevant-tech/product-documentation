@@ -245,7 +245,8 @@
                       "advanced-guide/workflows/logic-nodes/real-time-testing"
                     ]
                   },
-                  "advanced-guide/workflows/settings"
+                  "advanced-guide/workflows/settings",
+                  "advanced-guide/workflows/locale-handling"
                 ]
               },
               {
@@ -665,7 +666,8 @@
                       "fr/advanced-guide/workflows/logic-nodes/real-time-testing"
                     ]
                   },
-                  "fr/advanced-guide/workflows/settings"
+                  "fr/advanced-guide/workflows/settings",
+                  "fr/advanced-guide/workflows/locale-handling"
                 ]
               },
               {
