@@ -1,0 +1,100 @@
+---
+title: 'Editable Datasources'
+description: 'Maintain business data directly inside Reelevant by editing rows in place, with validation defined per field'
+---
+
+## Overview
+
+An Editable datasource lets your team maintain data directly inside Reelevant instead of relying on external spreadsheets. Rows are added, edited, and removed in place from the [Queries](/advanced-guide/datahub/queries) page, and each field enforces the validation you defined during [Field Mapping](/advanced-guide/datahub/field-mapping).
+
+This is designed to replace the spreadsheets many teams keep as ad-hoc datasources — pricing grids, store directories, editorial calendars, or reference tables — with data that lives on the platform and is immediately queryable in your [Workflows](/product-guide/workflows/overview) and [Contents](/product-guide/contents/data-binding).
+
+<Info>
+  Editable datasources are a distinct datasource type. You cannot convert an existing pull-based datasource (URL, file, BigQuery, etc.) into an Editable one — create a new datasource of the Editable type instead.
+</Info>
+
+## Before you begin
+
+- Create a datasource of the **Editable** type.
+- Define your fields and their types in the [Field Mapping](/advanced-guide/datahub/field-mapping) step. The types you choose determine the input controls and the validation applied when someone edits a row.
+- Reelevant maintains a hidden primary key for every row. You never see or manage it — it is used internally to match edits and deletions to the correct row.
+
+## Editing rows in place
+
+Open the [Queries](/advanced-guide/datahub/queries) page for the datasource. Each row exposes inline controls:
+
+| Action | Description |
+|--------|-------------|
+| **Add row** | Appends an empty row at the bottom of the table with every field ready to edit. |
+| **Edit a cell** | Click any cell to edit its value directly. The control adapts to the field type. |
+| **Save** | A checkmark appears on a row once it has unsaved changes. Click it to persist the row. |
+| **Cancel** | Discards the unsaved changes on a new row and removes it from the table. |
+| **Delete** | Removes an existing row from the datasource. |
+
+Editing happens entirely within the table — there is no separate form or modal. Clicking outside the table cancels the edit currently in progress and keeps your unsaved value on the row until you save or discard it.
+
+<Info>
+  After saving, the row stays visible immediately even though the underlying data store takes a short time to ingest the change. You do not need to reload the Queries page to see your edit.
+</Info>
+
+## Input controls by field type
+
+The control shown when you edit a cell depends on the field's type:
+
+| Field type | Control |
+|------------|---------|
+| **Text** | A single-line text input. |
+| **Number** (and Price, Latitude, Longitude, etc.) | A numeric input that rejects non-numeric characters. |
+| **Boolean** | A switch toggled on or off. |
+| **Datetime** | A date and time picker. |
+| **Array** (text or number lists) | A multi-tag input — type a value and press Enter to add it as a tag, then keep adding more. |
+| **Enum** (a field with a defined set of allowed values) | A dropdown limited to the allowed values. |
+
+## Field validation
+
+Validation rules are derived from each field's type and options, and are enforced the moment you edit a cell. A row cannot be saved while any of its edited fields fail validation.
+
+| Rule | Applies to | Behaviour |
+|------|------------|-----------|
+| Required | Fields marked as required | The value cannot be empty. |
+| Datetime required | **Datetime** fields | A value is mandatory. Nullable date fields are exempt and may be left empty. |
+| Valid number | **Number** fields | Non-numeric characters are blocked as you type. |
+| Price positive | **Price** fields | The value must be zero or greater. |
+| Latitude range | **Latitude** fields | The value must be between -90 and 90. |
+| Longitude range | **Longitude** fields | The value must be between -180 and 180. |
+| Valid URL | **URL** and **Image URL** fields | The value must be a valid web address. |
+| Allowed values | **Enum** fields | The value must be one of the defined options. |
+
+<Info>
+  When you edit an existing row, only the fields you actually changed are validated. Unchanged fields — including an empty nullable date — never block the save.
+</Info>
+
+## Sorting
+
+Only **Number** and **Datetime** fields can be sorted in the results table. Text, boolean, array, and other field types are not sortable, because sorting a multi-value field (such as an array) is not supported.
+
+## Dates and timezones
+
+Datetime values are stored in UTC. By default they are entered and displayed in UTC.
+
+If a field's mapping defines a specific locale, values are interpreted and displayed in that locale's timezone, while still being stored in UTC underneath. In that case the timezone is shown next to the value so there is no ambiguity.
+
+| Scenario | Input | Display |
+|----------|-------|---------|
+| No locale defined | UTC | UTC |
+| Locale defined (e.g. France) | Local time in that timezone | Local time, with the timezone shown |
+
+## Importing data in bulk
+
+For larger updates you can import a file rather than editing row by row:
+
+| Action | Description |
+|--------|-------------|
+| **Import file** | Upload a file to bulk-import rows into the datasource. |
+| **Reset data** | When enabled during import, replaces all existing data instead of appending to it. |
+
+The import flow has three steps: upload, verify data, and send. Use **Reset data** with care — it clears every existing row before importing the new file.
+
+<Warning>
+  **Reset data** permanently removes all current rows in the datasource before importing. Only enable it when you intend to fully replace the dataset.
+</Warning>

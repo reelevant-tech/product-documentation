@@ -1,0 +1,100 @@
+---
+title: 'Datasources éditables'
+description: 'Maintenez vos données métier directement dans Reelevant en éditant les lignes sur place, avec une validation définie par champ'
+---
+
+## Présentation
+
+Une Datasource éditable permet à votre équipe de maintenir ses données directement dans Reelevant plutôt que de dépendre de tableurs externes. Les lignes sont ajoutées, modifiées et supprimées sur place depuis la page [Requêtes](/fr/advanced-guide/datahub/queries), et chaque champ applique la validation que vous avez définie lors du [Field Mapping](/fr/advanced-guide/datahub/field-mapping).
+
+L'objectif est de remplacer les tableurs que de nombreuses équipes conservent comme Datasources improvisées — grilles tarifaires, annuaires de magasins, calendriers éditoriaux ou tables de référence — par des données qui vivent sur la plateforme et sont immédiatement interrogeables dans vos [Workflows](/fr/product-guide/workflows/overview) et vos [Contents](/fr/product-guide/contents/data-binding).
+
+<Info>
+  Les Datasources éditables sont un type de Datasource distinct. Vous ne pouvez pas convertir une Datasource existante basée sur un import (URL, fichier, BigQuery, etc.) en Datasource éditable — créez plutôt une nouvelle Datasource de type éditable.
+</Info>
+
+## Avant de commencer
+
+- Créez une Datasource de type **éditable**.
+- Définissez vos champs et leurs types dans l'étape [Field Mapping](/fr/advanced-guide/datahub/field-mapping). Les types choisis déterminent les contrôles de saisie et la validation appliquée lorsqu'une ligne est modifiée.
+- Reelevant maintient une clé primaire masquée pour chaque ligne. Vous ne la voyez ni ne la gérez jamais — elle sert en interne à associer les modifications et suppressions à la bonne ligne.
+
+## Édition des lignes sur place
+
+Ouvrez la page [Requêtes](/fr/advanced-guide/datahub/queries) de la Datasource. Chaque ligne expose des contrôles intégrés :
+
+| Action | Description |
+|--------|-------------|
+| **Add row** | Ajoute une ligne vide en bas du tableau, chaque champ prêt à être édité. |
+| **Edit a cell** | Cliquez sur une cellule pour éditer directement sa valeur. Le contrôle s'adapte au type du champ. |
+| **Save** | Une coche apparaît sur une ligne dès qu'elle contient des modifications non enregistrées. Cliquez dessus pour enregistrer la ligne. |
+| **Cancel** | Annule les modifications d'une nouvelle ligne et la retire du tableau. |
+| **Delete** | Supprime une ligne existante de la Datasource. |
+
+L'édition se fait entièrement dans le tableau — il n'y a ni formulaire ni fenêtre séparée. Cliquer en dehors du tableau annule l'édition en cours et conserve votre valeur non enregistrée sur la ligne jusqu'à ce que vous l'enregistriez ou l'abandonniez.
+
+<Info>
+  Après l'enregistrement, la ligne reste visible immédiatement même si le stockage sous-jacent met un court instant à intégrer la modification. Vous n'avez pas besoin de recharger la page Requêtes pour voir votre modification.
+</Info>
+
+## Contrôles de saisie par type de champ
+
+Le contrôle affiché lors de l'édition d'une cellule dépend du type du champ :
+
+| Type de champ | Contrôle |
+|---------------|----------|
+| **Text** | Un champ de saisie sur une ligne. |
+| **Number** (et Price, Latitude, Longitude, etc.) | Un champ numérique qui refuse les caractères non numériques. |
+| **Boolean** | Un interrupteur activé ou désactivé. |
+| **Datetime** | Un sélecteur de date et d'heure. |
+| **Array** (listes de texte ou de nombres) | Un champ multi-tags — saisissez une valeur et appuyez sur Entrée pour l'ajouter comme tag, puis continuez à en ajouter. |
+| **Enum** (un champ avec un ensemble de valeurs autorisées) | Un menu déroulant limité aux valeurs autorisées. |
+
+## Validation des champs
+
+Les règles de validation découlent du type et des options de chaque champ, et sont appliquées dès que vous éditez une cellule. Une ligne ne peut pas être enregistrée tant qu'un de ses champs modifiés échoue à la validation.
+
+| Règle | S'applique à | Comportement |
+|-------|--------------|--------------|
+| Requis | Champs marqués comme requis | La valeur ne peut pas être vide. |
+| Datetime requis | Champs **Datetime** | Une valeur est obligatoire. Les champs de date nullable en sont exemptés et peuvent rester vides. |
+| Nombre valide | Champs **Number** | Les caractères non numériques sont bloqués à la saisie. |
+| Prix positif | Champs **Price** | La valeur doit être supérieure ou égale à zéro. |
+| Plage de latitude | Champs **Latitude** | La valeur doit être comprise entre -90 et 90. |
+| Plage de longitude | Champs **Longitude** | La valeur doit être comprise entre -180 et 180. |
+| URL valide | Champs **URL** et **Image URL** | La valeur doit être une adresse web valide. |
+| Valeurs autorisées | Champs **Enum** | La valeur doit être l'une des options définies. |
+
+<Info>
+  Lorsque vous modifiez une ligne existante, seuls les champs que vous avez réellement changés sont validés. Les champs inchangés — y compris une date nullable vide — ne bloquent jamais l'enregistrement.
+</Info>
+
+## Tri
+
+Seuls les champs **Number** et **Datetime** peuvent être triés dans le tableau de résultats. Les champs de type texte, booléen, array et autres ne sont pas triables, car le tri d'un champ à valeurs multiples (comme un array) n'est pas pris en charge.
+
+## Dates et fuseaux horaires
+
+Les valeurs Datetime sont stockées en UTC. Par défaut, elles sont saisies et affichées en UTC.
+
+Si le mapping d'un champ définit une locale spécifique, les valeurs sont interprétées et affichées dans le fuseau horaire de cette locale, tout en restant stockées en UTC en interne. Dans ce cas, le fuseau horaire est affiché à côté de la valeur pour lever toute ambiguïté.
+
+| Cas | Saisie | Affichage |
+|-----|--------|-----------|
+| Aucune locale définie | UTC | UTC |
+| Locale définie (ex. France) | Heure locale dans ce fuseau | Heure locale, avec le fuseau affiché |
+
+## Import de données en masse
+
+Pour les mises à jour plus volumineuses, vous pouvez importer un fichier plutôt que d'éditer ligne par ligne :
+
+| Action | Description |
+|--------|-------------|
+| **Import file** | Uploader un fichier pour importer des lignes en masse dans la Datasource. |
+| **Reset data** | Lorsqu'elle est activée pendant l'import, remplace toutes les données existantes au lieu de les compléter. |
+
+Le flux d'import comprend trois étapes : upload, vérification des données et envoi. Utilisez **Reset data** avec précaution — cela efface toutes les lignes existantes avant d'importer le nouveau fichier.
+
+<Warning>
+  **Reset data** supprime définitivement toutes les lignes actuelles de la Datasource avant l'import. Ne l'activez que si vous souhaitez remplacer entièrement le jeu de données.
+</Warning>
