@@ -1,25 +1,30 @@
 ---
 title: 'Locale and Multi-Country Handling'
-description: 'How locale flows from DataHub to the Runner, drives automatic product filtering, and when locale selection becomes mandatory at integration'
+description: 'How locale flows from DataHub to the Personalisation Engine, drives automatic product filtering and countdown timezones, and when locale selection becomes mandatory at integration'
 ---
 
 ## Overview
 
 Reelevant treats **locale** as a first-class dimension for multi-country personalisation. A locale identifies both a language and a country, written in the canonical `lang_COUNTRY` format (for example `fr_FR`, `fr_CH`, `en_US`, `pt_PT`).
 
-Locale flows through three layers:
+Locale flows through four layers:
 
 1. **DataHub** — you map a locale field on your Datasource, and values are normalised to `lang_COUNTRY` on ingestion.
-2. **Workflow runtime** — the Runner resolves a single locale per execution and uses it to filter product Datasources automatically.
-3. **Integration** — when a Workflow is certain to use locale in a multi-country way, the integration panel makes locale selection mandatory before it reveals the links.
+2. **Workflow runtime** — the Personalisation Engine resolves a single locale per execution and uses it to filter product Datasources automatically.
+3. **Content** — components such as Countdown can adapt to the resolved locale, for instance to end a timer at the same local time in every country.
+4. **Integration** — when a Workflow is certain to use locale in a multi-country way, the integration panel makes locale selection mandatory before it reveals the links.
 
 This page explains each layer and how they connect.
 
 ## The locale format
 
+A locale is a **language identifier** and a **country identifier** joined by an underscore, in the form `lang_COUNTRY`.
+
 | Property | Detail |
 |---|---|
-| **Format** | `lang_COUNTRY` — two lowercase language letters, an underscore, two uppercase country letters. |
+| **Language part** | Lowercase [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) two-letter code (e.g. `fr`, `en`, `pt`). |
+| **Country part** | Uppercase [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two-letter code (e.g. `FR`, `CH`, `US`). |
+| **Separator** | An underscore (`_`) between the two, following the Unicode/CLDR locale identifier convention. |
 | **Examples** | `fr_FR`, `fr_CH`, `fr_BE`, `en_US`, `en_GB`, `pt_PT`, `de_DE`. |
 | **Why country matters** | The same language can target several countries (`fr_FR` vs. `fr_CH`). Locale keeps them separate for filtering and analytics. |
 
@@ -56,25 +61,25 @@ A retailer imports a shoe catalog covering three countries. After mapping, the l
 | SKU-200 | Trail Shoe | 120.00 | `fr_FR` |
 | SKU-200 | Trail Shoe | 110.00 | `pt_PT` |
 
-The same product (`SKU-100`) appears three times, once per locale, each with its own price. Locale is what lets the Runner return only the row for the recipient's country.
+The same product (`SKU-100`) appears three times, once per locale, each with its own price. Locale is what lets the Personalisation Engine return only the row for the recipient's country.
 
 ## Layer 2 — Automatic filtering at runtime
 
-When a Workflow runs, the Runner resolves **one** locale for the execution, then applies it automatically.
+When a Workflow runs, the Personalisation Engine resolves **one** locale for the execution, then applies it automatically.
 
-### How the Runner resolves locale
+### How locale is resolved
 
-The Runner checks these sources in order and uses the first that yields a value:
+The Personalisation Engine checks these sources in order and uses the first that yields a value:
 
 | Priority | Source | Description |
 |---|---|---|
 | 1 | **Context node** | If a Context node is in the executed Branch, its `user.locale` output is used. |
 | 2 | **CRM Datasource** | The locale field mapped on a CRM Datasource node provides the recipient's locale. |
-| 3 | **`rlvt-l` parameter** | The locale passed on the integration link (see Layer 3). |
+| 3 | **`rlvt-l` parameter** | The locale passed on the integration link (see Layer 4). |
 | 4 | **None** | If nothing resolves, locale is left empty. |
 
 <Info>
-  The Context node itself reads the CRM locale field when present, so sources 1 and 2 usually agree. The distinction matters only when the Context node is not on the executed Branch — the Runner then falls back to reading the CRM node directly.
+  The Context node itself reads the CRM locale field when present, so sources 1 and 2 usually agree. The distinction matters only when the Context node is not on the executed Branch — the Personalisation Engine then falls back to reading the CRM node directly.
 </Info>
 
 ### How product Datasources use it
@@ -94,11 +99,23 @@ Using the catalog above, if the resolved locale is `pt_PT`, the node returns onl
 
 ### The `rlvt-l` parameter
 
-`rlvt-l` is the reserved URL parameter that carries the visitor's locale into the Workflow. It accepts a `lang_COUNTRY` value (`rlvt-l=pt_PT`); a bare country code such as `rlvt-l=PT` is converted to the matching locale where possible.
+`rlvt-l` is the reserved URL parameter that carries the visitor's locale into the Workflow. Its value must always be a full ISO locale in `lang_COUNTRY` form (`rlvt-l=pt_PT`). A partial value such as a bare country code is not a valid locale and should not be used.
 
-`rlvt-l` also participates in caching: the Runner includes the locale in the render cache key, so a display built for one country is never served to another.
+## Layer 3 — Locale-driven content
 
-## Layer 3 — Mandatory locale selection at integration
+Some Content components adapt to the resolved locale. The clearest example is the **Countdown** timezone behaviour.
+
+### Countdown timezone
+
+The [Countdown component](/product-guide/contents/components/countdown) has a **Use user's local timezone** option. When enabled, the countdown ends at the same local time in every country, instead of the same absolute instant.
+
+Behind the scenes, enabling this option binds the countdown to `context.user.locale`. The Personalisation Engine derives the viewer's country from the resolved locale and adjusts the end time to that country's timezone. For example, a sale set to end at 18:00 local time expires at 18:00 in France (`fr_FR`) and at 18:00 in Portugal (`pt_PT`), even though those are different absolute moments.
+
+<Info>
+  Because the Countdown reads `context.user.locale`, a Workflow using this option is treated as a multi-country Workflow — locale selection becomes mandatory at integration (see Layer 4). Email client caching can still freeze a countdown image; see [Email client caching and proxies](/advanced-guide/email-rendering/caching-and-proxies).
+</Info>
+
+## Layer 4 — Mandatory locale selection at integration
 
 The [integration panel](/product-guide/workflows/integration) generates the links you paste into your channel. For multi-country Workflows it enforces locale selection so links are never shipped without a country.
 
@@ -109,7 +126,7 @@ The panel inspects the Workflow and marks locale as **required** in either of th
 | Case | Condition | Locale picker shown |
 |---|---|---|
 | **Datasource locale** | A product or CRM Datasource exposes a locale field with **more than one** distinct value. | A list of the actual locale values found in the data (e.g. `fr_FR`, `pt_PT`). |
-| **Context dependency** | The Workflow reads `context.user.locale` (the Context node's locale output). | A full country picker, because the possible countries are open-ended. |
+| **Context dependency** | A Node or a Content component in the Workflow reads `context.user.locale` — for example a Countdown with **Use user's local timezone** enabled. | A full country picker, because the possible countries are open-ended. |
 
 A single locale value on a Datasource does **not** trigger the requirement — with only one country, there is nothing to choose.
 
@@ -123,7 +140,7 @@ While locale selection is required and no locale is chosen, the panel hides the 
 
 ### Worked example
 
-Take the Localised catalog above, used by a Portugal campaign. The product Datasource exposes three locales (`fr_FR`, `fr_CH`, `pt_PT`), so the panel treats locale as required. The user selects `pt_PT`, and every generated link ends with `&rlvt-l=pt_PT`. At runtime the Runner reads `rlvt-l`, filters the catalog to the Portuguese rows, and tags the open as `pt_PT` in analytics.
+Take the Localised catalog above, used by a Portugal campaign. The product Datasource exposes three locales (`fr_FR`, `fr_CH`, `pt_PT`), so the panel treats locale as required. The user selects `pt_PT`, and every generated link ends with `&rlvt-l=pt_PT`. At runtime the Personalisation Engine reads `rlvt-l`, filters the catalog to the Portuguese rows, and tags the open as `pt_PT` in analytics.
 
 ## End-to-end summary
 
@@ -131,7 +148,7 @@ Take the Localised catalog above, used by a Portugal campaign. The product Datas
 |---|---|
 | **Import** | Locale field mapped in DataHub; values normalised to `lang_COUNTRY`. Localised product catalogs require it. |
 | **Integrate** | Panel detects multi-country use, enforces locale selection, and appends `rlvt-l` to the links. |
-| **Run** | Runner resolves locale (Context node → CRM Datasource → `rlvt-l`), filters product rows, and caches per locale. |
+| **Run** | Personalisation Engine resolves locale (Context node → CRM Datasource → `rlvt-l`), filters product rows, and adapts locale-driven content. |
 | **Analyse** | The resolved locale is attached to the open, so statistics are broken down by country. |
 
 ## Related pages
@@ -139,5 +156,6 @@ Take the Localised catalog above, used by a Portugal campaign. The product Datas
 - [Field Mapping](/advanced-guide/datahub/field-mapping)
 - [Datasource Nodes](/advanced-guide/workflows/data-nodes/datasources)
 - [URL Parameter](/advanced-guide/workflows/data-nodes/url-parameter)
+- [Countdown Component](/product-guide/contents/components/countdown)
 - [Workflow Integration](/product-guide/workflows/integration)
 - [Email Client Caching and Proxies](/advanced-guide/email-rendering/caching-and-proxies)

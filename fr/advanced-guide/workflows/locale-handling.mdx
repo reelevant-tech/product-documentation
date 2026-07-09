@@ -1,25 +1,30 @@
 ---
 title: 'Gestion de la locale et du multi-pays'
-description: "Comment la locale circule de DataHub au Runner, pilote le filtrage automatique des produits et devient obligatoire à l'intégration"
+description: "Comment la locale circule de DataHub au Personalisation Engine, pilote le filtrage automatique des produits et le fuseau horaire des countdowns, et devient obligatoire à l'intégration"
 ---
 
 ## Vue d'ensemble
 
 Reelevant traite la **locale** comme une dimension de premier plan pour la personnalisation multi-pays. Une locale identifie à la fois une langue et un pays, au format canonique `lang_COUNTRY` (par exemple `fr_FR`, `fr_CH`, `en_US`, `pt_PT`).
 
-La locale circule à travers trois couches :
+La locale circule à travers quatre couches :
 
 1. **DataHub** — vous mappez un field locale sur votre Datasource, et les valeurs sont normalisées au format `lang_COUNTRY` à l'ingestion.
-2. **Exécution du Workflow** — le Runner résout une seule locale par exécution et l'utilise pour filtrer automatiquement les Datasources produit.
-3. **Intégration** — lorsqu'un Workflow utilise la locale de façon multi-pays certaine, le panneau d'intégration rend la sélection de locale obligatoire avant d'afficher les liens.
+2. **Exécution du Workflow** — le Personalisation Engine résout une seule locale par exécution et l'utilise pour filtrer automatiquement les Datasources produit.
+3. **Content** — des composants comme Countdown peuvent s'adapter à la locale résolue, par exemple pour faire expirer un compte à rebours à la même heure locale dans chaque pays.
+4. **Intégration** — lorsqu'un Workflow utilise la locale de façon multi-pays certaine, le panneau d'intégration rend la sélection de locale obligatoire avant d'afficher les liens.
 
 Cette page décrit chaque couche et la façon dont elles s'articulent.
 
 ## Le format de la locale
 
+Une locale est un **identifiant de langue** et un **identifiant de pays** joints par un underscore, sous la forme `lang_COUNTRY`.
+
 | Propriété | Détail |
 |---|---|
-| **Format** | `lang_COUNTRY` — deux lettres minuscules pour la langue, un underscore, deux lettres majuscules pour le pays. |
+| **Partie langue** | Code [ISO 639-1](https://fr.wikipedia.org/wiki/Liste_des_codes_ISO_639-1) à deux lettres minuscules (par ex. `fr`, `en`, `pt`). |
+| **Partie pays** | Code [ISO 3166-1 alpha-2](https://fr.wikipedia.org/wiki/ISO_3166-1_alpha-2) à deux lettres majuscules (par ex. `FR`, `CH`, `US`). |
+| **Séparateur** | Un underscore (`_`) entre les deux, selon la convention d'identifiant de locale Unicode/CLDR. |
 | **Exemples** | `fr_FR`, `fr_CH`, `fr_BE`, `en_US`, `en_GB`, `pt_PT`, `de_DE`. |
 | **Pourquoi le pays compte** | Une même langue peut cibler plusieurs pays (`fr_FR` vs `fr_CH`). La locale les distingue pour le filtrage et l'analyse. |
 
@@ -56,25 +61,25 @@ Un distributeur importe un catalogue de chaussures couvrant trois pays. Après l
 | SKU-200 | Trail Shoe | 120.00 | `fr_FR` |
 | SKU-200 | Trail Shoe | 110.00 | `pt_PT` |
 
-Le même produit (`SKU-100`) apparaît trois fois, une par locale, chacune avec son propre prix. C'est la locale qui permet au Runner de ne renvoyer que la ligne correspondant au pays du destinataire.
+Le même produit (`SKU-100`) apparaît trois fois, une par locale, chacune avec son propre prix. C'est la locale qui permet au Personalisation Engine de ne renvoyer que la ligne correspondant au pays du destinataire.
 
 ## Couche 2 — Filtrage automatique à l'exécution
 
-Lorsqu'un Workflow s'exécute, le Runner résout **une** locale pour l'exécution, puis l'applique automatiquement.
+Lorsqu'un Workflow s'exécute, le Personalisation Engine résout **une** locale pour l'exécution, puis l'applique automatiquement.
 
-### Comment le Runner résout la locale
+### Comment la locale est résolue
 
-Le Runner examine ces sources dans l'ordre et utilise la première qui fournit une valeur :
+Le Personalisation Engine examine ces sources dans l'ordre et utilise la première qui fournit une valeur :
 
 | Priorité | Source | Description |
 |---|---|---|
 | 1 | **Node Context** | Si un node Context est sur la Branch exécutée, sa sortie `user.locale` est utilisée. |
 | 2 | **Datasource CRM** | Le field locale mappé sur un node Datasource CRM fournit la locale du destinataire. |
-| 3 | **Paramètre `rlvt-l`** | La locale passée sur le lien d'intégration (voir Couche 3). |
+| 3 | **Paramètre `rlvt-l`** | La locale passée sur le lien d'intégration (voir Couche 4). |
 | 4 | **Aucune** | Si rien ne résout, la locale reste vide. |
 
 <Info>
-  Le node Context lit lui-même le field locale du CRM lorsqu'il est présent, si bien que les sources 1 et 2 concordent généralement. La distinction ne compte que lorsque le node Context n'est pas sur la Branch exécutée — le Runner lit alors directement le node CRM.
+  Le node Context lit lui-même le field locale du CRM lorsqu'il est présent, si bien que les sources 1 et 2 concordent généralement. La distinction ne compte que lorsque le node Context n'est pas sur la Branch exécutée — le Personalisation Engine lit alors directement le node CRM.
 </Info>
 
 ### Comment les Datasources produit l'utilisent
@@ -94,11 +99,23 @@ Avec le catalogue ci-dessus, si la locale résolue est `pt_PT`, le node ne renvo
 
 ### Le paramètre `rlvt-l`
 
-`rlvt-l` est le paramètre d'URL réservé qui transporte la locale du visiteur dans le Workflow. Il accepte une valeur `lang_COUNTRY` (`rlvt-l=pt_PT`) ; un simple code pays comme `rlvt-l=PT` est converti vers la locale correspondante lorsque c'est possible.
+`rlvt-l` est le paramètre d'URL réservé qui transporte la locale du visiteur dans le Workflow. Sa valeur doit toujours être une locale ISO complète au format `lang_COUNTRY` (`rlvt-l=pt_PT`). Une valeur partielle comme un simple code pays n'est pas une locale valide et ne doit pas être utilisée.
 
-`rlvt-l` participe aussi au cache : le Runner inclut la locale dans la clé de cache de rendu, de sorte qu'un affichage construit pour un pays n'est jamais servi à un autre.
+## Couche 3 — Content piloté par la locale
 
-## Couche 3 — Sélection de locale obligatoire à l'intégration
+Certains composants de Content s'adaptent à la locale résolue. L'exemple le plus clair est le fuseau horaire du **Countdown**.
+
+### Fuseau horaire du Countdown
+
+Le [composant Countdown](/fr/product-guide/contents/components/countdown) dispose d'une option **Use user's local timezone**. Lorsqu'elle est activée, le compte à rebours se termine à la même heure locale dans chaque pays, au lieu du même instant absolu.
+
+En coulisses, activer cette option lie le countdown à `context.user.locale`. Le Personalisation Engine déduit le pays du visiteur de la locale résolue et ajuste l'heure de fin au fuseau horaire de ce pays. Par exemple, une promotion censée se terminer à 18h00 heure locale expire à 18h00 en France (`fr_FR`) et à 18h00 au Portugal (`pt_PT`), même s'il s'agit d'instants absolus différents.
+
+<Info>
+  Comme le Countdown lit `context.user.locale`, un Workflow utilisant cette option est considéré comme multi-pays — la sélection de locale devient obligatoire à l'intégration (voir Couche 4). Le cache des clients email peut tout de même figer une image de countdown ; voir [Cache et proxies des clients email](/fr/advanced-guide/email-rendering/caching-and-proxies).
+</Info>
+
+## Couche 4 — Sélection de locale obligatoire à l'intégration
 
 Le [panneau d'intégration](/fr/product-guide/workflows/integration) génère les liens que vous collez dans votre canal. Pour les Workflows multi-pays, il impose la sélection de la locale afin que les liens ne soient jamais livrés sans pays.
 
@@ -109,7 +126,7 @@ Le panneau inspecte le Workflow et marque la locale comme **obligatoire** dans l
 | Cas | Condition | Sélecteur de locale affiché |
 |---|---|---|
 | **Locale de Datasource** | Un Datasource produit ou CRM expose un field locale avec **plus d'une** valeur distincte. | Une liste des valeurs de locale réellement présentes dans les données (par ex. `fr_FR`, `pt_PT`). |
-| **Dépendance au Context** | Le Workflow lit `context.user.locale` (la sortie locale du node Context). | Un sélecteur de pays complet, car les pays possibles sont ouverts. |
+| **Dépendance au Context** | Un Node ou un composant de Content du Workflow lit `context.user.locale` — par exemple un Countdown avec **Use user's local timezone** activé. | Un sélecteur de pays complet, car les pays possibles sont ouverts. |
 
 Une valeur de locale unique sur un Datasource ne déclenche **pas** l'obligation — avec un seul pays, il n'y a rien à choisir.
 
@@ -123,7 +140,7 @@ Tant que la sélection de locale est requise et qu'aucune locale n'est choisie, 
 
 ### Exemple concret
 
-Reprenez le catalogue localisé ci-dessus, utilisé par une campagne Portugal. Le Datasource produit expose trois locales (`fr_FR`, `fr_CH`, `pt_PT`), donc le panneau considère la locale comme obligatoire. L'utilisateur sélectionne `pt_PT`, et chaque lien généré se termine par `&rlvt-l=pt_PT`. À l'exécution, le Runner lit `rlvt-l`, filtre le catalogue sur les lignes portugaises et tague l'ouverture comme `pt_PT` dans l'analyse.
+Reprenez le catalogue localisé ci-dessus, utilisé par une campagne Portugal. Le Datasource produit expose trois locales (`fr_FR`, `fr_CH`, `pt_PT`), donc le panneau considère la locale comme obligatoire. L'utilisateur sélectionne `pt_PT`, et chaque lien généré se termine par `&rlvt-l=pt_PT`. À l'exécution, le Personalisation Engine lit `rlvt-l`, filtre le catalogue sur les lignes portugaises et tague l'ouverture comme `pt_PT` dans l'analyse.
 
 ## Résumé de bout en bout
 
@@ -131,7 +148,7 @@ Reprenez le catalogue localisé ci-dessus, utilisé par une campagne Portugal. L
 |---|---|
 | **Import** | Field locale mappé dans DataHub ; valeurs normalisées en `lang_COUNTRY`. Obligatoire pour les catalogues produit localisés. |
 | **Intégration** | Le panneau détecte l'usage multi-pays, impose la sélection de locale et ajoute `rlvt-l` aux liens. |
-| **Exécution** | Le Runner résout la locale (node Context → Datasource CRM → `rlvt-l`), filtre les lignes produit et met en cache par locale. |
+| **Exécution** | Le Personalisation Engine résout la locale (node Context → Datasource CRM → `rlvt-l`), filtre les lignes produit et adapte le Content piloté par la locale. |
 | **Analyse** | La locale résolue est attachée à l'ouverture, de sorte que les statistiques sont ventilées par pays. |
 
 ## Pages associées
@@ -139,5 +156,6 @@ Reprenez le catalogue localisé ci-dessus, utilisé par une campagne Portugal. L
 - [Field Mapping](/fr/advanced-guide/datahub/field-mapping)
 - [Nodes Datasource](/fr/advanced-guide/workflows/data-nodes/datasources)
 - [URL Parameter](/fr/advanced-guide/workflows/data-nodes/url-parameter)
+- [Composant Countdown](/fr/product-guide/contents/components/countdown)
 - [Intégration du Workflow](/fr/product-guide/workflows/integration)
 - [Cache et proxies des clients email](/fr/advanced-guide/email-rendering/caching-and-proxies)

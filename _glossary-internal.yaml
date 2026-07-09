@@ -60,10 +60,10 @@ terms:
     technical_name: "Resource Group"
     note: "Use 'Team' in all user-facing docs. Add '(Resource Group)' in parentheses in developer-docs only."
 
-  runner:
-    canonical_name: "Runner"
-    definition: "The backend service that executes a Workflow and returns personalised content."
-    synonyms_forbidden: ["engine", "executor", "processor", "server"]
+  personalisation_engine:
+    canonical_name: "Personalisation Engine"
+    definition: "The service that executes a Workflow and returns personalised content. Formerly referred to as the Runner."
+    synonyms_forbidden: ["executor", "processor", "server"]
 
   uplift:
     canonical_name: "Uplift"
