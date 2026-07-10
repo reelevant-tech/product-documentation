@@ -33,6 +33,26 @@ After the markers are processed, the matching records stop appearing in Datasour
   Record-level anonymisation is not available for Append or Override strategies, or for PubSub and Proxy ingestion modes.
 </Info>
 
+## Submit an anonymisation request
+
+Set `DATASOURCE_ID` to the Datasource identifier and `ACCESS_TOKEN` to an OAuth 2.0 access token. See [Authentication](/developer-docs/api-reference/authentication) for token creation.
+
+The `ids` array contains the primary key values to anonymise.
+
+```bash
+DATASOURCE_ID="replace-with-datasource-id"
+ACCESS_TOKEN="replace-with-access-token"
+
+curl --request POST "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/anonymize" \
+  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{ "ids": ["C-1042", "C-2088"] }'
+```
+
+A `200` status confirms that Reelevant accepted the request for asynchronous processing. The `anonymized` field reports the number of submitted identifiers.
+
+Requests with an empty `ids` array or more than 10,000 values return `400`.
+
 ## Worked example
 
 A CRM Datasource uses `customer_id` as its primary key and Upsert as its update strategy.
