@@ -1,28 +1,112 @@
 ---
 title: 'Analytics Settings'
-description: 'Configure attribution period and other analytics settings for your company'
+description: 'Configure attribution and custom tags for consistent Branch qualification and analytics'
 ---
+
+The Analytics Settings page lets administrators configure attribution and custom tags for consistent [Branch](/glossary) qualification and analysis.
 
 ![Analytics settings page showing attribution period configuration](/images/analytics/settings-v2.png)
 
-## Overview
+Open **Analytics > Settings**, then select **General** or **Tags**.
 
-The Analytics Settings page lets you configure global analytics parameters for your company. Access it from the **Settings** link in the Analytics sidebar navigation.
+## General settings
 
-## Attribution Period
+### Attribution period
 
-The attribution period defines the number of hours used to attribute conversions to a [workflow](/product-guide/workflows/overview) interaction. When a user clicks on Reelevant content and later makes a purchase within this time window, the conversion is credited to that content interaction.
+The attribution period defines how long a conversion can be credited to a [Workflow](/glossary) interaction.
+
+When someone clicks Reelevant [Content](/glossary) and purchases within this period, Analytics credits the conversion to that interaction.
 
 | Field | Description |
 |-------|-------------|
 | **Attribution period (hours)** | The lookback window in hours (e.g., 720 for 30 days). Leave empty to use the default attribution period. |
 
-### Configuring the Attribution Period
+#### Configure the attribution period
 
 1. Navigate to **Analytics > Settings**.
-2. Enter the desired number of hours in the **Attribution period (hours)** field.
-3. Click **Save**.
+2. Select **General**.
+3. Enter the desired number of hours in the **Attribution period (hours)** field.
+4. Click **Save**.
 
 <Info>
-  Changing the attribution period affects how conversions are counted in the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration) queries. A longer period captures more conversions but may include less directly attributable purchases.
+  Changing this period affects the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). A longer period may include less directly related purchases.
 </Info>
+
+## Tags
+
+Tags give each Branch controlled labels that your team can use consistently across Workflows and Analytics.
+
+Each tag contains a **tag key** (the label to organise) and a list of **values**. For example, `Campaign objective` can contain `Acquisition` and `Retention`.
+
+Only custom tags appear in this tab. Reelevant-managed tags are not editable.
+
+### Understand cardinality
+
+Cardinality controls how many values from one tag key can be assigned to the same Branch. It does not limit how many values you create.
+
+| Cardinality | Behaviour in a Workflow | Example |
+|---|---|---|
+| **Single** | Each Branch can use one value from this tag key. | `Campaign objective: Retention` cannot be combined with `Campaign objective: Acquisition` on the same Branch. |
+| **Multiple** | Each Branch can use several values from this tag key. | `Audience context: Birthday` and `Audience context: Loyalty` can both describe the same Branch. |
+
+Imagine a Workflow with a Branch that displays birthday Content to loyalty members.
+
+- Set `Campaign objective` to **Single** when that Branch must have one objective.
+- Set `Audience context` to **Multiple** when both `Birthday` and `Loyalty` apply.
+
+<Tip>
+  Choose **Single** for values that exclude each other. Choose **Multiple** when several values can describe the same Branch.
+</Tip>
+
+### Create a tag key
+
+1. Navigate to **Analytics > Settings**.
+2. Select **Tags**.
+3. Click **Add tag**.
+4. Enter a unique **Name**.
+5. Add an optional **Description** to help teammates use the tag correctly.
+6. Choose **Single** or **Multiple** under **Cardinality**.
+7. Click **Create tag key**.
+
+Tag key names must be unique. The platform ignores capitalisation and leading or trailing spaces when checking names.
+
+### Add values
+
+1. Find the tag key.
+2. Click the plus icon beside **Values**.
+3. Enter a unique value name and an optional description.
+4. Click **Add value**.
+
+Value names must be unique within their tag key. You can expand **Values** to review every available choice.
+
+The platform also ignores capitalisation and leading or trailing spaces when checking value names.
+
+### Edit or delete tags
+
+Use the pencil icon to change a tag key, its description, or its cardinality.
+
+Expand **Values**, then use each value's action icons to edit or delete it.
+
+<Warning>
+  Deleting a tag key also deletes all its values. Deleted tag keys and values cannot be restored.
+</Warning>
+
+### Use tags in Workflows and Analytics
+
+Created tags become available when you [qualify a Branch](/product-guide/workflows/branches). Users select controlled values but cannot create new ones there.
+
+In Analytics, use tag keys and values to filter results or compare performance across your qualification choices.
+
+## What's Next?
+
+<CardGroup cols={3}>
+  <Card title="Branches" icon="code-branch" href="/product-guide/workflows/branches">
+    Assign your controlled tag values while qualifying Branches.
+  </Card>
+  <Card title="Data Exploration" icon="magnifying-glass-chart" href="/product-guide/analytics/data-exploration">
+    Filter and compare performance with your tag keys.
+  </Card>
+  <Card title="Measures and Dimensions" icon="table-list" href="/product-guide/analytics/measures-and-dimensions">
+    Review the tag dimensions available for analysis.
+  </Card>
+</CardGroup>
