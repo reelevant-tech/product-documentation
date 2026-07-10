@@ -1,35 +1,30 @@
 ---
 title: 'Analytics Settings'
-description: 'Configure attribution and custom tags for consistent Branch qualification and analytics'
+description: 'Configure attribution period and other analytics settings for your company'
 ---
-
-The Analytics Settings page lets administrators configure attribution and custom tags for consistent [Branch](/glossary) qualification and analysis.
 
 ![Analytics settings page showing attribution period configuration](/images/analytics/settings-v2.png)
 
-Open **Analytics > Settings**, then select **General** or **Tags**.
+## Overview
 
-## General settings
+The Analytics Settings page lets you configure global analytics parameters for your company. Access it from the **Settings** link in the Analytics sidebar navigation.
 
-### Attribution period
+## Attribution Period
 
-The attribution period defines how long a conversion can be credited to a [Workflow](/glossary) interaction.
-
-When someone clicks Reelevant [Content](/glossary) and purchases within this period, Analytics credits the conversion to that interaction.
+The attribution period defines the number of hours used to attribute conversions to a [workflow](/product-guide/workflows/overview) interaction. When a user clicks on Reelevant content and later makes a purchase within this time window, the conversion is credited to that content interaction.
 
 | Field | Description |
 |-------|-------------|
 | **Attribution period (hours)** | The lookback window in hours (e.g., 720 for 30 days). Leave empty to use the default attribution period. |
 
-#### Configure the attribution period
+### Configuring the Attribution Period
 
 1. Navigate to **Analytics > Settings**.
-2. Select **General**.
-3. Enter the desired number of hours in the **Attribution period (hours)** field.
-4. Click **Save**.
+2. Enter the desired number of hours in the **Attribution period (hours)** field.
+3. Click **Save**.
 
 <Info>
-  Changing this period affects the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). A longer period may include less directly related purchases.
+  Changing the attribution period affects how conversions are counted in the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration) queries. A longer period captures more conversions but may include less directly attributable purchases.
 </Info>
 
 ## Tags
