@@ -63,7 +63,18 @@ Chaque Branch peut se voir attribuer une catégorie à n'importe quel niveau de 
 
 - **Cohérence** — Tous les membres de l'équipe utilisent le même vocabulaire pour qualifier les Branches.
 - **Analytics** — Les tableaux de bord Analytics peuvent filtrer et regrouper les métriques par catégorie à n'importe quel niveau de la hiérarchie.
-- **Résolution ascendante** — Les catégories de Branches sont héritées en aval dans le graphe du Workflow. Si une Branch parente est qualifiée, les Branches filles héritent de ce contexte de catégorie.
+
+### Résolution des catégories le long d'une Branch
+
+Une catégorie continue sur les Branches en aval jusqu'à ce qu'une qualification ultérieure la remplace.
+
+Si plusieurs qualifications affectent la même Branch finale, Analytics utilise la catégorie la plus proche de l'Output Node.
+
+Par exemple, une qualification précédente peut définir `Promotionnel`. Une qualification ultérieure sur la même Branch finale peut la remplacer par `Fidélité`.
+
+<Tip>
+  Suivez le Workflow du Channel vers l'Output Node. La dernière catégorie rencontrée est utilisée pour la Branch finale.
+</Tip>
 
 ## Tags de Branch
 
@@ -76,7 +87,7 @@ Par exemple :
 
 ### D'où viennent les tags
 
-Les administrateurs définissent la liste des clés et valeurs de tags disponibles pour votre compte. Lors de la qualification d'une Branch, vous choisissez dans cette liste partagée — vous ne pouvez pas créer de nouveaux tags à la volée.
+Les administrateurs définissent les clés et valeurs disponibles dans les [paramètres Analytics](/fr/product-guide/analytics/settings). Lors de la qualification, vous choisissez dans cette liste partagée.
 
 Cela garantit une cohérence du tagging au sein de votre équipe. Tout le monde analyse les performances avec le même vocabulaire.
 
@@ -88,8 +99,12 @@ Chaque clé de tag accepte une ou plusieurs valeurs par Branch :
 
 | Type de clé | Comportement | Exemple |
 |---|---|---|
-| Valeur unique | Choisir une nouvelle valeur remplace la précédente | `Individualization: Yes` ou `No` |
-| Valeurs multiples | Vous pouvez ajouter plusieurs valeurs pour la même clé | `Lifecycle: Birthday` et `Lifecycle: Welcome` |
+| Valeur unique | La Branch finale conserve la valeur la plus en aval pour cette clé. | `Objectif : Fidélisation` remplace `Objectif : Acquisition` défini en amont. |
+| Valeurs multiples | La Branch finale conserve toutes les valeurs attribuées. | `Lifecycle: Birthday` et `Lifecycle: Welcome` |
+
+La valeur la plus en aval est celle attribuée au plus près de l'Output Node.
+
+Cette résolution correspond à celle des catégories. Elle intervient lorsque des qualifications imbriquées attribuent différentes valeurs uniques à la même Branch finale.
 
 ### Tags personnalisés et tags gérés par le système
 

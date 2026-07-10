@@ -63,7 +63,18 @@ Each branch can be assigned a category at any level of the tree.
 
 - **Consistency** — All team members use the same vocabulary when qualifying branches.
 - **Analytics** — Analytics dashboards can filter and group metrics by category at any level of the hierarchy.
-- **Upstream resolution** — Branch categories are inherited downstream through the workflow graph. If a parent branch is qualified, child branches inherit that category context.
+
+### How categories resolve along a Branch
+
+A category continues along downstream Branches until a later qualification replaces it.
+
+If several qualifications affect the same final Branch, Analytics uses the category closest to the Output Node.
+
+For example, an earlier qualification can set `Promotional`. A later qualification on the same final Branch can replace it with `Loyalty`.
+
+<Tip>
+  Think from the Channel towards the Output Node. The last category encountered is the category used for the final Branch.
+</Tip>
 
 ## Branch Tags
 
@@ -76,7 +87,7 @@ For example:
 
 ### Where Tags Come From
 
-Administrators define the list of available tag keys and values for your account. When qualifying a branch, you pick from this shared list — you cannot create new tags on the fly.
+Administrators define available tag keys and values in [Analytics Settings](/product-guide/analytics/settings). When qualifying a Branch, you pick from this shared list.
 
 This keeps tagging consistent across your team. Everyone analyses performance with the same vocabulary.
 
@@ -88,8 +99,12 @@ Each tag key accepts either one value or several values per branch:
 
 | Key type | Behaviour | Example |
 |---|---|---|
-| Single value | Picking a new value replaces the previous one | `Individualization: Yes` or `No` |
-| Multiple values | You can add several values from the same key | `Lifecycle: Birthday` and `Lifecycle: Welcome` |
+| Single value | The final Branch keeps the most downstream value for that key. | A downstream `Objective: Retention` replaces an earlier `Objective: Acquisition`. |
+| Multiple values | The final Branch keeps every value assigned along it. | `Lifecycle: Birthday` and `Lifecycle: Welcome` |
+
+The most downstream value is the value assigned closest to the Output Node.
+
+This resolution matches Branch categories. It matters when nested qualifications apply different values from one single-value key to the same final Branch.
 
 ### Custom and System-Managed Tags
 

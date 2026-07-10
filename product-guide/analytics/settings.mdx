@@ -36,6 +36,8 @@ When someone clicks Reelevant [Content](/glossary) and purchases within this per
 
 Tags give each Branch controlled labels that your team can use consistently across Workflows and Analytics.
 
+![Analytics Settings Tags tab showing tag keys, cardinality badges, and values](/images/analytics/tag-settings.png)
+
 Each tag contains a **tag key** (the label to organise) and a list of **values**. For example, `Campaign objective` can contain `Acquisition` and `Retention`.
 
 Only custom tags appear in this tab. Reelevant-managed tags are not editable.
@@ -44,18 +46,23 @@ Only custom tags appear in this tab. Reelevant-managed tags are not editable.
 
 Cardinality controls how many values from one tag key can be assigned to the same Branch. It does not limit how many values you create.
 
+![New tag key drawer showing the Single and Multiple cardinality choices](/images/analytics/tag-cardinality.png)
+
 | Cardinality | Behaviour in a Workflow | Example |
 |---|---|---|
-| **Single** | Each Branch can use one value from this tag key. | `Campaign objective: Retention` cannot be combined with `Campaign objective: Acquisition` on the same Branch. |
-| **Multiple** | Each Branch can use several values from this tag key. | `Audience context: Birthday` and `Audience context: Loyalty` can both describe the same Branch. |
+| **Single** | Each final Branch resolves to one value from this tag key. | If several values occur along one Branch, the most downstream value is used. |
+| **Multiple** | Each final Branch keeps every value assigned along it. | `Audience context: Birthday` and `Audience context: Loyalty` can both describe the same Branch. |
 
-Imagine a Workflow with a Branch that displays birthday Content to loyalty members.
+**Most downstream** means closest to the [Output Node](/glossary).
 
-- Set `Campaign objective` to **Single** when that Branch must have one objective.
-- Set `Audience context` to **Multiple** when both `Birthday` and `Loyalty` apply.
+Imagine one Workflow qualifies `Campaign objective: Acquisition` before a second Logic Node.
+
+A later qualification on the same final Branch assigns `Campaign objective: Retention`. Analytics uses `Retention` because it is closer to the Output Node.
+
+With **Multiple** cardinality, both values remain attached to the final Branch.
 
 <Tip>
-  Choose **Single** for values that exclude each other. Choose **Multiple** when several values can describe the same Branch.
+  Choose **Single** when one downstream value should replace earlier values. Choose **Multiple** when every matching value should remain available.
 </Tip>
 
 ### Create a tag key

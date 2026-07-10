@@ -36,6 +36,8 @@ Lorsqu'une personne clique sur un [Content](/fr/glossary) Reelevant et achète p
 
 Les tags donnent à chaque Branch des libellés contrôlés que votre équipe utilise de manière cohérente dans les Workflows et Analytics.
 
+![Onglet Tags des paramètres Analytics présentant les clés, leurs cardinalités et leurs valeurs](/images/analytics/tag-settings.png)
+
 Chaque tag contient une **clé de tag** (le libellé à organiser) et une liste de **valeurs**. Par exemple, `Objectif de campagne` peut contenir `Acquisition` et `Fidélisation`.
 
 Seuls les tags personnalisés apparaissent dans cet onglet. Les tags gérés par Reelevant ne peuvent pas être modifiés.
@@ -44,18 +46,23 @@ Seuls les tags personnalisés apparaissent dans cet onglet. Les tags gérés par
 
 La cardinalité contrôle le nombre de valeurs d'une clé de tag attribuables à une même Branch. Elle ne limite pas le nombre de valeurs créées.
 
+![Panneau de création d'une clé de tag présentant les cardinalités Unique et Multiple](/images/analytics/tag-cardinality.png)
+
 | Cardinalité | Comportement dans un Workflow | Exemple |
 |---|---|---|
-| **Unique** | Chaque Branch peut utiliser une valeur de cette clé de tag. | `Objectif de campagne : Fidélisation` ne peut pas être associé à `Objectif de campagne : Acquisition` sur la même Branch. |
-| **Multiple** | Chaque Branch peut utiliser plusieurs valeurs de cette clé de tag. | `Contexte d'audience : Anniversaire` et `Contexte d'audience : Fidélité` peuvent décrire la même Branch. |
+| **Unique** | Chaque Branch finale retient une valeur de cette clé de tag. | Si plusieurs valeurs apparaissent sur une Branch, la valeur la plus en aval est utilisée. |
+| **Multiple** | Chaque Branch finale conserve toutes les valeurs attribuées. | `Contexte d'audience : Anniversaire` et `Contexte d'audience : Fidélité` peuvent décrire la même Branch. |
 
-Imaginez un Workflow avec une Branch qui affiche un Content d'anniversaire aux membres du programme de fidélité.
+**La plus en aval** désigne la qualification la plus proche de l'[Output Node](/fr/glossary).
 
-- Définissez `Objectif de campagne` sur **Unique** lorsque cette Branch doit avoir un seul objectif.
-- Définissez `Contexte d'audience` sur **Multiple** lorsque `Anniversaire` et `Fidélité` s'appliquent ensemble.
+Imaginez un Workflow qui attribue `Objectif de campagne : Acquisition` avant un second Logic Node.
+
+Une qualification ultérieure sur la même Branch finale attribue `Objectif de campagne : Fidélisation`. Analytics utilise `Fidélisation`, car cette valeur est plus proche de l'Output Node.
+
+Avec la cardinalité **Multiple**, les deux valeurs restent attribuées à la Branch finale.
 
 <Tip>
-  Choisissez **Unique** pour des valeurs qui s'excluent. Choisissez **Multiple** lorsque plusieurs valeurs peuvent décrire la même Branch.
+  Choisissez **Unique** lorsqu'une valeur en aval doit remplacer les précédentes. Choisissez **Multiple** pour conserver toutes les valeurs rencontrées.
 </Tip>
 
 ### Créer une clé de tag
