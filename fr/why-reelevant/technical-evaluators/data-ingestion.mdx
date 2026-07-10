@@ -57,6 +57,16 @@ Lorsque de nouvelles données arrivent, trois stratégies contrôlent la fusion 
 | **Append** | Conserver les enregistrements existants, ajouter les nouvelles lignes | Événements en séries temporelles, historique d'achats |
 | **Upsert** | Fusionner par clé primaire — mettre à jour les existants, insérer les nouveaux | Profils CRM, niveaux de stock, changements de prix |
 
+## Anonymisation au niveau de l'enregistrement
+
+Les Datasources Upsert en modes Worker et Ingester supportent l'anonymisation ciblée par clé primaire. Les processus de confidentialité peuvent supprimer des enregistrements CRM sélectionnés sans remplacer tout le jeu de données.
+
+Chaque opération accepte jusqu'à 10 000 identifiants. Après traitement, les enregistrements sélectionnés n'apparaissent plus dans les requêtes de la Datasource, tandis que les autres restent disponibles.
+
+Le système source et les destinations analytiques configurées séparément conservent leurs propres copies. Appliquez la politique de suppression correspondante dans chaque système pour finaliser une demande de droit à l'effacement.
+
+Consultez [Anonymiser des enregistrements clients](/fr/advanced-guide/datahub/anonymise-customer-records) pour les configurations supportées, le comportement du traitement et la checklist opérationnelle.
+
 ## Effort d'intégration
 
 | Scénario | Votre effort | Support Reelevant |

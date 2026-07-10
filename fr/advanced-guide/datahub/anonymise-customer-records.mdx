@@ -1,0 +1,84 @@
+---
+title: 'Anonymiser des enregistrements clients'
+description: "Supprimez des enregistrements clients ciblés d'une Datasource Upsert tout en conservant le reste du jeu de données"
+---
+
+## Avant de commencer
+
+L'anonymisation au niveau de l'enregistrement est disponible lorsque toutes les conditions suivantes sont remplies :
+
+| Prérequis | Configuration attendue |
+|-----------|------------------------|
+| **Stratégie de mise à jour** | La Datasource utilise **Upsert** avec une clé primaire. |
+| **Mode d'ingestion** | La Datasource utilise le mode **Worker** ou **Ingester**. |
+| **Identifiant** | Chaque enregistrement client possède une valeur de clé primaire connue. |
+| **Permission** | La personne ou l'intégration qui lance l'opération peut mettre à jour la Datasource. |
+
+Cette opération est conçue pour les demandes de confidentialité ciblées. Elle supprime les enregistrements sélectionnés sans remplacer toute la Datasource.
+
+## Fonctionnement de l'anonymisation
+
+Votre processus de confidentialité transmet une ou plusieurs valeurs de clé primaire à l'opération d'anonymisation de la Datasource. Reelevant écrit un marqueur de suppression pour chaque identifiant dans le flux Upsert actif.
+
+Après le traitement des marqueurs, les enregistrements correspondants n'apparaissent plus dans les requêtes de la Datasource. Les autres enregistrements restent disponibles et inchangés.
+
+| Comportement | Détail |
+|--------------|--------|
+| **Nombre maximal d'identifiants** | Jusqu'à 10 000 valeurs de clé primaire par opération. |
+| **Traitement** | Asynchrone. Un court délai peut précéder la disparition des enregistrements dans les requêtes. |
+| **Résultat des requêtes** | Les enregistrements anonymisés sont exclus de toutes les requêtes de la Datasource. |
+| **Structure de la Datasource** | La Datasource, son Field Mapping et les enregistrements non concernés restent inchangés. |
+
+<Info>
+  L'anonymisation au niveau de l'enregistrement n'est pas disponible avec les stratégies Append ou Override, ni avec les modes d'ingestion PubSub et Proxy.
+</Info>
+
+## Exemple détaillé
+
+Une Datasource CRM utilise `customer_id` comme clé primaire et Upsert comme stratégie de mise à jour.
+
+### Avant l'anonymisation
+
+| customer_id | segment | country |
+|-------------|---------|---------|
+| C-1042 | loyal_customer | FR |
+| C-2088 | new_customer | BE |
+
+Une demande de confidentialité client identifie `C-1042`. Votre processus de confidentialité transmet cette clé primaire pour anonymisation.
+
+### Après l'anonymisation
+
+| customer_id | segment | country |
+|-------------|---------|---------|
+| C-2088 | new_customer | BE |
+
+Les requêtes ne renvoient plus `C-1042`. L'enregistrement `C-2088` reste disponible sans modification.
+
+## Coordonner la suppression entre vos systèmes de données
+
+L'anonymisation d'un enregistrement dans Reelevant ne le supprime pas du système source. Elle ne supprime pas non plus les copies stockées dans des destinations analytiques configurées séparément.
+
+Pour un processus complet de droit à l'effacement :
+
+1. Supprimez ou anonymisez l'enregistrement dans le système source.
+2. Transmettez la même clé primaire à l'opération d'anonymisation de la Datasource Reelevant.
+3. Appliquez la politique de suppression requise à chaque destination analytique.
+4. Vérifiez que l'identifiant n'apparaît plus dans les requêtes de la Datasource.
+5. Conservez les preuves d'audit requises par votre organisation.
+
+<Warning>
+  Une Datasource Worker peut importer à nouveau l'enregistrement si un rafraîchissement ultérieur de la source contient toujours la même clé primaire. Mettez à jour le système source avant le prochain rafraîchissement.
+</Warning>
+
+## Checklist opérationnelle
+
+| Vérification | Pourquoi elle est importante |
+|--------------|------------------------------|
+| Confirmer l'identité du demandeur | Évite les demandes de suppression non autorisées. |
+| Résoudre la bonne clé primaire | Garantit la sélection de l'enregistrement client prévu. |
+| Fractionner les demandes de plus de 10 000 identifiants | Maintient chaque opération dans la limite supportée. |
+| Vérifier le système source | Empêche le prochain rafraîchissement Worker de restaurer l'enregistrement. |
+| Vérifier les destinations analytiques | Garantit que les politiques de suppression couvrent les copies stockées séparément. |
+| Interroger après le traitement | Confirme que l'enregistrement n'est plus disponible pour les Workflows. |
+
+Pour valider les requêtes, consultez [Interroger les Datasources](/fr/advanced-guide/datahub/queries). Pour une vue d'ensemble de l'architecture, consultez [Ingestion de données](/fr/why-reelevant/technical-evaluators/data-ingestion).

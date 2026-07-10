@@ -57,6 +57,16 @@ When new data arrives, three strategies control how it merges with existing reco
 | **Append** | Keep existing records, add new rows | Time-series events, purchase history |
 | **Upsert** | Merge by primary key — update existing, insert new | CRM profiles, stock levels, price changes |
 
+## Record-Level Anonymisation
+
+Upsert Datasources in Worker and Ingester modes support targeted anonymisation by primary key. Privacy systems can remove selected CRM records without replacing the complete dataset.
+
+Each operation accepts up to 10,000 identifiers. After processing, the selected records stop appearing in Datasource queries while unaffected records remain available.
+
+The source system and separately configured analytics destinations retain their own copies. Apply the corresponding deletion policy in each system to complete a right-to-erasure request.
+
+See [Anonymising Customer Records](/advanced-guide/datahub/anonymise-customer-records) for supported configurations, processing behaviour, and an operational checklist.
+
 ## Integration Effort
 
 | Scenario | Your effort | Reelevant support |
