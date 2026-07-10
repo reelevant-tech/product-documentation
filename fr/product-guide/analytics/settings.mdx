@@ -50,7 +50,7 @@ La cardinalité contrôle le nombre de valeurs d'une clé de tag attribuables à
 
 | Cardinalité | Comportement dans un Workflow | Exemple |
 |---|---|---|
-| **Unique** | Chaque Branch finale retient une valeur de cette clé de tag. | Si plusieurs valeurs apparaissent sur une Branch, la valeur la plus en aval est utilisée. |
+| **Unique** | Chaque Branch finale retient une valeur de cette clé de tag. | `Objectif de campagne : Fidélisation` ne peut pas être associé à `Objectif de campagne : Acquisition` sur la même Branch. |
 | **Multiple** | Chaque Branch finale conserve toutes les valeurs attribuées. | `Contexte d'audience : Anniversaire` et `Contexte d'audience : Fidélité` peuvent décrire la même Branch. |
 
 **La plus en aval** désigne la qualification la plus proche de l'[Output Node](/fr/glossary).
