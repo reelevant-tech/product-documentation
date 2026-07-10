@@ -74,8 +74,9 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 - Tone: Professional, precise, data-oriented
 - Max sentence: 35 words. No need to explain platform terms.
 - **CAN use**: query, schema, field, filter, aggregation, boolean, operator, p-value
-- **FORBIDDEN**: SDK, npm, curl, HTTP method, REST, GraphQL, webhook, CI/CD, Docker
-- **NEVER include**: code in any language, API request/response, SDK instructions
+- **FORBIDDEN**: SDK, npm, REST, GraphQL, webhook, CI/CD, Docker
+- `curl` and exact HTTP methods are allowed only when the page mentions an API endpoint
+- **NEVER include**: code except one concise `curl` request for a documented API endpoint, API response payloads, SDK instructions
 
 ### `developer-docs/` — Software engineers
 - Owner: Engineering

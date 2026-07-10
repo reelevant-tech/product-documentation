@@ -33,6 +33,26 @@ Après le traitement des marqueurs, les enregistrements correspondants n'apparai
   L'anonymisation au niveau de l'enregistrement n'est pas disponible avec les stratégies Append ou Override, ni avec les modes d'ingestion PubSub et Proxy.
 </Info>
 
+## Envoyer une demande d'anonymisation
+
+Définissez `DATASOURCE_ID` avec l'identifiant de la Datasource et `ACCESS_TOKEN` avec un token d'accès OAuth 2.0. Consultez [Authentification](/fr/developer-docs/api-reference/authentication) pour créer ce token.
+
+Le tableau `ids` contient les valeurs de clé primaire à anonymiser.
+
+```bash
+DATASOURCE_ID="replace-with-datasource-id"
+ACCESS_TOKEN="replace-with-access-token"
+
+curl --request POST "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/anonymize" \
+  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{ "ids": ["C-1042", "C-2088"] }'
+```
+
+Un statut `200` confirme que Reelevant a accepté la demande pour un traitement asynchrone. Le champ `anonymized` indique le nombre d'identifiants transmis.
+
+Les demandes avec un tableau `ids` vide ou plus de 10 000 valeurs renvoient un statut `400`.
+
 ## Exemple détaillé
 
 Une Datasource CRM utilise `customer_id` comme clé primaire et Upsert comme stratégie de mise à jour.
