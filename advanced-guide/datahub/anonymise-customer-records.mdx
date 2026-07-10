@@ -1,0 +1,84 @@
+---
+title: 'Anonymising Customer Records'
+description: 'Remove selected customer records from an Upsert Datasource while preserving the rest of the dataset'
+---
+
+## Before you begin
+
+Record-level anonymisation is available when all of the following conditions are met:
+
+| Requirement | Expected configuration |
+|-------------|------------------------|
+| **Update strategy** | The Datasource uses **Upsert** with a primary key. |
+| **Ingestion mode** | The Datasource uses **Worker** or **Ingester** mode. |
+| **Identifier** | Each customer record has a known primary key value. |
+| **Permission** | The person or integration initiating the operation has permission to update the Datasource. |
+
+This operation is designed for targeted privacy requests. It removes selected records without replacing the complete Datasource.
+
+## How record-level anonymisation works
+
+Your privacy process sends one or more primary key values to the Datasource anonymisation operation. Reelevant writes a deletion marker for each identifier into the live Upsert stream.
+
+After the markers are processed, the matching records stop appearing in Datasource queries. Other records remain available and unchanged.
+
+| Behaviour | Detail |
+|-----------|--------|
+| **Maximum identifiers** | Up to 10,000 primary key values per operation. |
+| **Processing** | Asynchronous. A short delay may occur before queries stop returning the records. |
+| **Query result** | Anonymised records are excluded from all Datasource queries. |
+| **Datasource structure** | The Datasource, its Field Mapping, and unaffected records remain unchanged. |
+
+<Info>
+  Record-level anonymisation is not available for Append or Override strategies, or for PubSub and Proxy ingestion modes.
+</Info>
+
+## Worked example
+
+A CRM Datasource uses `customer_id` as its primary key and Upsert as its update strategy.
+
+### Before anonymisation
+
+| customer_id | segment | country |
+|-------------|---------|---------|
+| C-1042 | loyal_customer | FR |
+| C-2088 | new_customer | BE |
+
+A customer privacy request identifies `C-1042`. Your privacy process submits this primary key for anonymisation.
+
+### After anonymisation
+
+| customer_id | segment | country |
+|-------------|---------|---------|
+| C-2088 | new_customer | BE |
+
+Queries no longer return `C-1042`. The record for `C-2088` remains available without modification.
+
+## Coordinate deletion across your data systems
+
+Anonymising a record in Reelevant does not remove it from the original source system. It also does not remove copies stored in separately configured analytics destinations.
+
+For a complete right-to-erasure process:
+
+1. Remove or anonymise the record in the source system.
+2. Submit the same primary key to the Reelevant Datasource anonymisation operation.
+3. Apply the required deletion policy to each analytics destination.
+4. Verify that the identifier no longer appears in Datasource queries.
+5. Retain the audit evidence required by your organisation.
+
+<Warning>
+  A Worker Datasource can import the record again if a later source refresh still contains the same primary key. Update the source system before the next refresh to prevent re-ingestion.
+</Warning>
+
+## Operational checklist
+
+| Check | Why it matters |
+|-------|----------------|
+| Confirm the requester's identity | Prevents unauthorised deletion requests. |
+| Resolve the correct primary key | Ensures the intended customer record is selected. |
+| Split requests above 10,000 identifiers | Keeps each operation within the supported limit. |
+| Check the source system | Prevents the next Worker refresh from restoring the record. |
+| Check analytics destinations | Ensures deletion policies cover separately stored copies. |
+| Query after processing | Confirms that the record is no longer available to Workflows. |
+
+For query validation, see [Querying Datasources](/advanced-guide/datahub/queries). For an architectural overview, see [Data Ingestion](/why-reelevant/technical-evaluators/data-ingestion).
