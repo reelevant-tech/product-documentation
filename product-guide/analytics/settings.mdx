@@ -50,7 +50,7 @@ Cardinality controls how many values from one tag key can be assigned to the sam
 
 | Cardinality | Behaviour in a Workflow | Example |
 |---|---|---|
-| **Single** | Each final Branch resolves to one value from this tag key. | If several values occur along one Branch, the most downstream value is used. |
+| **Single** | Each final Branch resolves to one value from this tag key. | `Campaign objective: Retention` cannot be combined with `Campaign objective: Acquisition` on the same Branch. |
 | **Multiple** | Each final Branch keeps every value assigned along it. | `Audience context: Birthday` and `Audience context: Loyalty` can both describe the same Branch. |
 
 **Most downstream** means closest to the [Output Node](/glossary).
