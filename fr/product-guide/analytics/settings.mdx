@@ -1,28 +1,112 @@
 ---
 title: 'Paramètres Analytics'
-description: "Configurez la période d'attribution et d'autres paramètres Analytics pour votre entreprise"
+description: "Configurez l'attribution et les tags personnalisés pour qualifier les Branches et analyser leurs performances"
 ---
+
+La page Paramètres Analytics permet aux administrateurs de configurer l'attribution et les tags personnalisés pour qualifier les [Branches](/fr/glossary).
 
 ![Page des paramètres Analytics présentant la configuration de la période d'attribution](/images/analytics/settings-v2.png)
 
-## Vue d'ensemble
+Ouvrez **Analytics > Settings**, puis sélectionnez **Général** ou **Tags**.
 
-La page Paramètres Analytics vous permet de configurer les paramètres Analytics globaux de votre entreprise. Accédez-y depuis le lien **Settings** dans la navigation latérale d'Analytics.
+## Paramètres généraux
 
-## Période d'attribution
+### Période d'attribution
 
-La période d'attribution définit le nombre d'heures utilisé pour attribuer les conversions à une interaction avec un [Workflow](/fr/product-guide/workflows/overview). Lorsqu'un utilisateur clique sur un Content Reelevant puis effectue un achat dans cette fenêtre temporelle, la conversion est créditée à cette interaction avec le Content.
+La période d'attribution définit pendant combien de temps une conversion peut être attribuée à une interaction avec un [Workflow](/fr/glossary).
+
+Lorsqu'une personne clique sur un [Content](/fr/glossary) Reelevant et achète pendant cette période, Analytics attribue la conversion à cette interaction.
 
 | Champ | Description |
 |-------|-------------|
 | **Attribution period (hours)** | La fenêtre rétrospective en heures (par exemple, 720 pour 30 jours). Laissez vide pour utiliser la période d'attribution par défaut. |
 
-### Configurer la période d'attribution
+#### Configurer la période d'attribution
 
 1. Rendez-vous dans **Analytics > Settings**.
-2. Saisissez le nombre d'heures souhaité dans le champ **Attribution period (hours)**.
-3. Cliquez sur **Save**.
+2. Sélectionnez **Général**.
+3. Saisissez le nombre d'heures souhaité dans **Attribution period (hours)**.
+4. Cliquez sur **Save**.
 
 <Info>
-  Modifier la période d'attribution affecte la façon dont les conversions sont comptabilisées dans le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et les requêtes [Data Exploration](/fr/product-guide/analytics/data-exploration). Une période plus longue capte davantage de conversions mais peut inclure des achats moins directement attribuables.
+  Modifier cette période affecte le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et [Data Exploration](/fr/product-guide/analytics/data-exploration). Une période plus longue peut inclure des achats moins directement liés.
 </Info>
+
+## Tags
+
+Les tags donnent à chaque Branch des libellés contrôlés que votre équipe utilise de manière cohérente dans les Workflows et Analytics.
+
+Chaque tag contient une **clé de tag** (le libellé à organiser) et une liste de **valeurs**. Par exemple, `Objectif de campagne` peut contenir `Acquisition` et `Fidélisation`.
+
+Seuls les tags personnalisés apparaissent dans cet onglet. Les tags gérés par Reelevant ne peuvent pas être modifiés.
+
+### Comprendre la cardinalité
+
+La cardinalité contrôle le nombre de valeurs d'une clé de tag attribuables à une même Branch. Elle ne limite pas le nombre de valeurs créées.
+
+| Cardinalité | Comportement dans un Workflow | Exemple |
+|---|---|---|
+| **Unique** | Chaque Branch peut utiliser une valeur de cette clé de tag. | `Objectif de campagne : Fidélisation` ne peut pas être associé à `Objectif de campagne : Acquisition` sur la même Branch. |
+| **Multiple** | Chaque Branch peut utiliser plusieurs valeurs de cette clé de tag. | `Contexte d'audience : Anniversaire` et `Contexte d'audience : Fidélité` peuvent décrire la même Branch. |
+
+Imaginez un Workflow avec une Branch qui affiche un Content d'anniversaire aux membres du programme de fidélité.
+
+- Définissez `Objectif de campagne` sur **Unique** lorsque cette Branch doit avoir un seul objectif.
+- Définissez `Contexte d'audience` sur **Multiple** lorsque `Anniversaire` et `Fidélité` s'appliquent ensemble.
+
+<Tip>
+  Choisissez **Unique** pour des valeurs qui s'excluent. Choisissez **Multiple** lorsque plusieurs valeurs peuvent décrire la même Branch.
+</Tip>
+
+### Créer une clé de tag
+
+1. Rendez-vous dans **Analytics > Settings**.
+2. Sélectionnez **Tags**.
+3. Cliquez sur **Ajouter un tag**.
+4. Saisissez un **Nom** unique.
+5. Ajoutez une **Description** facultative pour guider vos coéquipiers.
+6. Choisissez **Unique** ou **Multiple** sous **Cardinalité**.
+7. Cliquez sur **Créer la clé de tag**.
+
+Les noms des clés de tag doivent être uniques. La plateforme ignore la casse et les espaces placés au début ou à la fin.
+
+### Ajouter des valeurs
+
+1. Trouvez la clé de tag.
+2. Cliquez sur l'icône plus à côté de **Valeurs**.
+3. Saisissez un nom de valeur unique et une description facultative.
+4. Cliquez sur **Ajouter une valeur**.
+
+Les noms des valeurs doivent être uniques dans leur clé. Développez **Valeurs** pour consulter tous les choix disponibles.
+
+La plateforme ignore aussi la casse et les espaces placés au début ou à la fin des valeurs.
+
+### Modifier ou supprimer des tags
+
+Utilisez l'icône crayon pour modifier une clé de tag, sa description ou sa cardinalité.
+
+Développez **Valeurs**, puis utilisez les icônes de chaque valeur pour la modifier ou la supprimer.
+
+<Warning>
+  Supprimer une clé de tag supprime également toutes ses valeurs. Les clés et valeurs supprimées ne peuvent pas être restaurées.
+</Warning>
+
+### Utiliser les tags dans les Workflows et Analytics
+
+Les tags créés deviennent disponibles lorsque vous [qualifiez une Branch](/fr/product-guide/workflows/branches). Les utilisateurs sélectionnent les valeurs contrôlées sans en créer de nouvelles.
+
+Dans Analytics, utilisez les clés et valeurs pour filtrer les résultats ou comparer les performances de vos qualifications.
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Branches" icon="code-branch" href="/fr/product-guide/workflows/branches">
+    Attribuez vos valeurs contrôlées lorsque vous qualifiez vos Branches.
+  </Card>
+  <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
+    Filtrez et comparez les performances avec vos clés de tag.
+  </Card>
+  <Card title="Mesures et dimensions" icon="table-list" href="/fr/product-guide/analytics/measures-and-dimensions">
+    Consultez les dimensions de tag disponibles pour vos analyses.
+  </Card>
+</CardGroup>
