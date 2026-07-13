@@ -1,0 +1,86 @@
+---
+title: "Suivre la consommation d'ouvreurs"
+description: "Comprenez comment les ouvertures et les ouvreurs sont comptabilisés et suivez votre consommation sur le tableau de bord Usage"
+---
+
+![Tableau de bord Usage présentant l'aperçu de consommation et les tableaux d'usage](/images/analytics/dashboard-usage-v2.png)
+
+Votre forfait Reelevant est mesuré selon la consommation de vos campagnes. Cette page explique ce qui compte comme consommation et comment la suivre.
+
+## Ce qui compte comme consommation
+
+Reelevant facture votre usage selon le nombre d'ouvertures générées par vos [Workflows](/fr/product-guide/workflows/overview). Selon votre forfait, vous êtes comptabilisé sur les ouvertures ou sur les ouvreurs.
+
+| Terme | Signification |
+|-------|---------------|
+| **Ouverture** | Chaque fois qu'un Workflow affiche un Content Reelevant à une personne. |
+| **Ouvreur** | Une personne unique ayant déclenché au moins une ouverture. |
+
+<Tip>
+  Un ouvreur peut générer plusieurs ouvertures. Si une personne ouvre le même email trois fois, cela fait 1 ouvreur et 3 ouvertures.
+</Tip>
+
+Votre forfait comptabilise l'une de ces deux valeurs :
+
+| Type de forfait | Mode de comptage |
+|-----------------|------------------|
+| **Forfait ouvertures** | Chaque ouverture s'ajoute à votre consommation. |
+| **Forfait ouvreurs** | Seule la première ouverture de chaque personne compte. |
+
+## Ouvrir le tableau de bord Usage
+
+Vous suivez votre consommation sur le [tableau de bord Usage](/fr/product-guide/analytics/dashboards/usage), une page dédiée de l'application Analytics.
+
+1. Ouvrez **Analytics** depuis la navigation principale.
+2. Sélectionnez **Dashboards**.
+3. Choisissez **Usage**.
+
+## Lire votre consommation
+
+La carte de consommation en haut de page montre où vous en êtes pour la période en cours.
+
+| Champ | Ce qu'il indique |
+|-------|------------------|
+| **Période d'abonnement** | Les dates de début et de fin couvertes par votre forfait. |
+| **Type de forfait** | Indique si vous êtes comptabilisé sur les ouvertures ou sur les ouvreurs uniques. |
+| **Usage prévu** | Le volume inclus dans votre forfait. |
+| **Consommation actuelle** | Le volume déjà utilisé. |
+
+Une bannière colorée indique votre proximité avec la limite de votre forfait.
+
+| Statut | Signification |
+|--------|---------------|
+| **Vert** | Votre consommation reste dans le volume prévu. |
+| **Jaune** | Vous avez dépassé le volume prévu. |
+| **Rouge** | Vous avez largement dépassé le volume prévu. |
+
+<Warning>
+  Dépasser votre usage prévu peut affecter votre facturation. Consultez la bannière régulièrement pour éviter les surprises.
+</Warning>
+
+## Décomposer votre consommation
+
+Deux tableaux sous la carte montrent d'où vient votre consommation. Chaque ligne affiche une seule valeur, rien n'est donc regroupé.
+
+| Tableau | Ce qu'il montre |
+|---------|-----------------|
+| **Usage by team** | Consommation détaillée par [Team](/fr/product-guide/account/teams). Un Workflow partagé par deux Teams apparaît une fois par Team. |
+| **Usage by channel** | Consommation détaillée par type de [Channel](/fr/product-guide/workflows/channels). |
+
+<Tip>
+  Utilisez la décomposition par Team pour identifier quels Teams génèrent le plus de consommation. Cela facilite la planification des capacités et l'allocation du budget.
+</Tip>
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Tableau de bord Usage" icon="gauge" href="/fr/product-guide/analytics/dashboards/usage">
+    Passez en revue chaque champ du tableau de bord Usage en détail.
+  </Card>
+  <Card title="Mesures et dimensions" icon="table-list" href="/fr/product-guide/analytics/measures-and-dimensions">
+    Découvrez comment les ouvertures et les ouvreurs sont définis dans la référence analytics.
+  </Card>
+  <Card title="Exploration de données" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
+    Construisez votre propre décomposition de la consommation avec les mesures et dimensions.
+  </Card>
+</CardGroup>
