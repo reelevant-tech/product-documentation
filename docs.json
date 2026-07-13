@@ -145,6 +145,7 @@
                 "group": "Analytics",
                 "pages": [
                   "product-guide/analytics/overview",
+                  "product-guide/analytics/tracking-opener-consumption",
                   {
                     "group": "Dashboards",
                     "pages": [
@@ -568,6 +569,7 @@
                 "group": "Analytics",
                 "pages": [
                   "fr/product-guide/analytics/overview",
+                  "fr/product-guide/analytics/tracking-opener-consumption",
                   {
                     "group": "Dashboards",
                     "pages": [
