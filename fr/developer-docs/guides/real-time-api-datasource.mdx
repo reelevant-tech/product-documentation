@@ -1,0 +1,269 @@
+---
+title: 'Datasource API en temps réel (mode proxy)'
+description: 'Exposez une API HTTP externe à Reelevant en tant que Datasource appelée en direct à chaque requête, via l''API datasources avec curl'
+---
+
+## Vue d'ensemble
+
+Une Datasource en mode **proxy** transforme une API HTTP externe en une Datasource interrogeable. Reelevant ne récupère pas ni ne stocke les données selon une planification — à la place, elle appelle votre API **en direct à chaque requête** et renvoie la réponse analysée, afin que vos Workflows voient toujours les données les plus récentes.
+
+Ce guide construit une Datasource proxy de bout en bout avec `curl`, à partir d'une fausse API produits. Chaque appel cible l'API datasources sur `https://api.reelevant.com/v2` et nécessite un token d'accès — voir [Authentification](/fr/developer-docs/api-reference/authentication) pour savoir comment l'obtenir.
+
+| Mode | Mode de récupération | Stockage |
+|------|----------------------|----------|
+| `ingester` | Les events sont ajoutés en continu, au fur et à mesure de leur arrivée. | Stocké |
+| `worker` | Reelevant récupère et analyse la source selon une planification. | Stocké |
+| **`proxy`** | **Reelevant appelle l'API externe en direct à chaque requête.** | **Non stocké** |
+
+<Info>
+  Utilisez le mode proxy lorsque les données externes doivent être fraîches à chaque requête (stock en direct, prix en direct, recommandations par utilisateur) ou lorsqu'elles ne peuvent pas être répliquées dans Reelevant. Pour de gros catalogues qui évoluent lentement, préférez une Datasource `worker` afin que les requêtes soient servies depuis le stockage de Reelevant.
+</Info>
+
+## L'API externe
+
+Supposons que vous possédiez une API produits qui prend une catégorie et un identifiant utilisateur dans le corps de la requête et renvoie une liste de produits. Un appel en direct et sa réponse ressemblent à ceci :
+
+```bash
+curl -XPOST https://api.example.com/products/shoes \
+  -H "Authorization: Bearer <your_upstream_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "userId": "[email protected]", "category": "shoes" }'
+```
+
+```json
+{
+  "products": [
+    { "id": "SKU-001", "name": "Running Shoes Pro", "price": 129.99, "inStock": true },
+    { "id": "SKU-002", "name": "Trail Runner X", "price": 149.0, "inStock": false }
+  ]
+}
+```
+
+Reelevant appellera cet endpoint à chaque requête, en substituant `userId` et `category` au moment de l'appel à partir des **variables** que vous déclarez ci-dessous.
+
+## Construire la Datasource
+
+La configuration est une séquence d'**étapes** appliquées à la version brouillon de la Datasource. Chaque étape est un appel `POST https://api.reelevant.com/v2/datasources/{id}/steps` avec un corps `{ name, payload }`. Récupérez l'étape courante à tout moment avec `GET https://api.reelevant.com/v2/datasources/{id}/steps`.
+
+La séquence d'étapes en mode proxy est : `configure_name` → `configure_sources` → `configure_fields` → `patch` (optionnel) → `validate`.
+
+### 1. Créer la Datasource
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "mode": "proxy" }'
+```
+
+La réponse contient l'`id` de la nouvelle Datasource — réutilisez-le comme `<datasource_id>` dans chaque étape ci-dessous.
+
+```json
+{
+  "status": "success",
+  "data": { "id": "665f1c0b2a9d4e0008b3a1f2", "mode": "proxy", "status": "draft" }
+}
+```
+
+### 2. La nommer
+
+Le payload de `configure_name` est la chaîne du nom elle-même.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "configure_name", "payload": "Catalogue produits en direct" }'
+```
+
+### 3. Configurer la source
+
+Décrivez l'appel externe avec une source `url`. Les valeurs d'exécution sont déclarées comme `variables` et référencées via des placeholders `{{name}}` dans `url`, `body`, `headers` et `query`. Comme la réponse encapsule les lignes sous `products`, définissez le `rootPath` JSON sur `products.*`.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "configure_sources",
+    "payload": {
+      "pipeline": [
+        {
+          "input": {
+            "source": {
+              "type": "url",
+              "options": {
+                "url": "https://api.example.com/products/{{category}}",
+                "format": { "type": "json", "options": { "rootPath": "products.*" } },
+                "options": {
+                  "method": "POST",
+                  "timeout": 30000,
+                  "headers": { "Authorization": "Bearer <your_upstream_token>" },
+                  "body": "{ \"userId\": \"{{userId}}\", \"category\": \"{{category}}\" }",
+                  "variables": [
+                    { "name": "userId",   "primitive": "string", "required": true,  "unique": true,  "default": "[email protected]" },
+                    { "name": "category", "primitive": "string", "required": false, "unique": true,  "default": "shoes" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }'
+```
+
+Reelevant valide la source en appelant l'API avec les valeurs `default` des variables et stocke une ligne d'exemple. Si l'URL est injoignable ou renvoie une erreur, l'étape échoue — voir [Gestion des erreurs](#gestion-des-erreurs).
+
+#### Définition d'une variable
+
+| Champ | Type | Requis | Description |
+|-------|------|--------|-------------|
+| `name` | `string` | Oui | Nom du placeholder, référencé via `{{name}}` dans `url`, `body`, `headers` ou `query`. |
+| `primitive` | `"string" \| "number"` | Oui | Type de la valeur. Les valeurs `number` sont injectées sans guillemets. |
+| `required` | `boolean` | Oui | Si `true`, la variable doit être résolue au moment de la requête, sinon la requête est rejetée. |
+| `unique` | `boolean` | Oui | Si `true`, la variable devient un filtre de requête à valeur unique (`$eq` uniquement). |
+| `default` | `string \| number \| array \| { dynamic: true, value: string }` | Oui | Valeur de repli utilisée pour l'échantillonnage et lorsqu'une requête omet la variable. Utilisez `{ "dynamic": true, "value": "String(Date.now())" }` pour calculer la valeur par défaut au moment de l'appel. |
+
+<Note>
+  Les variables ne fuitent jamais en tant que filtres post-récupération : un nom consommé par le template de requête sert uniquement à construire l'appel externe, pas à filtrer la réponse.
+</Note>
+
+### 4. Mapper les champs
+
+Demandez à Reelevant d'analyser la réponse d'exemple et de suggérer des champs, puis renvoyez ceux que vous souhaitez conserver avec `selected: true`.
+
+```bash
+# Obtenir les champs suggérés à partir de l'échantillon
+curl -XPOST https://api.reelevant.com/v2/datasources/proxy/<datasource_id>/analyzer \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+```json
+{
+  "status": "success",
+  "data": {
+    "fields": [
+      { "name": "id",      "type": "string",  "primitive": "string",  "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "id" } }] } },
+      { "name": "name",    "type": "string",  "primitive": "string",  "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "name" } }] } },
+      { "name": "price",   "type": "price",   "primitive": "number",  "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "price" } }] } },
+      { "name": "inStock", "type": "boolean", "primitive": "boolean", "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "inStock" } }] } }
+    ]
+  }
+}
+```
+
+Renvoyez le même tableau via `configure_fields` avec `selected: true` sur les champs à conserver. Les noms de champs doivent respecter `^[a-z][a-z0-9_-]*$` et être uniques.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "configure_fields",
+    "payload": [
+      { "name": "id",      "type": "string",  "primitive": "string",  "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "id" } }] } },
+      { "name": "name",    "type": "string",  "primitive": "string",  "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "name" } }] } },
+      { "name": "price",   "type": "price",   "primitive": "number",  "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "price" } }] } },
+      { "name": "inStock", "type": "boolean", "primitive": "boolean", "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "inStock" } }] } }
+    ]
+  }'
+```
+
+Le `rulesPerSources` de chaque champ associe l'index de la source (`"0"` pour la première source) à une règle `path` qui extrait la valeur de la ligne de réponse.
+
+### 5. Configurer le cache (optionnel)
+
+Comme les Datasources proxy appellent l'API externe à chaque requête, un cache court protège une API lente ou limitée en débit. L'étape `patch` définit la fenêtre de cache et permet d'ignorer certains codes de statut externes.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "patch",
+    "payload": {
+      "refresh": { "freq": 60000 },
+      "ignoreStatusCodes": [404]
+    }
+  }'
+```
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `refresh.freq` | `number` | Fenêtre de cache en millisecondes. Les requêtes identiques dans cette fenêtre réutilisent la réponse mise en cache. |
+| `ignoreStatusCodes` | `number[]` | Codes de statut externes traités comme un résultat vide plutôt qu'une erreur. |
+
+<Info>
+  Pour un fort effet d'éventail (une diffusion déclenchant de nombreux appels identiques) ou une agrégation à la volée de la réponse en direct, demandez à votre Technical Account Manager les [custom fetchers](/fr/advanced-guide/datahub/custom-fetchers) **Proxy Lock** et **Proxy Aggregation**.
+</Info>
+
+### 6. Valider pour passer en live
+
+`validate` promeut la version brouillon en version live. Les Datasources proxy passent en live immédiatement — aucun job de vérification ne s'exécute, car rien n'est stocké.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "validate", "payload": {} }'
+```
+
+Relisez la version live et sa ligne d'exemple pour confirmer :
+
+```bash
+curl "https://api.reelevant.com/v2/datasources/<datasource_id>?withExample&versions=LIVE" \
+  -H "Authorization: Bearer <access_token>"
+```
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "665f1c0b2a9d4e0008b3a1f2",
+    "status": "published",
+    "example": { "id": "SKU-001", "name": "Running Shoes Pro", "price": 129.99, "inStock": true }
+  }
+}
+```
+
+## Interroger à l'exécution
+
+Une fois live, la Datasource est consommée dans un Workflow via un [Data Node](/fr/advanced-guide/workflows/data-nodes/datasources) Datasource. Les filtres du node fournissent les valeurs de variables pour l'appel en direct :
+
+- Un filtre sur une **variable** (`userId`, `category`) définit la valeur envoyée à l'API. Omettre une variable revient à utiliser sa valeur `default`.
+- Un filtre sur un **champ de réponse** (`price`, `inStock`) est appliqué par Reelevant aux lignes renvoyées par l'API.
+
+Par exemple, filtrer `category = "boots"` et `inStock = true` appelle `POST https://api.example.com/products/boots`, puis ne conserve que les lignes renvoyées où `inStock` vaut `true`.
+
+## Gestion des erreurs
+
+| Erreur | Statut HTTP | Cause |
+|--------|-------------|-------|
+| `FailedToGetSample` | 400 | L'API externe était injoignable ou a renvoyé une erreur pendant `configure_sources`. Vérifiez l'URL, la méthode, les headers et les valeurs par défaut des variables. |
+| `UrlNotReachable` | 400 | L'hôte externe n'a pas pu être résolu ou joint au moment de la requête. Les IP privées/internes sont bloquées. |
+| `InvalidFieldName` | 400 | Un nom de champ ne respecte pas `^[a-z][a-z0-9_-]*$`. |
+| `EmptyFieldsMap` | 400 | Aucun champ n'a été envoyé avec `selected: true` dans `configure_fields`. |
+
+```json
+{
+  "status": "fail",
+  "error_code": 1012,
+  "message": "Failed to get sample",
+  "data": { "url": "url", "err": "connect ETIMEDOUT" }
+}
+```
+
+<Warning>
+  L'hôte externe doit être joignable publiquement. Les requêtes qui se résolvent vers des plages d'IP privées ou internes sont rejetées avec `UrlNotReachable`, à la fois lors de la configuration de la source et à chaque requête en direct.
+</Warning>
+
+## Pages associées
+
+- [Authentification](/fr/developer-docs/api-reference/authentication) — obtenir un token d'accès.
+- [Référence de l'API datasources](/fr/developer-docs/api-reference/introduction) — référence complète des endpoints.
+- [Custom Fetchers](/fr/advanced-guide/datahub/custom-fetchers) — Proxy Lock et Proxy Aggregation pour les Datasources en temps réel.
+- [Data Node Datasource](/fr/advanced-guide/workflows/data-nodes/datasources) — interroger une Datasource dans un Workflow.
