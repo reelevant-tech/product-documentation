@@ -7,7 +7,7 @@ description: 'Exposez une API HTTP externe à Reelevant en tant que Datasource a
 
 Une Datasource en mode **proxy** transforme une API HTTP externe en une Datasource interrogeable. Reelevant ne récupère pas ni ne stocke les données selon une planification — à la place, elle appelle votre API **en direct à chaque requête** et renvoie la réponse analysée, afin que vos Workflows voient toujours les données les plus récentes.
 
-Ce guide construit une Datasource proxy de bout en bout avec `curl`, à partir d'une fausse API produits. Chaque appel cible l'API datasources sur `https://api.reelevant.com/v2` et nécessite un token d'accès — voir [Authentification](/fr/developer-docs/api-reference/authentication) pour savoir comment l'obtenir.
+Ce guide construit une Datasource proxy de bout en bout avec `curl`, à partir d'une fausse API produits. Chaque appel cible l'API datasources sur `https://api.reelevant.com/v2/datasources` et nécessite un token d'accès — voir [Authentification](/fr/developer-docs/api-reference/authentication) pour savoir comment l'obtenir.
 
 | Mode | Mode de récupération | Stockage |
 |------|----------------------|----------|
@@ -239,6 +239,41 @@ Une fois live, la Datasource est consommée dans un Workflow via un [Data Node](
 
 Par exemple, filtrer `category = "boots"` et `inStock = true` appelle `POST https://api.example.com/products/boots`, puis ne conserve que les lignes renvoyées où `inStock` vaut `true`.
 
+### Tester depuis l'API
+
+Vous n'avez pas besoin d'un Workflow pour vérifier la Datasource — appelez directement l'endpoint [Query a datasource](/api-reference/datasource/query-a-datasource). Le champ `query` est un filtre encodé en JSON ; les variables et les champs de réponse sont filtrés exactement comme dans un Data Node. Passez la pagination en paramètres de requête.
+
+```bash
+curl -XPOST "https://api.reelevant.com/v2/datasources/query?page=1&perPage=10" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "datasourceId": "<datasource_id>",
+    "query": "{\"$and\":[{\"$or\":[{\"category\":{\"$eq\":\"boots\"}}]},{\"$or\":[{\"inStock\":{\"$eq\":true}}]}]}"
+  }'
+```
+
+La réponse renvoie les lignes analysées dans `entries`, le total `count` et les métadonnées de pagination :
+
+```json
+{
+  "status": "success",
+  "data": {
+    "entries": [
+      { "id": "SKU-001", "name": "Running Shoes Pro", "price": 129.99, "inStock": true }
+    ],
+    "count": 1
+  },
+  "paginationPage": 1,
+  "paginationLimit": 10,
+  "paginationCount": 1
+}
+```
+
+<Tip>
+  Envoyez une requête vide (`"query": "{}"`) pour récupérer les données avec les valeurs `default` des variables, ou ajoutez l'en-tête `x-rlvt-no-cache: true` pour contourner la fenêtre de cache configurée à l'[étape 5](#5-configurer-le-cache-optionnel) pendant vos tests.
+</Tip>
+
 ## Gestion des erreurs
 
 | Erreur | Statut HTTP | Cause |
@@ -264,6 +299,7 @@ Par exemple, filtrer `category = "boots"` et `inStock = true` appelle `POST http
 ## Pages associées
 
 - [Authentification](/fr/developer-docs/api-reference/authentication) — obtenir un token d'accès.
+- [Query a datasource](/api-reference/datasource/query-a-datasource) — l'endpoint utilisé pour tester la Datasource en direct.
 - [Référence de l'API datasources](/fr/developer-docs/api-reference/introduction) — référence complète des endpoints.
 - [Custom Fetchers](/fr/advanced-guide/datahub/custom-fetchers) — Proxy Lock et Proxy Aggregation pour les Datasources en temps réel.
 - [Data Node Datasource](/fr/advanced-guide/workflows/data-nodes/datasources) — interroger une Datasource dans un Workflow.
