@@ -1,0 +1,110 @@
+---
+title: 'Datasource query filters'
+description: 'JSON structure and operators for the query field accepted by the datasources query API'
+---
+
+## Overview
+
+Several datasources endpoints — including [Query a datasource](/api-reference/datasource/query-a-datasource) — accept a `query` field that filters the returned rows. The value is a **JSON-encoded string** of a filter object: it is serialised with `JSON.stringify` before being sent.
+
+```bash
+curl -XPOST "https://api.reelevant.com/v2/datasources/query" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "datasourceId": "<datasource_id>",
+    "query": "{\"$and\":[{\"$or\":[{\"category\":{\"$eq\":\"boots\"}}]},{\"$or\":[{\"inStock\":{\"$eq\":true}}]}]}"
+  }'
+```
+
+The decoded `query` above reads:
+
+```json
+{
+  "$and": [
+    { "$or": [ { "category": { "$eq": "boots" } } ] },
+    { "$or": [ { "inStock": { "$eq": true } } ] }
+  ]
+}
+```
+
+## Structure
+
+A query is a tree built from two logical groups and leaf conditions.
+
+| Element | Shape | Description |
+|---------|-------|-------------|
+| Root | `{ "$and": [...] }` or `{ "$or": [...] }` | The top level is a single logical group. An empty object `{}` matches everything. |
+| Group | `{ "$and": [...] }` or `{ "$or": [...] }` | Combines child elements. `$and` requires all to match, `$or` requires at least one. Groups can nest. |
+| Condition | `{ "<field>": { "<operator>": <value> } }` | A leaf. Exactly one field and one operator per object. |
+
+Each array element is either another group or a single condition — mix them to build nested logic.
+
+```json
+{
+  "$and": [
+    { "category": { "$eq": "boots" } },
+    { "$or": [
+      { "price": { "$lte": 100 } },
+      { "inStock": { "$eq": true } }
+    ] }
+  ]
+}
+```
+
+## Operators
+
+The operators allowed for a field depend on its type. A field's type and allowed operators are listed under `queriableFields` when you read the Datasource (`GET /datasources/{id}`).
+
+### String
+
+| Operator | Value | Matches when the field… |
+|----------|-------|-------------------------|
+| `$eq` | `string` or `string[]` | equals the value (an array matches any of the values). |
+| `$ne` | `string` or `string[]` | does not equal the value. |
+| `$contains` | `string` or `string[]` | contains the substring. |
+| `$notcontains` | `string` or `string[]` | does not contain the substring. |
+| `$startswith` | `string` or `string[]` | starts with the value. |
+| `$endswith` | `string` or `string[]` | ends with the value. |
+| `$empty` | `boolean` | is empty (`true`) or not empty (`false`). |
+
+### Number
+
+| Operator | Value | Matches when the field… |
+|----------|-------|-------------------------|
+| `$neq` | `number` or `number[]` | equals the value. |
+| `$nne` | `number` or `number[]` | does not equal the value. |
+| `$lt` / `$lte` | `number` | is less than / less than or equal to the value. |
+| `$gt` / `$gte` | `number` | is greater than / greater than or equal to the value. |
+| `$empty` | `boolean` | is empty (`true`) or not empty (`false`). |
+
+<Note>
+  Numeric equality uses `$neq` (numeric-equal) and `$nne` (numeric-not-equal). `$eq` / `$ne` are reserved for string and boolean fields.
+</Note>
+
+### Boolean
+
+| Operator | Value | Matches when the field… |
+|----------|-------|-------------------------|
+| `$eq` | `boolean` | equals the value. |
+| `$ne` | `boolean` | does not equal the value. |
+| `$empty` | `boolean` | is empty (`true`) or not empty (`false`). |
+
+### Datetime
+
+| Operator | Value | Matches when the field… |
+|----------|-------|-------------------------|
+| `$lt` / `$lte` | timestamp (`number`) or ISO `string` | is before / at or before the value. |
+| `$gt` / `$gte` | timestamp (`number`) or ISO `string` | is after / at or after the value. |
+| `$rangefuture` / `$rangepast` | relative window | falls within a future / past window. |
+| `$nrangefuture` / `$nrangepast` | relative window | falls outside a future / past window. |
+
+<Info>
+  Values may be `null` to match rows whose field is `null` (e.g. `{ "category": { "$eq": null } }`).
+</Info>
+
+## Related
+
+- [Query a datasource](/api-reference/datasource/query-a-datasource) — the endpoint that consumes this filter.
+- [Real-time API Datasource (proxy mode)](/developer-docs/guides/real-time-api-datasource) — building and testing a proxy Datasource.
+- [Datasource Data Node](/advanced-guide/workflows/data-nodes/datasources) — the same filters applied inside a Workflow.

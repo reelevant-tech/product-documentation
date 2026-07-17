@@ -241,7 +241,7 @@ Par exemple, filtrer `category = "boots"` et `inStock = true` appelle `POST http
 
 ### Tester depuis l'API
 
-Vous n'avez pas besoin d'un Workflow pour vérifier la Datasource — appelez directement l'endpoint [Query a datasource](/api-reference/datasource/query-a-datasource). Le champ `query` est un filtre encodé en JSON ; les variables et les champs de réponse sont filtrés exactement comme dans un Data Node. Passez la pagination en paramètres de requête.
+Vous n'avez pas besoin d'un Workflow pour vérifier la Datasource — appelez directement l'endpoint [Query a datasource](/api-reference/datasource/query-a-datasource). Le champ `query` est un filtre encodé en JSON (voir [Filtres de requête Datasource](/fr/developer-docs/guides/datasource-query-filters) pour sa structure et ses opérateurs) ; les variables et les champs de réponse sont filtrés exactement comme dans un Data Node. Passez la pagination en paramètres de requête.
 
 ```bash
 curl -XPOST "https://api.reelevant.com/v2/datasources/query?page=1&perPage=10" \
@@ -271,7 +271,7 @@ La réponse renvoie les lignes analysées dans `entries`, le total `count` et le
 ```
 
 <Tip>
-  Envoyez une requête vide (`"query": "{}"`) pour récupérer les données avec les valeurs `default` des variables, ou ajoutez l'en-tête `x-rlvt-no-cache: true` pour contourner la fenêtre de cache configurée à l'[étape 5](#5-configurer-le-cache-optionnel) pendant vos tests.
+  Envoyez une requête vide (`"query": "{}"`) pour récupérer les données avec les valeurs `default` des variables.
 </Tip>
 
 ## Gestion des erreurs

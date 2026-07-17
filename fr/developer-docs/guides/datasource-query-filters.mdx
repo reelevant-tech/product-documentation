@@ -1,0 +1,110 @@
+---
+title: 'Filtres de requête Datasource'
+description: 'Structure JSON et opérateurs du champ query accepté par l''API de requête des datasources'
+---
+
+## Vue d'ensemble
+
+Plusieurs endpoints datasources — dont [Query a datasource](/api-reference/datasource/query-a-datasource) — acceptent un champ `query` qui filtre les lignes renvoyées. La valeur est une **chaîne encodée en JSON** d'un objet de filtre : elle est sérialisée avec `JSON.stringify` avant d'être envoyée.
+
+```bash
+curl -XPOST "https://api.reelevant.com/v2/datasources/query" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "datasourceId": "<datasource_id>",
+    "query": "{\"$and\":[{\"$or\":[{\"category\":{\"$eq\":\"boots\"}}]},{\"$or\":[{\"inStock\":{\"$eq\":true}}]}]}"
+  }'
+```
+
+Le `query` décodé ci-dessus se lit :
+
+```json
+{
+  "$and": [
+    { "$or": [ { "category": { "$eq": "boots" } } ] },
+    { "$or": [ { "inStock": { "$eq": true } } ] }
+  ]
+}
+```
+
+## Structure
+
+Une requête est un arbre construit à partir de deux groupes logiques et de conditions feuilles.
+
+| Élément | Forme | Description |
+|---------|-------|-------------|
+| Racine | `{ "$and": [...] }` ou `{ "$or": [...] }` | Le niveau supérieur est un unique groupe logique. Un objet vide `{}` correspond à tout. |
+| Groupe | `{ "$and": [...] }` ou `{ "$or": [...] }` | Combine des éléments enfants. `$and` exige que tous correspondent, `$or` qu'au moins un corresponde. Les groupes peuvent être imbriqués. |
+| Condition | `{ "<field>": { "<operator>": <value> } }` | Une feuille. Exactement un champ et un opérateur par objet. |
+
+Chaque élément du tableau est soit un autre groupe, soit une condition unique — mélangez-les pour construire une logique imbriquée.
+
+```json
+{
+  "$and": [
+    { "category": { "$eq": "boots" } },
+    { "$or": [
+      { "price": { "$lte": 100 } },
+      { "inStock": { "$eq": true } }
+    ] }
+  ]
+}
+```
+
+## Opérateurs
+
+Les opérateurs autorisés pour un champ dépendent de son type. Le type d'un champ et ses opérateurs autorisés sont listés sous `queriableFields` lorsque vous lisez la Datasource (`GET /datasources/{id}`).
+
+### Chaîne (string)
+
+| Opérateur | Valeur | Correspond lorsque le champ… |
+|-----------|--------|------------------------------|
+| `$eq` | `string` ou `string[]` | est égal à la valeur (un tableau correspond à l'une des valeurs). |
+| `$ne` | `string` ou `string[]` | est différent de la valeur. |
+| `$contains` | `string` ou `string[]` | contient la sous-chaîne. |
+| `$notcontains` | `string` ou `string[]` | ne contient pas la sous-chaîne. |
+| `$startswith` | `string` ou `string[]` | commence par la valeur. |
+| `$endswith` | `string` ou `string[]` | se termine par la valeur. |
+| `$empty` | `boolean` | est vide (`true`) ou non vide (`false`). |
+
+### Nombre (number)
+
+| Opérateur | Valeur | Correspond lorsque le champ… |
+|-----------|--------|------------------------------|
+| `$neq` | `number` ou `number[]` | est égal à la valeur. |
+| `$nne` | `number` ou `number[]` | est différent de la valeur. |
+| `$lt` / `$lte` | `number` | est inférieur / inférieur ou égal à la valeur. |
+| `$gt` / `$gte` | `number` | est supérieur / supérieur ou égal à la valeur. |
+| `$empty` | `boolean` | est vide (`true`) ou non vide (`false`). |
+
+<Note>
+  L'égalité numérique utilise `$neq` (numeric-equal) et `$nne` (numeric-not-equal). `$eq` / `$ne` sont réservés aux champs chaîne et booléen.
+</Note>
+
+### Booléen (boolean)
+
+| Opérateur | Valeur | Correspond lorsque le champ… |
+|-----------|--------|------------------------------|
+| `$eq` | `boolean` | est égal à la valeur. |
+| `$ne` | `boolean` | est différent de la valeur. |
+| `$empty` | `boolean` | est vide (`true`) ou non vide (`false`). |
+
+### Date/heure (datetime)
+
+| Opérateur | Valeur | Correspond lorsque le champ… |
+|-----------|--------|------------------------------|
+| `$lt` / `$lte` | timestamp (`number`) ou `string` ISO | est avant / au plus tard à la valeur. |
+| `$gt` / `$gte` | timestamp (`number`) ou `string` ISO | est après / au plus tôt à la valeur. |
+| `$rangefuture` / `$rangepast` | fenêtre relative | tombe dans une fenêtre future / passée. |
+| `$nrangefuture` / `$nrangepast` | fenêtre relative | tombe en dehors d'une fenêtre future / passée. |
+
+<Info>
+  Les valeurs peuvent être `null` pour cibler les lignes dont le champ est `null` (par exemple `{ "category": { "$eq": null } }`).
+</Info>
+
+## Pages associées
+
+- [Query a datasource](/api-reference/datasource/query-a-datasource) — l'endpoint qui consomme ce filtre.
+- [Datasource API en temps réel (mode proxy)](/fr/developer-docs/guides/real-time-api-datasource) — construire et tester une Datasource proxy.
+- [Data Node Datasource](/fr/advanced-guide/workflows/data-nodes/datasources) — les mêmes filtres appliqués dans un Workflow.
