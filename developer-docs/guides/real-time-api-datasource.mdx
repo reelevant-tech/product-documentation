@@ -7,7 +7,7 @@ description: 'Expose an external HTTP API to Reelevant as a Datasource that is c
 
 A **proxy** Datasource turns an external HTTP API into a queryable Datasource. Reelevant does not fetch and store the data on a schedule — instead it calls your API **live on every request** and returns the parsed response, so your Workflows always see the latest data.
 
-This guide builds a proxy Datasource end to end with `curl`, against a fake product API. Every call goes to the datasources API at `https://api.reelevant.com/v2` and needs an access token — see [Authentication](/developer-docs/api-reference/authentication) for how to obtain one.
+This guide builds a proxy Datasource end to end with `curl`, against a fake product API. Every call goes to the datasources API at `https://api.reelevant.com/v2/datasources` and needs an access token — see [Authentication](/developer-docs/api-reference/authentication) for how to obtain one.
 
 | Mode | How data is retrieved | Storage |
 |------|-----------------------|---------|
@@ -239,6 +239,41 @@ Once live, the Datasource is consumed inside a Workflow through a Datasource [Da
 
 For example, filtering `category = "boots"` and `inStock = true` calls `POST https://api.example.com/products/boots`, then keeps only the returned rows where `inStock` is `true`.
 
+### Test it from the API
+
+You do not need a Workflow to verify the Datasource — call the [Query a datasource](/api-reference/datasource/query-a-datasource) endpoint directly. The `query` field is a JSON-encoded filter; variables and response fields are filtered exactly as in a Data Node. Pass pagination as query parameters.
+
+```bash
+curl -XPOST "https://api.reelevant.com/v2/datasources/query?page=1&perPage=10" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "datasourceId": "<datasource_id>",
+    "query": "{\"$and\":[{\"$or\":[{\"category\":{\"$eq\":\"boots\"}}]},{\"$or\":[{\"inStock\":{\"$eq\":true}}]}]}"
+  }'
+```
+
+The response returns the parsed rows in `entries`, the total `count`, and pagination metadata:
+
+```json
+{
+  "status": "success",
+  "data": {
+    "entries": [
+      { "id": "SKU-001", "name": "Running Shoes Pro", "price": 129.99, "inStock": true }
+    ],
+    "count": 1
+  },
+  "paginationPage": 1,
+  "paginationLimit": 10,
+  "paginationCount": 1
+}
+```
+
+<Tip>
+  Send an empty query (`"query": "{}"`) to fetch with the variables' `default` values, or add the `x-rlvt-no-cache: true` header to bypass the cache window configured in [step 5](#5-configure-caching-optional) while testing.
+</Tip>
+
 ## Error handling
 
 | Error | HTTP status | Cause |
@@ -264,6 +299,7 @@ For example, filtering `category = "boots"` and `inStock = true` calls `POST htt
 ## Related
 
 - [Authentication](/developer-docs/api-reference/authentication) — obtaining an access token.
+- [Query a datasource](/api-reference/datasource/query-a-datasource) — the endpoint used to test the live Datasource.
 - [Datasources API reference](/api-reference/introduction) — full endpoint reference.
 - [Custom Fetchers](/advanced-guide/datahub/custom-fetchers) — Proxy Lock and Proxy Aggregation for real-time Datasources.
 - [Datasource Data Node](/advanced-guide/workflows/data-nodes/datasources) — querying a Datasource inside a Workflow.
