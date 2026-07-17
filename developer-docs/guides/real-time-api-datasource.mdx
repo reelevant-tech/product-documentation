@@ -1,0 +1,269 @@
+---
+title: 'Real-time API Datasource (proxy mode)'
+description: 'Expose an external HTTP API to Reelevant as a Datasource that is called live on every request, using the datasources API with curl'
+---
+
+## Overview
+
+A **proxy** Datasource turns an external HTTP API into a queryable Datasource. Reelevant does not fetch and store the data on a schedule — instead it calls your API **live on every request** and returns the parsed response, so your Workflows always see the latest data.
+
+This guide builds a proxy Datasource end to end with `curl`, against a fake product API. Every call goes to the datasources API at `https://api.reelevant.com/v2` and needs an access token — see [Authentication](/developer-docs/api-reference/authentication) for how to obtain one.
+
+| Mode | How data is retrieved | Storage |
+|------|-----------------------|---------|
+| `ingester` | Events are appended continuously as they arrive. | Stored |
+| `worker` | Reelevant pulls and parses the source on a schedule. | Stored |
+| **`proxy`** | **Reelevant calls the upstream API live on every query.** | **Not stored** |
+
+<Info>
+  Use proxy mode when the upstream data must be fresh on every request (live stock, live pricing, per-user recommendations) or when it cannot be replicated into Reelevant. For large, slow-changing catalogues, prefer a `worker` Datasource so queries are served from Reelevant storage.
+</Info>
+
+## The upstream API
+
+Assume you own a product API that takes a category and a user identifier in the request body and returns a list of products. A live call and its response look like this:
+
+```bash
+curl -XPOST https://api.example.com/products/shoes \
+  -H "Authorization: Bearer <your_upstream_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "userId": "[email protected]", "category": "shoes" }'
+```
+
+```json
+{
+  "products": [
+    { "id": "SKU-001", "name": "Running Shoes Pro", "price": 129.99, "inStock": true },
+    { "id": "SKU-002", "name": "Trail Runner X", "price": 149.0, "inStock": false }
+  ]
+}
+```
+
+Reelevant will call this endpoint on every query, substituting the `userId` and `category` at request time from **variables** you declare below.
+
+## Build the Datasource
+
+Configuration is a sequence of **steps** applied to the Datasource's draft version. Each step is a `POST https://api.reelevant.com/v2/datasources/{id}/steps` call with a `{ name, payload }` body. Fetch the current step at any time with `GET https://api.reelevant.com/v2/datasources/{id}/steps`.
+
+The proxy step sequence is: `configure_name` → `configure_sources` → `configure_fields` → `patch` (optional) → `validate`.
+
+### 1. Create the Datasource
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "mode": "proxy" }'
+```
+
+The response contains the new Datasource `id` — reuse it as `<datasource_id>` in every step below.
+
+```json
+{
+  "status": "success",
+  "data": { "id": "665f1c0b2a9d4e0008b3a1f2", "mode": "proxy", "status": "draft" }
+}
+```
+
+### 2. Name it
+
+The `configure_name` payload is the name string itself.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "configure_name", "payload": "Live product catalogue" }'
+```
+
+### 3. Configure the source
+
+Describe the upstream call with a `url` source. Runtime values are declared as `variables` and referenced as `{{name}}` placeholders in the `url`, `body`, `headers`, and `query`. Because the response wraps the rows under `products`, set the JSON `rootPath` to `products.*`.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "configure_sources",
+    "payload": {
+      "pipeline": [
+        {
+          "input": {
+            "source": {
+              "type": "url",
+              "options": {
+                "url": "https://api.example.com/products/{{category}}",
+                "format": { "type": "json", "options": { "rootPath": "products.*" } },
+                "options": {
+                  "method": "POST",
+                  "timeout": 30000,
+                  "headers": { "Authorization": "Bearer <your_upstream_token>" },
+                  "body": "{ \"userId\": \"{{userId}}\", \"category\": \"{{category}}\" }",
+                  "variables": [
+                    { "name": "userId",   "primitive": "string", "required": true,  "unique": true,  "default": "[email protected]" },
+                    { "name": "category", "primitive": "string", "required": false, "unique": true,  "default": "shoes" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }'
+```
+
+Reelevant validates the source by calling the API with the variables' `default` values and stores one sample row. If the URL is unreachable or returns an error, the step fails — see [Error handling](#error-handling).
+
+#### Variable definition
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | `string` | Yes | Placeholder name, referenced as `{{name}}` in `url`, `body`, `headers`, or `query`. |
+| `primitive` | `"string" \| "number"` | Yes | Value type. `number` values are injected without quotes. |
+| `required` | `boolean` | Yes | When `true`, the variable must resolve at query time or the query is rejected. |
+| `unique` | `boolean` | Yes | When `true`, the variable becomes a single-value query filter (`$eq` only). |
+| `default` | `string \| number \| array \| { dynamic: true, value: string }` | Yes | Fallback used for sampling and when a query omits the variable. Use `{ "dynamic": true, "value": "String(Date.now())" }` to compute the default at request time. |
+
+<Note>
+  Variables never leak as post-fetch filters: a name consumed by the request template is only used to build the upstream call, not to filter the response.
+</Note>
+
+### 4. Map the fields
+
+Ask Reelevant to analyse the sample response and suggest fields, then send the fields you want to keep with `selected: true`.
+
+```bash
+# Get suggested fields from the sample
+curl -XPOST https://api.reelevant.com/v2/datasources/proxy/<datasource_id>/analyzer \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+```json
+{
+  "status": "success",
+  "data": {
+    "fields": [
+      { "name": "id",      "type": "string",  "primitive": "string",  "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "id" } }] } },
+      { "name": "name",    "type": "string",  "primitive": "string",  "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "name" } }] } },
+      { "name": "price",   "type": "price",   "primitive": "number",  "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "price" } }] } },
+      { "name": "inStock", "type": "boolean", "primitive": "boolean", "selected": false, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "inStock" } }] } }
+    ]
+  }
+}
+```
+
+Send the same array back through `configure_fields` with `selected: true` on the fields to keep. Field names must match `^[a-z][a-z0-9_-]*$` and be unique.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "configure_fields",
+    "payload": [
+      { "name": "id",      "type": "string",  "primitive": "string",  "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "id" } }] } },
+      { "name": "name",    "type": "string",  "primitive": "string",  "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "name" } }] } },
+      { "name": "price",   "type": "price",   "primitive": "number",  "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "price" } }] } },
+      { "name": "inStock", "type": "boolean", "primitive": "boolean", "selected": true, "rulesPerSources": { "0": [{ "name": "path", "params": { "value": "inStock" } }] } }
+    ]
+  }'
+```
+
+Each field's `rulesPerSources` maps the source index (`"0"` for the first source) to a `path` rule that extracts the value from the response row.
+
+### 5. Configure caching (optional)
+
+Because proxy Datasources call the upstream on every request, a short cache protects a rate-limited or slow API. The `patch` step sets the cache window and lets you ignore specific upstream status codes.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "patch",
+    "payload": {
+      "refresh": { "freq": 60000 },
+      "ignoreStatusCodes": [404]
+    }
+  }'
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `refresh.freq` | `number` | Cache window in milliseconds. Identical requests within this window reuse the cached response. |
+| `ignoreStatusCodes` | `number[]` | Upstream status codes treated as an empty result instead of an error. |
+
+<Info>
+  For heavy fan-out (one delivery triggering many identical calls) or on-the-fly aggregation of the live response, ask your Technical Account Manager about the **Proxy Lock** and **Proxy Aggregation** [custom fetchers](/advanced-guide/datahub/custom-fetchers).
+</Info>
+
+### 6. Validate to go live
+
+`validate` promotes the draft version to live. Proxy Datasources go live immediately — no verification job runs, because nothing is stored.
+
+```bash
+curl -XPOST https://api.reelevant.com/v2/datasources/<datasource_id>/steps \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "validate", "payload": {} }'
+```
+
+Read back the live version and its sample row to confirm:
+
+```bash
+curl "https://api.reelevant.com/v2/datasources/<datasource_id>?withExample&versions=LIVE" \
+  -H "Authorization: Bearer <access_token>"
+```
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "665f1c0b2a9d4e0008b3a1f2",
+    "status": "published",
+    "example": { "id": "SKU-001", "name": "Running Shoes Pro", "price": 129.99, "inStock": true }
+  }
+}
+```
+
+## Querying at runtime
+
+Once live, the Datasource is consumed inside a Workflow through a Datasource [Data Node](/advanced-guide/workflows/data-nodes/datasources). The node's filters supply the variable values for the live call:
+
+- A filter on a **variable** (`userId`, `category`) sets the value sent upstream. Omitting a variable falls back to its `default`.
+- A filter on a **response field** (`price`, `inStock`) is applied by Reelevant to the rows returned by the API.
+
+For example, filtering `category = "boots"` and `inStock = true` calls `POST https://api.example.com/products/boots`, then keeps only the returned rows where `inStock` is `true`.
+
+## Error handling
+
+| Error | HTTP status | Cause |
+|-------|-------------|-------|
+| `FailedToGetSample` | 400 | The upstream API was unreachable or errored during `configure_sources`. Check the URL, method, headers, and default variable values. |
+| `UrlNotReachable` | 400 | The upstream host could not be resolved or connected to at query time. Private/internal IPs are blocked. |
+| `InvalidFieldName` | 400 | A field name does not match `^[a-z][a-z0-9_-]*$`. |
+| `EmptyFieldsMap` | 400 | No field was sent with `selected: true` in `configure_fields`. |
+
+```json
+{
+  "status": "fail",
+  "error_code": 1012,
+  "message": "Failed to get sample",
+  "data": { "url": "url", "err": "connect ETIMEDOUT" }
+}
+```
+
+<Warning>
+  The upstream host must be publicly reachable. Requests that resolve to private or internal IP ranges are rejected with `UrlNotReachable`, both when configuring the source and on every live query.
+</Warning>
+
+## Related
+
+- [Authentication](/developer-docs/api-reference/authentication) — obtaining an access token.
+- [Datasources API reference](/api-reference/introduction) — full endpoint reference.
+- [Custom Fetchers](/advanced-guide/datahub/custom-fetchers) — Proxy Lock and Proxy Aggregation for real-time Datasources.
+- [Datasource Data Node](/advanced-guide/workflows/data-nodes/datasources) — querying a Datasource inside a Workflow.
