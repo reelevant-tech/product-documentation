@@ -241,7 +241,7 @@ For example, filtering `category = "boots"` and `inStock = true` calls `POST htt
 
 ### Test it from the API
 
-You do not need a Workflow to verify the Datasource — call the [Query a datasource](/api-reference/datasource/query-a-datasource) endpoint directly. The `query` field is a JSON-encoded filter; variables and response fields are filtered exactly as in a Data Node. Pass pagination as query parameters.
+You do not need a Workflow to verify the Datasource — call the [Query a datasource](/api-reference/datasource/query-a-datasource) endpoint directly. The `query` field is a JSON-encoded filter (see [Datasource query filters](/developer-docs/guides/datasource-query-filters) for its structure and operators); variables and response fields are filtered exactly as in a Data Node. Pass pagination as query parameters.
 
 ```bash
 curl -XPOST "https://api.reelevant.com/v2/datasources/query?page=1&perPage=10" \
@@ -271,7 +271,7 @@ The response returns the parsed rows in `entries`, the total `count`, and pagina
 ```
 
 <Tip>
-  Send an empty query (`"query": "{}"`) to fetch with the variables' `default` values, or add the `x-rlvt-no-cache: true` header to bypass the cache window configured in [step 5](#5-configure-caching-optional) while testing.
+  Send an empty query (`"query": "{}"`) to fetch with the variables' `default` values.
 </Tip>
 
 ## Error handling
