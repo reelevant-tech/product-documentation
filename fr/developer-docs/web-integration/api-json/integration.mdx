@@ -119,12 +119,15 @@ Un JSON Template est une définition de schéma réutilisable créée dans la pl
 - **Definition** — la structure JSON où chaque champ est soit `{ "type": "static", "value": ... }` (fixe), soit `{ "type": "dependency", "variable": "..." }` (résolu à l'exécution)
 - **Variables** — des emplacements nommés qui correspondent à des valeurs de Datasource, en cohérence avec les noms de `variable` de la définition
 
-Chaque variable est déclarée soit comme **scalaire** (une valeur unique), soit comme **tableau** (une liste de valeurs issues d'une Datasource). Cela indique au moteur comment résoudre les dépendances :
+Chaque variable déclare un `type` qui indique au Runner comment résoudre sa dépendance :
 
-| Type de variable | Comportement | Exemple de cas d'usage |
-|---------------|-----------|------------------|
-| Scalaire | Se résout en une valeur unique issue de la première ligne de la Datasource | Le nom de l'utilisateur, une recommandation produit unique |
-| Tableau | Se résout en un tableau de toutes les valeurs à travers les lignes de la Datasource | Liste de produits recommandés, noms de catégories |
+| `type` | Champ supplémentaire | Comportement | Exemple de cas d'usage |
+|--------|----------------------|--------------|------------------------|
+| `scalar` | — | Se résout en une valeur unique, sélectionnée automatiquement par Branch | Le nom de l'utilisateur, une recommandation produit unique |
+| `array` | — | Se résout en un tableau de toutes les valeurs à travers les lignes de la Datasource | Liste de produits recommandés, noms de catégories |
+| `fixed` | `index` (base 0) | Se résout en la valeur à une position fixe de la Datasource | Toujours le 1er (`index: 0`) ou le 3e (`index: 2`) produit |
+
+L'interface expose les positions `fixed` sous la forme **Datasource item #1 … #20** ; l'élément #N correspond à `index: N - 1`.
 
 ### API de gestion des templates
 

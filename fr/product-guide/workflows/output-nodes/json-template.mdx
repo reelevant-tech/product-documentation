@@ -31,7 +31,7 @@ Chaque template déclare des **variables nommées** qui sont résolues à l'exé
     - Cliquez sur le sélecteur **Parameter value**.
     - Sélectionnez un champ de Datasource parmi les Data Nodes en amont de votre Workflow.
     
-    Chaque variable a une description indiquant si elle récupère **une seule valeur** (scalaire) ou **toutes les valeurs** (tableau) de la Datasource.
+    Chaque variable indique comment elle résout ses données : **une seule valeur** (scalaire), **toutes les valeurs** (tableau), ou **un élément précis de la Datasource** (une position fixe, comme l'élément n° 1). Le mode est choisi à la création du template — voir [les réglages des JSON Templates](/fr/product-guide/workflows/settings#json-templates).
   </Step>
   <Step title="Confirmer">
     Cliquez sur **Confirm** pour enregistrer la configuration. Le Node est maintenant prêt pour la publication.
@@ -49,6 +49,12 @@ Une variable scalaire récupère **une valeur** de la Datasource — par exemple
 ### Variables tableau (toutes les valeurs)
 
 Une variable tableau récupère **toutes les valeurs correspondantes** — par exemple, une liste de produits recommandés ou d'achats récents. La description indique : *« Retrieves all values from the datasource »*. Le moteur itère automatiquement sur toutes les lignes de la Datasource.
+
+### Variables élément précis (une position fixe)
+
+Une variable « élément précis » récupère toujours la valeur à une **position fixe** dans la Datasource — par exemple, toujours le 1er produit, ou toujours le 3e. Vous pouvez choisir n'importe quel élément de **n° 1 à n° 20**.
+
+Utilisez ce mode lorsque vous voulez un emplacement prévisible plutôt que la valeur choisie automatiquement par le moteur — une alternative pratique à l'ajout d'étapes supplémentaires pour atteindre un seul élément.
 
 ## Comment ça fonctionne
 
@@ -77,8 +83,10 @@ Chaque champ est soit :
 - `"type": "dependency"` — une variable nommée que l'équipe marketing lie à un champ de Datasource.
 
 Le template déclare deux variables :
-- `productName` — **isArray: true** → récupère toutes les lignes correspondantes de la Datasource
-- `loyaltyPoints` — **isArray: false** → récupère une seule valeur
+- `productName` — **Tableau** → récupère toutes les lignes correspondantes de la Datasource
+- `loyaltyPoints` — **Scalaire** → récupère une seule valeur
+
+Un troisième mode, **Élément de Datasource n° N**, renverrait plutôt une position fixe (par exemple toujours le nom du 1er produit) au lieu de la liste entière ou de la valeur résolue automatiquement.
 
 À l'exécution, le moteur résout chaque variable à partir de la Datasource liée et renvoie une réponse JSON plate :
 

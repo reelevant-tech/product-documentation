@@ -41,7 +41,7 @@ Mais parfois, vous souhaitez que Reelevant prenne en charge les **décisions de 
     Dans la plateforme Reelevant, créez un JSON Template qui définit le schéma (champs et types) et déclare des variables nommées. Chaque variable correspond à une valeur de Datasource qui sera résolue au moment de l'exécution.
   </Step>
   <Step title="Construire un Workflow avec un Output Node JSON Template">
-    Ajoutez un Output Node **JSON Template** à votre Workflow. Sélectionnez le template que vous avez créé, puis liez chaque variable à un champ de Datasource — soit comme valeur scalaire, soit comme tableau (pour les listes de produits, les recommandations, etc.).
+    Ajoutez un Output Node **JSON Template** à votre Workflow. Sélectionnez le template que vous avez créé, puis liez chaque variable à un champ de Datasource — comme valeur scalaire, comme tableau (pour les listes de produits, les recommandations, etc.), ou comme élément fixe de la Datasource (une position précise).
   </Step>
   <Step title="Publier le Workflow">
     La publication vérifie que tous les Nodes JSON Template référencent le même template et que le template existe. Une fois publié, le Workflow est en ligne.

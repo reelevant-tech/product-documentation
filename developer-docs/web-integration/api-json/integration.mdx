@@ -119,12 +119,15 @@ A JSON Template is a reusable schema definition created in the Reelevant platfor
 - **Definition** — the JSON structure where each field is either `{ "type": "static", "value": ... }` (fixed) or `{ "type": "dependency", "variable": "..." }` (resolved at runtime)
 - **Variables** — named slots that map to datasource values, matching the `variable` names in the definition
 
-Each variable is declared as either **scalar** (a single value) or **array** (a list of values from a datasource). This tells the engine how to resolve dependencies:
+Each variable declares a `type` that tells the Runner how to resolve its dependency:
 
-| Variable type | Behaviour | Example use case |
-|---------------|-----------|------------------|
-| Scalar | Resolves to a single value from the first datasource row | User's name, a single product recommendation |
-| Array | Resolves to an array of all values across datasource rows | List of recommended products, category names |
+| `type` | Extra field | Behaviour | Example use case |
+|--------|-------------|-----------|------------------|
+| `scalar` | — | Resolves to a single value, auto-selected per branch | User's name, a single product recommendation |
+| `array` | — | Resolves to an array of all values across datasource rows | List of recommended products, category names |
+| `fixed` | `index` (0-based) | Resolves to the value at a fixed datasource position | Always the 1st (`index: 0`) or 3rd (`index: 2`) product |
+
+The UI exposes `fixed` positions as **Datasource item #1 … #20**; item #N maps to `index: N - 1`.
 
 ### Template management API
 

@@ -165,7 +165,10 @@ The **JSON Templates** tab displays all configured templates with their name and
     For each dependency field in the definition, add a **variable** entry:
     - **Name** — Must exactly match the `variable` value in the definition (e.g., `productName`).
     - **Description** — Optional; helps marketing understand what the variable represents.
-    - **Is Array** — Toggle on if this variable should retrieve all values from the datasource (e.g., a list of products). Leave off for scalar values (e.g., a single loyalty score).
+    - **Value** — Choose how the variable resolves data:
+      - **Array** — retrieve all values from the datasource (e.g., a list of products).
+      - **Scalar** — retrieve a single value, chosen automatically (e.g., a single loyalty score).
+      - **Datasource item #1 … #20** — always retrieve one fixed position in the datasource (e.g., always the 2nd product).
   </Step>
   <Step title="Save">
     Click **Save** to create the template. It becomes immediately available for selection in JSON Template output nodes across your workflows.
@@ -205,7 +208,7 @@ Each variable represents a **dynamic slot** in the JSON payload:
 |----------|-------------|
 | **Name** | Must exactly match a key in the JSON definition. Case-sensitive. |
 | **Description** | Human-readable explanation shown to marketing in the workflow editor. |
-| **Is Array** | When enabled, the engine uses automatic mapping to iterate over all datasource rows. When disabled, it retrieves a single value. |
+| **Value** | How the variable resolves data. **Array** iterates over all datasource rows. **Scalar** returns a single value chosen automatically. **Datasource item #N** always returns one fixed position (item #1 to #20). |
 
 ### Publish Validation
 
