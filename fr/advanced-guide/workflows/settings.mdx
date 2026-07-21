@@ -165,7 +165,10 @@ L'onglet **JSON Templates** affiche tous les templates configurés avec leur nom
     Pour chaque champ dependency dans la définition, ajoutez une entrée **variable** :
     - **Nom** — Doit correspondre exactement à la valeur `variable` dans la définition (ex. : `productName`).
     - **Description** — Optionnel ; aide le marketing à comprendre ce que la variable représente.
-    - **Is Array** — Activez si cette variable doit récupérer toutes les valeurs de la Datasource (ex. : une liste de produits). Désactivez pour les valeurs scalaires (ex. : un score de fidélité unique).
+    - **Value** — Choisissez comment la variable résout ses données :
+      - **Array** — récupérer toutes les valeurs de la Datasource (ex. : une liste de produits).
+      - **Scalar** — récupérer une seule valeur, choisie automatiquement (ex. : un score de fidélité unique).
+      - **Datasource item #1 … #20** — toujours récupérer une position fixe dans la Datasource (ex. : toujours le 2e produit).
   </Step>
   <Step title="Enregistrer">
     Cliquez sur **Save** pour créer le template. Il devient immédiatement disponible pour sélection dans les Output Nodes JSON Template de vos Workflows.
@@ -205,7 +208,7 @@ Chaque variable représente un **emplacement dynamique** dans le payload JSON :
 |-----------|-------------|
 | **Nom** | Doit correspondre exactement à une clé dans la définition JSON. Sensible à la casse. |
 | **Description** | Explication lisible affichée au marketing dans l'éditeur de Workflow. |
-| **Is Array** | Lorsqu'activé, le moteur utilise le mapping automatique pour itérer sur toutes les lignes de la Datasource. Lorsque désactivé, il récupère une seule valeur. |
+| **Value** | Comment la variable résout ses données. **Array** itère sur toutes les lignes de la Datasource. **Scalar** renvoie une seule valeur choisie automatiquement. **Datasource item #N** renvoie toujours une position fixe (élément #1 à #20). |
 
 ### Validation à la publication
 

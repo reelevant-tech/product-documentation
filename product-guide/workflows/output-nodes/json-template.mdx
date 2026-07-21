@@ -31,7 +31,7 @@ Each template declares **named variables** that are resolved at runtime from you
     - Click the **Parameter value** picker.
     - Select a datasource field from your workflow's upstream data nodes.
     
-    Each variable has a description indicating whether it retrieves **a single value** (scalar) or **all values** (array) from the datasource.
+    Each variable indicates how it resolves data: **a single value** (scalar), **all values** (array), or **a specific datasource item** (a fixed position, such as item #1). The mode is chosen when the template is created — see [JSON Templates settings](/product-guide/workflows/settings#json-templates).
   </Step>
   <Step title="Confirm">
     Click **Confirm** to save the configuration. The node is now ready for publishing.
@@ -49,6 +49,12 @@ A scalar variable retrieves **one value** from the datasource — for example, a
 ### Array Variables (all values)
 
 An array variable retrieves **all matching values** — for example, a list of recommended products or recent purchases. The description reads: *"Retrieves all values from the datasource"*. The engine automatically iterates over all rows in the datasource.
+
+### Specific Item Variables (a fixed position)
+
+A specific-item variable always retrieves the value at a **fixed position** in the datasource — for example, always the 1st product, or always the 3rd. You can pick any item from **#1 up to #20**.
+
+Use this when you want a predictable slot instead of the value the engine chooses automatically — a common alternative to building extra steps just to reach one item.
 
 ## How It Works
 
@@ -77,8 +83,10 @@ Each field is either:
 - `"type": "dependency"` — a named variable that the marketing team binds to a datasource field.
 
 The template declares two variables:
-- `productName` — **isArray: true** → retrieves all matching rows from the datasource
-- `loyaltyPoints` — **isArray: false** → retrieves a single value
+- `productName` — **Array** → retrieves all matching rows from the datasource
+- `loyaltyPoints` — **Scalar** → retrieves a single value
+
+A third mode, **Datasource item #N**, would instead return one fixed position (e.g. always the 1st product name) rather than the whole list or the auto-resolved value.
 
 At runtime, the engine resolves each variable from the bound datasource and returns a flat JSON response:
 
