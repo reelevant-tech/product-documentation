@@ -1,32 +1,49 @@
 ---
 title: 'Paramètres Analytics'
-description: "Configurez la période d'attribution et les tags personnalisés de votre entreprise"
+description: "Configurez l'attribution et les tags personnalisés de votre entreprise"
 ---
 
 ![Onglet Tags des paramètres Analytics présentant les clés, leurs cardinalités et leurs valeurs](/images/analytics/tag-settings.png)
 
 ## Vue d'ensemble
 
-La page Paramètres Analytics permet de configurer la période d'attribution et les tags personnalisés de votre entreprise. Utilisez les tags pour qualifier les Branches et segmenter Analytics.
+La page Paramètres Analytics permet de configurer l'attribution et les tags personnalisés de votre entreprise. Utilisez les tags pour qualifier les Branches et segmenter Analytics.
 
 Accédez-y depuis le lien **Settings** dans la navigation latérale d'Analytics.
 
-## Période d'attribution
+## Attribution
 
-La période d'attribution définit le nombre d'heures utilisé pour attribuer les conversions à une interaction avec un [Workflow](/fr/product-guide/workflows/overview). Lorsqu'un utilisateur clique sur un Content Reelevant puis effectue un achat dans cette fenêtre temporelle, la conversion est créditée à cette interaction avec le Content.
+L'attribution détermine la part de chiffre d'affaires que vos [Workflows](/fr/product-guide/workflows/overview) Reelevant ont aidé à générer. Vous y choisissez le modèle, les fenêtres rétrospectives et la source de données. Voir [Attribution](/fr/product-guide/analytics/attribution) pour une explication complète.
+
+### Modèle d'attribution
+
+Le modèle décide comment le crédit est partagé entre les interactions d'un parcours client.
+
+| Modèle | Comment il partage le crédit |
+|-------|-------------|
+| **Position-based** (par défaut) | La première et la dernière interaction reçoivent l'essentiel du crédit ; celles du milieu se partagent le reste. |
+| **Linear** | Chaque interaction reçoit une part égale. |
+| **Last-touch** | La dernière interaction avant l'achat reçoit tout le crédit. |
+
+### Fenêtres rétrospectives
+
+La fenêtre rétrospective est la durée précédant un achat pendant laquelle une interaction peut recevoir du crédit. Vous pouvez définir une fenêtre différente pour chaque type d'interaction.
 
 | Champ | Description |
 |-------|-------------|
-| **Attribution period (hours)** | La fenêtre rétrospective en heures (par exemple, 720 pour 30 jours). Laissez vide pour utiliser la période d'attribution par défaut. |
+| **Click window (hours)** | Fenêtre rétrospective pour les clics sur du Content Reelevant (par exemple, 720 pour 30 jours). Laissez vide pour la valeur par défaut. |
+| **View-through window (hours)** | Fenêtre rétrospective pour les vues display (par exemple, 168 pour 7 jours). Laissez vide pour la valeur par défaut. |
 
-### Configurer la période d'attribution
+### Configurer l'attribution
 
 1. Rendez-vous dans **Analytics > Settings**.
-2. Saisissez le nombre d'heures souhaité dans le champ **Attribution period (hours)**.
-3. Cliquez sur **Save**.
+2. Choisissez un **modèle d'attribution**.
+3. Définissez les **fenêtres rétrospectives** pour chaque type d'interaction.
+4. Choisissez votre **source de données** (web tracking ou customer purchases).
+5. Cliquez sur **Save**.
 
 <Info>
-  Modifier la période d'attribution affecte la façon dont les conversions sont comptabilisées dans le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et les requêtes [Data Exploration](/fr/product-guide/analytics/data-exploration). Une période plus longue capte davantage de conversions mais peut inclure des achats moins directement attribuables.
+  Modifier l'attribution affecte la façon dont les conversions sont comptabilisées dans le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et [Data Exploration](/fr/product-guide/analytics/data-exploration). Une fenêtre plus longue capte davantage de conversions mais peut inclure des achats moins directement attribuables.
 </Info>
 
 ## Tags
@@ -108,7 +125,7 @@ Dans Analytics, utilisez les clés et valeurs pour filtrer les résultats ou com
   <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
     Filtrez et comparez les performances avec vos clés de tag.
   </Card>
-  <Card title="Mesures et dimensions" icon="table-list" href="/fr/product-guide/analytics/measures-and-dimensions">
-    Consultez les dimensions de tag disponibles pour vos analyses.
+  <Card title="Attribution" icon="bullseye-arrow" href="/fr/product-guide/analytics/attribution">
+    Comprenez comment Reelevant crédite le chiffre d'affaires aux interactions avec le Content.
   </Card>
 </CardGroup>
