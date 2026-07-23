@@ -1,0 +1,96 @@
+---
+title: 'Attribution'
+description: 'Understand how Reelevant credits revenue to content interactions with influenced revenue and attribution models'
+---
+
+## Overview
+
+Attribution explains how much revenue your Reelevant [workflows](/product-guide/workflows/overview) helped generate. It links each purchase back to the content interactions that led to it.
+
+A customer often sees or clicks Reelevant content several times before buying. Attribution shares the credit across those interactions, so you can see the real contribution of your personalisation.
+
+## Reelevant-influenced revenue
+
+Reelevant reports **influenced revenue** — the revenue Reelevant helped generate, not a claim to own every sale.
+
+This wording is deliberate. A purchase usually involves several marketing efforts, so Reelevant credits its share of the outcome rather than the whole sale.
+
+| Measure | What it tells you |
+|---|---|
+| **Influenced Revenue** | Revenue credited to Reelevant content interactions, spread across the interactions before the purchase. |
+| **Direct Revenue** | Revenue credited only to the last Reelevant interaction before the purchase. |
+| **Influenced Conversions** | The share of each conversion credited to Reelevant interactions. |
+
+<Info>
+  Compare Influenced Revenue and Direct Revenue side by side to see how much value your early interactions add beyond the final one.
+</Info>
+
+## Attribution models
+
+An attribution model decides how credit is shared between the interactions that led to a purchase. You choose one model in [Analytics Settings](/product-guide/analytics/settings).
+
+| Model | How it shares credit | Best for |
+|---|---|---|
+| **Position-based** (default) | The first and last interactions receive most of the credit. The interactions in between share the rest. | A balanced view that values both discovery and the final push. |
+| **Linear** | Every interaction receives an equal share. | Seeing every interaction contribute evenly. |
+| **Last-touch** | The last interaction before the purchase receives all the credit. | A simple view focused on the final interaction. |
+
+### Worked example
+
+Imagine a customer interacts with Reelevant content three times, then buys for 100.
+
+| Model | First interaction | Middle interaction | Last interaction |
+|---|---|---|---|
+| **Position-based** | 40 | 20 | 40 |
+| **Linear** | 33.3 | 33.3 | 33.3 |
+| **Last-touch** | 0 | 0 | 100 |
+
+<Tip>
+  Position-based is the default because it rewards the interaction that opened the relationship and the one that closed the sale, without ignoring those in between.
+</Tip>
+
+## The lookback window
+
+The lookback window is the time before a purchase during which an interaction can earn credit. An interaction that happened outside this window is not credited.
+
+You can set a different window for each interaction type:
+
+| Interaction type | What it means | Default window |
+|---|---|---|
+| **Click** | The customer clicked on Reelevant content. | 30 days |
+| **View-through (display)** | The customer was shown Reelevant content but did not click. | 7 days |
+
+A display view is a weaker signal than a click, so it uses a shorter default window. You can change either window to match how your customers behave.
+
+## Where the data comes from
+
+Reelevant can measure attribution from two sources. You pick the one that fits your setup in [Analytics Settings](/product-guide/analytics/settings).
+
+| Source | Use it when |
+|---|---|
+| **Web tracking** | You let Reelevant track purchases on your website. |
+| **Customer purchases** | You send Reelevant your own purchase data. |
+
+<Info>
+  Both sources support click and view-through attribution, so you get the same models and measures whichever one you choose.
+</Info>
+
+## Beyond purchases
+
+Attribution is not limited to online shopping. You can define your own stages — for example `signup_start` then `signup_complete` — and Reelevant credits the last stage as the conversion.
+
+This lets you measure any goal that matters to you, not only sales.
+
+## What's Next?
+
+<CardGroup cols={3}>
+  <Card title="Analytics Settings" icon="gear" href="/product-guide/analytics/settings">
+    Choose your attribution model, lookback windows, and data source.
+  </Card>
+  <Card title="Conversions Dashboard" icon="cart-shopping" href="/product-guide/analytics/dashboards/conversions">
+    See influenced revenue and conversions from your campaigns.
+  </Card>
+  <Card title="Measures and Dimensions" icon="table-list" href="/product-guide/analytics/measures-and-dimensions">
+    Review the measures available for your analysis.
+  </Card>
+</CardGroup>

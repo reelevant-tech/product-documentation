@@ -145,6 +145,7 @@
                 "group": "Analytics",
                 "pages": [
                   "product-guide/analytics/overview",
+                  "product-guide/analytics/attribution",
                   "product-guide/analytics/tracking-opener-consumption",
                   {
                     "group": "Dashboards",
@@ -337,6 +338,7 @@
               {
                 "group": "Advanced Analytics",
                 "pages": [
+                  "advanced-guide/analytics/attribution",
                   "product-guide/analytics/data-exploration",
                   "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/dashboards/individualization",
@@ -571,6 +573,7 @@
                 "group": "Analytics",
                 "pages": [
                   "fr/product-guide/analytics/overview",
+                  "fr/product-guide/analytics/attribution",
                   "fr/product-guide/analytics/tracking-opener-consumption",
                   {
                     "group": "Dashboards",
@@ -763,6 +766,7 @@
               {
                 "group": "Advanced Analytics",
                 "pages": [
+                  "fr/advanced-guide/analytics/attribution",
                   "fr/product-guide/analytics/data-exploration",
                   "fr/product-guide/analytics/measures-and-dimensions",
                   "fr/product-guide/analytics/dashboards/individualization",

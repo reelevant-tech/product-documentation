@@ -1,0 +1,96 @@
+---
+title: 'Attribution'
+description: "Comprenez comment Reelevant crédite le chiffre d'affaires aux interactions avec le Content grâce au chiffre d'affaires influencé et aux modèles d'attribution"
+---
+
+## Vue d'ensemble
+
+L'attribution explique la part de chiffre d'affaires que vos [Workflows](/fr/product-guide/workflows/overview) Reelevant ont contribué à générer. Elle relie chaque achat aux interactions avec le Content qui l'ont précédé.
+
+Un client voit ou clique souvent plusieurs fois sur du Content Reelevant avant d'acheter. L'attribution partage le crédit entre ces interactions, pour révéler la contribution réelle de votre personnalisation.
+
+## Chiffre d'affaires influencé par Reelevant
+
+Reelevant reporte un **chiffre d'affaires influencé** — le chiffre d'affaires que Reelevant a aidé à générer, sans prétendre s'attribuer chaque vente.
+
+Cette formulation est volontaire. Un achat implique généralement plusieurs actions marketing ; Reelevant crédite donc sa part du résultat plutôt que la vente entière.
+
+| Mesure | Ce qu'elle indique |
+|---|---|
+| **Influenced Revenue** | Chiffre d'affaires crédité aux interactions avec le Content Reelevant, réparti sur le parcours client. |
+| **Direct Revenue** | Chiffre d'affaires crédité uniquement à la dernière interaction Reelevant avant l'achat. |
+| **Influenced Conversions** | La part de chaque conversion créditée aux interactions Reelevant. |
+
+<Info>
+  Comparez Influenced Revenue et Direct Revenue côte à côte pour voir la valeur ajoutée par vos premières interactions, au-delà de la dernière.
+</Info>
+
+## Modèles d'attribution
+
+Un modèle d'attribution décide comment le crédit est partagé entre les interactions d'un parcours. Vous en choisissez un dans les [Paramètres Analytics](/fr/product-guide/analytics/settings).
+
+| Modèle | Comment il partage le crédit | Idéal pour |
+|---|---|---|
+| **Position-based** (par défaut) | La première et la dernière interaction reçoivent l'essentiel du crédit. Celles du milieu se partagent le reste. | Une vue équilibrée qui valorise la découverte et la conclusion. |
+| **Linear** | Chaque interaction reçoit une part égale. | Voir l'ensemble du parcours contribuer uniformément. |
+| **Last-touch** | La dernière interaction avant l'achat reçoit tout le crédit. | Une vue simple centrée sur l'interaction finale. |
+
+### Exemple concret
+
+Imaginez un client qui interagit trois fois avec du Content Reelevant, puis achète pour 100.
+
+| Modèle | Première interaction | Interaction du milieu | Dernière interaction |
+|---|---|---|---|
+| **Position-based** | 40 | 20 | 40 |
+| **Linear** | 33,3 | 33,3 | 33,3 |
+| **Last-touch** | 0 | 0 | 100 |
+
+<Tip>
+  Position-based est le modèle par défaut car il récompense l'interaction qui a lancé le parcours et celle qui l'a conclu, sans ignorer les étapes intermédiaires.
+</Tip>
+
+## La fenêtre rétrospective
+
+La fenêtre rétrospective est la durée précédant un achat pendant laquelle une interaction peut recevoir du crédit. Une interaction survenue hors de cette fenêtre n'est pas créditée.
+
+Vous pouvez définir une fenêtre différente pour chaque type d'interaction :
+
+| Type d'interaction | Signification | Fenêtre par défaut |
+|---|---|---|
+| **Clic** | Le client a cliqué sur du Content Reelevant. | 30 jours |
+| **View-through (display)** | Le client a vu du Content Reelevant sans cliquer. | 7 jours |
+
+Une vue display est un signal plus faible qu'un clic ; elle utilise donc une fenêtre par défaut plus courte. Vous pouvez modifier chaque fenêtre selon le comportement de vos clients.
+
+## D'où proviennent les données
+
+Reelevant peut mesurer l'attribution à partir de deux sources. Vous choisissez celle qui correspond à votre configuration dans les [Paramètres Analytics](/fr/product-guide/analytics/settings).
+
+| Source | À utiliser lorsque |
+|---|---|
+| **Web tracking** | Vous laissez Reelevant suivre les achats sur votre site web. |
+| **Customer purchases** | Vous transmettez vos propres données d'achat à Reelevant. |
+
+<Info>
+  Les deux sources gèrent l'attribution au clic et view-through, vous bénéficiez donc des mêmes modèles et mesures quel que soit votre choix.
+</Info>
+
+## Au-delà des achats
+
+L'attribution ne se limite pas à l'achat en ligne. Vous pouvez définir vos propres étapes — par exemple `signup_start` puis `signup_complete` — et Reelevant crédite l'étape finale comme conversion.
+
+Vous mesurez ainsi n'importe quel objectif qui compte pour vous, pas uniquement les ventes.
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Paramètres Analytics" icon="gear" href="/fr/product-guide/analytics/settings">
+    Choisissez votre modèle d'attribution, vos fenêtres rétrospectives et votre source de données.
+  </Card>
+  <Card title="Tableau de bord Conversions" icon="cart-shopping" href="/fr/product-guide/analytics/dashboards/conversions">
+    Consultez le chiffre d'affaires influencé et les conversions de vos campagnes.
+  </Card>
+  <Card title="Mesures et dimensions" icon="table-list" href="/fr/product-guide/analytics/measures-and-dimensions">
+    Passez en revue les mesures disponibles pour vos analyses.
+  </Card>
+</CardGroup>
