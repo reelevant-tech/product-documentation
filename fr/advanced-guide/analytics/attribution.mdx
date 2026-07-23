@@ -1,0 +1,100 @@
+---
+title: "Modèle d'attribution"
+description: "Comment Reelevant répartit le crédit de conversion entre les interactions via le chiffre d'affaires influencé, les modèles d'attribution et des fenêtres rétrospectives par type d'interaction"
+---
+
+## Avant de commencer
+
+Cette page explique la méthodologie d'attribution derrière le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et [Data Exploration](/fr/product-guide/analytics/data-exploration). Configurez les paramètres décrits ici depuis les [Paramètres Analytics](/fr/product-guide/analytics/settings).
+
+L'attribution répond à une seule question : pour une conversion donnée, quelle part de sa valeur créditer à chaque interaction avec du Content Reelevant qui l'a précédée.
+
+## Chiffre d'affaires influencé et chiffre d'affaires direct
+
+Reelevant reporte un **chiffre d'affaires influencé** plutôt qu'un chiffre d'affaires attribué. La distinction est volontaire : une conversion implique généralement plusieurs actions marketing, Reelevant quantifie donc sa contribution au lieu de revendiquer la vente entière.
+
+| Mesure | Définition |
+|---|---|
+| **Influenced Revenue** | Valeur de la conversion répartie sur chaque interaction éligible selon le modèle d'attribution sélectionné. |
+| **Direct Revenue** | Valeur de la conversion créditée uniquement à la dernière interaction éligible avant la conversion. |
+| **Influenced Conversions** | Nombre de conversions fractionné et réparti entre les interactions éligibles. Le crédit d'une conversion totalise toujours 1. |
+
+Exposer les deux mesures permet de quantifier la valeur d'assistance : l'écart entre le chiffre d'affaires influencé et direct correspond à la contribution des interactions antérieures à la dernière.
+
+<Info>
+  Les conversions sans aucune interaction Reelevant éligible sont exclues. Une conversion n'est créditée que lorsqu'au moins une interaction tombe dans sa fenêtre rétrospective ; les achats directs et non attribués ne gonflent donc jamais le chiffre d'affaires influencé.
+</Info>
+
+## Modèles d'attribution
+
+Le modèle d'attribution détermine comment la valeur d'une conversion est répartie entre ses interactions éligibles. Le modèle est un paramètre global unique par configuration.
+
+| Modèle | Règle de répartition |
+|---|---|
+| **Position-based** (par défaut) | Une interaction : 100 %. Deux : 50 % / 50 %. Trois ou plus : 40 % à la première, 40 % à la dernière, les 20 % restants partagés à parts égales entre les interactions intermédiaires. |
+| **Linear** | Part égale pour chaque interaction éligible (`1 / n`). |
+| **Last-touch** | 100 % à la dernière interaction éligible ; les précédentes reçoivent 0 %. |
+
+### Exemple concret
+
+Un client enregistre trois interactions éligibles avant une conversion d'une valeur de 100.
+
+| Interaction | Position-based | Linear | Last-touch |
+|---|---|---|---|
+| Première | 40,00 | 33,33 | 0,00 |
+| Milieu | 20,00 | 33,33 | 0,00 |
+| Dernière | 40,00 | 33,33 | 100,00 |
+| **Total** | **100,00** | **100,00** | **100,00** |
+
+Pour chaque modèle, le crédit d'une conversion totalise la valeur complète de la conversion, et le nombre de conversions fractionné totalise 1.
+
+## Fenêtres rétrospectives par type d'interaction
+
+Une interaction ne reçoit du crédit que lorsqu'elle tombe dans sa fenêtre rétrospective — l'intervalle précédant la conversion pendant lequel l'interaction reste éligible. Reelevant résout la fenêtre par type d'interaction ; le clic et le view-through peuvent donc être crédités dans une même conversion avec des fenêtres différentes.
+
+| Type d'interaction | Signal | Fenêtre par défaut |
+|---|---|---|
+| **Clic** | Le client a cliqué sur du Content Reelevant. | 720 heures (30 jours) |
+| **View-through (display)** | Du Content Reelevant a été diffusé mais non cliqué. | 168 heures (7 jours) |
+
+La fenêtre est évaluée indépendamment pour chaque interaction, selon son type. Une même conversion peut donc inclure un clic vieux de 20 jours et exclure une vue display vieille de 10 jours, lorsque la fenêtre de clic est de 30 jours et celle de display de 7 jours.
+
+<Info>
+  Le modèle d'attribution est global, mais les fenêtres rétrospectives sont par type d'interaction. Cela permet à une fenêtre plus courte de pondérer les signaux display plus faibles sans changer la répartition du crédit une fois les interactions éligibles.
+</Info>
+
+## Sources de données
+
+L'attribution peut être calculée à partir de deux jeux de données. Les deux gèrent les interactions au clic et view-through, et exposent les mêmes modèles et mesures.
+
+| Jeu de données | Source des conversions |
+|---|---|
+| **Web tracking** | Achats suivis par Reelevant sur votre site web. |
+| **Customer purchases** | Enregistrements d'achats que vous transmettez à Reelevant. |
+
+Le type d'interaction de chaque enregistrement est résolu dynamiquement à partir des données d'événement sous-jacentes ; la même configuration se comporte donc de façon cohérente sur les deux jeux de données.
+
+## Funnels de conversion génériques
+
+L'attribution ne se limite pas aux achats. Un funnel est une liste ordonnée d'étapes, où chaque étape correspond à un ou plusieurs noms d'événement et où la **dernière étape est traitée comme la conversion**.
+
+Par exemple, un funnel `signup_start` puis `signup_complete` crédite `signup_complete` comme conversion tout en gardant l'étape précédente disponible pour l'analyse. Cela couvre les objectifs hors e-commerce — onboarding, capture de leads, abonnement — avec les mêmes modèles et fenêtres.
+
+<Info>
+  Les noms d'événement et d'étape sont validés à l'enregistrement de votre configuration. Les noms contenant des guillemets, des barres obliques inverses ou des caractères de contrôle sont rejetés, car ils servent à faire correspondre les événements dans le jeu de données sous-jacent.
+</Info>
+
+## Auditer le crédit
+
+Le chiffre d'affaires influencé est entièrement décomposable : la valeur de chaque conversion est répartie en crédits par interaction qui totalisent la valeur d'origine. Utilisez [Data Exploration](/fr/product-guide/analytics/data-exploration) pour ventiler le chiffre d'affaires influencé par dimension et le réconcilier avec votre propre reporting.
+
+## Pages associées
+
+<CardGroup cols={2}>
+  <Card title="Paramètres Analytics" icon="gear" href="/fr/product-guide/analytics/settings">
+    Configurez le modèle, les fenêtres rétrospectives et la source de données.
+  </Card>
+  <Card title="Mesures et dimensions" icon="table-list" href="/fr/product-guide/analytics/measures-and-dimensions">
+    Référence des mesures utilisées dans les tableaux de bord et les requêtes.
+  </Card>
+</CardGroup>

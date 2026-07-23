@@ -1,32 +1,49 @@
 ---
 title: 'Analytics Settings'
-description: 'Configure attribution period and custom tags for your company'
+description: 'Configure attribution and custom tags for your company'
 ---
 
 ![Analytics Settings Tags tab showing tag keys, cardinality badges, and values](/images/analytics/tag-settings.png)
 
 ## Overview
 
-The Analytics Settings page lets you configure the attribution period and custom tags for your company. Use tags to qualify Branches and segment Analytics.
+The Analytics Settings page lets you configure attribution and custom tags for your company. Use tags to qualify Branches and segment Analytics.
 
 Access it from the **Settings** link in the Analytics sidebar navigation.
 
-## Attribution Period
+## Attribution
 
-The attribution period defines the number of hours used to attribute conversions to a [workflow](/product-guide/workflows/overview) interaction. When a user clicks on Reelevant content and later makes a purchase within this time window, the conversion is credited to that content interaction.
+Attribution decides how much revenue your Reelevant [workflows](/product-guide/workflows/overview) helped generate. Here you choose the model, the lookback windows, and the data source. See [Attribution](/product-guide/analytics/attribution) for a full explanation.
+
+### Attribution model
+
+The model decides how credit is shared between the interactions that led to a purchase.
+
+| Model | How it shares credit |
+|-------|-------------|
+| **Position-based** (default) | The first and last interactions receive most of the credit; the ones in between share the rest. |
+| **Linear** | Every interaction receives an equal share. |
+| **Last-touch** | The last interaction before the purchase receives all the credit. |
+
+### Lookback windows
+
+The lookback window is the time before a purchase during which an interaction can earn credit. You can set a different window for each interaction type.
 
 | Field | Description |
 |-------|-------------|
-| **Attribution period (hours)** | The lookback window in hours (e.g., 720 for 30 days). Leave empty to use the default attribution period. |
+| **Click window (hours)** | Lookback for clicks on Reelevant content (e.g., 720 for 30 days). Leave empty to use the default. |
+| **View-through window (hours)** | Lookback for display views (e.g., 168 for 7 days). Leave empty to use the default. |
 
-### Configuring the Attribution Period
+### Configuring attribution
 
 1. Navigate to **Analytics > Settings**.
-2. Enter the desired number of hours in the **Attribution period (hours)** field.
-3. Click **Save**.
+2. Choose an **attribution model**.
+3. Set the **lookback windows** for each interaction type.
+4. Choose your **data source** (web tracking or customer purchases).
+5. Click **Save**.
 
 <Info>
-  Changing the attribution period affects how conversions are counted in the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration) queries. A longer period captures more conversions but may include less directly attributable purchases.
+  Changing attribution affects how conversions are counted in the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). A longer window captures more conversions but may include less directly attributable purchases.
 </Info>
 
 ## Tags
@@ -108,7 +125,7 @@ In Analytics, use tag keys and values to filter results or compare performance a
   <Card title="Data Exploration" icon="magnifying-glass-chart" href="/product-guide/analytics/data-exploration">
     Filter and compare performance with your tag keys.
   </Card>
-  <Card title="Measures and Dimensions" icon="table-list" href="/product-guide/analytics/measures-and-dimensions">
-    Review the tag dimensions available for analysis.
+  <Card title="Attribution" icon="bullseye-arrow" href="/product-guide/analytics/attribution">
+    Understand how Reelevant credits revenue to content interactions.
   </Card>
 </CardGroup>

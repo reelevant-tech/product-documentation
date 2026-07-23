@@ -1,0 +1,100 @@
+---
+title: 'Attribution Model'
+description: 'How Reelevant distributes conversion credit across interactions using influenced revenue, attribution models, and per-interaction-type lookback windows'
+---
+
+## Before you begin
+
+This page explains the attribution methodology behind the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). Configure the settings described here from [Analytics Settings](/product-guide/analytics/settings).
+
+Attribution answers a single question: given a conversion, how much of its value should be credited to each Reelevant content interaction that preceded it.
+
+## Influenced revenue versus direct revenue
+
+Reelevant reports **influenced revenue** rather than attributed revenue. The distinction is intentional: a conversion typically involves several marketing efforts, so Reelevant quantifies its contribution instead of claiming the entire sale.
+
+| Measure | Definition |
+|---|---|
+| **Influenced Revenue** | Conversion value distributed across every qualifying interaction according to the selected attribution model. |
+| **Direct Revenue** | Conversion value credited only to the last qualifying interaction before the conversion. |
+| **Influenced Conversions** | Fractional conversion count distributed across qualifying interactions. Credits for one conversion always sum to 1. |
+
+Exposing both measures lets you quantify assist value: the gap between influenced and direct revenue is the contribution of interactions earlier than the final one.
+
+<Info>
+  Conversions without any qualifying Reelevant interaction are excluded. A conversion is only credited when at least one interaction falls inside its lookback window, so direct and unattributed purchases never inflate influenced revenue.
+</Info>
+
+## Attribution models
+
+The attribution model determines how a conversion's value is distributed across its qualifying interactions. The model is a single global setting per configuration.
+
+| Model | Distribution rule |
+|---|---|
+| **Position-based** (default) | One interaction: 100%. Two: 50% / 50%. Three or more: 40% to the first, 40% to the last, the remaining 20% shared equally across the intermediate interactions. |
+| **Linear** | Equal share to every qualifying interaction (`1 / n`). |
+| **Last-touch** | 100% to the last qualifying interaction; earlier interactions receive 0%. |
+
+### Worked example
+
+A customer records three qualifying interactions before a conversion worth 100.
+
+| Interaction | Position-based | Linear | Last-touch |
+|---|---|---|---|
+| First | 40.00 | 33.33 | 0.00 |
+| Middle | 20.00 | 33.33 | 0.00 |
+| Last | 40.00 | 33.33 | 100.00 |
+| **Total** | **100.00** | **100.00** | **100.00** |
+
+For every model, the credits for a conversion sum to the full conversion value, and the fractional conversion count sums to 1.
+
+## Lookback windows per interaction type
+
+An interaction earns credit only when it falls inside its lookback window — the interval before the conversion during which the interaction remains eligible. Reelevant resolves the window per interaction type, so click and view-through interactions can be credited within the same conversion using different windows.
+
+| Interaction type | Signal | Default window |
+|---|---|---|
+| **Click** | The customer clicked Reelevant content. | 720 hours (30 days) |
+| **View-through (display)** | Reelevant content was served but not clicked. | 168 hours (7 days) |
+
+The window is evaluated independently for each interaction, based on its type. A single conversion can therefore include a click from 20 days earlier and exclude a display view from 10 days earlier, when the click window is 30 days and the display window is 7 days.
+
+<Info>
+  The attribution model is global, but lookback windows are per interaction type. This lets a shorter window discount weaker display signals without changing how credit is distributed once interactions qualify.
+</Info>
+
+## Data sources
+
+Attribution can be computed from two datasets. Both support click and view-through interactions, and both expose the same models and measures.
+
+| Dataset | Source of conversions |
+|---|---|
+| **Web tracking** | Purchases tracked by Reelevant on your website. |
+| **Customer purchases** | Purchase records you provide to Reelevant. |
+
+The interaction type for each record is resolved dynamically from the underlying event data, so the same configuration behaves consistently across both datasets.
+
+## Generic conversion funnels
+
+Attribution is not restricted to purchases. A funnel is an ordered list of stages, where each stage matches one or more event names and the **last stage is treated as the conversion**.
+
+For example, a funnel of `signup_start` then `signup_complete` credits `signup_complete` as the conversion while keeping the earlier stage available for analysis. This supports non-commerce goals — onboarding, lead capture, subscription — with the same models and windows.
+
+<Info>
+  Event and stage names are validated when you save your configuration. Names containing quotes, backslashes, or control characters are rejected, because stage names are used to match events in the underlying dataset.
+</Info>
+
+## Auditing the credit
+
+Influenced revenue is fully decomposable: each conversion's value is split into per-interaction credits that sum back to the original value. Use [Data Exploration](/product-guide/analytics/data-exploration) to break influenced revenue down by dimension and reconcile it against your own reporting.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Analytics Settings" icon="gear" href="/product-guide/analytics/settings">
+    Configure the model, lookback windows, and data source.
+  </Card>
+  <Card title="Measures and Dimensions" icon="table-list" href="/product-guide/analytics/measures-and-dimensions">
+    Reference for the measures used across dashboards and queries.
+  </Card>
+</CardGroup>
