@@ -3,6 +3,10 @@ title: 'Attribution'
 description: 'Understand how Reelevant credits revenue to content interactions with influenced revenue and attribution models'
 ---
 
+<Warning>
+  **Beta** — Attribution models and configurable attribution settings are currently in beta. Behaviour and available options may still change, and numbers may be refined as the feature matures.
+</Warning>
+
 ## Overview
 
 Attribution explains how much revenue your Reelevant [workflows](/product-guide/workflows/overview) helped generate. It links each purchase back to the content interactions that led to it.
@@ -28,6 +32,8 @@ This wording is deliberate. A purchase usually involves several marketing effort
 ## Attribution models
 
 An attribution model decides how credit is shared between the interactions that led to a purchase. You choose one model in [Analytics Settings](/product-guide/analytics/settings).
+
+![Attribution settings on the Analytics General tab: dataset, attribution source, model, method, and conversion channels](/images/analytics/attribution-settings-reelevant.png)
 
 | Model | How it shares credit | Best for |
 |---|---|---|
@@ -77,6 +83,8 @@ Reelevant can measure attribution from two sources. You pick the one that fits y
 
 With **Customer purchases**, you can set different interaction types and lookback windows per **purchase source** (matched against the transaction source in your data). Purchases whose source is not configured use your default settings.
 
+![Conversion channels for customer purchases, matched against the transaction source with a web fallback](/images/analytics/attribution-settings-customer-purchases.png)
+
 ## UTM-based attribution
 
 When you use **Web tracking**, you can attribute conversions across the UTM tags in your landing-page links instead of Reelevant interactions.
@@ -84,6 +92,8 @@ When you use **Web tracking**, you can attribute conversions across the UTM tags
 Each distinct UTM combination before the purchase becomes an interaction and earns a share, using the same models above. This spreads credit across every marketing effort in the customer's path — for example email, paid search, and social.
 
 You choose which UTM tags define an interaction. By default Reelevant groups by `utm_source` and `utm_medium`.
+
+![UTM configuration: choose which UTM tags define the grain and set the lookback window](/images/analytics/attribution-settings-utm.png)
 
 <Info>
   UTM-based attribution is only available with Web tracking, because it reads the UTM tags Reelevant captures from your landing-page links.
