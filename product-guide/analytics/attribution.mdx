@@ -31,9 +31,9 @@ An attribution model decides how credit is shared between the interactions that 
 
 | Model | How it shares credit | Best for |
 |---|---|---|
-| **Position-based** (default) | The first and last interactions receive most of the credit. The interactions in between share the rest. | A balanced view that values both discovery and the final push. |
+| **Last-touch** (default) | The last interaction before the purchase receives all the credit. | A simple view that matches classic last-click reporting. |
 | **Linear** | Every interaction receives an equal share. | Seeing every interaction contribute evenly. |
-| **Last-touch** | The last interaction before the purchase receives all the credit. | A simple view focused on the final interaction. |
+| **Decay** | Interactions closer to the purchase receive more credit. The earliest ones receive the least. | Rewarding the interactions that pushed the customer towards buying. |
 
 ### Worked example
 
@@ -41,12 +41,12 @@ Imagine a customer interacts with Reelevant content three times, then buys for 1
 
 | Model | First interaction | Middle interaction | Last interaction |
 |---|---|---|---|
-| **Position-based** | 40 | 20 | 40 |
-| **Linear** | 33.3 | 33.3 | 33.3 |
 | **Last-touch** | 0 | 0 | 100 |
+| **Linear** | 33.3 | 33.3 | 33.3 |
+| **Decay** | 16.7 | 33.3 | 50 |
 
 <Tip>
-  Position-based is the default because it rewards the interaction that opened the relationship and the one that closed the sale, without ignoring those in between.
+  Last-touch is the default, so your numbers match classic last-click reporting until you pick a model that shares credit across earlier interactions.
 </Tip>
 
 ## The lookback window
@@ -73,6 +73,20 @@ Reelevant can measure attribution from two sources. You pick the one that fits y
 
 <Info>
   Both sources support click and view-through attribution, so you get the same models and measures whichever one you choose.
+</Info>
+
+With **Customer purchases**, you can set different interaction types and lookback windows per **purchase source** (matched against the transaction source in your data). Purchases whose source is not configured use your default settings.
+
+## UTM-based attribution
+
+When you use **Web tracking**, you can attribute conversions across the UTM tags in your landing-page links instead of Reelevant interactions.
+
+Each distinct UTM combination before the purchase becomes an interaction and earns a share, using the same models above. This spreads credit across every marketing effort in the customer's path — for example email, paid search, and social.
+
+You choose which UTM tags define an interaction. By default Reelevant groups by `utm_source` and `utm_medium`.
+
+<Info>
+  UTM-based attribution is only available with Web tracking, because it reads the UTM tags Reelevant captures from your landing-page links.
 </Info>
 
 ## Beyond purchases

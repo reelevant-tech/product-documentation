@@ -31,22 +31,24 @@ Le modèle d'attribution détermine comment la valeur d'une conversion est répa
 
 | Modèle | Règle de répartition |
 |---|---|
-| **Position-based** (par défaut) | Une interaction : 100 %. Deux : 50 % / 50 %. Trois ou plus : 40 % à la première, 40 % à la dernière, les 20 % restants partagés à parts égales entre les interactions intermédiaires. |
+| **Last-touch** (par défaut) | 100 % à la dernière interaction éligible ; les précédentes reçoivent 0 %. |
 | **Linear** | Part égale pour chaque interaction éligible (`1 / n`). |
-| **Last-touch** | 100 % à la dernière interaction éligible ; les précédentes reçoivent 0 %. |
+| **Decay** | Le crédit augmente vers la conversion. Pour `n` interactions classées de la plus ancienne à la plus récente, l'interaction en position `i` reçoit `i / (1 + 2 + … + n)`, soit `i / (n(n+1)/2)`. |
+
+Last-touch est le modèle par défaut afin qu'une configuration laissée inchangée reproduise le reporting last-click classique, y compris lorsque les résultats sont groupés par dimension.
 
 ### Exemple concret
 
 Un client enregistre trois interactions éligibles avant une conversion d'une valeur de 100.
 
-| Interaction | Position-based | Linear | Last-touch |
+| Interaction | Last-touch | Linear | Decay |
 |---|---|---|---|
-| Première | 40,00 | 33,33 | 0,00 |
-| Milieu | 20,00 | 33,33 | 0,00 |
-| Dernière | 40,00 | 33,33 | 100,00 |
+| Première | 0,00 | 33,33 | 16,67 |
+| Milieu | 0,00 | 33,33 | 33,33 |
+| Dernière | 100,00 | 33,33 | 50,00 |
 | **Total** | **100,00** | **100,00** | **100,00** |
 
-Pour chaque modèle, le crédit d'une conversion totalise la valeur complète de la conversion, et le nombre de conversions fractionné totalise 1.
+En decay, le dénominateur est `1 + 2 + 3 = 6`, les interactions reçoivent donc `1/6`, `2/6` et `3/6`. Pour chaque modèle, le crédit d'une conversion totalise la valeur complète de la conversion, et le nombre de conversions fractionné totalise 1.
 
 ## Fenêtres rétrospectives par type d'interaction
 
@@ -73,6 +75,34 @@ L'attribution peut être calculée à partir de deux jeux de données. Les deux 
 | **Customer purchases** | Enregistrements d'achats que vous transmettez à Reelevant. |
 
 Le type d'interaction de chaque enregistrement est résolu dynamiquement à partir des données d'événement sous-jacentes ; la même configuration se comporte donc de façon cohérente sur les deux jeux de données.
+
+### Configuration par source pour les customer purchases
+
+Avec le jeu de données customer purchases, vous pouvez définir plusieurs **sources d'achat**, chacune avec ses propres types d'interaction et fenêtres rétrospectives. Chaque source est rapprochée de la source de transaction enregistrée sur l'achat ; un achat en magasin et un achat web peuvent donc rendre éligibles des interactions selon des fenêtres différentes.
+
+| Champ | Signification |
+|---|---|
+| Clé de source | Une valeur libre rapprochée de la source de transaction présente dans vos données d'achat. |
+| Types d'interaction | Un ou plusieurs parmi clic / view-through, chacun avec sa propre fenêtre rétrospective. |
+
+Un achat dont la source de transaction ne correspond à aucune source configurée bascule sur la source `web`, de sorte que chaque conversion est évaluée selon une configuration définie. Le web tracking utilise toujours une source `web` unique et fixe.
+
+## Attribution basée sur les UTM
+
+Le web tracking prend également en charge l'**attribution basée sur les UTM**, qui répartit une conversion sur les interactions taggées UTM qui l'ont précédée plutôt que sur les interactions avec le Content Reelevant. Elle n'est disponible qu'avec le web tracking, car elle s'appuie sur les tags UTM que Reelevant extrait des URL de destination suivies.
+
+Chaque combinaison UTM distincte dans la fenêtre rétrospective constitue une interaction et reçoit une part selon le modèle sélectionné (last-touch, linear ou decay). Cela attribue une conversion à toutes les sources marketing présentes dans le parcours — référencement payant, réseaux display, e-mail, etc. — pas seulement Reelevant.
+
+| Aspect | Comportement |
+|---|---|
+| Granularité | Vous choisissez quels champs UTM définissent une interaction. Par défaut : `utm_source` + `utm_medium`. |
+| Déduplication | Les interactions consécutives aux valeurs de granularité identiques sont fusionnées en une seule. |
+| Interaction de conversion | Les tags UTM de la page de conversion comptent comme l'interaction la plus récente. |
+| Fenêtre rétrospective | Une seule fenêtre configurable s'applique à toutes les interactions UTM. |
+
+<Info>
+  L'attribution basée sur les UTM mesure chaque source marketing du parcours, ce qui est plus large que le chiffre d'affaires influencé par Reelevant. Utilisez-la pour une vue multi-sources ; utilisez les jeux de données d'interactions Reelevant pour isoler la contribution de Reelevant.
+</Info>
 
 ## Funnels de conversion génériques
 

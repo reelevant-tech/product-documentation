@@ -31,9 +31,9 @@ Un modèle d'attribution décide comment le crédit est partagé entre les inter
 
 | Modèle | Comment il partage le crédit | Idéal pour |
 |---|---|---|
-| **Position-based** (par défaut) | La première et la dernière interaction reçoivent l'essentiel du crédit. Celles du milieu se partagent le reste. | Une vue équilibrée qui valorise la découverte et la conclusion. |
+| **Last-touch** (par défaut) | La dernière interaction avant l'achat reçoit tout le crédit. | Une vue simple, alignée sur le reporting last-click classique. |
 | **Linear** | Chaque interaction reçoit une part égale. | Voir l'ensemble du parcours contribuer uniformément. |
-| **Last-touch** | La dernière interaction avant l'achat reçoit tout le crédit. | Une vue simple centrée sur l'interaction finale. |
+| **Decay** | Les interactions les plus proches de l'achat reçoivent plus de crédit. Les plus anciennes en reçoivent le moins. | Récompenser les interactions qui ont poussé le client à acheter. |
 
 ### Exemple concret
 
@@ -41,12 +41,12 @@ Imaginez un client qui interagit trois fois avec du Content Reelevant, puis ach�
 
 | Modèle | Première interaction | Interaction du milieu | Dernière interaction |
 |---|---|---|---|
-| **Position-based** | 40 | 20 | 40 |
-| **Linear** | 33,3 | 33,3 | 33,3 |
 | **Last-touch** | 0 | 0 | 100 |
+| **Linear** | 33,3 | 33,3 | 33,3 |
+| **Decay** | 16,7 | 33,3 | 50 |
 
 <Tip>
-  Position-based est le modèle par défaut car il récompense l'interaction qui a lancé le parcours et celle qui l'a conclu, sans ignorer les étapes intermédiaires.
+  Last-touch est le modèle par défaut : vos chiffres correspondent au reporting last-click classique tant que vous ne choisissez pas un modèle qui répartit le crédit sur les interactions antérieures.
 </Tip>
 
 ## La fenêtre rétrospective
@@ -73,6 +73,20 @@ Reelevant peut mesurer l'attribution à partir de deux sources. Vous choisissez 
 
 <Info>
   Les deux sources gèrent l'attribution au clic et view-through, vous bénéficiez donc des mêmes modèles et mesures quel que soit votre choix.
+</Info>
+
+Avec **Customer purchases**, vous pouvez définir des types d'interaction et des fenêtres rétrospectives différents par **source d'achat** (rapprochée de la source de transaction présente dans vos données). Les achats dont la source n'est pas configurée utilisent vos paramètres par défaut.
+
+## Attribution basée sur les UTM
+
+Avec le **Web tracking**, vous pouvez attribuer les conversions aux tags UTM de vos liens de destination plutôt qu'aux interactions Reelevant.
+
+Chaque combinaison UTM distincte précédant l'achat devient une interaction et reçoit une part, selon les mêmes modèles ci-dessus. Cela répartit le crédit sur chaque effort marketing du parcours — par exemple e-mail, référencement payant et réseaux sociaux.
+
+Vous choisissez quels tags UTM définissent une interaction. Par défaut, Reelevant regroupe par `utm_source` et `utm_medium`.
+
+<Info>
+  L'attribution basée sur les UTM n'est disponible qu'avec le Web tracking, car elle lit les tags UTM que Reelevant capture depuis vos liens de destination.
 </Info>
 
 ## Au-delà des achats
