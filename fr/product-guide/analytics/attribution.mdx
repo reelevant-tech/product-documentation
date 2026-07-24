@@ -3,6 +3,10 @@ title: 'Attribution'
 description: "Comprenez comment Reelevant crédite le chiffre d'affaires aux interactions avec le Content grâce au chiffre d'affaires influencé et aux modèles d'attribution"
 ---
 
+<Warning>
+  **Bêta** — Les modèles d'attribution et les paramètres d'attribution configurables sont actuellement en bêta. Le comportement et les options disponibles peuvent encore évoluer, et les chiffres peuvent être affinés à mesure que la fonctionnalité mûrit.
+</Warning>
+
 ## Vue d'ensemble
 
 L'attribution explique la part de chiffre d'affaires que vos [Workflows](/fr/product-guide/workflows/overview) Reelevant ont contribué à générer. Elle relie chaque achat aux interactions avec le Content qui l'ont précédé.
@@ -28,6 +32,8 @@ Cette formulation est volontaire. Un achat implique généralement plusieurs act
 ## Modèles d'attribution
 
 Un modèle d'attribution décide comment le crédit est partagé entre les interactions d'un parcours. Vous en choisissez un dans les [Paramètres Analytics](/fr/product-guide/analytics/settings).
+
+![Paramètres d'attribution sur l'onglet Général d'Analytics : jeu de données, source d'attribution, modèle, méthode et canaux de conversion](/images/analytics/attribution-settings-reelevant.png)
 
 | Modèle | Comment il partage le crédit | Idéal pour |
 |---|---|---|
@@ -77,6 +83,8 @@ Reelevant peut mesurer l'attribution à partir de deux sources. Vous choisissez 
 
 Avec **Customer purchases**, vous pouvez définir des types d'interaction et des fenêtres rétrospectives différents par **source d'achat** (rapprochée de la source de transaction présente dans vos données). Les achats dont la source n'est pas configurée utilisent vos paramètres par défaut.
 
+![Canaux de conversion pour Customer purchases, rapprochés de la source de transaction avec repli sur web](/images/analytics/attribution-settings-customer-purchases.png)
+
 ## Attribution basée sur les UTM
 
 Avec le **Web tracking**, vous pouvez attribuer les conversions aux tags UTM de vos liens de destination plutôt qu'aux interactions Reelevant.
@@ -84,6 +92,8 @@ Avec le **Web tracking**, vous pouvez attribuer les conversions aux tags UTM de 
 Chaque combinaison UTM distincte précédant l'achat devient une interaction et reçoit une part, selon les mêmes modèles ci-dessus. Cela répartit le crédit sur chaque effort marketing du parcours — par exemple e-mail, référencement payant et réseaux sociaux.
 
 Vous choisissez quels tags UTM définissent une interaction. Par défaut, Reelevant regroupe par `utm_source` et `utm_medium`.
+
+![Configuration UTM : choisissez quels tags UTM définissent la granularité et réglez la fenêtre rétrospective](/images/analytics/attribution-settings-utm.png)
 
 <Info>
   L'attribution basée sur les UTM n'est disponible qu'avec le Web tracking, car elle lit les tags UTM que Reelevant capture depuis vos liens de destination.
