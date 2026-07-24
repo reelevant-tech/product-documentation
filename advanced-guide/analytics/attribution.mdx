@@ -31,22 +31,24 @@ The attribution model determines how a conversion's value is distributed across 
 
 | Model | Distribution rule |
 |---|---|
-| **Position-based** (default) | One interaction: 100%. Two: 50% / 50%. Three or more: 40% to the first, 40% to the last, the remaining 20% shared equally across the intermediate interactions. |
+| **Last-touch** (default) | 100% to the last qualifying interaction; earlier interactions receive 0%. |
 | **Linear** | Equal share to every qualifying interaction (`1 / n`). |
-| **Last-touch** | 100% to the last qualifying interaction; earlier interactions receive 0%. |
+| **Decay** | Credit increases towards the conversion. For `n` interactions ordered oldest to newest, interaction at position `i` receives `i / (1 + 2 + … + n)`, i.e. `i / (n(n+1)/2)`. |
+
+Last-touch is the default so that a configuration left unchanged reproduces classic last-click reporting, including when results are grouped by dimension.
 
 ### Worked example
 
 A customer records three qualifying interactions before a conversion worth 100.
 
-| Interaction | Position-based | Linear | Last-touch |
+| Interaction | Last-touch | Linear | Decay |
 |---|---|---|---|
-| First | 40.00 | 33.33 | 0.00 |
-| Middle | 20.00 | 33.33 | 0.00 |
-| Last | 40.00 | 33.33 | 100.00 |
+| First | 0.00 | 33.33 | 16.67 |
+| Middle | 0.00 | 33.33 | 33.33 |
+| Last | 100.00 | 33.33 | 50.00 |
 | **Total** | **100.00** | **100.00** | **100.00** |
 
-For every model, the credits for a conversion sum to the full conversion value, and the fractional conversion count sums to 1.
+Under decay the denominator is `1 + 2 + 3 = 6`, so the interactions receive `1/6`, `2/6`, and `3/6`. For every model, the credits for a conversion sum to the full conversion value, and the fractional conversion count sums to 1.
 
 ## Lookback windows per interaction type
 
@@ -73,6 +75,34 @@ Attribution can be computed from two datasets. Both support click and view-throu
 | **Customer purchases** | Purchase records you provide to Reelevant. |
 
 The interaction type for each record is resolved dynamically from the underlying event data, so the same configuration behaves consistently across both datasets.
+
+### Per-source configuration for customer purchases
+
+With the customer-purchases dataset you can define several **purchase sources**, each with its own set of interaction types and lookback windows. Each source is matched against the transaction source recorded on the purchase, so a store purchase and a web purchase can qualify interactions under different windows.
+
+| Field | Meaning |
+|---|---|
+| Source key | A free-form value matched against the transaction source in your purchase data. |
+| Interaction types | One or more of click / view-through, each with its own lookback window. |
+
+A purchase whose transaction source matches no configured source falls back to the `web` source, so every conversion is evaluated against a defined configuration. Web tracking always uses a single fixed `web` source.
+
+## UTM-based attribution
+
+Web tracking additionally supports **UTM-based attribution**, which distributes a conversion across the UTM-tagged interactions that preceded it rather than across Reelevant content interactions. It is available only with web tracking, because it relies on the UTM tags Reelevant parses from tracked landing-page URLs.
+
+Each distinct UTM combination in the lookback window is one interaction and earns a share under the selected model (last-touch, linear, or decay). This attributes a conversion across all marketing sources present in the path — paid search, display networks, email, and so on — not only Reelevant.
+
+| Aspect | Behaviour |
+|---|---|
+| Grain | You choose which UTM fields define an interaction. Default: `utm_source` + `utm_medium`. |
+| De-duplication | Consecutive interactions with identical grain values collapse into one. |
+| Conversion interaction | The UTM tags on the converting page count as the most recent interaction. |
+| Lookback | A single configurable window applies to all UTM interactions. |
+
+<Info>
+  UTM-based attribution measures every marketing source in the path, which is broader than Reelevant-influenced revenue. Use it when you want a cross-source view; use the Reelevant interaction datasets when you want to isolate Reelevant's contribution.
+</Info>
 
 ## Generic conversion funnels
 

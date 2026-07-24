@@ -21,9 +21,9 @@ The model decides how credit is shared between the interactions that led to a pu
 
 | Model | How it shares credit |
 |-------|-------------|
-| **Position-based** (default) | The first and last interactions receive most of the credit; the ones in between share the rest. |
+| **Last-touch** (default) | The last interaction before the purchase receives all the credit. |
 | **Linear** | Every interaction receives an equal share. |
-| **Last-touch** | The last interaction before the purchase receives all the credit. |
+| **Decay** | Interactions closer to the purchase receive more credit; the earliest receive the least. |
 
 ### Lookback windows
 
