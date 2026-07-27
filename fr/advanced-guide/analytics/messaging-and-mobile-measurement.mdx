@@ -1,0 +1,59 @@
+---
+title: 'Mesure messagerie et mobile'
+description: "Ce que Reelevant mesure sur RCS, WhatsApp, push et in-app — et ce qu'il ne mesure pas"
+---
+
+## Vue d'ensemble
+
+Reelevant mesure le Content qu'il sert. Sur les surfaces de messagerie et mobiles, une partie du parcours se déroule dans la plateforme d'envoi, que Reelevant ne voit jamais.
+
+Lire une campagne messagerie ou mobile suppose donc toujours de combiner deux sources : les chiffres Reelevant pour l'interaction avec le contenu, et les chiffres de la plateforme pour la délivrabilité et les actions natives.
+
+## Disponibilité par KPI
+
+| KPI | Disponible dans Reelevant | Remarques |
+|---|---|---|
+| Taux de délivrabilité | Non | Propriété de la plateforme de messagerie ou push |
+| Taux d'ouverture (RCS, SMS enrichi) | Non applicable | Le format n'offre pas de signal d'ouverture fiable |
+| Taux de clic | Oui | Compte uniquement les clics sur le Content Reelevant |
+| Taux de conversion après un clic | Oui | Utilise l'[Attribution Period](/fr/advanced-guide/analytics/attribution) configurée |
+| Taux d'opt-in push | Non suivi | Techniquement possible, hors configuration standard |
+| Taux d'ouverture de l'application après un push sur l'écran de verrouillage | Oui | Nécessite que les événements de navigation mobile arrivent dans le DataHub |
+| Conversion après une ouverture depuis l'écran de verrouillage | Non | L'ouverture n'est pas attribuable à un Content précis |
+| Effet du push sur la rétention | Non | Non modélisé |
+| Taux d'exposition (scène in-app, centre de notifications) | Estimé | Supérieur à 95 %, sans comptage exact |
+| Taux de clic (scène in-app, centre de notifications) | Oui | |
+| Conversion après un clic in-app | Non | |
+
+## Pourquoi les clics RCS sont répartis
+
+Une carte RCS comporte deux zones cliquables : le visuel Reelevant, et le bouton défini dans la plateforme de messagerie. Reelevant compte les clics sur le visuel. Le bouton appartient à la plateforme de messagerie, qui compte les siens.
+
+Aucun des deux chiffres n'est faux ; ils mesurent des zones différentes. Rapporter les performances RCS suppose d'additionner les deux, en précisant ce que couvre chaque source.
+
+<Info>
+  Le même partage s'applique aux boutons de réponse rapide WhatsApp et aux boutons d'action des notifications push. Tout élément ajouté par la plateforme d'envoi est mesuré par cette plateforme.
+</Info>
+
+## Démontrer la valeur de la personnalisation
+
+Puisque les clics sont répartis entre deux systèmes, un taux de clic absolu constitue une preuve faible sur ces canaux. Une comparaison est plus solide.
+
+Partagez l'audience ciblée en deux groupes au sein du même envoi : l'un reçoit le Content personnalisé, l'autre la version générique. Comparez le taux de clic, le taux de conversion et le panier moyen entre les groupes. L'écart correspond à l'[Uplift](/fr/product-guide/analytics/dashboards/uplift) attribuable à la personnalisation, mesuré dans les mêmes conditions de diffusion des deux côtés.
+
+<Info>
+  Gardez les deux groupes dans le même envoi et le même jour. Comparer un envoi personnalisé à un envoi générique d'une autre semaine mélange personnalisation et saisonnalité.
+</Info>
+
+## Dimensions à utiliser
+
+Les événements Reelevant produits par les campagnes messagerie et mobiles portent les dimensions standard documentées dans [Mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions).
+
+Deux d'entre elles sont particulièrement utiles ici :
+
+| Dimension | Usage |
+|---|---|
+| UTM Campaign Parameter | Isoler un envoi, en particulier sur WhatsApp où le paramètre doit changer à chaque envoi |
+| Message (rlvt-m) | Distinguer les messages d'une même campagne |
+
+Renseignez-les systématiquement via un Variable Profile pour pouvoir séparer chaque envoi par la suite.

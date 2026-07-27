@@ -65,7 +65,10 @@
                       "product-guide/workflows/channels/landing-page",
                       "product-guide/workflows/channels/push-notification",
                       "product-guide/workflows/channels/in-app-popup",
-                      "product-guide/workflows/channels/in-app-inbox"
+                      "product-guide/workflows/channels/in-app-inbox",
+                      "product-guide/workflows/channels/messaging-overview",
+                      "product-guide/workflows/channels/rcs",
+                      "product-guide/workflows/channels/whatsapp"
                     ]
                   },
                   {
@@ -250,7 +253,8 @@
                     ]
                   },
                   "advanced-guide/workflows/settings",
-                  "advanced-guide/workflows/locale-handling"
+                  "advanced-guide/workflows/locale-handling",
+                  "advanced-guide/workflows/push-integration"
                 ]
               },
               {
@@ -339,6 +343,7 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "advanced-guide/analytics/attribution",
+                  "advanced-guide/analytics/messaging-and-mobile-measurement",
                   "product-guide/analytics/data-exploration",
                   "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/dashboards/individualization",
@@ -443,7 +448,8 @@
               {
                 "group": "Overview",
                 "pages": [
-                  "why-reelevant/introduction"
+                  "why-reelevant/introduction",
+                  "why-reelevant/omnichannel-coverage"
                 ]
               },
               {
@@ -493,7 +499,10 @@
                       "fr/product-guide/workflows/channels/landing-page",
                       "fr/product-guide/workflows/channels/push-notification",
                       "fr/product-guide/workflows/channels/in-app-popup",
-                      "fr/product-guide/workflows/channels/in-app-inbox"
+                      "fr/product-guide/workflows/channels/in-app-inbox",
+                      "fr/product-guide/workflows/channels/messaging-overview",
+                      "fr/product-guide/workflows/channels/rcs",
+                      "fr/product-guide/workflows/channels/whatsapp"
                     ]
                   },
                   {
@@ -678,7 +687,8 @@
                     ]
                   },
                   "fr/advanced-guide/workflows/settings",
-                  "fr/advanced-guide/workflows/locale-handling"
+                  "fr/advanced-guide/workflows/locale-handling",
+                  "fr/advanced-guide/workflows/push-integration"
                 ]
               },
               {
@@ -767,6 +777,7 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "fr/advanced-guide/analytics/attribution",
+                  "fr/advanced-guide/analytics/messaging-and-mobile-measurement",
                   "fr/product-guide/analytics/data-exploration",
                   "fr/product-guide/analytics/measures-and-dimensions",
                   "fr/product-guide/analytics/dashboards/individualization",
@@ -871,7 +882,8 @@
               {
                 "group": "Overview",
                 "pages": [
-                  "fr/why-reelevant/introduction"
+                  "fr/why-reelevant/introduction",
+                  "fr/why-reelevant/omnichannel-coverage"
                 ]
               },
               {

@@ -19,6 +19,25 @@ The Push Notification Image channel renders a personalized image for rich push n
 
 When your app sends a push notification that includes a Reelevant visual zone, the workflow executes and returns a personalized image. This image is displayed as the rich media attachment in the push notification.
 
+## Where Push Notifications Appear
+
+A push notification can be displayed on three different surfaces. They do not offer the same level of personalisation.
+
+| Surface | What it is | Personalised visual | Personalised text |
+|---|---|---|---|
+| **Lock screen** | The notification shown before the phone is unlocked | Yes, as the image of the notification | Only if your push platform asks Reelevant for the text before sending |
+| **In-app scene** | A banner or pop-up shown while the person uses the app | Yes | Yes |
+| **Notification centre** | The list of past notifications inside the app | Yes | Yes |
+
+There are two ways to personalise a lock screen notification:
+
+- **Personalised visual, fixed text** — the notification text is written once in the campaign, and the image link is a Reelevant link, so each person sees a visual built for them. This is the quickest setup.
+- **Personalised visual and text** — your push platform asks Reelevant for the content of each notification before sending it, so the wording changes per person too. This needs work on your side, described in the [push integration guide](/advanced-guide/workflows/push-integration).
+
+<Info>
+  In-app scenes and the notification centre follow the same pattern as e-mail: a personalised visual replaces a fixed image. See [In-App Popup](/product-guide/workflows/channels/in-app-popup) and [In-App Inbox](/product-guide/workflows/channels/in-app-inbox).
+</Info>
+
 ## Configuration
 
 1. Add a Push Notification Image channel node to your workflow canvas.
@@ -30,3 +49,17 @@ When your app sends a push notification that includes a Reelevant visual zone, t
 - Keep push notification images concise and impactful — they are viewed at small sizes on mobile screens.
 - Use [URL parameters](/product-guide/workflows/data-nodes/url-parameter) to pass user identifiers from your push notification service into the workflow.
 - Test the image rendering on both iOS and Android devices, as display sizes may vary.
+
+## What's Next?
+
+<CardGroup cols={3}>
+  <Card title="Push integration guide" icon="bell" href="/advanced-guide/workflows/push-integration">
+    Set up each surface, and see what data mobile browsing brings to your Workflows.
+  </Card>
+  <Card title="In-App Popup" icon="window-maximize" href="/product-guide/workflows/channels/in-app-popup">
+    Personalise banners and pop-ups shown inside the app.
+  </Card>
+  <Card title="Measurement" icon="chart-line" href="/advanced-guide/analytics/messaging-and-mobile-measurement">
+    See which mobile figures Reelevant reports.
+  </Card>
+</CardGroup>

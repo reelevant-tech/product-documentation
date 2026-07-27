@@ -29,6 +29,45 @@ terms:
     definition: "The entry Node of a Workflow that defines the delivery medium (Email, Web, Mobile, Landing Page)."
     synonyms_forbidden: ["touchpoint", "medium", "entry point"]
 
+  rcs:
+    canonical_name: "RCS"
+    definition: "A messaging format displayed in the native messaging app of a mobile device, capable of carrying images, carousels, and buttons. Reelevant supplies the personalised visual; the messaging platform sends the message."
+    synonyms_forbidden: ["rich SMS", "Rich Communication Services", "RCS channel", "Google Messages"]
+    note: "RCS is not a Channel type in the product. Build it with an Email Channel."
+
+  rich_sms:
+    canonical_name: "rich SMS"
+    definition: "The fallback format used when a device does not support RCS."
+    synonyms_forbidden: ["MMS", "enhanced SMS", "SMS+"]
+
+  whatsapp:
+    canonical_name: "WhatsApp"
+    definition: "A messaging service where personalised Reelevant visuals are displayed inside an approved WhatsApp Business message template."
+    synonyms_forbidden: ["Whatsapp", "WA", "Meta messaging", "WhatsApp channel"]
+    note: "WhatsApp is not a Channel type in the product. Build it with an Email Channel."
+
+  messaging_platform:
+    canonical_name: "messaging platform"
+    definition: "The third-party system that owns the recipient list, consent, message composition, and sending for RCS, rich SMS, and WhatsApp."
+    synonyms_forbidden: ["provider", "aggregator", "carrier", "partner"]
+    note: "Stay vendor-agnostic in public documentation — never name a specific messaging platform."
+
+  lock_screen_push:
+    canonical_name: "lock screen push"
+    definition: "A push notification displayed before the device is unlocked. Carries a personalised visual, and personalised copy only when content is resolved before send."
+    synonyms_forbidden: ["lockscreen notification", "banner push", "system notification"]
+
+  in_app_scene:
+    canonical_name: "in-app scene"
+    definition: "A banner or pop-up displayed while the person is using the app, personalised through the In-App Popup Channel."
+    synonyms_forbidden: ["in-app message", "interstitial", "overlay"]
+
+  notification_centre:
+    canonical_name: "notification centre"
+    definition: "The list of past messages inside the app, personalised through the In-App Inbox Channel."
+    synonyms_forbidden: ["inbox", "message center", "notification center"]
+    note: "UK spelling in prose; the Channel itself keeps its product label, In-App Inbox."
+
   branch:
     canonical_name: "Branch"
     definition: "A unique execution path through a Workflow, from a Channel to an Output Node."

@@ -1,0 +1,78 @@
+---
+title: 'Push and In-App Integration'
+description: 'Integration patterns for lock screen push, in-app scenes, and the notification centre'
+---
+
+## Overview
+
+Mobile personalisation covers three display surfaces, and each one has its own integration pattern.
+
+| Surface | When it is shown | Integration pattern | What is personalised |
+|---|---|---|---|
+| Lock screen | Before the device is unlocked | Personalised image attached to the notification, or content resolved before send | Image always; text only in the second pattern |
+| In-app scene | While the person is using the app | Personalised image swapped into the banner or pop-up | Image and surrounding text |
+| Notification centre | In the message list inside the app | Personalised image swapped into the card | Image and surrounding text |
+
+The two mechanisms behind these patterns are: **image swap**, where the push platform points at a Reelevant link and the image is generated per recipient at display time; and **resolve before send**, where your push platform asks Reelevant for the content of each notification and injects the values in the message it sends.
+
+## Prerequisites
+
+- A published Workflow with a Channel matching the surface: Push Notification Image, In-App Popup, or In-App Inbox.
+- A recipient identifier your push platform can inject in the Reelevant link, usually the same identifier used in e-mail campaigns.
+- For the resolve-before-send pattern, a Workflow ending with a JSON Template Output Node.
+
+## Pattern 1 — Image swap
+
+This is the default and fastest pattern, and it works on all three surfaces.
+
+<Steps>
+  <Step title="Publish the Workflow">
+    Copy the Channel link from the Integration modal.
+  </Step>
+  <Step title="Register the link in the push platform">
+    Use it as the rich media attachment of the notification, or as the image of the in-app scene or notification centre card. Add the recipient identifier as a URL parameter.
+  </Step>
+  <Step title="Keep the copy generic">
+    The notification title and body come from the campaign, not from Reelevant, so the same wording reaches everyone.
+  </Step>
+</Steps>
+
+Rich push images on the lock screen are handled by the mobile platform itself: iOS requires a notification service extension and the `mutable-content` flag ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationserviceextension)), Android reads the `image` field of the notification payload ([Firebase Cloud Messaging documentation](https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages)). Confirm with your push platform which of the two it supports before planning a lock screen visual.
+
+<Info>
+  Some push setups send lock screen notifications as plain text only. In that case the personalised visual appears once the person taps through to the notification centre or an in-app scene, and the lock screen itself stays generic.
+</Info>
+
+## Pattern 2 — Resolve before send
+
+Use this pattern when the notification text must change per recipient, not only the visual.
+
+Your push platform, or the system that triggers the send, requests the personalised values from Reelevant for each recipient and injects them into the notification it sends.
+
+```bash
+curl "https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}"
+```
+
+| Value | Where it comes from |
+|---|---|
+| `workflowId` | The Workflow identifier, visible in the Integration modal |
+| `entrypointId` | The Channel identifier within the Workflow |
+| `rlvt-u` | Your recipient identifier, the same one used across channels |
+
+The response contains the fields declared in the JSON Template Output Node, for example a title, a message, and an image link. Your push platform maps those fields onto the notification title, body, and image.
+
+<Info>
+  This request happens at send time, for every recipient, so it adds load to your sending window. Batch it as your push platform recommends, and define a fallback for recipients where the Workflow returns no content.
+</Info>
+
+Implementation details, response codes, and code examples are in the [mobile integration documentation](/developer-docs/mobile-integration/overview).
+
+## Mobile browsing data in Workflows
+
+The Reelevant mobile libraries collect in-app browsing events and send them to the DataHub, in the same way website events are collected on the web. Once collected, they are available in Workflows through the [Website Events Data Node](/advanced-guide/workflows/data-nodes/website-events), so you can build conditions on products viewed in the app.
+
+That data is what makes the difference between a generic push and a push that reacts to what the person did in the app the day before.
+
+## Measurement
+
+Availability of push and in-app metrics differs by surface. See [Messaging and mobile measurement](/advanced-guide/analytics/messaging-and-mobile-measurement).

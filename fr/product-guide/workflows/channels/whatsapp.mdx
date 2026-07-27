@@ -1,0 +1,68 @@
+---
+title: 'WhatsApp'
+description: 'Envoyer des visuels personnalisés dans les messages WhatsApp Business'
+---
+
+Les messages WhatsApp affichent des visuels Reelevant personnalisés au sein d'une conversation avec votre marque.
+
+## Vue d'ensemble
+
+| Propriété | Valeur |
+|----------|-------|
+| **Channel utilisé dans Reelevant** | Email |
+| **Format de sortie** | Visuel personnalisé dans l'en-tête du message |
+| **Cas d'usage** | Recommandations produits, offres personnalisées, relances après achat |
+| **Prérequis** | Un compte WhatsApp Business connecté à votre plateforme de messagerie |
+
+Le message lui-même est construit dans votre plateforme de messagerie, connectée à votre compte WhatsApp Business. Reelevant fournit le visuel personnalisé via un lien, exactement comme pour l'e-mail. Voir [Channels de messagerie](/fr/product-guide/workflows/channels/messaging-overview).
+
+## Configuration
+
+<Steps>
+  <Step title="Ajouter un Channel Email">
+    Ajoutez un Channel Email pour le visuel à personnaliser, puis construisez vos Branches comme d'habitude.
+  </Step>
+  <Step title="Publier et copier le lien">
+    Copiez le lien depuis la [modale d'intégration](/fr/product-guide/workflows/integration).
+  </Step>
+  <Step title="Ajouter le lien au template de message">
+    Dans votre plateforme de messagerie, utilisez ce lien comme image du message. Le numéro de téléphone et l'identifiant du destinataire Reelevant sont ajoutés au lien sous forme de paramètres, comme dans une campagne e-mail.
+  </Step>
+  <Step title="Faire valider le template">
+    WhatsApp examine et valide chaque template de message avant le premier envoi. Prévoyez ce délai.
+  </Step>
+</Steps>
+
+## Limites connues
+
+<Warning>
+  **WhatsApp conserve une copie du visuel après le premier téléchargement.** Si deux envois utilisent exactement le même lien, le second destinataire peut voir le visuel généré pour le premier.
+</Warning>
+
+Pour l'éviter, changez le paramètre de campagne du lien à chaque envoi. Un [Variable Profile](/fr/product-guide/workflows/integration) permet de l'appliquer de manière systématique.
+
+<Info>
+  Ce comportement est proche de celui de certains clients e-mail. Voir [Cache et proxies](/fr/advanced-guide/email-rendering/caching-and-proxies) pour le même sujet côté e-mail.
+</Info>
+
+## Consentement
+
+Votre plateforme de messagerie et votre équipe juridique sont responsables du consentement, pas Reelevant. Vérifiez quel opt-in vos destinataires ont donné avant d'ajouter du contenu marketing personnalisé à une conversation.
+
+## Mesurer WhatsApp
+
+Reelevant compte les affichages et les clics sur le visuel qu'il sert. Les accusés de réception et de lecture restent dans votre plateforme de messagerie. Voir [Mesure messagerie et mobile](/fr/advanced-guide/analytics/messaging-and-mobile-measurement).
+
+## Étapes suivantes
+
+<CardGroup cols={3}>
+  <Card title="RCS" icon="comment-dots" href="/fr/product-guide/workflows/channels/rcs">
+    Faites de même dans les conversations RCS.
+  </Card>
+  <Card title="Mesure" icon="chart-line" href="/fr/advanced-guide/analytics/messaging-and-mobile-measurement">
+    Découvrez ce qui est mesuré, et ce qui ne l'est pas.
+  </Card>
+  <Card title="Intégration" icon="link" href="/fr/product-guide/workflows/integration">
+    Obtenez le lien pour votre plateforme de messagerie.
+  </Card>
+</CardGroup>
