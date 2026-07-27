@@ -1,0 +1,78 @@
+---
+title: 'Intégration push et in-app'
+description: "Modèles d'intégration pour l'écran de verrouillage, les scènes in-app et le centre de notifications"
+---
+
+## Vue d'ensemble
+
+La personnalisation mobile couvre trois surfaces d'affichage, et chacune a son propre modèle d'intégration.
+
+| Surface | Quand elle s'affiche | Modèle d'intégration | Ce qui est personnalisé |
+|---|---|---|---|
+| Écran de verrouillage | Avant le déverrouillage de l'appareil | Image personnalisée attachée à la notification, ou contenu résolu avant l'envoi | Toujours l'image ; le texte uniquement dans le second modèle |
+| Scène in-app | Pendant que la personne utilise l'application | Image personnalisée insérée dans la bannière ou le popup | Image et texte associé |
+| Centre de notifications | Dans la liste des messages de l'application | Image personnalisée insérée dans la carte | Image et texte associé |
+
+Deux mécanismes sous-tendent ces modèles : le **remplacement d'image**, où la plateforme push pointe vers un lien Reelevant et où l'image est générée par destinataire au moment de l'affichage ; et la **résolution avant envoi**, où votre plateforme push demande à Reelevant le contenu de chaque notification et injecte les valeurs dans le message envoyé.
+
+## Prérequis
+
+- Un Workflow publié avec un Channel correspondant à la surface : Push Notification Image, In-App Popup ou In-App Inbox.
+- Un identifiant de destinataire que votre plateforme push peut injecter dans le lien Reelevant, généralement le même que celui utilisé pour les campagnes e-mail.
+- Pour le modèle de résolution avant envoi, un Workflow se terminant par un Output Node JSON Template.
+
+## Modèle 1 — Remplacement d'image
+
+C'est le modèle par défaut, le plus rapide, et il fonctionne sur les trois surfaces.
+
+<Steps>
+  <Step title="Publier le Workflow">
+    Copiez le lien du Channel depuis la modale d'intégration.
+  </Step>
+  <Step title="Déclarer le lien dans la plateforme push">
+    Utilisez-le comme média enrichi de la notification, ou comme image de la scène in-app ou de la carte du centre de notifications. Ajoutez l'identifiant du destinataire en paramètre d'URL.
+  </Step>
+  <Step title="Garder un texte générique">
+    Le titre et le corps de la notification proviennent de la campagne, pas de Reelevant : le même texte est donc envoyé à tout le monde.
+  </Step>
+</Steps>
+
+Les images enrichies sur l'écran de verrouillage sont gérées par la plateforme mobile elle-même : iOS exige une extension de service de notification et l'attribut `mutable-content` ([documentation Apple](https://developer.apple.com/documentation/usernotifications/unnotificationserviceextension)), Android lit le champ `image` de la notification ([documentation Firebase Cloud Messaging](https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages)). Vérifiez avec votre plateforme push laquelle des deux options elle prend en charge avant de planifier un visuel sur l'écran de verrouillage.
+
+<Info>
+  Certaines configurations push envoient les notifications de l'écran de verrouillage en texte seul. Dans ce cas, le visuel personnalisé apparaît une fois la personne arrivée dans le centre de notifications ou sur une scène in-app, et l'écran de verrouillage reste générique.
+</Info>
+
+## Modèle 2 — Résolution avant envoi
+
+Utilisez ce modèle lorsque le texte de la notification doit changer selon le destinataire, et pas seulement le visuel.
+
+Votre plateforme push, ou le système qui déclenche l'envoi, demande à Reelevant les valeurs personnalisées pour chaque destinataire et les injecte dans la notification envoyée.
+
+```bash
+curl "https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}"
+```
+
+| Valeur | Provenance |
+|---|---|
+| `workflowId` | L'identifiant du Workflow, visible dans la modale d'intégration |
+| `entrypointId` | L'identifiant du Channel au sein du Workflow |
+| `rlvt-u` | Votre identifiant de destinataire, le même que sur les autres canaux |
+
+La réponse contient les champs déclarés dans l'Output Node JSON Template, par exemple un titre, un message et un lien d'image. Votre plateforme push associe ces champs au titre, au corps et à l'image de la notification.
+
+<Info>
+  Cette requête a lieu au moment de l'envoi, pour chaque destinataire : elle ajoute donc de la charge à votre fenêtre d'envoi. Regroupez les appels selon les recommandations de votre plateforme push, et définissez un repli lorsque le Workflow ne renvoie aucun contenu.
+</Info>
+
+Les détails d'implémentation, les codes de réponse et les exemples de code figurent dans la [documentation d'intégration mobile](/fr/developer-docs/mobile-integration/overview).
+
+## Les données de navigation mobile dans les Workflows
+
+Les bibliothèques mobiles Reelevant collectent les événements de navigation in-app et les envoient au DataHub, comme les événements de site web sur le web. Une fois collectés, ils sont disponibles dans les Workflows via le [Data Node Website Events](/fr/advanced-guide/workflows/data-nodes/website-events), ce qui permet de construire des conditions sur les produits consultés dans l'application.
+
+C'est cette donnée qui distingue un push générique d'un push qui réagit à ce que la personne a fait dans l'application la veille.
+
+## Mesure
+
+La disponibilité des métriques push et in-app varie selon la surface. Voir [Mesure messagerie et mobile](/fr/advanced-guide/analytics/messaging-and-mobile-measurement).

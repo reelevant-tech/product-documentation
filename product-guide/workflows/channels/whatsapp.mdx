@@ -1,0 +1,68 @@
+---
+title: 'WhatsApp'
+description: 'Send personalised visuals in WhatsApp Business messages'
+---
+
+WhatsApp messages carry personalised Reelevant visuals inside a conversation with your brand.
+
+## Overview
+
+| Property | Value |
+|----------|-------|
+| **Channel used in Reelevant** | Email |
+| **Output format** | Personalised visual in the message header |
+| **Use case** | Product recommendations, personalised offers, post-purchase follow-up |
+| **Prerequisite** | A WhatsApp Business account connected to your messaging platform |
+
+The message itself is built in your messaging platform, which is connected to your WhatsApp Business account. Reelevant supplies the personalised visual through a link, exactly as for e-mail. See [Messaging Channels](/product-guide/workflows/channels/messaging-overview).
+
+## Configuration
+
+<Steps>
+  <Step title="Add an Email Channel">
+    Add one Email Channel for the visual you want to personalise, then build your Branches as usual.
+  </Step>
+  <Step title="Publish and copy the link">
+    Copy the link from the [Integration modal](/product-guide/workflows/integration).
+  </Step>
+  <Step title="Add the link to your message template">
+    In your messaging platform, use that link as the image of the message. The phone number and the Reelevant recipient identifier are added to the link as parameters, like in an e-mail campaign.
+  </Step>
+  <Step title="Get the template approved">
+    WhatsApp reviews and approves every message template before the first send. Plan for that delay.
+  </Step>
+</Steps>
+
+## Known Limitations
+
+<Warning>
+  **WhatsApp keeps a copy of the visual after the first download.** If two sends use exactly the same link, the second recipient can see the visual generated for the first one.
+</Warning>
+
+To avoid this, change the campaign parameter of the link on every send. A [Variable Profile](/product-guide/workflows/integration) makes this easy to apply consistently.
+
+<Info>
+  This behaviour is close to what happens with some e-mail clients. See [Caching and proxies](/advanced-guide/email-rendering/caching-and-proxies) for the same topic on the e-mail side.
+</Info>
+
+## Consent
+
+Your messaging platform and your legal team own consent, not Reelevant. Confirm which opt-in your recipients gave before adding personalised marketing content to a conversation.
+
+## Measuring WhatsApp
+
+Reelevant counts displays and clicks on the visual it serves. Delivery and read receipts stay in your messaging platform. See [Messaging and mobile measurement](/advanced-guide/analytics/messaging-and-mobile-measurement).
+
+## What's Next?
+
+<CardGroup cols={3}>
+  <Card title="RCS" icon="comment-dots" href="/product-guide/workflows/channels/rcs">
+    Do the same in RCS conversations.
+  </Card>
+  <Card title="Measurement" icon="chart-line" href="/advanced-guide/analytics/messaging-and-mobile-measurement">
+    See what is measured, and what is not.
+  </Card>
+  <Card title="Integration" icon="link" href="/product-guide/workflows/integration">
+    Get the link for your messaging platform.
+  </Card>
+</CardGroup>

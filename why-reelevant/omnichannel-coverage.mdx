@@ -1,0 +1,43 @@
+---
+title: 'Omnichannel Coverage'
+description: 'One personalisation engine across email, web, messaging, and mobile'
+---
+
+## One engine, every channel
+
+Most personalisation stacks are channel-specific: one tool for email, another for the app, a third for messaging. The logic is rebuilt three times, and the three tools disagree on what the customer just did.
+
+Reelevant keeps the logic in one place. A Workflow is built once, connected to Datasources once, and consumed by any surface that can display an image or read structured content.
+
+## Channel coverage
+
+| Channel | How Reelevant delivers | Effort on your side |
+|---|---|---|
+| Email | Personalised visual served at open time | Paste a link in the email template |
+| Web | Personalised image or HTML section | Add a snippet, or call Reelevant from your frontend |
+| Landing page | Full personalised page | Publish the Workflow |
+| RCS and rich SMS | Personalised card visuals in the conversation | Paste the link in the messaging platform |
+| WhatsApp | Personalised visual in an approved message template | Paste the link in the messaging platform |
+| Push notification | Personalised image on the notification, or full content resolved before send | Configure the campaign in your push platform |
+| In-app scene and notification centre | Personalised visual in the app | Register the link in your push platform |
+
+Messaging and push channels reuse the same delivery mechanism as email: a link that returns a personalised visual for the individual who opened the message. That is why adding a channel is a configuration exercise, not a new integration project.
+
+## What that means in practice
+
+- **One data model.** Datasources feed every channel; a product catalogue connected for email is available for RCS the same day.
+- **One decision layer.** Conditions, splits, and recommendation logic are shared, so channels do not contradict each other.
+- **One measurement model.** Displays, clicks, and post-click conversions are reported with the same measures across channels, with the [Uplift](/product-guide/analytics/dashboards/uplift) methodology applied everywhere.
+- **Channel-agnostic partners.** Reelevant sits behind your existing sending platforms rather than replacing them, so the messaging or push vendor stays your choice.
+
+## Where the boundary sits
+
+Reelevant does not send messages, hold consent, or manage delivery. Your messaging, push, and email platforms keep those responsibilities. Reelevant supplies the personalised content and reports on how people interacted with it.
+
+Native elements added by the sending platform — RCS buttons, WhatsApp quick replies, push action buttons — are measured by that platform, not by Reelevant.
+
+## Next Steps
+
+- [Integration options](/why-reelevant/technical-evaluators/integrations) — Technical view of each integration mode
+- [Messaging channels](/product-guide/workflows/channels/messaging-overview) — How RCS and WhatsApp are set up
+- [Push and in-app integration](/advanced-guide/workflows/push-integration) — Mobile integration patterns

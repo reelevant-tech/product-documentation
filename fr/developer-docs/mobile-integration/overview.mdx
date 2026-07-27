@@ -44,6 +44,29 @@ Votre application mobile s'intègre à Reelevant de la même façon qu'un fronte
   </Step>
 </Steps>
 
+## Surfaces push et in-app
+
+Les notifications push et les surfaces in-app sont servies par votre fournisseur push, pas par Reelevant. Deux modes d'intégration existent, et ils peuvent coexister dans la même application.
+
+| Surface | Mode d'intégration | Ce dont le fournisseur a besoin |
+|---------|--------------------|---------------------------------|
+| **Notification sur écran de verrouillage** | URL d'image | L'URL du Runner comme média enrichi. iOS exige une [extension de service de notification](https://developer.apple.com/documentation/usernotifications/unnotificationserviceextension) avec `mutable-content: 1` ; Android lit le [champ `image`](https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages) du payload de notification. |
+| **Notification sur écran de verrouillage (texte personnalisé)** | JSON, résolu avant l'envoi | Le système d'envoi appelle le Runner par destinataire et associe les champs de la réponse à `title`, `body` et `image`. |
+| **Scène in-app** (bannière, popup) | URL d'image ou JSON | Même principe que le web : remplacer une image statique par l'URL du Runner, ou récupérer le JSON et effectuer le rendu nativement. |
+| **Centre de notifications** | URL d'image ou JSON | Comme les scènes in-app ; les cartes persistent, privilégiez donc le JSON lorsque le texte doit rester exact dans la durée. |
+
+Le mode URL d'image résout le Workflow au moment de l'affichage : le contenu reste donc frais après l'envoi. Le mode JSON le résout au moment de l'envoi, ce qui est nécessaire lorsque le texte de la notification doit être personnalisé — au prix d'un appel au Runner par destinataire dans la fenêtre d'envoi.
+
+```bash
+curl "https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}"
+```
+
+<Note>
+  Certains fournisseurs push n'affichent que du texte brut sur l'écran de verrouillage. Dans ce cas, diffusez le visuel personnalisé sur la carte du centre de notifications ou sur une scène in-app, et gardez un texte générique sur l'écran de verrouillage.
+</Note>
+
+La configuration produit de chaque surface est documentée dans le [guide d'intégration push et in-app](/fr/advanced-guide/workflows/push-integration).
+
 ## Étapes suivantes
 
 <Card title="Intégration technique" icon="code" href="/fr/developer-docs/mobile-integration/api-json/overview">

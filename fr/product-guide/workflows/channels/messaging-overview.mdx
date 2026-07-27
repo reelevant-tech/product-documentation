@@ -1,0 +1,67 @@
+---
+title: 'Channels de messagerie'
+description: 'Comment le contenu Reelevant est diffusé dans RCS, WhatsApp et les autres conversations de messagerie'
+---
+
+Les Channels de messagerie vous permettent d'envoyer du contenu Reelevant personnalisé au sein d'une conversation sur le téléphone du destinataire.
+
+## Comment la messagerie fonctionne avec Reelevant
+
+Reelevant n'envoie pas de messages. C'est votre plateforme de messagerie qui s'en charge. Reelevant produit la partie personnalisée du message : un visuel généré pour chaque destinataire au moment de l'ouverture.
+
+Il n'existe pas de Channel « RCS » ou « WhatsApp » dans le sélecteur de Channels. Vous construisez le Workflow avec un [Channel Email](/fr/product-guide/workflows/channels/email), car il génère exactement ce dont une plateforme de messagerie a besoin : un visuel personnalisé servi depuis un lien.
+
+<Steps>
+  <Step title="Construire le Workflow">
+    Ajoutez un Channel Email, connectez vos [Data Nodes](/fr/product-guide/workflows/data-nodes) et [Logic Nodes](/fr/product-guide/workflows/logic-nodes), puis terminez par un Output Node [Visual Content](/fr/product-guide/workflows/output-nodes/visual-content).
+  </Step>
+  <Step title="Publier et copier le lien">
+    Ouvrez la [modale d'intégration](/fr/product-guide/workflows/integration) et copiez le lien de ce Channel.
+  </Step>
+  <Step title="Coller le lien dans votre plateforme de messagerie">
+    Votre plateforme de messagerie construit le message et utilise ce lien comme image du message. Elle ajoute l'identifiant du destinataire au lien, comme pour une campagne e-mail.
+  </Step>
+  <Step title="Envoyer">
+    Chaque destinataire reçoit un visuel construit pour lui, à partir des données disponibles au moment où il ouvre le message.
+  </Step>
+</Steps>
+
+## Channels de messagerie disponibles
+
+<CardGroup cols={2}>
+  <Card title="RCS" icon="comment-dots" href="/fr/product-guide/workflows/channels/rcs">
+    Carrousels et cartes personnalisés dans les conversations RCS, avec le SMS enrichi en repli.
+  </Card>
+  <Card title="WhatsApp" icon="whatsapp" href="/fr/product-guide/workflows/channels/whatsapp">
+    Visuels personnalisés dans les messages WhatsApp Business.
+  </Card>
+</CardGroup>
+
+## Ce qui reste du côté de la messagerie
+
+Certains éléments du message ne sont jamais contrôlés par Reelevant. Votre plateforme de messagerie en reste responsable :
+
+| Élément | Responsable |
+|---|---|
+| Liste de destinataires, consentement et planification des envois | Plateforme de messagerie |
+| Texte du message et boutons | Plateforme de messagerie |
+| Visuel personnalisé | Reelevant |
+| Page d'atterrissage après un clic | Reelevant ou votre site |
+
+<Warning>
+  Reelevant mesure uniquement ce qui se passe sur le contenu qu'il sert. Les clics sur les boutons ajoutés par la plateforme de messagerie sont comptés par cette plateforme, pas par Reelevant. Voir [Mesure messagerie et mobile](/fr/advanced-guide/analytics/messaging-and-mobile-measurement).
+</Warning>
+
+## Étapes suivantes
+
+<CardGroup cols={3}>
+  <Card title="RCS" icon="comment-dots" href="/fr/product-guide/workflows/channels/rcs">
+    Configurez un carrousel RCS personnalisé.
+  </Card>
+  <Card title="WhatsApp" icon="whatsapp" href="/fr/product-guide/workflows/channels/whatsapp">
+    Configurez un message WhatsApp personnalisé.
+  </Card>
+  <Card title="Intégration" icon="link" href="/fr/product-guide/workflows/integration">
+    Obtenez le lien à transmettre à votre plateforme de messagerie.
+  </Card>
+</CardGroup>
