@@ -9,18 +9,22 @@ RCS messages carry personalised Reelevant visuals inside the native messaging ap
 
 | Property | Value |
 |----------|-------|
-| **Channel used in Reelevant** | Email |
+| **Channel used in Reelevant** | RCS |
 | **Output format** | Personalised visual, one per card |
 | **Use case** | Product carousels, personalised offers, conversational journeys |
 | **Fallback** | Rich SMS on phones that do not support RCS |
 
 Building an RCS campaign works like building an e-mail campaign. You create the Workflow, publish it, and give the resulting link to your messaging platform, which places the visual in the RCS message. See [Messaging Channels](/product-guide/workflows/channels/messaging-overview) for the general pattern.
 
+<Info>
+  The RCS Channel is greyed out until it is enabled for your account. Ask your Reelevant contact to activate it.
+</Info>
+
 ## Configuration
 
 <Steps>
-  <Step title="Add an Email Channel">
-    Add one Email Channel per card you want to personalise. A three-card carousel needs three Channels.
+  <Step title="Add an RCS Channel">
+    Add one RCS Channel per card you want to personalise. A three-card carousel needs three Channels.
   </Step>
   <Step title="Build the personalisation">
     Connect [Data Nodes](/product-guide/workflows/data-nodes) and [Logic Nodes](/product-guide/workflows/logic-nodes) as usual, then end each Branch with a [Visual Content](/product-guide/workflows/output-nodes/visual-content) Output Node.
