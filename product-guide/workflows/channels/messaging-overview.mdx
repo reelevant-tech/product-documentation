@@ -9,11 +9,15 @@ Messaging channels let you send personalised Reelevant content inside a conversa
 
 Reelevant does not send messages. Your messaging platform does that. Reelevant produces the personalised part of the message: a visual that is generated for each recipient at the moment the message is opened.
 
-There is no "RCS" or "WhatsApp" Channel in the Channel picker. You build the Workflow with an [Email Channel](/product-guide/workflows/channels/email), because it renders exactly what a messaging platform needs — a personalised visual served from a link.
+RCS and WhatsApp each have their own Channel in the Channel picker. Pick the one that matches the conversation you are sending in, so your reports separate messaging from e-mail.
+
+<Info>
+  A greyed-out Channel is not enabled for your account. Ask your Reelevant contact to activate it.
+</Info>
 
 <Steps>
   <Step title="Build the Workflow">
-    Add an Email Channel, connect your [Data Nodes](/product-guide/workflows/data-nodes) and [Logic Nodes](/product-guide/workflows/logic-nodes), and finish with a [Visual Content](/product-guide/workflows/output-nodes/visual-content) Output Node.
+    Add the RCS or WhatsApp Channel, connect your [Data Nodes](/product-guide/workflows/data-nodes) and [Logic Nodes](/product-guide/workflows/logic-nodes), and finish with a [Visual Content](/product-guide/workflows/output-nodes/visual-content) Output Node.
   </Step>
   <Step title="Publish and copy the link">
     Open the [Integration modal](/product-guide/workflows/integration) and copy the link for that Channel.
