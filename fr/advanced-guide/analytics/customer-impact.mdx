@@ -1,0 +1,96 @@
+---
+title: 'Impact client'
+description: "Comment Reelevant mesure l'effet de la personnalisation sur la valeur par client, le panier moyen, la fréquence d'achat, le cycle de réachat et la rétention, en comparant la Exposed Population à une Non-Exposed Population comparable"
+---
+
+<Warning>
+  **Bêta** — Les mesures d'impact client sont actuellement en bêta. Le comportement et les mesures disponibles peuvent encore évoluer, et les chiffres peuvent être affinés à mesure que la fonctionnalité mûrit.
+</Warning>
+
+## Avant de commencer
+
+L'attribution répond à la question de ce qu'une conversion doit à une interaction Reelevant. L'impact client répond à une autre question : les clients que vous personnalisez valent-ils plus que des clients comparables que vous ne personnalisez pas, et par quel comportement.
+
+Ces mesures exigent que le jeu de données d'achats configuré comme source d'attribution dans les [Paramètres Analytics](/fr/product-guide/analytics/settings) porte un identifiant client. Les événements d'achat du site web ne suffisent pas : un navigateur ne sait qui est le visiteur qu'une fois celui-ci identifié, donc les mesures par client sont refusées lorsque votre source d'attribution est le tracking web plutôt qu'un jeu de données d'achats.
+
+## Ce qui est mesuré
+
+Chaque mesure est calculée sur la période interrogée, sur les clients qui **achetaient déjà sur la période précédente de même durée**.
+
+| Mesure | Définition |
+|---|---|
+| **Valeur par client** | Chiffre d'affaires de la période divisé par le nombre de clients. Une valeur client sur une fenêtre donnée, pas une valeur vie projetée. |
+| **Panier moyen** | Chiffre d'affaires de la période divisé par le nombre de commandes. |
+| **Commandes par client** | Commandes de la période divisées par le nombre de clients. |
+| **Jours entre deux achats** | Durée de la période divisée par les commandes par client. |
+| **Taux de rétention** | Part des clients ayant acheté sur la période précédente et ayant racheté sur la période. |
+| **Valeur par client avant la période** | La même valeur par client sur la période précédente. Un contrôle d'équilibre, pas un résultat. |
+| **Clients comparables** | Taille de la population sur laquelle chaque chiffre est calculé. |
+
+Les commandes sont comptées comme des transactions et non comme des lignes de commande : un panier contenant sept références produit est une commande.
+
+## La comparaison
+
+Chaque mesure est disponible sur deux populations, la Exposed Population et la Non-Exposed Population, via la dimension **Was Exposed** :
+
+| Population | Définition |
+|---|---|
+| **Exposed Population** | Clients ayant vu au moins un Content Reelevant sur la période. |
+| **Non-Exposed Population comparable** | Clients n'en ayant vu aucun, pondérés pour que leur comportement d'achat avant la période corresponde à celui de la Exposed Population. |
+
+La pondération est essentielle. Les clients exposés sont joignables, opt-in et plus engagés : ils sont donc de meilleurs clients avant toute personnalisation. Chez un distributeur, ils valaient déjà 8,6 % de plus que la Non-Exposed Population avant la période mesurée. Reelevant regroupe donc les clients par décile de commandes et décile de valeur sur la période précédente, puis pondère la Non-Exposed Population pour que chaque décile y pèse le même poids que dans la Exposed Population. Les deux populations ont alors, en moyenne, le même historique d'achat.
+
+<Info>
+  Les clients n'ayant rien acheté sur la période précédente sont exclus de la comparaison. Un client de la Non-Exposed Population n'est observé qu'à travers vos données d'achats : « joint mais jamais acheteur » est donc une population qui existe côté exposé et ne peut pas exister de l'autre côté. L'impact client mesure l'effet sur les clients qui achetaient déjà — il ne mesure pas l'acquisition.
+</Info>
+
+## Les mesures d'Uplift
+
+| Mesure | Définition |
+|---|---|
+| **Customer Value Uplift** | Croissance de la valeur par client sur la Exposed Population, divisée par la même croissance sur la Non-Exposed Population. |
+| **Average Order Value Uplift** | Le même rapport de croissances, sur le panier moyen. |
+| **Purchase Frequency Uplift** | Le même rapport de croissances, sur les commandes par client. |
+| **Repurchase Cycle Gain** | L'Uplift de fréquence d'achat exprimé en jours. Un chiffre positif signifie que les clients reviennent plus tôt. |
+| **Retention Uplift** | Taux de rétention de la Exposed Population moins celui de la Non-Exposed Population, en points de pourcentage. |
+| **Cohort Pre-Period Gap** | Écart de valeur par client entre les deux populations *avant* la période. |
+
+Chaque Uplift compare chaque population à **sa propre** période précédente, plutôt que de comparer directement les deux populations. Deux effets s'annulent alors : une tendance saisonnière qui touche tout le monde, et l'écart que la pondération n'a pas pu refermer.
+
+Cohort Pre-Period Gap sert à contrôler la comparaison, pas à être reporté comme résultat. Chez le même distributeur, la pondération le ramène de 8,6 % à moins de 1 %, ce qui rend les Uplifts exploitables. Un écart de plus de quelques pourcents signifie que les deux populations ne sont pas assez comparables et que les Uplifts ne sont qu'indicatifs.
+
+### Exemple chiffré
+
+| Mesure | Exposée | Non exposée | Avant la période | Uplift |
+|---|---|---|---|---|
+| Valeur par client | 73,56 | 60,06 | 39,06 / 39,20 | +22,9 % |
+| Panier moyen | 36,73 | 35,83 | 37,33 / 37,41 | +2,7 % |
+| Commandes par client | 2,00 | 1,68 | 1,05 / 1,05 | +19,6 % |
+| Taux de rétention | 60,7 % | 53,0 % | — | +7,7 pt |
+| Jours entre deux achats | 89,2 | 106,8 | — | 17,5 jours plus tôt |
+
+Lisez le mécanisme, pas seulement le chiffre principal : la valeur par client progresse de 22,9 % alors que le panier moyen bouge à peine. Les clients ne dépensent pas plus par commande — ils commandent plus souvent et décrochent moins. Ici la personnalisation agit sur la fréquence et la rétention : les actions à en tirer portent donc sur la présence et la récurrence, pas sur la construction du panier.
+
+## Pression d'exposition
+
+**Exposure Decile** découpe la Exposed Population en dix groupes, du moins exposé au plus exposé, pour lire la valeur par client et les commandes par client en fonction du volume d'exposition. Cela indique si davantage d'exposition continue de payer, et où les rendements s'aplatissent.
+
+<Info>
+  Lisez la courbe de pression au sein de la Exposed Population uniquement. C'est une lecture dose-réponse et non une seconde comparaison entre les deux populations : les clients les plus exposés sont aussi les plus actifs, et une partie de la courbe reflète cela plutôt que l'effet de l'exposition.
+</Info>
+
+## Jusqu'où vont ces chiffres
+
+L'exposition n'est pas randomisée. La pondération rend les deux populations comparables sur leur historique d'achat, mais pas sur la joignabilité, le consentement ou l'engagement, et ces différences ne sont pas observables dans les données.
+
+| Le résultat est | Le résultat n'est pas |
+|---|---|
+| Un écart mesuré entre deux populations comparables sur la même période | La preuve que la personnalisation a causé cet écart |
+| Robuste à la saisonnalité, les deux populations étant mesurées sur la même période | Une expérience randomisée |
+| Limité aux clients qui achetaient déjà | Une mesure de l'acquisition |
+
+Présentez-le comme la Exposed Population comparée à une Non-Exposed Population comparable. Une affirmation causale exige une Non-Exposed Population randomisée, où une part de vos clients joignables n'est délibérément jamais personnalisée.
+
+<Info>
+  Lisez toujours Clients comparables avant tout autre chiffre. La pondération ne conserve que les clients dont l'historique d'achat existe des deux côtés : une population petite ou très homogène peut donc ne rien laisser à comparer — toutes les mesures valent alors 0, ce qui n'est pas la même réponse que « aucun effet ».
+</Info>
