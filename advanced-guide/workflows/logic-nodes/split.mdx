@@ -1,34 +1,101 @@
 ---
 title: 'Split (A/B Testing)'
-description: 'Divide traffic into multiple branches based on population share percentages'
+description: 'Configure fixed Split allocations, measure executed Branches, and manually update the Workflow based on results'
 ---
 
-![Split node configuration panel showing group distribution with percentage slider](/images/workflows/node-split.png)
+Split provides fixed percentage allocation between Branches. Use it to compare Content, measure each executed Branch, and make a manual Workflow decision.
 
-## Overview
+## Before you begin
 
-Split nodes divide traffic into multiple branches based on **population share percentages**. This is used for A/B testing or multivariate testing.
+Define the Content and success measures for each Branch. Confirm that the Workflow has a Channel and an Output Node for every Branch.
 
-## Configuration
+## 1. Add the Split Node and set group shares
 
-- **Variant count** — Add two or more groups using the **Add** button. Groups are automatically labelled A, B, C, and so on.
-- **Population share** — Use the slider to set the percentage of traffic each group receives. The total across all groups always equals 100%.
-- **Remove** — Click the delete button on any group row to remove it (minimum two groups required).
+![Logic Node picker showing the Split Node](/images/workflows/node-picker-branches.png)
 
-## Example
+1. Open the Logic Node picker.
+2. Select **Split**.
+3. Retain the two automatically created groups, or select **Add group**.
+4. Configure the slider handles for the required group shares.
 
-| Group | Population Share |
-|-------|-----------------|
-| Variant A | 50% |
-| Variant B | 30% |
-| Control | 20% |
+The panel displays **Group**, **Population Share**, and **Action**. Group labels are derived as **Group A**, **Group B**, **Group C**, and so on.
 
-## How It Works
+The UI stores cumulative thresholds. For a 50%/30%/20% allocation, the thresholds are 50, 80, and 100. The final threshold is fixed at 100, so the UI produces a complete allocation.
 
-When a user triggers the workflow, the split node randomly assigns them to one of the groups based on the configured percentages. The assignment is deterministic per user — the same user will always follow the same branch.
+The panel requires at least two groups. There is no explicit product maximum in the Split configuration or its type definition.
 
-## Best Practices
+<Info>
+Adding a group splits the final group's current share. Removing a non-final group leaves the following cumulative threshold in place, so that Branch absorbs the removed share. Removing the final group sets the preceding threshold to 100.
+</Info>
 
-- Always include a **control group** (e.g., 10-20%) to measure the impact of personalization.
-- Run tests for a sufficient duration to achieve statistical significance before drawing conclusions.
-- Use [branch categories](/product-guide/workflows/branches) to tag split branches for analytics.
+Groups cannot be renamed. A separate custom Branch name can be assigned through Branch qualification, but it does not rename the generated group label.
+
+## 2. Build each Branch
+
+![Split Node configuration panel showing group shares](/images/workflows/node-split.png)
+
+Select the continuation control below each Branch and add the required Nodes. Connect each Branch to its intended Output Node.
+
+The Split configuration changes thresholds only. Adding or removing a Split group does not automatically connect or reconnect downstream Nodes.
+
+See [Branches](/product-guide/workflows/branches) for Branch qualification concepts.
+
+## 3. Tag Branches for measurement
+
+![Branch qualification drawer for assigning a category and tags](/images/workflows/branch-qualification-drawer.png)
+
+Use Branch qualification to assign a custom Branch name, a Branch category, or custom tags. These settings are analyzer metadata, not Split allocation settings.
+
+At publish time, the analyzer resolves category and tag associations onto full Branch identifiers. The resulting metadata is available to Analytics for the executed Branch.
+
+## 4. Read the results
+
+### Workflow builder statistics
+
+Enable **Display branch statistics** from the Workflow toolbar. The builder queries display and click measures grouped by `WorkflowEvents.executedBranch`, then shows **Displays** and **Clicks** on Logic Node Branches.
+
+### Analytics dimensions and metadata
+
+In [Analytics data exploration](/product-guide/analytics/data-exploration), use the **Workflow Branch** dimension to group events by `WorkflowEvents.executedBranch`.
+
+Branch categories resolve through the published `categoryIdByBranch` mapping. Branch tags resolve through `branchTags`, and tag values can be used through the relevant tag dimensions.
+
+The executed Branch is a comma-separated identifier containing the selected Split Branch IDs and the Output Node ID. This is an identifier for analysis, not the generated A/B/C label.
+
+## 5. Assignment mechanics
+
+For one Split affecting a Branch, the Personalisation Engine computes an MD5 hash of the user identifier. It reduces that hash modulo 100, producing a bucket from 0 through 99.
+
+The Personalisation Engine evaluates Split Branches in ascending cumulative-threshold order. The first threshold greater than the bucket receives the user. Consequently, the assignment is stable for the same user identifier across runs.
+
+When several Splits occur on the same Branch, the Split metadata uses the current Node identifier in the hash seed. This prevents multiple Splits from filtering the same population segment while retaining deterministic assignment per user and Split Node.
+
+If the configured thresholds do not reach 100, users in the remaining buckets match no Branch. Traversal stops, and the run does not continue through a Split Branch. The backend does not normalise or validate the threshold total.
+
+## 6. Act on the winner
+
+Split has no automatic winner selection, optimisation, confidence threshold, or end-of-test action. The allocation remains fixed until the Workflow is edited.
+
+After reviewing Branch statistics, edit the Workflow manually. Typical actions include changing thresholds, updating Content, removing losing Branches, or removing the Split Node.
+
+Publish a new Workflow version after validating the resulting Branches.
+
+## Split configuration reference
+
+| Setting | Behaviour |
+| --- | --- |
+| Groups | The UI initialises two groups and prevents removal below two. No explicit maximum is defined. |
+| Group labels | Generated from sorted cumulative thresholds as A, B, C, and so on. They are not editable. |
+| Slider | Controls all cumulative thresholds except the final threshold, which is fixed at 100. |
+| Add group | Splits the current allocation of the final group between that group and the new group. |
+| Remove | Removes the selected Branch. The UI adjusts the final threshold when removing the final group. |
+| User assignment | MD5(user identifier) modulo 100 for one Split. |
+| Multiple Splits | The current Split Node ID is added to the seed when Splits share a Branch. |
+| Invalid total | Thresholds below 100 leave some users without a matching Branch; traversal stops. |
+| Optimisation | None. Winner selection and Workflow changes are manual. |
+
+## Split or Real-Time Testing?
+
+Use Split for fixed allocation and manual analysis. Use [Real-Time Testing](/product-guide/workflows/logic-nodes/real-time-testing) for automatic allocation optimisation based on performance.
+
+For UI basics, see the [product guide Split instructions](/product-guide/workflows/logic-nodes/split).

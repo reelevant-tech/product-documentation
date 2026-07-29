@@ -1,34 +1,101 @@
 ---
 title: 'Split (A/B Testing)'
-description: 'Divide traffic into multiple branches based on population share percentages'
+description: 'Run an A/B test by sharing your audience between Branches, measuring results, and updating your Workflow'
 ---
 
-![Split node configuration panel showing group distribution with percentage slider](/images/workflows/node-split.png)
+Use a Split Node to share your audience between Branches, compare their results, and choose what to change next.
 
-## Overview
+## Before you begin
 
-Split nodes divide traffic into multiple branches based on **population share percentages**. This is used for A/B testing or multivariate testing.
+Prepare the Content you want to compare. Create the Workflow and connect its Channel to a Logic Node.
 
-## Configuration
+## 1. Add the Split Node and set group shares
 
-- **Variant count** — Add two or more groups using the **Add** button. Groups are automatically labelled A, B, C, and so on.
-- **Population share** — Use the slider to set the percentage of traffic each group receives. The total across all groups always equals 100%.
-- **Remove** — Click the delete button on any group row to remove it (minimum two groups required).
+![Logic Node picker showing the Split Node](/images/workflows/node-picker-branches.png)
 
-## Example
+1. Open the Logic Node picker.
+2. Select **Split**.
+3. Keep the two groups created automatically, or select **Add group**.
+4. Move the slider handles to set each group's share.
 
-| Group | Population Share |
-|-------|-----------------|
-| Variant A | 50% |
-| Variant B | 30% |
-| Control | 20% |
+The panel shows **Group**, **Population Share**, and **Action**. Groups are labelled **Group A**, **Group B**, **Group C**, and so on.
 
-## How It Works
+You need at least two groups. The last group receives the remaining share, so the displayed shares total 100%.
 
-When a user triggers the workflow, the split node randomly assigns them to one of the groups based on the configured percentages. The assignment is deterministic per user — the same user will always follow the same branch.
+<Tip>
+Adding a group splits the last group's share between the existing group and the new group.
+</Tip>
 
-## Best Practices
+<Warning>
+The trash icon removes a group. You cannot remove a group when only two groups remain.
+</Warning>
 
-- Always include a **control group** (e.g., 10-20%) to measure the impact of personalization.
-- Run tests for a sufficient duration to achieve statistical significance before drawing conclusions.
-- Use [branch categories](/product-guide/workflows/branches) to tag split branches for analytics.
+Groups cannot be renamed. Their letters are generated from their order and shares.
+
+## 2. Build each Branch
+
+![Split Node configuration panel showing group shares](/images/workflows/node-split.png)
+
+Select the continuation control below each Branch. Add the Nodes and Content that belong to that Branch.
+
+Give every Branch the Content you want to compare. Check that every Branch continues to an Output Node.
+
+Read more about [Branches](/product-guide/workflows/branches) and [Output Nodes](/product-guide/workflows/output-nodes).
+
+## 3. Tag Branches for measurement
+
+![Branch qualification drawer for assigning a category and tags](/images/workflows/branch-qualification-drawer.png)
+
+Open a Branch menu and select its qualification settings. Add a custom Branch name, category, or custom tags.
+
+Use the same naming pattern for every group. For example, name them `A`, `B`, and `Control`.
+
+Branch categories and tags help you recognise Branch results in Analytics. They do not change the Split allocation.
+
+## 4. Read the results
+
+Open the Workflow statistics mode from the toolbar. Each Logic Node Branch displays **Displays** and **Clicks**, with totals and percentages.
+
+You can also compare Branches in [Analytics](/product-guide/analytics/overview). Use the **Workflow Branch** dimension to group results by executed Branch.
+
+Allow enough activity for a useful comparison. Consider your business goal before choosing a winner.
+
+## 5. Act on the winner
+
+A Split Node does not choose a winner or end the comparison automatically. Edit the Workflow when you are ready to act.
+
+You can:
+
+- Keep the winning Branch and remove the others.
+- Change the group shares.
+- Update the Content in each Branch.
+- Remove the Split Node and keep one Branch.
+
+Publish the updated Workflow after reviewing your changes.
+
+## Split configuration reference
+
+| Setting | Details |
+| --- | --- |
+| Groups | Two or more groups are required in the panel. |
+| Group names | Generated as **A**, **B**, **C**, and so on. They cannot be renamed. |
+| Population Share | Set with the percentage slider. The final group receives the remaining share. |
+| Add group | Splits the last group's share between two groups. |
+| Remove | Select the trash icon. Removal is unavailable below two groups. |
+| Assignment | A user receives a stable group assignment based on their user identifier. |
+| Optimisation | No automatic optimisation or winner selection. Edit the Workflow manually. |
+
+## Split or Real-Time Testing?
+
+Choose Split when you want fixed group shares and a manual decision. Choose [Real-Time Testing](/product-guide/workflows/logic-nodes/real-time-testing) when you want automatic optimisation.
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Branches" icon="code-branch" href="/product-guide/workflows/branches">
+    Learn how to qualify and organise Branches.
+  </Card>
+  <Card title="Analytics Overview" icon="chart-line" href="/product-guide/analytics/overview">
+    Explore Workflow performance in Analytics.
+  </Card>
+</CardGroup>
