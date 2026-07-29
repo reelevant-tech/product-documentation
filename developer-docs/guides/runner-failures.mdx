@@ -110,6 +110,24 @@ curl "https://reelevant.run/<workflow_id>/0?rlvt-u=user@example.com&mode=debug" 
 
 Tokens live 15 minutes and are scoped to the company that owns the Workflow. A missing, expired or out-of-scope token returns `error_code` `3501` with HTTP `401`.
 
+## Execution return codes
+
+Degraded runs are reported on the Workflow event rather than on the HTTP response. Each run emits one event carrying an execution return code, exposed as:
+
+- the **Execution return code** dimension in [Data Exploration](/product-guide/analytics/data-exploration) and dashboards
+- the `execution_error_code` column of the Workflow events dataset in DataHub
+
+| Code | Meaning |
+|---|---|
+| _empty_ | The run completed without error. |
+| `3501` | Fatal error: the run stopped before reaching an Output Node. The response is the transparent PNG or the default output. |
+| `3502` | Silenced error: at least one Node failed but the Branch completed. Content was still served. |
+| `3503` | Click run with no destination URL — the run answered `404`. |
+
+These codes are independent of the HTTP `error_code` values above, even though `3501` exists in both sets: `3501` on an event means a fatal execution error, `3501` on an HTTP failure means an unauthorised debug request. HTTP failures (`3000`, `3500`, validation, `500`) emit no event at all, so they never appear in analytics.
+
+A degraded run is still counted as a display, so these codes are the way to size the impact of a failing Datasource: group your usual display measures by **Execution return code** in Data Exploration, or filter the dataset on `execution_error_code`.
+
 ## Correlating a failed run
 
 Every response carries `x-rlvt-workflow-run-id`. Log it next to your own request id: it identifies the run in analytics and in the debug report, and is what support needs to trace an execution.
@@ -118,4 +136,5 @@ Every response carries `x-rlvt-workflow-run-id`. Log it next to your own request
 
 - [Technical Integration](/developer-docs/web-integration/api-json/integration)
 - [JSON API overview](/developer-docs/web-integration/api-json/overview)
+- [Measures and dimensions](/product-guide/analytics/measures-and-dimensions)
 - [Authentication](/developer-docs/api-reference/authentication)

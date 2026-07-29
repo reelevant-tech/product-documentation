@@ -110,12 +110,31 @@ curl "https://reelevant.run/<workflow_id>/0?rlvt-u=user@example.com&mode=debug" 
 
 Les tokens durent 15 minutes et sont limités à la société propriétaire du Workflow. Un token absent, expiré ou hors périmètre renvoie l'`error_code` `3501` avec le statut HTTP `401`.
 
+## Codes de retour d'exécution
+
+Les exécutions dégradées sont remontées sur l'événement de Workflow, pas sur la réponse HTTP. Chaque exécution émet un événement portant un code de retour, exposé via :
+
+- la dimension **Execution return code** dans l'[Exploration de données](/fr/product-guide/analytics/data-exploration) et les dashboards
+- la colonne `execution_error_code` du dataset des événements de Workflow dans le DataHub
+
+| Code | Signification |
+|---|---|
+| _vide_ | L'exécution s'est terminée sans erreur. |
+| `3501` | Erreur fatale : l'exécution s'est arrêtée avant d'atteindre un Output Node. La réponse est le PNG transparent ou la sortie par défaut. |
+| `3502` | Erreur silencieuse : au moins un Node a échoué mais la Branch s'est terminée. Le contenu a été servi. |
+| `3503` | Exécution en mode click sans URL de destination — la réponse a été un `404`. |
+
+Ces codes sont indépendants des `error_code` HTTP ci-dessus, même si `3501` existe dans les deux ensembles : `3501` sur un événement signifie une erreur fatale d'exécution, `3501` sur un échec HTTP signifie une requête de debug non autorisée. Les échecs HTTP (`3000`, `3500`, validation, `500`) n'émettent aucun événement : ils n'apparaissent donc jamais dans les analytics.
+
+Une exécution dégradée reste comptée comme un display : ces codes sont donc le moyen de mesurer l'impact d'une Datasource en erreur. Regroupez vos mesures de display par **Execution return code** dans l'Exploration de données, ou filtrez le dataset sur `execution_error_code`.
+
 ## Corréler une exécution en échec
 
 Chaque réponse porte l'en-tête `x-rlvt-workflow-run-id`. Journalisez-le à côté de votre propre identifiant de requête : il identifie l'exécution dans les analytics et dans le rapport de debug, et c'est ce dont le support a besoin pour la tracer.
 
-## Related
+## Pages associées
 
 - [Intégration technique](/fr/developer-docs/web-integration/api-json/integration)
 - [Vue d'ensemble de l'API JSON](/fr/developer-docs/web-integration/api-json/overview)
+- [Mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions)
 - [Authentification](/fr/developer-docs/api-reference/authentication)
