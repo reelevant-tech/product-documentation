@@ -1,0 +1,121 @@
+---
+title: 'Runner failures'
+description: 'Error codes, degraded responses and click behaviour returned by the Runner endpoint'
+---
+
+## Overview
+
+The Runner endpoint is public and mostly consumed by email clients, browsers and server-side integrations. Because a broken response would break the page or the email, most execution problems are **not** returned as HTTP errors: the Runner degrades to a neutral response.
+
+```typescript
+const runnerUrl = `https://reelevant.run/${workflowId}/${entrypointId}?rlvt-u=${encodeURIComponent(userId)}`
+
+const response = await fetch(runnerUrl)
+
+if (response.status === 200) {
+  const runId = response.headers.get('x-rlvt-workflow-run-id')
+  const payload = await response.json()
+  renderRecommendation(payload, runId)
+} else {
+  const failure = await response.json()
+  // failure.error_code === 3000 -> unknown Workflow, fall back to default content
+  logger.warn('Runner returned a failure', { code: failure.error_code, message: failure.message })
+  renderFallback()
+}
+```
+
+Always keep a fallback rendering path: a `200` response can still carry degraded content (see below).
+
+## Failure response body
+
+Failures use the same envelope across the Reelevant APIs. `code` is the HTTP status, `error_code` identifies the failure, and `data` carries the failure payload.
+
+```json
+{
+  "program": "workflow-api",
+  "version": "1.2.3",
+  "datetime": "2026-07-29T10:00:00.000Z",
+  "status": "fail",
+  "code": 404,
+  "error_code": 3000,
+  "message": "Workflow not found",
+  "data": { "id": "6626ef1a2d1f4c0012ab34cd" }
+}
+```
+
+| `error_code` | HTTP | Meaning | `data` |
+|---|---|---|---|
+| `3000` | 404 | The Workflow id does not exist. | `{ id }` |
+| `3500` | 400 | The entrypoint index does not exist on the published Workflow. | `{ id, index }` |
+| `3500` | 400 | The entrypoint id does not match any entrypoint of the published Workflow. | `{ id, entrypointId }` |
+| `3501` | 401 | `mode=debug` or `mode=ui-debug` requested without a valid debug token, or with a token issued for another company. | `{ id }` |
+| _none_ | 400 | Parameter validation failed — most often a Workflow id that does not match `^[0-9a-fA-F]{24}$`. | invalid fields |
+| _none_ | 500 | Unexpected error outside the Workflow execution. `status` is `error`. | `{}` |
+
+Retry `500` responses with a short backoff. Every other failure is deterministic: retrying returns the same result, so render your own fallback instead.
+
+## Degraded responses
+
+Node-level errors never fail the request. The Runner returns `200` and serves a neutral response, so a broken Data Node or Datasource does not break the integration.
+
+| Situation | Response |
+|---|---|
+| Workflow is inactive or archived | `200`, transparent 600x1 PNG (`Content-Type: image/png`). |
+| Fatal error, entrypoint type `email`, `rcs` or `whatsapp` | `200`, same transparent PNG. |
+| Fatal error, any other entrypoint type | `200`, default output body (`default`). |
+| One Node failed but the Branch completed (silenced error) | `200`, normal output. |
+
+Detect these cases client-side before rendering:
+
+```typescript
+const response = await fetch(runnerUrl)
+const contentType = response.headers.get('content-type') ?? ''
+
+// A JSON entrypoint answering with an image means the Workflow is inactive or errored
+if (contentType.startsWith('image/')) {
+  renderFallback()
+  return
+}
+
+const payload: unknown = await response.json()
+```
+
+## Click mode
+
+`mode=click` resolves the destination URL of the executed Branch and redirects to it.
+
+| Situation | Response |
+|---|---|
+| A destination URL is resolved | `302` to the destination, with forwarded query parameters, `rlvt_id` and `utm_term`. Non-HTTP schemes (mobile deeplinks) are redirected untouched. |
+| No destination URL, JSON Output Node | `204`, empty body. |
+| No destination URL, any other Output Node | `404`. |
+
+Set `rlvt-redirect` to override the destination resolved by the Workflow.
+
+## Debug mode
+
+`mode=debug` returns an HTML execution report (per-Node timings, resolved dependencies, silenced errors, fatal error stack) and `mode=ui-debug` redirects to the Workflow editor with the same report. Both expose Workflow internals and Datasource outputs, so they require a short-lived debug token:
+
+```bash
+curl -XPOST "https://api.reelevant.com/v2/workflows/debug/token" \
+  -H "Authorization: Bearer <access_token>"
+```
+
+The response contains `token` and `expiresAt`. Send the token on the Runner request:
+
+```bash
+curl "https://reelevant.run/<workflow_id>/0?rlvt-u=user@example.com&mode=debug" \
+  -H "x-rlvt-debug-token: <token>"
+```
+
+Tokens live 15 minutes and are scoped to the company that owns the Workflow. A missing, expired or out-of-scope token returns `error_code` `3501` with HTTP `401`.
+
+## Correlating a failed run
+
+Every response carries `x-rlvt-workflow-run-id`. Log it next to your own request id: it identifies the run in analytics and in the debug report, and is what support needs to trace an execution.
+
+## Related
+
+- [Technical Integration](/developer-docs/web-integration/api-json/integration)
+- [JSON API overview](/developer-docs/web-integration/api-json/overview)
+- [Authentication](/developer-docs/api-reference/authentication)

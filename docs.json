@@ -421,7 +421,8 @@
                   "developer-docs/guides/browser-extension-integration",
                   "developer-docs/guides/browser-extension-content-script",
                   "developer-docs/guides/real-time-api-datasource",
-                  "developer-docs/guides/datasource-query-filters"
+                  "developer-docs/guides/datasource-query-filters",
+                  "developer-docs/guides/runner-failures"
                 ]
               },
               {
@@ -855,7 +856,8 @@
                   "fr/developer-docs/guides/browser-extension-integration",
                   "fr/developer-docs/guides/browser-extension-content-script",
                   "fr/developer-docs/guides/real-time-api-datasource",
-                  "fr/developer-docs/guides/datasource-query-filters"
+                  "fr/developer-docs/guides/datasource-query-filters",
+                  "fr/developer-docs/guides/runner-failures"
                 ]
               },
               {
