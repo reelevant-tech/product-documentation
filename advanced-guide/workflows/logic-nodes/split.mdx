@@ -22,7 +22,7 @@ The panel displays **Group**, **Population Share**, and **Action**. Group labels
 
 The UI stores cumulative thresholds. For a 50%/30%/20% allocation, the thresholds are 50, 80, and 100. The final threshold is fixed at 100, so the UI produces a complete allocation.
 
-The panel requires at least two groups. There is no explicit product maximum in the Split configuration or its type definition.
+The panel enforces a minimum of two groups. No maximum is defined.
 
 <Info>
 Adding a group splits the final group's current share. Removing a non-final group leaves the following cumulative threshold in place, so that Branch absorbs the removed share. Removing the final group sets the preceding threshold to 100.
@@ -46,19 +46,19 @@ See [Branches](/product-guide/workflows/branches) for Branch qualification conce
 
 Use Branch qualification to assign a custom Branch name, a Branch category, or custom tags. These settings are analyzer metadata, not Split allocation settings.
 
-At publish time, the analyzer resolves category and tag associations onto full Branch identifiers. The resulting metadata is available to Analytics for the executed Branch.
+At publish time, branch categories and custom tags are resolved onto the full Branch identifier. The resulting metadata is available to Analytics for the executed Branch.
 
 ## 4. Read the results
 
 ### Workflow builder statistics
 
-Enable **Display branch statistics** from the Workflow toolbar. The builder queries display and click measures grouped by `WorkflowEvents.executedBranch`, then shows **Displays** and **Clicks** on Logic Node Branches.
+Enable **Display branch statistics** from the Workflow toolbar. The builder groups display and click measures by the executed Branch dimension, then shows **Displays** and **Clicks** on Logic Node Branches.
 
 ### Analytics dimensions and metadata
 
-In [Analytics data exploration](/product-guide/analytics/data-exploration), use the **Workflow Branch** dimension to group events by `WorkflowEvents.executedBranch`.
+In [Analytics data exploration](/product-guide/analytics/data-exploration), use the **Workflow Branch** dimension to group events by the executed Branch dimension.
 
-Branch categories resolve through the published `categoryIdByBranch` mapping. Branch tags resolve through `branchTags`, and tag values can be used through the relevant tag dimensions.
+Branch categories and custom tags are resolved at publish time onto the full Branch identifier. Their values can then be used in Analytics.
 
 The executed Branch is a comma-separated identifier containing the selected Split Branch IDs and the Output Node ID. This is an identifier for analysis, not the generated A/B/C label.
 
@@ -70,7 +70,7 @@ The Personalisation Engine evaluates Split Branches in ascending cumulative-thre
 
 When several Splits occur on the same Branch, the Split metadata uses the current Node identifier in the hash seed. This prevents multiple Splits from filtering the same population segment while retaining deterministic assignment per user and Split Node.
 
-If the configured thresholds do not reach 100, users in the remaining buckets match no Branch. Traversal stops, and the run does not continue through a Split Branch. The backend does not normalise or validate the threshold total.
+If the configured thresholds do not reach 100, users in the remaining buckets match no Branch. Traversal stops, and the run does not continue through a Split Branch. The Personalisation Engine does not normalise or validate the threshold total.
 
 ## 6. Act on the winner
 
