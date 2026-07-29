@@ -1,17 +1,39 @@
 ---
 title: 'Run an A/B Test with Split'
-description: 'Compare Content options by assigning fixed audience percentages to Workflow Branches'
+description: 'Compare Workflow Branches by assigning fixed audience percentages'
 ---
 
-A Split Node (a Logic Node that assigns users to [Branches](/glossary)) lets you compare Content options using fixed audience percentages.
+A Split Node (a Logic Node that randomly assigns eligible users to [Branches](/glossary)) helps you compare different Workflow setups.
 
 ![Split Node configuration panel showing group distribution with percentage slider](/images/workflows/node-split.png)
 
+## Split or Conditions?
+
+| Logic Node | How it assigns users | When to use it |
+|---|---|---|
+| **Split** | Randomly, using fixed audience percentages | Compare two or more Branches with the same eligible audience |
+| [**Conditions**](/product-guide/workflows/logic-nodes/conditions) | Using data and rules | Send different audiences to different Branches |
+
+Split supports A/B/n testing. This means you can compare more than two Branches in one test.
+
 ## Before you begin
 
-Choose the Content options you want to compare. Decide which result will identify the winner, such as clicks, conversions, or revenue.
+Choose one primary success measure, such as click rate or conversion rate. Do not choose it after seeing the results.
 
-Make sure every Branch will receive enough users for a useful comparison.
+There is no universal minimum audience size. Ask your analytics specialist to estimate the audience needed for your expected result.
+
+Campaigns with only a few hundred displays per Branch are usually poor candidates when clicks or conversions are rare.
+
+### Preflight checklist
+
+Before publishing, check that:
+
+- The same eligible audience can enter every Branch.
+- Every Branch uses the same Channel, placement, and analysis period.
+- Only the setup you want to compare differs between Branches.
+- Every Branch reaches an Output Node.
+- Every Branch has comparable categories and tags.
+- Your chosen success measure is available in Analytics.
 
 ## Run your A/B test
 
@@ -20,65 +42,103 @@ Make sure every Branch will receive enough users for a useful comparison.
     1. Open your Workflow in the Workflow Editor.
     2. Choose **Create branches** where the comparison should begin.
     3. Select **Split**.
-    4. Use **Add** to create at least two groups. Each group creates one Branch.
-    5. Set each group's **Population share** with the slider. The shares must total 100%.
+    4. Use **Add** to create two or more groups. Each group creates one Branch.
+    5. Set each group's **Population share** with the slider.
 
-    Start with 50% for each group when you want an equal two-way comparison.
+    Shares use whole percentages and must total 100%. Start with 50% for each group when you want an equal two-way comparison.
   </Step>
 
   <Step title="Build each Branch">
-    Add the Nodes needed for each experience. Finish every Branch with an Output Node (a Node that returns the final response).
+    Add the Nodes needed for each setup. Finish every Branch with an Output Node (a Node that returns the final response).
 
-    Use a different [Visual Content Output Node](/product-guide/workflows/output-nodes/visual-content) for each Content option.
+    | What you want to compare | Branch setup |
+    |---|---|
+    | Two personalisation approaches | Use different Content or Nodes in each Branch. |
+    | Personalisation against no Reelevant Content | Use Content for the Exposed Population and an [Empty Output Node](/product-guide/workflows/output-nodes/empty) for the Non-Exposed Population. |
+    | New Content against current Content | Use the new Content in one Branch and the current Content in another. |
 
-    To compare personalisation against no Reelevant Content, use an [Empty Output Node](/product-guide/workflows/output-nodes/empty) for the Non-Exposed Population.
+    The Non-Exposed Population is the audience that receives no Reelevant Content during this comparison.
   </Step>
 
   <Step title="Prepare your measurement">
     1. Right-click each Branch connection and select **Qualify branch**.
     2. Give every Branch a clear name.
-    3. Apply a relevant category and a distinct tag value to each Branch.
-    4. Confirm the measure you will compare in Analytics.
+    3. Apply the appropriate category to every Branch.
+    4. Create one tag key for the test and give each Branch a different value.
+    5. Confirm that Analytics receives your chosen success measure.
 
-    For example, use the tag key `A/B test` with the values `A` and `B`.
+    For example, use the tag key `Summer hero test`.
+
+    - Branch A: `Summer hero test: Product recommendation`
+    - Branch B: `Summer hero test: Static promotion`
+
+    Complete the Branch qualification before publishing. Do not rename or retag Branches while the test is live.
   </Step>
 
   <Step title="Publish and measure">
     1. Click **Publish** to make the A/B test live.
-    2. Use **Statistics mode** to check the traffic share for each Branch.
-    3. Open [Analytics](/product-guide/analytics/overview).
-    4. Compare your chosen measure by the tag used for the A/B test.
+    2. Use **Statistics mode** to check the observed traffic share for each Branch.
+    3. Open [Data Exploration](/product-guide/analytics/data-exploration).
+    4. Add your primary success measure.
+    5. Add `Tag: Summer hero test` as the dimension that groups your results.
+    6. Filter to the tested Workflow and select your planned analysis period.
 
-    <Tip>
-      Avoid choosing a winner after only a few interactions. Let every Branch receive enough traffic for a meaningful comparison.
-    </Tip>
+    <Info>
+      Statistics mode checks traffic distribution only. It does not assess test validity or identify a winner.
+    </Info>
+
+    Analytics reports the results but does not calculate statistical significance for Split. Ask your analytics specialist to validate the comparison before choosing a winner.
   </Step>
 
   <Step title="Keep the winning Branch">
-    1. Select the Branch that performed best for your chosen measure.
-    2. Connect its Nodes directly to the Node before the Split Node.
-    3. Delete the Split Node and the unused Branches.
-    4. Check that the winning Branch still reaches its Output Node.
-    5. Publish the updated Workflow.
+    1. Record the analysis period, primary measure, and final result.
+    2. Select the Branch that performed best for your primary measure.
+    3. Connect its Nodes directly to the Node before the Split Node.
+    4. Delete the Split Node and the unused Branches.
+    5. Check every connection from the Channel to the Output Node.
+    6. Preview any winning Content and publish the updated Workflow.
 
     <Warning>
-      Check every connection before publishing. You can restore an earlier setup from [Workflow Versions](/product-guide/workflows/versions).
+      Removing the Split Node changes the Workflow structure. You can restore the tested setup from [Workflow Versions](/product-guide/workflows/versions).
     </Warning>
   </Step>
 </Steps>
 
-## How user assignment works
+## How assignment works
 
-When a user triggers the Workflow, Reelevant assigns them according to your percentages. The same user will return to the same Branch.
+Split uses the user identifier supplied when the Workflow runs. See [Integration and Deployment](/product-guide/workflows/integration) for identity setup.
 
-This stable assignment gives each user a consistent Content experience during the A/B test.
+Reelevant uses that identifier and the current percentages to choose a Branch. The same identifier returns to the same Branch while the Split remains unchanged.
 
-## Split or Real-Time Testing?
+<AccordionGroup>
+  <Accordion title="Anonymous visitors and multiple devices">
+    Anonymous web visitors usually receive a browser identity. Clearing browsing data or changing browsers or devices can create a different identity.
 
-| Your goal | Choose |
-|---|---|
-| Keep fixed audience shares and choose the winner yourself | **Split** |
-| Let Reelevant adjust shares towards better-performing Content | [**Real-Time Testing**](/product-guide/workflows/logic-nodes/real-time-testing) |
+    Logged-in users remain consistent only when your integration supplies the same identifier across their devices.
+  </Accordion>
+  <Accordion title="Email caching and privacy tools">
+    Email caching and privacy tools can affect display counts. Consider clicks or conversions when they provide a more reliable success measure.
+
+    Learn more in [Email client caching and proxies](/advanced-guide/email-rendering/caching-and-proxies).
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  Changing percentages can move returning users between Branches. Treat the republished setup as a new test with a new analysis period.
+</Warning>
+
+## Protect a live test
+
+Do not change Branch shares, Nodes, Content, tags, or the primary success measure while a test is live.
+
+These changes mix results from different setups. If a material change is necessary, record the date and start a new analysis period.
+
+## When not to use Split
+
+- Avoid Split when each Branch will receive little traffic and your success measure is rare.
+- Avoid comparing Branches that target different eligible audiences. Use [Conditions](/product-guide/workflows/logic-nodes/conditions) to separate those audiences first.
+- Avoid Split when delayed or unreliable attribution prevents a fair comparison.
+- Use [Real-Time Testing](/product-guide/workflows/logic-nodes/real-time-testing) when you want Reelevant to adjust shares towards better-performing Content.
 
 ## What's Next?
 
