@@ -15,7 +15,7 @@ Ces mesures exigent que le jeu de données d'achats configuré comme source d'at
 
 ## Ce qui est mesuré
 
-Chaque mesure est calculée sur la période interrogée, sur les clients qui **achetaient déjà sur la période précédente de même durée**.
+Chaque mesure est calculée sur la période interrogée, sur les clients que Reelevant a touchés pendant cette période.
 
 | Mesure | Définition |
 |---|---|
@@ -35,14 +35,16 @@ Chaque mesure est disponible sur deux populations, la Exposed Population et la N
 
 | Population | Définition |
 |---|---|
-| **Exposed Population** | Clients ayant vu au moins un Content Reelevant sur la période. |
-| **Non-Exposed Population comparable** | Clients n'en ayant vu aucun, pondérés pour que leur comportement d'achat avant la période corresponde à celui de la Exposed Population. |
+| **Exposed Population** | Clients dont l'expérience Reelevant a été majoritairement personnalisée sur la période : au moins deux Contents personnalisés, et au moins la moitié des Contents qui leur ont été présentés. |
+| **Non-Exposed Population comparable** | Clients à qui des Contents Reelevant ont été présentés mais jamais un Content personnalisé, pondérés pour que leur comportement d'achat avant la période corresponde à celui de la Exposed Population. |
 
-La pondération est essentielle. Les clients exposés sont joignables, opt-in et plus engagés : ils sont donc de meilleurs clients avant toute personnalisation. Chez un distributeur, ils valaient déjà 8,6 % de plus que la Non-Exposed Population avant la période mesurée. Reelevant regroupe donc les clients par décile de commandes et décile de valeur sur la période précédente, puis pondère la Non-Exposed Population pour que chaque décile y pèse le même poids que dans la Exposed Population. Les deux populations ont alors, en moyenne, le même historique d'achat.
+Les deux populations sont issues des clients que Reelevant a touchés : la comparaison oppose donc la personnalisation aux mêmes canaux sans personnalisation. Les clients qui n'apparaissent jamais dans votre activité Workflow sur la période n'appartiennent à aucune des deux populations, quoi qu'en disent vos données d'achats.
 
 <Info>
-  Les clients n'ayant rien acheté sur la période précédente sont exclus de la comparaison. Un client de la Non-Exposed Population n'est observé qu'à travers vos données d'achats : « joint mais jamais acheteur » est donc une population qui existe côté exposé et ne peut pas exister de l'autre côté. L'impact client mesure l'effet sur les clients qui achetaient déjà — il ne mesure pas l'acquisition.
+  Les clients dont l'expérience n'a été que partiellement personnalisée — un Content personnalisé parmi de nombreux Contents non personnalisés — n'appartiennent à aucune des deux populations. Ils restent visibles dans les effectifs, mais ne pèsent sur aucune comparaison : les compter comme exposés décrirait une expérience qu'ils n'ont pas eue.
 </Info>
+
+La pondération est essentielle. Les clients qui reçoivent le plus de personnalisation sont aussi les plus engagés : ils sont donc de meilleurs clients avant toute personnalisation. Reelevant regroupe donc les clients par décile de commandes et décile de valeur sur la période précédente, puis pondère la Non-Exposed Population pour que chaque décile y pèse le même poids que dans la Exposed Population. Les deux populations ont alors, en moyenne, le même historique d'achat.
 
 ## Les mesures d'Uplift
 
@@ -57,23 +59,27 @@ La pondération est essentielle. Les clients exposés sont joignables, opt-in et
 
 Chaque Uplift compare chaque population à **sa propre** période précédente, plutôt que de comparer directement les deux populations. Deux effets s'annulent alors : une tendance saisonnière qui touche tout le monde, et l'écart que la pondération n'a pas pu refermer.
 
-Cohort Pre-Period Gap sert à contrôler la comparaison, pas à être reporté comme résultat. Chez le même distributeur, la pondération le ramène de 8,6 % à moins de 1 %, ce qui rend les Uplifts exploitables. Un écart de plus de quelques pourcents signifie que les deux populations ne sont pas assez comparables et que les Uplifts ne sont qu'indicatifs.
+Cohort Pre-Period Gap sert à contrôler la comparaison, pas à être reporté comme résultat. Chez un distributeur, la pondération le ramène sous 1 %, ce qui rend les Uplifts exploitables. Un écart de plus de quelques pourcents signifie que les deux populations ne sont pas assez comparables et que les Uplifts ne sont qu'indicatifs.
 
 ### Exemple chiffré
 
+Un distributeur, six mois, 263 550 clients comparables de chaque côté :
+
 | Mesure | Exposée | Non exposée | Avant la période | Uplift |
 |---|---|---|---|---|
-| Valeur par client | 73,56 | 60,06 | 39,06 / 39,20 | +22,9 % |
-| Panier moyen | 36,73 | 35,83 | 37,33 / 37,41 | +2,7 % |
-| Commandes par client | 2,00 | 1,68 | 1,05 / 1,05 | +19,6 % |
-| Taux de rétention | 60,7 % | 53,0 % | — | +7,7 pt |
-| Jours entre deux achats | 89,2 | 106,8 | — | 17,5 jours plus tôt |
+| Valeur par client | 37,34 | 27,02 | 3,28 / 3,26 | +37,3 % |
+| Panier moyen | 42,61 | 38,44 | 40,86 / 40,60 | +10,1 % |
+| Commandes par client | 0,88 | 0,70 | 0,080 / 0,080 | +24,8 % |
+| Taux de rétention | 59,4 % | 61,7 % | — | −2,3 pt |
+| Jours entre deux achats | 205,4 | 256,1 | — | 50,7 jours plus tôt |
 
-Lisez le mécanisme, pas seulement le chiffre principal : la valeur par client progresse de 22,9 % alors que le panier moyen bouge à peine. Les clients ne dépensent pas plus par commande — ils commandent plus souvent et décrochent moins. Ici la personnalisation agit sur la fréquence et la rétention : les actions à en tirer portent donc sur la présence et la récurrence, pas sur la construction du panier.
+Lisez le mécanisme, pas seulement le chiffre principal. La valeur par client progresse de 37,3 %, et l'essentiel vient de clients qui commandent plus souvent plutôt que de clients qui dépensent plus par commande. La rétention est légèrement plus faible : le gain ne vient donc pas de la fidélisation des acheteurs établis, mais de la part des clients touchés qui achètent sur la période. Les actions à en tirer portent sur la présence et la conversion, pas sur la construction du panier.
 
 ## Pression d'exposition
 
 **Exposure Decile** découpe la Exposed Population en dix groupes, du moins exposé au plus exposé, pour lire la valeur par client et les commandes par client en fonction du volume d'exposition. Cela indique si davantage d'exposition continue de payer, et où les rendements s'aplatissent.
+
+Chaque décile indique aussi ce qui lui a été présenté — Contents personnalisés, ouvertures, clics et nombre de Contents distincts vus — afin que les déciles se lisent comme des volumes reçus plutôt que comme des rangs.
 
 <Info>
   Lisez la courbe de pression au sein de la Exposed Population uniquement. C'est une lecture dose-réponse et non une seconde comparaison entre les deux populations : les clients les plus exposés sont aussi les plus actifs, et une partie de la courbe reflète cela plutôt que l'effet de l'exposition.
@@ -87,10 +93,14 @@ L'exposition n'est pas randomisée. La pondération rend les deux populations co
 |---|---|
 | Un écart mesuré entre deux populations comparables sur la même période | La preuve que la personnalisation a causé cet écart |
 | Robuste à la saisonnalité, les deux populations étant mesurées sur la même période | Une expérience randomisée |
-| Limité aux clients qui achetaient déjà | Une mesure de l'acquisition |
+| Limité aux clients que Reelevant a touchés | Une mesure de ce que la personnalisation ferait aux clients que vous ne pouvez pas joindre |
 
 Présentez-le comme la Exposed Population comparée à une Non-Exposed Population comparable. Une affirmation causale exige une Non-Exposed Population randomisée, où une part de vos clients joignables n'est délibérément jamais personnalisée.
 
 <Info>
   Lisez toujours Clients comparables avant tout autre chiffre. La pondération ne conserve que les clients dont l'historique d'achat existe des deux côtés : une population petite ou très homogène peut donc ne rien laisser à comparer — toutes les mesures valent alors 0, ce qui n'est pas la même réponse que « aucun effet ».
+</Info>
+
+<Info>
+  Les deux populations incluent les clients qui n'avaient jamais acheté avant la période : un premier achat compte donc dans les Uplifts. La valeur par client avant la période est alors faible des deux côtés, ce qui en fait un contrôle d'équilibre entre les populations plutôt qu'un chiffre à reporter.
 </Info>

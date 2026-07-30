@@ -15,7 +15,7 @@ These measures require the purchase dataset configured as your attribution sourc
 
 ## What is measured
 
-Every measure is computed over the period you query, on customers who were **already buying over the preceding period of the same length**.
+Every measure is computed over the period you query, on the customers Reelevant reached over that period.
 
 | Measure | Definition |
 |---|---|
@@ -35,14 +35,16 @@ Each measure is available on two populations, the Exposed Population and the Non
 
 | Population | Definition |
 |---|---|
-| **Exposed Population** | Customers who saw at least one Reelevant Content over the period. |
-| **Comparable Non-Exposed Population** | Customers who saw none, weighted so that their buying behaviour before the period matches the Exposed Population. |
+| **Exposed Population** | Customers whose Reelevant experience was mostly personalised over the period: at least two personalised Contents, and at least half of the Contents they were shown. |
+| **Comparable Non-Exposed Population** | Customers who were shown Reelevant Contents but never a personalised one, weighted so that their buying behaviour before the period matches the Exposed Population. |
 
-The weighting matters. Exposed customers are reachable, opted in and more engaged, so they tend to be better customers before any personalisation happens. On one retailer they were already worth 8.6% more than the Non-Exposed Population before the measured period. Reelevant therefore groups customers by decile of orders and decile of value over the preceding period, and weights the Non-Exposed Population so that each decile carries the same share as in the Exposed Population. The two populations then have, on average, the same purchasing history.
+Both populations are drawn from the customers Reelevant reached, so the comparison is personalisation against the same channels without personalisation. Customers who never appear in your Workflow activity over the period belong to neither population, whatever your purchase data says about them.
 
 <Info>
-  Customers who bought nothing over the preceding period are excluded from the comparison. A customer in the Non-Exposed Population is only ever observed through your purchase data, so "reached but never bought" is a population that exists on the exposed side and cannot exist on the other. Customer impact measures the effect on customers who were already buying — it does not measure acquisition.
+  Customers whose experience was only partly personalised — one personalised Content among many non-personalised ones — belong to neither population. They remain visible in the population counts, but they weigh on no comparison: counting them as exposed would describe an experience they did not have.
 </Info>
+
+The weighting matters. Customers who receive more personalisation tend to be more engaged, so they tend to be better customers before any personalisation happens. Reelevant therefore groups customers by decile of orders and decile of value over the preceding period, and weights the Non-Exposed Population so that each decile carries the same share as in the Exposed Population. The two populations then have, on average, the same purchasing history.
 
 ## The uplift measures
 
@@ -57,23 +59,27 @@ The weighting matters. Exposed customers are reachable, opted in and more engage
 
 Each uplift compares each population with **its own** preceding period, rather than comparing the two populations directly. Two effects then cancel out: a seasonal trend that affects everyone, and whatever difference the weighting could not close.
 
-Cohort Pre-Period Gap is how you check the comparison rather than a result to report. On the same retailer, weighting brings it from 8.6% to below 1%, which is what makes the uplifts meaningful. A gap of more than a few percent means the two populations are not comparable enough and the uplifts should be read as indicative only.
+Cohort Pre-Period Gap is how you check the comparison rather than a result to report. On one retailer, weighting brings it below 1%, which is what makes the uplifts meaningful. A gap of more than a few percent means the two populations are not comparable enough and the uplifts should be read as indicative only.
 
 ### Worked example
 
+One retailer, six months, 263,550 comparable customers on each side:
+
 | Measure | Exposed | Non-Exposed | Before the period | Uplift |
 |---|---|---|---|---|
-| Value per customer | 73.56 | 60.06 | 39.06 / 39.20 | +22.9% |
-| Average order value | 36.73 | 35.83 | 37.33 / 37.41 | +2.7% |
-| Orders per customer | 2.00 | 1.68 | 1.05 / 1.05 | +19.6% |
-| Retention rate | 60.7% | 53.0% | — | +7.7pt |
-| Days between purchases | 89.2 | 106.8 | — | 17.5 days sooner |
+| Value per customer | 37.34 | 27.02 | 3.28 / 3.26 | +37.3% |
+| Average order value | 42.61 | 38.44 | 40.86 / 40.60 | +10.1% |
+| Orders per customer | 0.88 | 0.70 | 0.080 / 0.080 | +24.8% |
+| Retention rate | 59.4% | 61.7% | — | −2.3pt |
+| Days between purchases | 205.4 | 256.1 | — | 50.7 days sooner |
 
-Read the mechanism, not only the headline: value per customer is up 22.9%, but average order value barely moves. The customers do not spend more per order — they order more often and stop buying less. Personalisation is working on frequency and retention here, so the actions that follow are about presence and recurrence rather than basket building.
+Read the mechanism, not only the headline. Value per customer is up 37.3%, and most of it comes from customers ordering more often rather than spending more per order. Retention is slightly lower, so the gain is not in holding on to established buyers: it is in how many of the reached customers buy at all over the period. The actions that follow are about presence and conversion rather than basket building.
 
 ## Exposure pressure
 
 **Exposure Decile** splits the Exposed Population into ten groups, from the least to the most exposed, so you can read value per customer and orders per customer against exposure volume. It answers whether more exposure keeps paying, and where returns flatten.
+
+Each decile also reports what it was shown — personalised Contents, openings, clicks, and the number of distinct Contents seen — so the deciles read as volumes received rather than as ranks.
 
 <Info>
   Read the pressure curve within the Exposed Population only. It is a dose-response reading and not a second comparison between the two populations: the most exposed customers are also the most active ones, and part of the curve reflects that rather than the effect of exposure.
@@ -87,10 +93,14 @@ Exposure is not randomised. Weighting makes the two populations comparable on th
 |---|---|
 | A difference measured between two comparable populations over the same period | Proof that personalisation caused the difference |
 | Robust to seasonality, since both populations are measured over the same period | A randomised experiment |
-| Restricted to customers who were already buying | A measure of acquisition |
+| Restricted to the customers Reelevant reached | A measure of what personalisation does to customers you cannot reach |
 
 Report it as the Exposed Population compared with a comparable Non-Exposed Population. A causal claim requires a randomised Non-Exposed Population, where a share of your reachable customers is deliberately never personalised.
 
 <Info>
   Always read Comparable customers before reading any figure. Weighting only keeps customers whose buying history exists on both sides, so a small or very homogeneous population can leave nothing to compare — every measure then reads 0, which is not the same answer as "no effect".
+</Info>
+
+<Info>
+  Both populations include customers who had never bought before the period, so a first purchase counts towards the uplifts. Value per customer before the period is then low on both sides, which makes it a balance check between the two populations rather than a figure to report.
 </Info>
