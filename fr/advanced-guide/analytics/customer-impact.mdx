@@ -35,13 +35,15 @@ Chaque mesure est disponible sur deux populations, la Exposed Population et la N
 
 | Population | Définition |
 |---|---|
-| **Exposed Population** | Clients dont l'expérience Reelevant a été majoritairement personnalisée sur la période : au moins deux Contents personnalisés, et au moins la moitié des Contents qui leur ont été présentés. |
+| **Exposed Population** | Clients dont l'expérience Reelevant a été majoritairement personnalisée sur la période : par défaut au moins deux Contents personnalisés, et au moins la moitié des Contents qui leur ont été présentés. |
 | **Non-Exposed Population comparable** | Clients à qui des Contents Reelevant ont été présentés mais jamais un Content personnalisé, pondérés pour que leur comportement d'achat avant la période corresponde à celui de la Exposed Population. |
 
 Les deux populations sont issues des clients que Reelevant a touchés : la comparaison oppose donc la personnalisation aux mêmes canaux sans personnalisation. Les clients qui n'apparaissent jamais dans votre activité Workflow sur la période n'appartiennent à aucune des deux populations, quoi qu'en disent vos données d'achats.
 
 <Info>
   Les clients dont l'expérience n'a été que partiellement personnalisée — un Content personnalisé parmi de nombreux Contents non personnalisés — n'appartiennent à aucune des deux populations. Ils restent visibles dans les effectifs, mais ne pèsent sur aucune comparaison : les compter comme exposés décrirait une expérience qu'ils n'ont pas eue.
+
+  Ces deux seuils font partie de votre configuration de reporting. Demandez à votre Technical Account Manager de les relever quand la personnalisation est la norme dans vos Workflows, ou de les abaisser quand seuls quelques Contents sont personnalisés.
 </Info>
 
 La pondération est essentielle. Les clients qui reçoivent le plus de personnalisation sont aussi les plus engagés : ils sont donc de meilleurs clients avant toute personnalisation. Reelevant regroupe donc les clients par décile de commandes et décile de valeur sur la période précédente, puis pondère la Non-Exposed Population pour que chaque décile y pèse le même poids que dans la Exposed Population. Les deux populations ont alors, en moyenne, le même historique d'achat.

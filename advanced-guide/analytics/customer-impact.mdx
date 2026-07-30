@@ -35,13 +35,15 @@ Each measure is available on two populations, the Exposed Population and the Non
 
 | Population | Definition |
 |---|---|
-| **Exposed Population** | Customers whose Reelevant experience was mostly personalised over the period: at least two personalised Contents, and at least half of the Contents they were shown. |
+| **Exposed Population** | Customers whose Reelevant experience was mostly personalised over the period: by default at least two personalised Contents, and at least half of the Contents they were shown. |
 | **Comparable Non-Exposed Population** | Customers who were shown Reelevant Contents but never a personalised one, weighted so that their buying behaviour before the period matches the Exposed Population. |
 
 Both populations are drawn from the customers Reelevant reached, so the comparison is personalisation against the same channels without personalisation. Customers who never appear in your Workflow activity over the period belong to neither population, whatever your purchase data says about them.
 
 <Info>
   Customers whose experience was only partly personalised — one personalised Content among many non-personalised ones — belong to neither population. They remain visible in the population counts, but they weigh on no comparison: counting them as exposed would describe an experience they did not have.
+
+  Both thresholds are part of your reporting configuration. Ask your Technical Account Manager to raise them when personalisation is the norm across your Workflows, or to lower them when only a few Contents are personalised.
 </Info>
 
 The weighting matters. Customers who receive more personalisation tend to be more engaged, so they tend to be better customers before any personalisation happens. Reelevant therefore groups customers by decile of orders and decile of value over the preceding period, and weights the Non-Exposed Population so that each decile carries the same share as in the Exposed Population. The two populations then have, on average, the same purchasing history.
