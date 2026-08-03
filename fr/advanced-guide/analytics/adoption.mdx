@@ -1,0 +1,68 @@
+---
+title: 'Adoption'
+description: "Comment le dashboard Adoption rend compte de ce qui est réellement en production : scalabilité de la personnalisation, Contents uniques, Use Cases personnalisés, exposition répétée, Real-Time Testing et transitions de cycle de vie"
+---
+
+<Warning>
+  **Bêta** — Adoption et [Impact client](/fr/advanced-guide/analytics/customer-impact) sont tous deux en bêta et activés sur demande. Leurs mesures, leur mise en page et leurs chiffres peuvent encore évoluer.
+</Warning>
+
+![Dashboard Adoption avec la scalabilité de la personnalisation, les Contents uniques, les ouvreurs uniques, les Use Cases personnalisés, l'exposition répétée et les expérimentations](/images/analytics/adoption-dashboard.png)
+
+## Avant de commencer
+
+La performance répond à la question de ce que vos Workflows ont produit. L'adoption répond à une autre question : quelle part de la plateforme est réellement utilisée, et quelle variété atteint chaque client.
+
+Toutes ces mesures lisent l'activité Workflow : aucune n'a besoin d'un jeu de données d'achats. Seule la matrice des transitions de cycle de vie lit les achats, via la source d'attribution configurée dans les [Paramètres Analytics](/fr/product-guide/analytics/settings).
+
+## Ce qui est mesuré
+
+Chaque mesure est calculée sur la période interrogée, sur les affichages servis par Reelevant.
+
+| Mesure | Définition |
+|---|---|
+| **Scalabilité de la personnalisation** | Contents distincts rendus divisés par les clients distincts touchés. Combien de variations vous produisez par client. |
+| **Contents uniques** | Nombre de Contents distincts rendus. Deux clients recevant un rendu identique comptent pour un. |
+| **Ouvreurs uniques** | Nombre de clients distincts à qui au moins un Content a été présenté. |
+| **Use Cases personnalisés** | Nombre de Workflows distincts ayant servi au moins une Branch individualisée. |
+| **Exposition répétée par client** | Affichages divisés par les clients touchés. À quelle fréquence un même client revient sur un Content. |
+| **Expérimentations** | Nombre de Real-Time Testing distincts observés sur la période. |
+
+La scalabilité de la personnalisation est le ratio à lire en premier. Une valeur proche de zéro signifie que vos Workflows servent le même rendu à tout le monde, quel que soit leur volume. Une valeur proche de un signifie que presque chaque client reçoit son propre Content.
+
+## Adoption des Use Cases
+
+Le tableau liste les Workflows ayant servi du Content personnalisé sur la période, avec les Datasources qui les alimentent et leur volume d'affichage.
+
+![Tableau d'adoption des Use Cases avec les Workflows, l'usage d'une Datasource, les affichages totaux, les Contents uniques, les ouvreurs uniques et la scalabilité de la personnalisation](/images/analytics/adoption-use-cases.png)
+
+| Champ | Définition |
+|---|---|
+| **Nom du Workflow** | Renvoie vers le Workflow. |
+| **Utilise une Datasource** | Si le Workflow lit une Datasource, plutôt que de personnaliser uniquement sur des champs de profil. |
+| **Nombre total d'affichages** | Affichages servis par le Workflow sur la période. |
+| **Contents uniques** | Contents distincts rendus par le Workflow. |
+| **Ouvreurs uniques** | Clients distincts touchés par le Workflow. |
+| **Scalabilité de la personnalisation** | Le même ratio, par Workflow. |
+
+**Affichages minimum** écarte les Workflows trop petits pour être lus, et vaut 1 000 par défaut. Le tableau s'exporte en CSV.
+
+<Info>
+  Lisez la scalabilité par Workflow et non seulement en haut de page. Un seul Workflow à fort volume servant un unique Content sur la période tire le ratio global vers le bas, et masque les Workflows où la personnalisation fonctionne.
+</Info>
+
+## Transitions de cycle de vie
+
+La matrice compte combien de clients sont passés d'une étape de cycle de vie à une autre entre le début et la fin de la période.
+
+![Matrice des transitions de cycle de vie avec le sélecteur d'exposition, les effectifs par étape de départ et d'arrivée, et les totaux par ligne](/images/analytics/adoption-lifecycle-transitions.png)
+
+**Exposition** sélectionne la population : tous les clients, la Exposed Population, la Non-Exposed Population, ou les deux côte à côte. **Affichage** bascule entre effectifs et part de l'étape de départ.
+
+<Info>
+  La Exposed Population est désormais définie par l'exposition à la personnalisation : les clients dont l'expérience n'a été que partiellement personnalisée n'appartiennent donc à aucune des deux populations. Les deux sous-matrices ne totalisent pas celle de tous les clients.
+</Info>
+
+## La pression d'exposition a changé de place
+
+Le tableau des déciles d'exposition se trouve désormais sur le dashboard [Impact client](/fr/advanced-guide/analytics/customer-impact), là où les populations qu'il découpe sont définies, et où il se lit à côté des mesures de valeur et de fréquence auxquelles il appartient. Il indique aussi les affichages personnalisés, ouvertures, clics et Contents distincts reçus par chaque décile, ce qu'Adoption n'a jamais contenu.

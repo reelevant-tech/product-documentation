@@ -1,13 +1,13 @@
 ---
 title: 'Paramètres Analytics'
-description: "Configurez l'attribution et les tags personnalisés de votre entreprise"
+description: "Configurez l'attribution, les seuils d'exposition à la personnalisation et les tags personnalisés de votre entreprise"
 ---
 
 ![Onglet Tags des paramètres Analytics présentant les clés, leurs cardinalités et leurs valeurs](/images/analytics/tag-settings.png)
 
 ## Vue d'ensemble
 
-La page Paramètres Analytics permet de configurer l'attribution et les tags personnalisés de votre entreprise. Utilisez les tags pour qualifier les Branches et segmenter Analytics.
+La page Paramètres Analytics permet de configurer l'attribution, l'exposition à la personnalisation et les tags personnalisés de votre entreprise. Utilisez les tags pour qualifier les Branches et segmenter Analytics.
 
 Accédez-y depuis le lien **Settings** dans la navigation latérale d'Analytics.
 
@@ -47,6 +47,28 @@ La fenêtre rétrospective est la durée précédant un achat pendant laquelle u
 <Info>
   Modifier l'attribution affecte la façon dont les conversions sont comptabilisées dans le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et [Data Exploration](/fr/product-guide/analytics/data-exploration). Une fenêtre plus longue capte davantage de conversions mais peut inclure des achats moins directement attribuables.
 </Info>
+
+## Exposition à la personnalisation
+
+Ces deux seuils décident quels clients comptent comme personnalisés dans le dashboard [Impact client](/fr/advanced-guide/analytics/customer-impact). Ce dashboard et [Adoption](/fr/advanced-guide/analytics/adoption) sont tous deux en bêta et activés sur demande : vous ne les voyez peut-être pas encore.
+
+![Paramètres d'exposition à la personnalisation avec les champs affichages personnalisés minimum et part personnalisée minimum](/images/analytics/analytics-settings-personalisation-exposure.png)
+
+| Champ | Par défaut | Rôle |
+|---|---|---|
+| **Affichages personnalisés minimum** | 2 | Combien de Contents personnalisés un client doit avoir vus. |
+| **Part personnalisée minimum (%)** | 50 | Quelle part de ce qu'il a vu doit être personnalisée. |
+
+Les clients au-dessus de zéro mais sous ces seuils ne comptent ni comme personnalisés ni comme non personnalisés. Ils restent hors de la comparaison.
+
+1. Rendez-vous dans **Analytics > Settings**.
+2. Faites défiler jusqu'à **Exposition à la personnalisation** sur l'onglet **General**.
+3. Définissez les deux seuils, ou laissez-les vides pour conserver les valeurs par défaut.
+4. Cliquez sur **Enregistrer les modifications**.
+
+<Tip>
+  Relevez les deux seuils quand presque tout le Content que vous envoyez est personnalisé. Abaissez-les quand seuls quelques Contents le sont.
+</Tip>
 
 ## Tags
 

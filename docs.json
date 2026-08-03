@@ -343,6 +343,8 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "advanced-guide/analytics/attribution",
+                  "advanced-guide/analytics/customer-impact",
+                  "advanced-guide/analytics/adoption",
                   "advanced-guide/analytics/messaging-and-mobile-measurement",
                   "product-guide/analytics/data-exploration",
                   "product-guide/analytics/measures-and-dimensions",
@@ -777,6 +779,8 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "fr/advanced-guide/analytics/attribution",
+                  "fr/advanced-guide/analytics/customer-impact",
+                  "fr/advanced-guide/analytics/adoption",
                   "fr/advanced-guide/analytics/messaging-and-mobile-measurement",
                   "fr/product-guide/analytics/data-exploration",
                   "fr/product-guide/analytics/measures-and-dimensions",

@@ -1,0 +1,68 @@
+---
+title: 'Adoption'
+description: 'How the Adoption dashboard reports how much of your Reelevant setup is live: personalisation scalability, unique Contents, personalised Use Cases, repeat exposition, Real-Time Testing and lifecycle transitions'
+---
+
+<Warning>
+  **Beta** — Adoption and [Customer impact](/advanced-guide/analytics/customer-impact) are both in beta and enabled on request. Their measures, layout and numbers may still change while the feature matures.
+</Warning>
+
+![Adoption dashboard showing personalisation scalability, unique Contents, unique openers, personalised Use Cases, repeat exposition and experiments](/images/analytics/adoption-dashboard.png)
+
+## Before you begin
+
+Performance answers what your Workflows produced. Adoption answers a different question: how much of the platform is actually in use, and how much variety reaches each customer.
+
+Every measure here reads Workflow activity, so none of them needs a purchase dataset. Only the lifecycle transitions matrix reads purchases, through the attribution source configured in [Analytics Settings](/product-guide/analytics/settings).
+
+## What is measured
+
+Every measure is computed over the period you query, on displays served by Reelevant.
+
+| Measure | Definition |
+|---|---|
+| **Personalisation scalability** | Distinct Contents rendered divided by distinct customers reached. How many variations you produce per customer. |
+| **Unique Contents** | Number of distinct rendered Contents. Two customers receiving identical output count as one. |
+| **Unique openers** | Number of distinct customers who were shown at least one Content. |
+| **Personalised Use Cases** | Number of distinct Workflows that served at least one individualised Branch. |
+| **Repeat Content exposition per user** | Displays divided by customers reached. How often the same customer comes back to a Content. |
+| **Experiments** | Number of distinct Real-Time Testing experiments observed over the period. |
+
+Personalisation scalability is the ratio to read first. A value near zero means your Workflows serve the same output to everybody, whatever their volume. A value near one means almost every customer receives their own Content.
+
+## Use Case adoption
+
+The table lists the Workflows that served personalised Content over the period, with the Datasources feeding them and how much they were displayed.
+
+![Use case adoption table listing Workflows, whether they use a Datasource, total displays, unique Contents, unique openers and personalisation scalability](/images/analytics/adoption-use-cases.png)
+
+| Field | Definition |
+|---|---|
+| **Workflow name** | Links back to the Workflow. |
+| **Uses a Datasource** | Whether the Workflow reads a Datasource, rather than personalising on profile fields only. |
+| **Total display count** | Displays served by the Workflow over the period. |
+| **Unique Contents** | Distinct rendered Contents served by the Workflow. |
+| **Unique openers** | Distinct customers reached by the Workflow. |
+| **Personalisation scalability** | The same ratio, per Workflow. |
+
+**Minimum displays** filters out Workflows too small to read, and defaults to 1,000. The table exports to CSV.
+
+<Info>
+  Read scalability per Workflow rather than only at the top. A single high-volume Workflow serving one Content per period pulls the overall ratio down, and hides the Workflows where personalisation is working.
+</Info>
+
+## Lifecycle transitions
+
+The matrix counts how many customers moved from one lifecycle stage to another between the start and the end of the period.
+
+![Lifecycle transitions matrix with the exposure selector, counts per starting and ending stage, and row totals](/images/analytics/adoption-lifecycle-transitions.png)
+
+**Exposure** selects the population: all customers, the Exposed Population, the Non-Exposed Population, or the two side by side. **Display** switches between counts and share of the starting stage.
+
+<Info>
+  The Exposed Population is now defined by exposure to personalisation, so customers whose experience was only partly personalised sit in none of the two populations. The two sub-matrices therefore do not add up to the one over all customers.
+</Info>
+
+## Exposure pressure has moved
+
+The exposure decile table now lives on the [Customer impact](/advanced-guide/analytics/customer-impact) dashboard, where the populations it splits are defined, and where it reads next to the value and frequency measures it belongs to. It also reports the personalised displays, openings, clicks and distinct Contents each decile received, which Adoption never held.
