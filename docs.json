@@ -340,6 +340,7 @@
                 "pages": [
                   "advanced-guide/analytics/attribution",
                   "advanced-guide/analytics/customer-impact",
+                  "advanced-guide/analytics/adoption",
                   "product-guide/analytics/data-exploration",
                   "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/dashboards/individualization",
@@ -769,6 +770,7 @@
                 "pages": [
                   "fr/advanced-guide/analytics/attribution",
                   "fr/advanced-guide/analytics/customer-impact",
+                  "fr/advanced-guide/analytics/adoption",
                   "fr/product-guide/analytics/data-exploration",
                   "fr/product-guide/analytics/measures-and-dimensions",
                   "fr/product-guide/analytics/dashboards/individualization",

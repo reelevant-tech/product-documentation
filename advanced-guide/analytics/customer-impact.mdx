@@ -4,8 +4,10 @@ description: 'How Reelevant measures the effect of personalisation on customer v
 ---
 
 <Warning>
-  **Beta** — Customer impact measures are currently in beta. Behaviour and available measures may still change, and numbers may be refined as the feature matures.
+  **Beta** — Customer impact measures are currently in beta and the dashboard is enabled on request. Behaviour and available measures may still change, and numbers may be refined as the feature matures.
 </Warning>
+
+![Customer impact dashboard showing the five Uplift measures and the exposed versus comparable non-exposed cohort table](/images/analytics/customer-impact-dashboard.png)
 
 ## Before you begin
 
@@ -40,11 +42,22 @@ Each measure is available on two populations, the Exposed Population and the Non
 
 Both populations are drawn from the customers Reelevant reached, so the comparison is personalisation against the same channels without personalisation. Customers who never appear in your Workflow activity over the period belong to neither population, whatever your purchase data says about them.
 
+![Cohort table listing comparable customers, value per customer, average order value, orders per customer, days between purchases and retention for each population](/images/analytics/customer-impact-cohorts.png)
+
 <Info>
   Customers whose experience was only partly personalised — one personalised Content among many non-personalised ones — belong to neither population. They remain visible in the population counts, but they weigh on no comparison: counting them as exposed would describe an experience they did not have.
 
-  Both thresholds are part of your reporting configuration. Ask your Technical Account Manager to raise them when personalisation is the norm across your Workflows, or to lower them when only a few Contents are personalised.
+  Both thresholds are part of your reporting configuration, under **Personalization exposure** in [Analytics Settings](/product-guide/analytics/settings). Raise them when personalisation is the norm across your Workflows, lower them when only a few Contents are personalised.
 </Info>
+
+![Personalization exposure settings with the minimum personalised displays and minimum personalised share fields](/images/analytics/analytics-settings-personalisation-exposure.png)
+
+| Setting | Default | Effect |
+|---|---|---|
+| **Minimum personalised displays** | 2 | Personalised Contents a customer must have been shown over the exposure window to qualify as exposed. |
+| **Minimum personalised share** | 50% | Share of the Contents shown to a customer that must be personalised. |
+
+Left empty, each threshold falls back to its default. Changing either one redraws both populations, so the measures move: expect a stricter threshold to shrink the Exposed Population and to widen the differences.
 
 The weighting matters. Customers who receive more personalisation tend to be more engaged, so they tend to be better customers before any personalisation happens. Reelevant therefore groups customers by decile of orders and decile of value over the preceding period, and weights the Non-Exposed Population so that each decile carries the same share as in the Exposed Population. The two populations then have, on average, the same purchasing history.
 
@@ -65,23 +78,46 @@ Cohort Pre-Period Gap is how you check the comparison rather than a result to re
 
 ### Worked example
 
-One retailer, six months, 263,550 comparable customers on each side:
+One retailer, six months, 436,496 comparable customers on each side:
 
-| Measure | Exposed | Non-Exposed | Before the period | Uplift |
-|---|---|---|---|---|
-| Value per customer | 37.34 | 27.02 | 3.28 / 3.26 | +37.3% |
-| Average order value | 42.61 | 38.44 | 40.86 / 40.60 | +10.1% |
-| Orders per customer | 0.88 | 0.70 | 0.080 / 0.080 | +24.8% |
-| Retention rate | 59.4% | 61.7% | — | −2.3pt |
-| Days between purchases | 205.4 | 256.1 | — | 50.7 days sooner |
+| Measure | Exposed | Non-Exposed | Uplift |
+|---|---|---|---|
+| Value per customer | 37.09 | 19.38 | +90.2% |
+| Average order value | 41.98 | 38.03 | +9.5% |
+| Orders per customer | 0.88 | 0.51 | +73.7% |
+| Retention rate | 63.8% | 56.5% | +7.3pt |
+| Days between purchases | 203.7 | 353.2 | 149.9 days sooner |
+| Value per customer before the period | 7.14 | 7.10 | 0.6% gap |
 
-Read the mechanism, not only the headline. Value per customer is up 37.3%, and most of it comes from customers ordering more often rather than spending more per order. Retention is slightly lower, so the gain is not in holding on to established buyers: it is in how many of the reached customers buy at all over the period. The actions that follow are about presence and conversion rather than basket building.
+Read the mechanism, not only the headline. Value per customer is up 90.2%, and most of it comes from customers ordering more often rather than spending more per order, which moves 9.5%. Retention is 7.3 points higher, so the gain is partly in holding on to established buyers and partly in how many of the reached customers buy at all. The pre-period gap of 0.6% is what makes the comparison usable.
+
+## Where the difference came from
+
+The Uplift measures say how much the two populations differ. The lifecycle matrix says where that difference sits, by following each customer from their lifecycle stage at the start of the period to their stage at the end.
+
+![Lifecycle difference matrix showing, per starting stage, the percentage point difference between the two populations for each ending stage](/images/analytics/customer-impact-lifecycle-difference.png)
+
+| View | What each cell holds |
+|---|---|
+| **Difference** (default) | Share of the Exposed Population ending in that stage, minus the same share of the Non-Exposed Population, in percentage points. |
+| **% per cohort** | Share of the starting stage ending in that stage, per population. Rows add up to 100%. |
+| **Customers per cohort** | Number of customers, per population. |
+
+Read the difference view row by row. In the example above, 19.8 points fewer exposed customers stayed prospects, and those customers reappear as first purchases and repeat purchases, which is the mechanism behind the value and frequency measures.
+
+<Info>
+  The matrix is unweighted, so its two populations are the full ones rather than the matched populations behind the measures above. Shares are comparable between the two, totals are not. Partly personalised customers appear in neither.
+</Info>
+
+Each view exports to CSV, with the view in the file name, so a percentage export cannot be mistaken for a count export.
 
 ## Exposure pressure
 
 **Exposure Decile** splits the Exposed Population into ten groups, from the least to the most exposed, so you can read value per customer and orders per customer against exposure volume. It answers whether more exposure keeps paying, and where returns flatten.
 
 Each decile also reports what it was shown — personalised Contents, openings, clicks, and the number of distinct Contents seen — so the deciles read as volumes received rather than as ranks.
+
+![Exposure pressure table with ten deciles, the personalised displays, openings, clicks and unique Contents each received, and their value and orders per customer](/images/analytics/customer-impact-exposure-pressure.png)
 
 <Info>
   Read the pressure curve within the Exposed Population only. It is a dose-response reading and not a second comparison between the two populations: the most exposed customers are also the most active ones, and part of the curve reflects that rather than the effect of exposure.

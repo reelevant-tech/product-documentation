@@ -1,13 +1,13 @@
 ---
 title: 'Analytics Settings'
-description: 'Configure attribution and custom tags for your company'
+description: 'Configure attribution, personalisation exposure thresholds and custom tags for your company'
 ---
 
 ![Analytics Settings Tags tab showing tag keys, cardinality badges, and values](/images/analytics/tag-settings.png)
 
 ## Overview
 
-The Analytics Settings page lets you configure attribution and custom tags for your company. Use tags to qualify Branches and segment Analytics.
+The Analytics Settings page lets you configure attribution, personalisation exposure and custom tags for your company. Use tags to qualify Branches and segment Analytics.
 
 Access it from the **Settings** link in the Analytics sidebar navigation.
 
@@ -47,6 +47,28 @@ The lookback window is the time before a purchase during which an interaction ca
 <Info>
   Changing attribution affects how conversions are counted in the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). A longer window captures more conversions but may include less directly attributable purchases.
 </Info>
+
+## Personalisation exposure
+
+These two thresholds decide which customers count as personalised in the [Customer Impact](/advanced-guide/analytics/customer-impact) dashboard.
+
+![Personalization exposure settings with the minimum personalised displays and minimum personalised share fields](/images/analytics/analytics-settings-personalisation-exposure.png)
+
+| Field | Default | What it does |
+|---|---|---|
+| **Minimum personalized displays** | 2 | How many personalised Contents a customer must have seen. |
+| **Minimum personalized share (%)** | 50 | How much of what they saw must be personalised. |
+
+Customers above zero but below these thresholds count as neither personalised nor non-personalised. They stay out of the comparison.
+
+1. Navigate to **Analytics > Settings**.
+2. Scroll to **Personalization exposure** on the **General** tab.
+3. Set the two thresholds, or leave them empty to keep the defaults.
+4. Click **Save changes**.
+
+<Tip>
+  Raise both thresholds when almost every Content you send is personalised. Lower them when only a few Contents are.
+</Tip>
 
 ## Tags
 
