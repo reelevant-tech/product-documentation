@@ -44,6 +44,29 @@ Your mobile app integrates with Reelevant the same way a headless web frontend d
   </Step>
 </Steps>
 
+## Push and in-app surfaces
+
+Push notifications and in-app surfaces are served by your push provider, not by Reelevant. Two integration modes exist, and they can be combined in the same app.
+
+| Surface | Integration mode | What the provider needs |
+|---------|------------------|-------------------------|
+| **Lock screen notification** | Image URL | The Runner URL as the rich media attachment. iOS requires a [notification service extension](https://developer.apple.com/documentation/usernotifications/unnotificationserviceextension) with `mutable-content: 1`; Android reads the [`image` field](https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages) of the notification payload. |
+| **Lock screen notification (personalised copy)** | JSON, resolved before send | The sending system calls the Runner per recipient and maps the response fields onto `title`, `body`, and `image`. |
+| **In-app scene** (banner, pop-up) | Image URL or JSON | Same pattern as web: swap a static image for the Runner URL, or fetch JSON and render natively. |
+| **Notification centre** | Image URL or JSON | Same as in-app scenes; cards persist, so prefer JSON when the copy must stay accurate over time. |
+
+Image-URL mode resolves the Workflow at display time, so content stays fresh after the send. JSON mode resolves it at send time, which is required when the notification copy itself must be personalised — the trade-off is one Runner call per recipient inside the sending window.
+
+```bash
+curl "https://reelevant.run/{workflowId}/{entrypointId}?rlvt-u={userId}"
+```
+
+<Note>
+  Some push providers only render plain text on the lock screen. In that case, deliver the personalised visual on the notification centre card or an in-app scene, and keep the lock screen copy generic.
+</Note>
+
+Product-side setup for each surface is documented in the [push and in-app integration guide](/advanced-guide/workflows/push-integration).
+
 ## Next steps
 
 <Card title="Technical Integration" icon="code" href="/developer-docs/mobile-integration/api-json/overview">

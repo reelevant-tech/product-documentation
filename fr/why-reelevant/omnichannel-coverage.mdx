@@ -1,0 +1,43 @@
+---
+title: 'Couverture omnicanale'
+description: "Un seul moteur de personnalisation pour l'e-mail, le web, la messagerie et le mobile"
+---
+
+## Un moteur, tous les canaux
+
+La plupart des stacks de personnalisation sont spécifiques à un canal : un outil pour l'e-mail, un autre pour l'application, un troisième pour la messagerie. La logique est reconstruite trois fois, et les trois outils ne s'accordent pas sur ce que le client vient de faire.
+
+Reelevant conserve la logique à un seul endroit. Un Workflow est construit une fois, connecté à ses Datasources une fois, et consommé par n'importe quelle surface capable d'afficher une image ou de lire un contenu structuré.
+
+## Couverture par canal
+
+| Canal | Comment Reelevant diffuse | Effort de votre côté |
+|---|---|---|
+| E-mail | Visuel personnalisé servi à l'ouverture | Coller un lien dans le template e-mail |
+| Web | Image personnalisée ou section HTML | Ajouter un extrait, ou appeler Reelevant depuis votre front |
+| Landing page | Page personnalisée complète | Publier le Workflow |
+| RCS et SMS enrichi | Visuels de cartes personnalisés dans la conversation | Coller le lien dans la plateforme de messagerie |
+| WhatsApp | Visuel personnalisé dans un template de message validé | Coller le lien dans la plateforme de messagerie |
+| Notification push | Image personnalisée sur la notification, ou contenu complet résolu avant l'envoi | Configurer la campagne dans votre plateforme push |
+| Scène in-app et centre de notifications | Visuel personnalisé dans l'application | Déclarer le lien dans votre plateforme push |
+
+Les canaux de messagerie et push réutilisent le même mécanisme de diffusion que l'e-mail : un lien qui renvoie un visuel personnalisé pour la personne qui a ouvert le message. C'est pourquoi ajouter un canal relève de la configuration, et non d'un nouveau projet d'intégration.
+
+## Ce que cela change concrètement
+
+- **Un seul modèle de données.** Les Datasources alimentent tous les canaux ; un catalogue produits connecté pour l'e-mail est disponible pour le RCS le jour même.
+- **Une seule couche de décision.** Conditions, splits et logique de recommandation sont partagés : les canaux ne se contredisent pas.
+- **Un seul modèle de mesure.** Affichages, clics et conversions après clic sont restitués avec les mêmes mesures sur tous les canaux, avec la méthodologie d'[Uplift](/fr/product-guide/analytics/dashboards/uplift) appliquée partout.
+- **Des partenaires interchangeables.** Reelevant se place derrière vos plateformes d'envoi existantes plutôt que de les remplacer : le choix du prestataire messagerie ou push reste le vôtre.
+
+## Où se situe la frontière
+
+Reelevant n'envoie pas de messages, ne détient pas le consentement et ne gère pas la délivrabilité. Vos plateformes de messagerie, push et e-mail conservent ces responsabilités. Reelevant fournit le contenu personnalisé et restitue la façon dont les personnes ont interagi avec lui.
+
+Les éléments natifs ajoutés par la plateforme d'envoi — boutons RCS, réponses rapides WhatsApp, boutons d'action push — sont mesurés par cette plateforme, pas par Reelevant.
+
+## Étapes suivantes
+
+- [Options d'intégration](/fr/why-reelevant/technical-evaluators/integrations) — Vue technique de chaque mode d'intégration
+- [Channels de messagerie](/fr/product-guide/workflows/channels/messaging-overview) — Comment RCS et WhatsApp se configurent
+- [Intégration push et in-app](/fr/advanced-guide/workflows/push-integration) — Modèles d'intégration mobile

@@ -1,0 +1,59 @@
+---
+title: 'Messaging and Mobile Measurement'
+description: 'What Reelevant measures on RCS, WhatsApp, push, and in-app surfaces — and what it does not'
+---
+
+## Overview
+
+Reelevant measures the Content it serves. On messaging and mobile surfaces, part of the journey happens in the sending platform, which Reelevant never sees.
+
+Reading a messaging or mobile campaign therefore always means combining two sources: Reelevant figures for content interaction, and platform figures for delivery and native actions.
+
+## Availability by KPI
+
+| KPI | Available in Reelevant | Notes |
+|---|---|---|
+| Delivery rate | No | Owned by the messaging or push platform |
+| Open rate (RCS, rich SMS) | Not applicable | The format has no reliable open signal |
+| Click rate | Yes | Counts clicks on Reelevant Content only |
+| Conversion rate after a click | Yes | Uses the configured [Attribution Period](/advanced-guide/analytics/attribution) |
+| Push opt-in rate | Not tracked | Technically possible, not part of the standard setup |
+| App open rate after a lock screen push | Yes | Requires the mobile browsing events to reach the DataHub |
+| Conversion after a lock screen open | No | The open is not attributable to a specific Content |
+| Retention effect of a push | No | Not modelled |
+| Exposure rate (in-app scene, notification centre) | Estimated | Above 95%, not an exact count |
+| Click rate (in-app scene, notification centre) | Yes | |
+| Conversion after an in-app click | No | |
+
+## Why RCS clicks are split
+
+An RCS card carries two clickable areas: the Reelevant visual, and the button defined in the messaging platform. Reelevant counts clicks on the visual. The button belongs to the messaging platform, which counts its own.
+
+Neither figure is wrong; they measure different areas. Reporting on RCS means summing both, and stating which part each source covers.
+
+<Info>
+  The same split applies to WhatsApp quick-reply buttons and to push notification action buttons. Any element added by the sending platform is measured by that platform.
+</Info>
+
+## Proving the value of personalisation
+
+Because the click figures are split across two systems, an absolute click rate is a weak proof point on these channels. A comparison is stronger.
+
+Split the target audience into two groups within the same send: one receives the personalised Content, the other receives the generic version. Compare click rate, conversion rate, and average order value between the groups. The difference is the [Uplift](/product-guide/analytics/dashboards/uplift) attributable to personalisation, measured with the same delivery conditions on both sides.
+
+<Info>
+  Keep the two groups inside the same send and the same day. Comparing a personalised send with a generic send from another week mixes personalisation with seasonality.
+</Info>
+
+## Dimensions to use
+
+The Reelevant events produced by messaging and mobile campaigns carry the standard dimensions documented in [Measures and Dimensions](/product-guide/analytics/measures-and-dimensions).
+
+Two are particularly useful here:
+
+| Dimension | Use |
+|---|---|
+| UTM Campaign Parameter | Isolate one send, especially on WhatsApp where the parameter must change on every send |
+| Message (rlvt-m) | Separate messages within the same campaign |
+
+Set them consistently through a Variable Profile so that every send is separable afterwards.

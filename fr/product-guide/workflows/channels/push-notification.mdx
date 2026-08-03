@@ -19,6 +19,25 @@ Le Channel Push Notification Image génère une image personnalisée pour les no
 
 Lorsque votre application envoie une notification push incluant une zone visuelle Reelevant, le Workflow s'exécute et renvoie une image personnalisée. Cette image est affichée comme pièce jointe média enrichie dans la notification push.
 
+## Où les notifications push s'affichent
+
+Une notification push peut s'afficher sur trois surfaces différentes. Elles n'offrent pas le même niveau de personnalisation.
+
+| Surface | De quoi il s'agit | Visuel personnalisé | Texte personnalisé |
+|---|---|---|---|
+| **Écran de verrouillage** | La notification affichée avant le déverrouillage du téléphone | Oui, comme image de la notification | Uniquement si votre plateforme push demande le texte à Reelevant avant l'envoi |
+| **Scène in-app** | Une bannière ou un popup affiché pendant que la personne utilise l'application | Oui | Oui |
+| **Centre de notifications** | La liste des notifications passées dans l'application | Oui | Oui |
+
+Il existe deux façons de personnaliser une notification sur l'écran de verrouillage :
+
+- **Visuel personnalisé, texte fixe** — le texte de la notification est écrit une fois dans la campagne, et le lien de l'image est un lien Reelevant : chaque personne voit donc un visuel construit pour elle. C'est la mise en place la plus rapide.
+- **Visuel et texte personnalisés** — votre plateforme push demande à Reelevant le contenu de chaque notification avant de l'envoyer, ce qui fait varier le texte aussi. Cela demande du travail de votre côté, décrit dans le [guide d'intégration push](/fr/advanced-guide/workflows/push-integration).
+
+<Info>
+  Les scènes in-app et le centre de notifications suivent le même principe que l'e-mail : un visuel personnalisé remplace une image fixe. Voir [In-App Popup](/fr/product-guide/workflows/channels/in-app-popup) et [In-App Inbox](/fr/product-guide/workflows/channels/in-app-inbox).
+</Info>
+
 ## Configuration
 
 1. Ajoutez un Node Channel Push Notification Image à votre canevas de Workflow.
@@ -30,3 +49,17 @@ Lorsque votre application envoie une notification push incluant une zone visuell
 - Gardez les images de notification push concises et percutantes — elles sont consultées à de petites tailles sur les écrans mobiles.
 - Utilisez les [paramètres d'URL](/fr/product-guide/workflows/data-nodes/url-parameter) pour transmettre les identifiants utilisateur depuis votre service de notifications push vers le Workflow.
 - Testez le rendu de l'image sur les appareils iOS et Android, car les tailles d'affichage peuvent varier.
+
+## Étapes suivantes
+
+<CardGroup cols={3}>
+  <Card title="Guide d'intégration push" icon="bell" href="/fr/advanced-guide/workflows/push-integration">
+    Configurez chaque surface et découvrez les données que la navigation mobile apporte à vos Workflows.
+  </Card>
+  <Card title="In-App Popup" icon="window-maximize" href="/fr/product-guide/workflows/channels/in-app-popup">
+    Personnalisez les bannières et popups affichés dans l'application.
+  </Card>
+  <Card title="Mesure" icon="chart-line" href="/fr/advanced-guide/analytics/messaging-and-mobile-measurement">
+    Découvrez quels chiffres mobiles Reelevant restitue.
+  </Card>
+</CardGroup>
