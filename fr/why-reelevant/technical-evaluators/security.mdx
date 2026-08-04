@@ -122,11 +122,11 @@ Reelevant évalue tous les fournisseurs en termes de criticité et de risque ava
 
 Reelevant s'appuie sur une liste courte et volontairement limitée de fournisseurs d'infrastructure :
 
-| Fournisseur | Service | Rôle |
-|-------------|---------|------|
-| **OVHcloud** | Serveurs bare metal | Héberge la plateforme : services applicatifs, bases de données et traitement des événements. Résidence des données en UE |
-| **Google Cloud** | BigQuery | Entrepôt analytique utilisé pour le stockage des événements et les requêtes de reporting |
-| **AWS** | Route 53 (DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client |
+| Fournisseur | Service | Région | Rôle |
+|-------------|---------|--------|------|
+| **OVHcloud** | Serveurs bare metal | France | Héberge la plateforme : services applicatifs, bases de données et traitement des événements |
+| **Google Cloud** | BigQuery | Belgique | Entrepôt analytique utilisé pour le stockage des événements et les requêtes de reporting |
+| **AWS** | Route 53 (DNS) | Global (anycast, comme l'exige le DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client |
 
 ## Journalisation des audits
 

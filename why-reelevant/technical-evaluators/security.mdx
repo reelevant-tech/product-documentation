@@ -122,11 +122,11 @@ Reelevant assesses all vendors for criticality and risk before engagement:
 
 Reelevant runs on a short, deliberately limited list of infrastructure vendors:
 
-| Vendor | Service | Role |
-|--------|---------|------|
-| **OVHcloud** | Bare metal servers | Hosts the platform: application services, databases, and event processing. EU data residency |
-| **Google Cloud** | BigQuery | Analytics warehouse used for event storage and reporting queries |
-| **AWS** | Route 53 (DNS) | Public DNS resolution for Reelevant domains — no customer data |
+| Vendor | Service | Region | Role |
+|--------|---------|--------|------|
+| **OVHcloud** | Bare metal servers | France | Hosts the platform: application services, databases, and event processing |
+| **Google Cloud** | BigQuery | Belgium | Analytics warehouse used for event storage and reporting queries |
+| **AWS** | Route 53 (DNS) | Global (anycast, as DNS requires) | Public DNS resolution for Reelevant domains — no customer data |
 
 ## Audit Logging
 
