@@ -1,0 +1,50 @@
+---
+title: "Releases et rétrocompatibilité"
+description: "Comment Reelevant livre ses changements : releases rétrocompatibles par défaut, préavis minimum de 30 jours pour les releases majeures, et ce que les intégrateurs doivent surveiller."
+keywords: ["politique de release", "rétrocompatibilité", "changement cassant", "préavis de dépréciation", "versioning API"]
+---
+
+## Principes de release
+
+Reelevant livre en continu. Les intégrations sont conçues pour continuer à fonctionner d'une release à l'autre sans action de votre part.
+
+| Principe | Ce que cela signifie pour votre intégration |
+|----------|---------------------------------------------|
+| **Rétrocompatibilité par défaut** | Chaque release est conçue pour être non cassante. Les nouvelles capacités sont ajoutées sous forme de nouveaux champs, paramètres ou endpoints plutôt que par modification de l'existant |
+| **Changements additifs** | De nouveaux champs de réponse et paramètres optionnels peuvent apparaître à tout moment — parsez les réponses de façon tolérante et ignorez les champs inconnus |
+| **Contrats stables** | Les URL du Runner (`https://reelevant.run/{workflowId}`), les endpoints d'API existants et les schémas de JSON Template publiés conservent leur comportement |
+| **Préavis minimum de 30 jours pour les releases majeures** | Lorsqu'une release modifie un comportement existant, vous êtes prévenu au moins 30 jours avant sa mise en production |
+
+## Releases majeures
+
+Une release majeure est tout changement pouvant nécessiter une action de l'intégrateur — par exemple une modification d'une réponse d'API existante, la suppression d'un paramètre ou un changement de comportement par défaut.
+
+Pour ces releases :
+
+- **Au moins 30 jours de préavis** avant la mise en production
+- Le préavis est envoyé aux contacts techniques de votre compte et publié sur la [status page](/fr/why-reelevant/technical-evaluators/status-page)
+- Le préavis précise ce qui change, quels endpoints ou Workflows sont concernés et quelle action est éventuellement requise
+- Lorsque c'est possible, le comportement précédent reste disponible pendant la période de préavis afin que vous puissiez migrer à votre rythme
+
+Même pour les releases majeures, Reelevant fait le maximum pour que le changement reste rétrocompatible et qu'aucune migration ne soit nécessaire.
+
+## Releases courantes
+
+Les releases courantes — corrections de bugs, optimisations, nouveaux types de Nodes, nouveaux connecteurs de Datasource, améliorations d'interface — sont déployées sans préavis car elles ne modifient pas les comportements existants. Elles sont listées sur la [status page](/fr/why-reelevant/technical-evaluators/status-page) au même titre que les fenêtres de maintenance.
+
+## Ce qu'il faut prévoir de votre côté
+
+- Considérez les réponses d'API comme extensibles : ignorez les champs non reconnus plutôt que d'échouer
+- Gardez au moins un contact technique du compte abonné aux préavis de release
+- Abonnez-vous à la [status page](/fr/why-reelevant/technical-evaluators/status-page) pour les notifications de déploiement et d'incident
+
+## Étapes suivantes
+
+<CardGroup cols={2}>
+<Card title="Statut et monitoring" icon="signal" href="/fr/why-reelevant/technical-evaluators/status-page">
+Préavis de déploiement, disponibilité et communication d'incident.
+</Card>
+<Card title="Sécurité et conformité" icon="shield-check" href="/fr/why-reelevant/technical-evaluators/security">
+Certifications, fournisseurs, journalisation des audits et signalement d'une faille.
+</Card>
+</CardGroup>

@@ -1,6 +1,7 @@
 ---
 title: "Sécurité et conformité"
-description: "Certification SOC 2 Type II, conformité RGPD, standards de chiffrement, gestion des vulnérabilités et posture de sécurité de Reelevant pour les évaluateurs techniques."
+description: "Certification SOC 2 Type II, conformité RGPD, standards de chiffrement, gestion des vulnérabilités, fournisseurs et posture de sécurité de Reelevant pour les évaluateurs techniques."
+keywords: ["SOC 2", "RGPD", "logs d'audit", "sous-traitants", "fournisseurs", "contact sécurité", "divulgation de vulnérabilité"]
 ---
 
 ## Vue d'ensemble de la sécurité
@@ -117,12 +118,33 @@ Reelevant évalue tous les fournisseurs en termes de criticité et de risque ava
 - Les fournisseurs critiques et à haut risque sont revus au moins annuellement via des rapports de conformité
 - Tous les fournisseurs doivent se conformer aux politiques de sécurité de l'information de Reelevant
 
+### Fournisseurs d'infrastructure
+
+Reelevant s'appuie sur une liste courte et volontairement limitée de fournisseurs d'infrastructure :
+
+| Fournisseur | Service | Rôle |
+|-------------|---------|------|
+| **OVHcloud** | Serveurs bare metal | Héberge la plateforme : services applicatifs, bases de données et traitement des événements. Résidence des données en UE |
+| **Google Cloud** | BigQuery | Entrepôt analytique utilisé pour le stockage des événements et les requêtes de reporting |
+| **AWS** | Route 53 (DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client |
+
 ## Journalisation des audits
 
+- **Logs d'audit conservés pendant 1 an**
 - Toutes les actions d'administration sont journalisées avec attribution utilisateur et horodatage
 - Les événements d'authentification (réussis et échoués) sont capturés et surveillés
 - Monitoring d'intégrité des fichiers et détection d'intrusion basée sur l'hôte déployés
 - Les données de logs sont protégées en termes de confidentialité, intégrité et disponibilité
+
+## Signaler une faille de sécurité
+
+Signalez toute vulnérabilité suspectée ou incident de sécurité à **[security@reelevant.com](mailto:security@reelevant.com)**.
+
+| Contact | Rôle |
+|---------|------|
+| Valentin Marchaud | CTO — contact sécurité et responsable du programme de sécurité de l'information |
+
+Indiquez si possible les étapes de reproduction et les endpoints concernés. Les signalements sont triés par l'Incident Response Team et corrigés selon les délais ci-dessus.
 
 ## Sensibilisation à la sécurité
 
@@ -139,5 +161,8 @@ Certifications, rapports d'audit et documentation de sécurité à jour.
 </Card>
 <Card title="Status Page" icon="signal" href="/fr/why-reelevant/technical-evaluators/status-page">
 Disponibilité de la plateforme en temps réel et historique des incidents.
+</Card>
+<Card title="Releases et rétrocompatibilité" icon="rocket" href="/fr/why-reelevant/technical-evaluators/releases">
+Politique de release, délais de préavis et garanties de compatibilité.
 </Card>
 </CardGroup>

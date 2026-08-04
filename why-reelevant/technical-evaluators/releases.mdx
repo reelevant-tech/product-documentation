@@ -1,0 +1,50 @@
+---
+title: "Releases & Backward Compatibility"
+description: "How Reelevant ships changes: backward-compatible releases by default, a minimum 30-day notice for major releases, and what integrators need to monitor."
+keywords: ["release policy", "backward compatibility", "breaking change", "deprecation notice", "API versioning"]
+---
+
+## Release Principles
+
+Reelevant ships continuously. Integrations are built to keep working across releases without action on your side.
+
+| Principle | What it means for your integration |
+|-----------|------------------------------------|
+| **Backward compatibility by default** | Every release is designed to be non-breaking. New capabilities are added as new fields, parameters, or endpoints rather than changes to existing ones |
+| **Additive changes** | New response fields and optional request parameters can appear at any time — parse responses tolerantly and ignore unknown fields |
+| **Stable contracts** | Runner URLs (`https://reelevant.run/{workflowId}`), existing API endpoints, and published JSON Template schemas keep their behaviour |
+| **Minimum 30-day notice for major releases** | When a release changes existing behaviour, you are notified at least 30 days before it reaches production |
+
+## Major Releases
+
+A major release is any change that could require action from an integrator — for example a change to an existing API response, a removed parameter, or a change in default behaviour.
+
+For these releases:
+
+- **At least 30 days' notice** before the change reaches production
+- Notice is sent to the technical contacts on your account and published on the [status page](/why-reelevant/technical-evaluators/status-page)
+- The notice states what changes, which endpoints or Workflows are affected, and what action (if any) is required
+- Where feasible, the previous behaviour remains available during the notice period so you can migrate on your own schedule
+
+Even for major releases, Reelevant does as much as possible to keep the change backward compatible so that no migration is needed.
+
+## Routine Releases
+
+Routine releases — bug fixes, performance work, new Node types, new Datasource connectors, UI improvements — are deployed without prior notice because they do not change existing behaviour. They are listed on the [status page](/why-reelevant/technical-evaluators/status-page) alongside maintenance windows.
+
+## What to Do on Your Side
+
+- Treat API responses as extensible: ignore fields you do not recognise instead of failing on them
+- Keep at least one technical contact on the account subscribed to release notices
+- Subscribe to the [status page](/why-reelevant/technical-evaluators/status-page) for deployment and incident notifications
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Status & Monitoring" icon="signal" href="/why-reelevant/technical-evaluators/status-page">
+Deployment notices, availability, and incident communication.
+</Card>
+<Card title="Security & Compliance" icon="shield-check" href="/why-reelevant/technical-evaluators/security">
+Certifications, vendors, audit logging, and how to report a security issue.
+</Card>
+</CardGroup>

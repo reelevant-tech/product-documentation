@@ -1,6 +1,7 @@
 ---
 title: "Security & Compliance"
-description: "SOC 2 Type II certification, GDPR compliance, encryption standards, vulnerability management, and Reelevant's security posture for technical evaluators."
+description: "SOC 2 Type II certification, GDPR compliance, encryption standards, vulnerability management, vendors, and Reelevant's security posture for technical evaluators."
+keywords: ["SOC 2", "GDPR", "audit logs", "subprocessors", "vendors", "security contact", "vulnerability disclosure"]
 ---
 
 ## Security Overview
@@ -117,12 +118,33 @@ Reelevant assesses all vendors for criticality and risk before engagement:
 - Critical and high-risk vendors are reviewed at least annually via compliance reports
 - All vendors must comply with Reelevant's information security policies
 
+### Infrastructure Vendors
+
+Reelevant runs on a short, deliberately limited list of infrastructure vendors:
+
+| Vendor | Service | Role |
+|--------|---------|------|
+| **OVHcloud** | Bare metal servers | Hosts the platform: application services, databases, and event processing. EU data residency |
+| **Google Cloud** | BigQuery | Analytics warehouse used for event storage and reporting queries |
+| **AWS** | Route 53 (DNS) | Public DNS resolution for Reelevant domains — no customer data |
+
 ## Audit Logging
 
+- **Audit logs retained for 1 year**
 - All admin actions logged with user attribution and timestamp
 - Authentication events (successful and failed) captured and monitored
 - File integrity monitoring and host-based intrusion detection deployed
 - Log data protected for confidentiality, integrity, and availability
+
+## Reporting a Security Issue
+
+Report suspected vulnerabilities or security incidents to **[security@reelevant.com](mailto:security@reelevant.com)**.
+
+| Contact | Role |
+|---------|------|
+| Valentin Marchaud | CTO — security contact and owner of the Information Security Programme |
+
+Include reproduction steps and affected endpoints where possible. Reports are triaged by the Incident Response Team and remediated according to the timelines above.
 
 ## Security Awareness
 
@@ -139,5 +161,8 @@ Up-to-date certifications, audit reports, and security documentation.
 </Card>
 <Card title="Status Page" icon="signal" href="/why-reelevant/technical-evaluators/status-page">
 Real-time platform availability and incident history.
+</Card>
+<Card title="Releases & Backward Compatibility" icon="rocket" href="/why-reelevant/technical-evaluators/releases">
+Release policy, notice periods, and compatibility guarantees.
 </Card>
 </CardGroup>
