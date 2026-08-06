@@ -1,0 +1,140 @@
+---
+title: 'Échecs du Runner'
+description: 'Codes d''erreur, réponses dégradées et comportement du mode click renvoyés par l''endpoint Runner'
+---
+
+## Vue d'ensemble
+
+L'endpoint Runner est public et consommé principalement par des clients email, des navigateurs et des intégrations côté serveur. Comme une réponse en erreur casserait la page ou l'email, la plupart des problèmes d'exécution ne sont **pas** renvoyés comme des erreurs HTTP : le Runner se dégrade vers une réponse neutre.
+
+```typescript
+const runnerUrl = `https://reelevant.run/${workflowId}/${entrypointId}?rlvt-u=${encodeURIComponent(userId)}`
+
+const response = await fetch(runnerUrl)
+
+if (response.status === 200) {
+  const runId = response.headers.get('x-rlvt-workflow-run-id')
+  const payload = await response.json()
+  renderRecommendation(payload, runId)
+} else {
+  const failure = await response.json()
+  // failure.error_code === 3000 -> Workflow inconnu, afficher le contenu par défaut
+  logger.warn('Runner returned a failure', { code: failure.error_code, message: failure.message })
+  renderFallback()
+}
+```
+
+Prévoyez toujours un rendu de repli : une réponse `200` peut malgré tout contenir un contenu dégradé (voir ci-dessous).
+
+## Corps d'une réponse en échec
+
+Les échecs utilisent la même enveloppe que les autres API Reelevant. `code` est le statut HTTP, `error_code` identifie l'échec et `data` porte les informations associées.
+
+```json
+{
+  "program": "workflow-api",
+  "version": "1.2.3",
+  "datetime": "2026-07-29T10:00:00.000Z",
+  "status": "fail",
+  "code": 404,
+  "error_code": 3000,
+  "message": "Workflow not found",
+  "data": { "id": "6626ef1a2d1f4c0012ab34cd" }
+}
+```
+
+| `error_code` | HTTP | Signification | `data` |
+|---|---|---|---|
+| `3000` | 404 | L'id du Workflow n'existe pas. | `{ id }` |
+| `3500` | 400 | L'index d'entrypoint n'existe pas sur le Workflow publié. | `{ id, index }` |
+| `3500` | 400 | L'id d'entrypoint ne correspond à aucun entrypoint du Workflow publié. | `{ id, entrypointId }` |
+| `3501` | 401 | `mode=debug` ou `mode=ui-debug` demandé sans token de debug valide, ou avec un token émis pour une autre société. | `{ id }` |
+| _aucun_ | 400 | Validation des paramètres en échec — le plus souvent un id de Workflow ne respectant pas `^[0-9a-fA-F]{24}$`. | champs invalides |
+| _aucun_ | 500 | Erreur inattendue en dehors de l'exécution du Workflow. `status` vaut `error`. | `{}` |
+
+Rejouez les réponses `500` avec un court backoff. Tous les autres échecs sont déterministes : réessayer renverra le même résultat, affichez plutôt votre propre contenu de repli.
+
+## Réponses dégradées
+
+Les erreurs au niveau d'un Node ne font jamais échouer la requête. Le Runner renvoie `200` et sert une réponse neutre, afin qu'un Data Node ou une Datasource en erreur ne casse pas l'intégration.
+
+| Situation | Réponse |
+|---|---|
+| Workflow inactif ou archivé | `200`, PNG transparent 600x1 (`Content-Type: image/png`). |
+| Erreur fatale, entrypoint de type `email`, `rcs` ou `whatsapp` | `200`, le même PNG transparent. |
+| Erreur fatale, tout autre type d'entrypoint | `200`, sortie par défaut (`default`). |
+| Un Node a échoué mais la Branch s'est terminée (erreur silencieuse) | `200`, sortie normale. |
+
+Détectez ces cas côté client avant le rendu :
+
+```typescript
+const response = await fetch(runnerUrl)
+const contentType = response.headers.get('content-type') ?? ''
+
+// Un entrypoint JSON qui répond une image signifie que le Workflow est inactif ou en erreur
+if (contentType.startsWith('image/')) {
+  renderFallback()
+  return
+}
+
+const payload: unknown = await response.json()
+```
+
+## Mode click
+
+`mode=click` résout l'URL de destination de la Branch exécutée et redirige vers celle-ci.
+
+| Situation | Réponse |
+|---|---|
+| Une URL de destination est résolue | `302` vers la destination, avec les paramètres de requête transmis, `rlvt_id` et `utm_term`. Les schémas non HTTP (deeplinks mobiles) sont redirigés tels quels. |
+| Aucune URL de destination, Output Node JSON | `204`, corps vide. |
+| Aucune URL de destination, tout autre Output Node | `404`. |
+
+Utilisez `rlvt-redirect` pour surcharger la destination résolue par le Workflow.
+
+## Mode debug
+
+`mode=debug` renvoie un rapport d'exécution HTML (temps par Node, dépendances résolues, erreurs silencieuses, stack de l'erreur fatale) et `mode=ui-debug` redirige vers l'éditeur de Workflow avec le même rapport. Les deux exposent les internes du Workflow et les sorties des Datasources : ils requièrent un token de debug de courte durée.
+
+```bash
+curl -XPOST "https://api.reelevant.com/v2/workflows/debug/token" \
+  -H "Authorization: Bearer <access_token>"
+```
+
+La réponse contient `token` et `expiresAt`. Envoyez le token sur la requête Runner :
+
+```bash
+curl "https://reelevant.run/<workflow_id>/0?rlvt-u=user@example.com&mode=debug" \
+  -H "x-rlvt-debug-token: <token>"
+```
+
+Les tokens durent 15 minutes et sont limités à la société propriétaire du Workflow. Un token absent, expiré ou hors périmètre renvoie l'`error_code` `3501` avec le statut HTTP `401`.
+
+## Codes de retour d'exécution
+
+Les exécutions dégradées sont remontées sur l'événement de Workflow, pas sur la réponse HTTP. Chaque exécution émet un événement portant un code de retour, exposé via :
+
+- la dimension **Execution return code** dans l'[Exploration de données](/fr/product-guide/analytics/data-exploration) et les dashboards
+- la colonne `execution_error_code` du dataset des événements de Workflow dans le DataHub
+
+| Code | Signification |
+|---|---|
+| _vide_ | L'exécution s'est terminée sans erreur. |
+| `3501` | Erreur fatale : l'exécution s'est arrêtée avant d'atteindre un Output Node. La réponse est le PNG transparent ou la sortie par défaut. |
+| `3502` | Erreur silencieuse : au moins un Node a échoué mais la Branch s'est terminée. Le contenu a été servi. |
+| `3503` | Exécution en mode click sans URL de destination — la réponse a été un `404`. |
+
+Ces codes sont indépendants des `error_code` HTTP ci-dessus, même si `3501` existe dans les deux ensembles : `3501` sur un événement signifie une erreur fatale d'exécution, `3501` sur un échec HTTP signifie une requête de debug non autorisée. Les échecs HTTP (`3000`, `3500`, validation, `500`) n'émettent aucun événement : ils n'apparaissent donc jamais dans les analytics.
+
+Une exécution dégradée reste comptée comme un display : ces codes sont donc le moyen de mesurer l'impact d'une Datasource en erreur. Regroupez vos mesures de display par **Execution return code** dans l'Exploration de données, ou filtrez le dataset sur `execution_error_code`.
+
+## Corréler une exécution en échec
+
+Chaque réponse porte l'en-tête `x-rlvt-workflow-run-id`. Journalisez-le à côté de votre propre identifiant de requête : il identifie l'exécution dans les analytics et dans le rapport de debug, et c'est ce dont le support a besoin pour la tracer.
+
+## Pages associées
+
+- [Intégration technique](/fr/developer-docs/web-integration/api-json/integration)
+- [Vue d'ensemble de l'API JSON](/fr/developer-docs/web-integration/api-json/overview)
+- [Mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions)
+- [Authentification](/fr/developer-docs/api-reference/authentication)

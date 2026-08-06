@@ -84,6 +84,19 @@ This reference lists the measures and dimensions you can use in Data Exploration
 | UTM Campaign Parameter | Group by the UTM campaign value. |
 | UTM Medium Parameter | Group by the UTM medium value. |
 
+#### Execution return code values
+
+This dimension tells you whether the Runner (the service that builds your Content) finished the Workflow. Most rows are empty, which means everything went well.
+
+| Code | What it means |
+|---|---|
+| Empty | The Workflow ran to the end. |
+| 3501 | The Workflow stopped before reaching an Output Node (the last step of a Branch). The default visual was shown instead. |
+| 3502 | A Node failed but the Branch finished. Your Content was still shown. |
+| 3503 | A click could not be matched with a destination link. |
+
+A high share of 3501 or 3502 usually points to a Datasource that stopped answering. Share the Workflow name and the code with your Technical Account Manager.
+
 ### Purchase event dimensions
 
 | Dimension | Description |

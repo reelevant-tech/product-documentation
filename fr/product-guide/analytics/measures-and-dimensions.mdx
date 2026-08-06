@@ -84,6 +84,19 @@ Cette référence liste les mesures et dimensions que vous pouvez utiliser dans 
 | UTM Campaign Parameter | Regrouper par la valeur UTM campaign. |
 | UTM Medium Parameter | Regrouper par la valeur UTM medium. |
 
+#### Valeurs du code de retour d'exécution
+
+Cette dimension indique si le Runner (le service qui construit votre Content) a terminé le Workflow. La plupart des lignes sont vides : tout s'est bien passé.
+
+| Code | Signification |
+|---|---|
+| Vide | Le Workflow est allé jusqu'au bout. |
+| 3501 | Le Workflow s'est arrêté avant d'atteindre un Output Node (la dernière étape d'une Branch). Le visuel par défaut a été affiché. |
+| 3502 | Un Node a échoué mais la Branch s'est terminée. Votre Content a bien été affiché. |
+| 3503 | Un clic n'a pas pu être associé à un lien de destination. |
+
+Une part importante de 3501 ou 3502 signale généralement une Datasource qui ne répond plus. Transmettez le nom du Workflow et le code à votre Technical Account Manager.
+
 ### Dimensions des événements d'achat
 
 | Dimension | Description |
