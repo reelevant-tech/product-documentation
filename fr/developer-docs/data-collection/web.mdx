@@ -62,7 +62,7 @@ Charger le tag deux fois n'a aucun effet : l'amorçage s'arrête immédiatement 
 | `event` | `(name: string, data?: Record<string, unknown>) => void` | Envoie un événement. `data` doit être un objet simple — tableaux et primitives sont rejetés avec une erreur console. |
 | `identify` | `(clientId: string) => void` | Stocke l'identité connue dans `rlvt_clientId` et envoie un événement `identify`. |
 | `getClientId` | `() => string \| undefined` | Identité connue actuelle (`rlvt_clientId`, ou `rlvt_id` si le visiteur arrive d'un lien Reelevant). |
-| `loadZones` | `() => Promise<void>` | Rescanne le DOM à la recherche des zones `[rlvt]` et des intégrations on-site. À appeler après une navigation côté client. |
+| `loadZones` | `() => Promise<void>` | Ré-attache les [intégrations on-site](/fr/developer-docs/web-integration/client-side-script/overview). À appeler après une navigation côté client. |
 
 `window.reel.event` et `window.reel.identify` sont remplacées par les implémentations réelles au chargement du tracker ; avant cela, elles poussent dans `window.reel.queue`.
 
