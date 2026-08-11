@@ -62,7 +62,7 @@ Loading the tag twice is a no-op: the bootstrap exits early when `window.reel` a
 | `event` | `(name: string, data?: Record<string, unknown>) => void` | Send an event. `data` must be a plain object — arrays and primitives are rejected with a console error. |
 | `identify` | `(clientId: string) => void` | Store the known user identity in `rlvt_clientId` and send an `identify` event. |
 | `getClientId` | `() => string \| undefined` | Current known identity (`rlvt_clientId`, or `rlvt_id` when the visitor arrived from a Reelevant link). |
-| `loadZones` | `() => Promise<void>` | Re-scan the DOM for `[rlvt]` zones and on-site integrations. Call it after client-side navigation. |
+| `loadZones` | `() => Promise<void>` | Re-attach the [on-site integrations](/developer-docs/web-integration/client-side-script/overview). Call it after client-side navigation. |
 
 `window.reel.event` and `window.reel.identify` are replaced by the real implementations once the tracker loads; before that they push to `window.reel.queue`.
 
