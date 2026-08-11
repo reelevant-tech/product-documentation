@@ -1,0 +1,150 @@
+---
+title: 'Référence des événements'
+description: 'Enveloppe du collecteur, catalogue d''événements, règles de validation et collecte serveur à serveur'
+---
+
+## Enveloppe
+
+Tous les SDK envoient ce payload vers `POST https://collector.reelevant.com/collect/{datasourceId}/rlvt` :
+
+```typescript
+type CollectedEvent = {
+  key: string                        // companyId
+  name: string                       // nom de l'événement — voir le catalogue ci-dessous
+  url: string                        // URL de la page, ou identifiant d'écran applicatif
+  tmpId: string                      // identité anonyme de l'appareil, toujours renseignée
+  clientId?: string                  // identité utilisateur connue, après identification
+  data: Record<string, unknown>      // ids, value, transId et labels libres
+  eventId: string                    // généré côté client, unique par événement
+  v: 1                               // version de l'enveloppe
+  timestamp?: number                 // epoch ms — par défaut l'heure de réception
+}
+```
+
+La réponse est un `200` avec un corps vide. L'endpoint accepte également un tableau d'enveloppes et les corps `application/x-www-form-urlencoded`, tous traités par la même chaîne d'ingestion.
+
+| Réponse | Signification |
+|---------|---------------|
+| `200` | Accepté. Les problèmes champ par champ sont signalés dans les [logs de la Datasource](/fr/advanced-guide/datahub/logs), jamais dans la réponse. |
+| `202` | Écarté comme trafic de bot, d'après l'en-tête `user-agent`. |
+| `400` | Corps vide, ou segment `id` qui n'est pas un identifiant hexadécimal de 24 caractères. |
+| `404` | Aucune Datasource ne correspond à l'identifiant. |
+
+## Champs réservés de `data`
+
+Trois clés de `data` sont mappées vers des colonnes typées de la Datasource de tracking. Toutes les autres clés sont stockées comme labels interrogeables.
+
+| Champ | Type | Utilisé par | Description |
+|-------|------|-------------|-------------|
+| `ids` | `string[]` | Événements produit, catégorie, marque, panier et achat | Identifiants de référence des éléments concernés |
+| `value` | `number` | `purchase` | Montant total de la transaction, tronqué à deux décimales |
+| `transId` | `string` | `purchase`, `purchase_references` | Votre identifiant de commande — la clé de déduplication de l'[attribution](/fr/product-guide/analytics/attribution) |
+
+```json
+{
+  "name": "purchase",
+  "data": {
+    "ids": ["SKU-12345", "SKU-67890"],
+    "value": 129.9,
+    "transId": "order-456",
+    "locale": "EN-GB",
+    "store": "FR-online"
+  }
+}
+```
+
+Ci-dessus, `locale` et `store` sont des labels : filtrables dans un Workflow, mais pas agrégés comme des métriques.
+
+## Catalogue d'événements
+
+| Événement | `data` attendu | Objectif |
+|-----------|----------------|----------|
+| `identify` | — | Associe le `tmpId` courant à un `clientId`. Envoyé automatiquement par `identify()` et `setUser()`. |
+| `page_view` | — | Vue de page ou d'écran. Envoyé par les SDK mobiles ; écarté par le tracker web. |
+| `product_page` | `ids` | Vue de fiche produit — le signal de base du retargeting. |
+| `product_hover` | `ids` | Interaction produit sans consultation, par exemple un survol en liste. |
+| `category_view` | `ids` (noms de catégories) | Vue d'une liste de catégorie. |
+| `brand_view` | `ids` (noms de marques) | Vue d'une liste de marque. |
+| `add_cart` | `ids` | Ajout au panier. |
+| `purchase` | `ids`, `value`, `transId` | Commande finalisée, avec des identifiants produit. |
+| `purchase_references` | `ids`, `transId` | Commande finalisée, avec des références catalogue au lieu d'identifiants produit. |
+| tout autre nom | libre | Événement personnalisé. À utiliser pour les signaux sans équivalent au catalogue — favoris, soumissions de formulaire, changements d'abonnement. |
+
+Les noms personnalisés sont acceptés tels quels et deviennent des valeurs de filtre sur le [Data Node Website Events](/fr/product-guide/workflows/data-nodes/website-events) : gardez-les stables, renommer un événement rend orphelin l'historique collecté sous l'ancien nom.
+
+## Règles de validation
+
+Le tracker web valide les payloads avant envoi et journalise la raison de son refus. Les SDK mobiles envoient ce que vous construisez : appliquez vous-même les mêmes règles.
+
+| Règle | Appliquée à | Comportement en cas de violation |
+|-------|-------------|----------------------------------|
+| `data` doit être un objet simple | tous les événements | Événement abandonné |
+| `ids` doit être une chaîne ou un tableau de chaînes | tous les événements | Événement abandonné |
+| Les entrées de `ids` ne doivent pas être des valeurs de remplissage | tous les événements | Entrée retirée ; événement abandonné s'il ne reste rien |
+| `value` doit être une chaîne ou un nombre, et être convertible en nombre | `purchase` | Événement abandonné |
+| `value` ne doit pas contenir `;`, `,` ni `\|` | `purchase` | Événement abandonné — envoyez le total de la commande, pas une concaténation des montants de lignes |
+| `clientId` ne doit pas être une valeur de remplissage | `identify` | Identité ignorée, le tracking reste anonyme |
+
+Les valeurs de remplissage sont rejetées car elles résultent presque toujours d'une erreur de templating : `undefined`, `null`, `unknown`, `inconnu`, `0`, `-1`, `NaN`, `ko`, `true`, `false`, `Infinity`, `-Infinity`, `{}`, `[]`.
+
+Deux normalisations sont appliquées silencieusement, à connaître si vous comparez vos données avec celles de Reelevant :
+
+- `value` est tronqué à deux décimales.
+- Une chaîne `ids` unique contenant `;`, `,` ou `|` est découpée en plusieurs identifiants, sauf pour `category_view` et `brand_view` où les séparateurs font légitimement partie du nom.
+
+## Collecte serveur à serveur
+
+Le collecteur accepte les appels directs : c'est l'intégration adaptée lorsque l'événement n'existe que sur votre backend — commande confirmée par votre prestataire de paiement, changement d'abonnement, achat en magasin. Envoyez la même enveloppe et réutilisez l'identité de la session de navigation (`rlvt_clientId`) pour que l'événement rejoigne l'historique de l'utilisateur :
+
+```typescript
+import { randomUUID } from 'node:crypto'
+
+type PurchaseLine = { reference: string; amount: number }
+
+export const trackServerSidePurchase = async (
+  clientId: string,
+  orderId: string,
+  lines: PurchaseLine[],
+): Promise<void> => {
+  const response = await fetch(
+    `https://collector.reelevant.com/collect/${process.env.RLVT_DATASOURCE_ID}/rlvt`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        key: process.env.RLVT_COMPANY_ID,
+        name: 'purchase',
+        url: 'https://shop.example.com/checkout/confirmation',
+        tmpId: clientId,
+        clientId,
+        data: {
+          ids: lines.map(line => line.reference),
+          value: Number(lines.reduce((total, line) => total + line.amount, 0).toFixed(2)),
+          transId: orderId,
+          channel: 'backoffice',
+        },
+        eventId: randomUUID(),
+        v: 1,
+        timestamp: Date.now(),
+      }),
+    },
+  )
+
+  // Le collecteur répond 200 même quand des champs sont rejetés — ne réessayez que sur
+  // erreur de transport ou 5xx, et consultez les logs de la Datasource pour les champs.
+  if (response.status >= 500) {
+    throw new Error(`Reelevant collector unavailable: ${response.status}`)
+  }
+}
+```
+
+`tmpId` est obligatoire : renseignez-le avec l'identité anonyme quand vous l'avez, sinon avec `clientId`. Envoyez `timestamp` explicitement dès que l'événement est rejoué ou traité de façon asynchrone — sinon le collecteur l'horodate à la réception.
+
+Les appels serveur contournent les règles de validation côté client décrites plus haut : normalisez `ids` et `value` avant l'envoi. Le schéma complet est publié dans la référence OpenAPI [Datasources Collector](/fr/developer-docs/api-reference/introduction).
+
+## Ressources associées
+
+- [Vue d'ensemble de la collecte](/fr/developer-docs/data-collection/overview) — chaîne de traitement, identité, consentement
+- [Collecte web](/fr/developer-docs/data-collection/web) — tag, Google Tag Manager, API `window.reel`
+- [Collecte mobile](/fr/developer-docs/data-collection/mobile) — Android, iOS, Flutter
+- [Filtres de requête Datasource](/fr/developer-docs/guides/datasource-query-filters) — interroger directement les événements collectés

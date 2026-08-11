@@ -69,7 +69,7 @@ await rlvt.setUser('user@example.com');
 await rlvt.send(rlvt.pageView(labels: {'lang': 'en'}));
 
 // Product page
-await rlvt.send(rlvt.productPage('product-123', labels: {'category': 'shoes'}));
+await rlvt.send(rlvt.productPage(id: 'product-123', labels: {'category': 'shoes'}));
 
 // Purchase
 await rlvt.send(rlvt.purchase(
