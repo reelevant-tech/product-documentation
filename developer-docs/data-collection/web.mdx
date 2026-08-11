@@ -1,0 +1,154 @@
+---
+title: 'Website Collection'
+description: 'Collect behavioural events from your website with the Reelevant tracking tag, the window.reel API, or the Google Tag Manager template'
+---
+
+## Overview
+
+The tracking tag is a small bootstrap script that loads the Reelevant client tracker and exposes `window.reel`. Send an event with two lines:
+
+```html
+<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}" async></script>
+<script>
+  window.reel.identify('user@example.com')
+  window.reel.event('product_page', { ids: ['SKU-12345'], locale: 'EN-GB' })
+</script>
+```
+
+Both calls are safe before the tracker finishes loading: the bootstrap script defines `window.reel` synchronously and buffers calls in `window.reel.queue`, which the tracker drains once per second after it initialises.
+
+The exact snippet, with your `companyId` and `datasourceId` already substituted, is displayed by the **Configure Reelevant Script** step of the tracking Datasource wizard.
+
+## Installation
+
+<CodeGroup>
+
+```html Tag
+<!-- In <head>, or before </body> -->
+<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}" async></script>
+```
+
+```typescript SPA
+// Load the tag once, then track route changes yourself.
+// Types are not published — declare the surface you use.
+declare global {
+  interface Window {
+    reel: {
+      queue: [string, Record<string, unknown>?][]
+      event(name: string, data?: Record<string, unknown>): void
+      identify(clientId: string): void
+      loadZones(): Promise<void>
+      getClientId(): string | undefined
+    }
+  }
+}
+
+export const trackProductView = (productId: string, locale: string): void => {
+  if (typeof window.reel === 'undefined') return
+  window.reel.event('product_page', { ids: [productId], locale })
+}
+```
+
+</CodeGroup>
+
+The tag injects the tracker from the same origin (`/rlvt?company=…&datasource=…`). The tracker is cached for 5 minutes, or 60 seconds when the company has on-site integrations, so tag or Workflow changes propagate without a deploy.
+
+Loading the tag twice is a no-op: the bootstrap exits early when `window.reel` already exists.
+
+## `window.reel` API
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `event` | `(name: string, data?: Record<string, unknown>) => void` | Send an event. `data` must be a plain object — arrays and primitives are rejected with a console error. |
+| `identify` | `(clientId: string) => void` | Store the known user identity in `rlvt_clientId` and send an `identify` event. |
+| `getClientId` | `() => string \| undefined` | Current known identity (`rlvt_clientId`, or `rlvt_id` when the visitor arrived from a Reelevant link). |
+| `loadZones` | `() => Promise<void>` | Re-scan the DOM for `[rlvt]` zones and on-site integrations. Call it after client-side navigation. |
+
+`window.reel.event` and `window.reel.identify` are replaced by the real implementations once the tracker loads; before that they push to `window.reel.queue`.
+
+Events and identities are also read from the page without any call from you:
+
+| Source | Effect |
+|--------|--------|
+| `?rlvt-u=`, `?rlvt_u=`, `?clientUid=` query parameter, or a `#rlvt-u=` fragment | Stored as `rlvt_clientId` |
+| `window.reelevant_user` global | Stored as `rlvt_clientId` |
+| `?rlvt_id=` query parameter | Stored as `rlvt_id` — the recipient identity of a Reelevant link, used instead of `clientId` on subsequent events |
+| Keys containing `locale`, `language`, or `country` in the dataLayer | Added to every event payload as `locale` / `country`, uppercased |
+
+<Note>
+  `page_view` is dropped by the web tracker — page URLs are already carried by the `url` field of every other event. Send a custom event name if you need an explicit page-level event.
+</Note>
+
+## Google Tag Manager
+
+The [client-side GTM template](https://github.com/reelevant-tech/gtm-template-website-tracker-client) wraps the same tag. Configure one tag per event type:
+
+| Template field | Value |
+|----------------|-------|
+| **Company ID** / **Datasource ID** | Identifiers from the Datasource wizard |
+| **Event** | `init`, `identify`, `product_page`, `product_hover`, `category_view`, `brand_view`, `add_cart`, `purchase`, `purchase_references`, or `custom` |
+| **Global labels** | Key/value pairs merged into every event sent from the container |
+| **Labels** | Key/value pairs merged into this event only |
+
+Fire the `init` event first — it injects the tracker and preserves any queued events. Other tags push to `window.reel.queue`, so tag firing order does not matter.
+
+`purchase_references` is the reference-based variant of `purchase`: send it when your dataLayer exposes catalogue reference IDs instead of product IDs, so that [attribution on the same reference ID](/product-guide/analytics/attribution) can match the purchase to the Content that was displayed.
+
+## Identity cookies
+
+| Cookie | Lifetime | Set by |
+|--------|----------|--------|
+| `rlvt_tmpId` | 365 days | The tracker, on first load — a cuid, always sent as `tmpId` |
+| `rlvt_clientId` | 180 days | `identify()`, a URL parameter, or `window.reelevant_user` |
+| `rlvt_id` | 30 days | The `rlvt_id` URL parameter of a Reelevant link |
+
+Cookies are written on the registrable domain (`.example.com`, `.example.co.uk`), so identity is shared across subdomains.
+
+`identify()` rejects values that are technically strings but carry no identity — `undefined`, `null`, `unknown`, `inconnu`, `0`, `-1`, `NaN`, `ko`, `true`, `false`, `{}`, `[]`, and empty strings. Check what your template renders before shipping:
+
+```typescript
+const clientId = document.querySelector<HTMLMetaElement>('meta[name="user-id"]')?.content
+
+// Guard against templating fallbacks such as "undefined" or "0"
+if (typeof clientId === 'string' && /^[^\s]{2,}$/.test(clientId)) {
+  window.reel.identify(clientId)
+} else {
+  console.warn('Reelevant: no usable identity on this page, tracking stays anonymous')
+}
+```
+
+## Delivery guarantees
+
+The tracker posts each event with `XMLHttpRequest` and applies three rules you should design around:
+
+| Behaviour | Detail |
+|-----------|--------|
+| **Deduplication** | Identical `name` + `data` pairs are sent once per page load. Add a discriminating label if you need repeated identical events. |
+| **Retry queue** | Network failures and `5xx` responses are stored in the `rlvt_fail_queue` localStorage key and retried every 60 seconds. |
+| **Expiry** | Queued events older than 30 minutes are dropped instead of being retried. |
+
+Events are not flushed on `beforeunload`. Send them at the moment the interaction happens, not when the user leaves the page.
+
+## Verifying an integration
+
+<Steps>
+  <Step title="Send events from the browser">
+    Open your page and check `window.reel.getClientId()` returns your test identity, then trigger the events you integrated.
+  </Step>
+  <Step title="Check the network calls">
+    Each event is a `POST` to `https://collector.reelevant.com/collect/{datasourceId}/rlvt` returning `200`. A `404` means the `datasourceId` is wrong; `4xx` with a paused Datasource means collection is stopped.
+  </Step>
+  <Step title="Check the console">
+    Payload problems are logged client-side with a `Reelevant error:` or `Reelevant warning:` prefix, and the event is not sent.
+  </Step>
+  <Step title="Check ingestion">
+    Rejected fields are reported in the [Datasource logs](/advanced-guide/datahub/logs). The collector always answers `200`, so ingestion errors are only visible there.
+  </Step>
+</Steps>
+
+## Related
+
+- [Data collection overview](/developer-docs/data-collection/overview) — pipeline, identity, consent
+- [Event reference](/developer-docs/data-collection/events-reference) — envelope, catalogue, validation rules
+- [Client-side script](/developer-docs/web-integration/client-side-script/overview) — using the same tag to inject personalised content
+- [Mobile collection](/developer-docs/data-collection/mobile) — the app-side equivalent

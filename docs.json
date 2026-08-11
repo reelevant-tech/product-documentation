@@ -367,6 +367,15 @@
                 ]
               },
               {
+                "group": "Data Collection",
+                "pages": [
+                  "developer-docs/data-collection/overview",
+                  "developer-docs/data-collection/web",
+                  "developer-docs/data-collection/mobile",
+                  "developer-docs/data-collection/events-reference"
+                ]
+              },
+              {
                 "group": "Web Integration",
                 "pages": [
                   "developer-docs/web-integration/overview",
@@ -802,6 +811,15 @@
                   "fr/developer-docs/introduction",
                   "fr/developer-docs/api-reference/introduction",
                   "fr/developer-docs/api-reference/authentication"
+                ]
+              },
+              {
+                "group": "Collecte de données",
+                "pages": [
+                  "fr/developer-docs/data-collection/overview",
+                  "fr/developer-docs/data-collection/web",
+                  "fr/developer-docs/data-collection/mobile",
+                  "fr/developer-docs/data-collection/events-reference"
                 ]
               },
               {

@@ -75,7 +75,7 @@ rlvt.send(rlvt.pageView(mapOf("lang" to "en")))
 rlvt.send(rlvt.productPage("product-123", mapOf("category" to "shoes")))
 
 // Purchase
-rlvt.send(rlvt.purchase(listOf("p1", "p2"), 99.99f, mapOf(), "order-456"))
+rlvt.send(rlvt.purchase(listOf("p1", "p2"), 99.99, "order-456", mapOf()))
 
 // Add to cart
 rlvt.send(rlvt.addCart(listOf("p1"), mapOf()))

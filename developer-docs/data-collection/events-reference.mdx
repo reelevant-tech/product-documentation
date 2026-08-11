@@ -1,0 +1,150 @@
+---
+title: 'Event Reference'
+description: 'Collector envelope, event catalogue, payload validation rules, and server-to-server collection'
+---
+
+## Envelope
+
+Every SDK posts this payload to `POST https://collector.reelevant.com/collect/{datasourceId}/rlvt`:
+
+```typescript
+type CollectedEvent = {
+  key: string                        // companyId
+  name: string                       // event name — see the catalogue below
+  url: string                        // page URL, or an app screen identifier
+  tmpId: string                      // anonymous device identity, always set
+  clientId?: string                  // known user identity, once identified
+  data: Record<string, unknown>      // ids, value, transId, and free-form labels
+  eventId: string                    // client-generated, unique per event
+  v: 1                               // envelope version
+  timestamp?: number                 // epoch ms — defaults to reception time
+}
+```
+
+The response is `200` with an empty body. The endpoint also accepts an array of envelopes and `application/x-www-form-urlencoded` bodies, both mapped to the same ingestion path.
+
+| Response | Meaning |
+|----------|---------|
+| `200` | Accepted. Per-field problems are reported in the [Datasource logs](/advanced-guide/datahub/logs), never in the response. |
+| `202` | Dropped as bot traffic, based on the `user-agent` header. |
+| `400` | Empty body, or an `id` path segment that is not a 24-character hexadecimal identifier. |
+| `404` | No Datasource matches the identifier. |
+
+## Reserved `data` fields
+
+Three keys of `data` are mapped to typed columns of the tracking Datasource. Every other key is stored as a queryable label.
+
+| Field | Type | Used by | Description |
+|-------|------|---------|-------------|
+| `ids` | `string[]` | Product, category, brand, cart, and purchase events | Reference identifiers of the items involved |
+| `value` | `number` | `purchase` | Total transaction amount, truncated to two decimals |
+| `transId` | `string` | `purchase`, `purchase_references` | Your order identifier — the deduplication key for [attribution](/product-guide/analytics/attribution) |
+
+```json
+{
+  "name": "purchase",
+  "data": {
+    "ids": ["SKU-12345", "SKU-67890"],
+    "value": 129.9,
+    "transId": "order-456",
+    "locale": "EN-GB",
+    "store": "FR-online"
+  }
+}
+```
+
+`locale` and `store` above are labels: filterable in a Workflow, but not aggregated as metrics.
+
+## Event catalogue
+
+| Event | Expected `data` | Purpose |
+|-------|-----------------|---------|
+| `identify` | — | Binds the current `tmpId` to a `clientId`. Sent automatically by `identify()` and `setUser()`. |
+| `page_view` | — | Screen or page view. Sent by the mobile SDKs; dropped by the web tracker. |
+| `product_page` | `ids` | Product detail view — the base signal for retargeting. |
+| `product_hover` | `ids` | Product interaction short of a view, e.g. a listing hover. |
+| `category_view` | `ids` (category names) | Category listing view. |
+| `brand_view` | `ids` (brand names) | Brand listing view. |
+| `add_cart` | `ids` | Cart addition. |
+| `purchase` | `ids`, `value`, `transId` | Completed order, with product identifiers. |
+| `purchase_references` | `ids`, `transId` | Completed order, with catalogue reference identifiers instead of product identifiers. |
+| any other name | free-form | Custom event. Use it for signals with no catalogue equivalent — favourites, form submissions, subscription changes. |
+
+Custom names are accepted as-is and become filter values on the [Website Events Data Node](/product-guide/workflows/data-nodes/website-events), so keep them stable: renaming an event orphans the history collected under the old name.
+
+## Validation rules
+
+The web tracker validates payloads before sending and logs the reason to the console when it refuses. The mobile SDKs send what you build, so apply the same rules yourself.
+
+| Rule | Applied to | Behaviour on violation |
+|------|-----------|------------------------|
+| `data` must be a plain object | all events | Event dropped |
+| `ids` must be a string or an array of strings | all events | Event dropped |
+| `ids` entries must not be placeholders | all events | Entry removed; event dropped if nothing remains |
+| `value` must be a string or a number, and parse as a number | `purchase` | Event dropped |
+| `value` must not contain `;`, `,`, or `\|` | `purchase` | Event dropped — send the order total, not a concatenation of line amounts |
+| `clientId` must not be a placeholder | `identify` | Identity ignored, tracking stays anonymous |
+
+Placeholder values are rejected because they are almost always a templating accident: `undefined`, `null`, `unknown`, `inconnu`, `0`, `-1`, `NaN`, `ko`, `true`, `false`, `Infinity`, `-Infinity`, `{}`, `[]`.
+
+Two normalisations run silently and are worth knowing when you compare your data with Reelevant's:
+
+- `value` is truncated to two decimals.
+- A single `ids` string containing `;`, `,`, or `|` is split into several identifiers, except for `category_view` and `brand_view` where separators are legitimate parts of a name.
+
+## Server-to-server collection
+
+The collector accepts direct calls, which is the right integration when the event only exists on your backend — an order confirmed by your payment provider, a subscription change, an offline purchase. Send the same envelope, and reuse the identity of the browsing session (`rlvt_clientId`) so the event joins the user's history:
+
+```typescript
+import { randomUUID } from 'node:crypto'
+
+type PurchaseLine = { reference: string; amount: number }
+
+export const trackServerSidePurchase = async (
+  clientId: string,
+  orderId: string,
+  lines: PurchaseLine[],
+): Promise<void> => {
+  const response = await fetch(
+    `https://collector.reelevant.com/collect/${process.env.RLVT_DATASOURCE_ID}/rlvt`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        key: process.env.RLVT_COMPANY_ID,
+        name: 'purchase',
+        url: 'https://shop.example.com/checkout/confirmation',
+        tmpId: clientId,
+        clientId,
+        data: {
+          ids: lines.map(line => line.reference),
+          value: Number(lines.reduce((total, line) => total + line.amount, 0).toFixed(2)),
+          transId: orderId,
+          channel: 'backoffice',
+        },
+        eventId: randomUUID(),
+        v: 1,
+        timestamp: Date.now(),
+      }),
+    },
+  )
+
+  // The collector answers 200 even when fields are rejected — retry only on transport
+  // and 5xx failures, and check the Datasource logs for per-field problems.
+  if (response.status >= 500) {
+    throw new Error(`Reelevant collector unavailable: ${response.status}`)
+  }
+}
+```
+
+`tmpId` is mandatory, so set it to the anonymous identity when you have it and to `clientId` otherwise. Send `timestamp` explicitly whenever the event is replayed or processed asynchronously — the collector otherwise stamps it at reception time.
+
+Server-side calls bypass the client-side validation rules above, so normalise `ids` and `value` before sending. The full schema is published in the [Datasources Collector](/developer-docs/api-reference/introduction) OpenAPI reference.
+
+## Related
+
+- [Data collection overview](/developer-docs/data-collection/overview) — pipeline, identity, consent
+- [Website collection](/developer-docs/data-collection/web) — tag, Google Tag Manager, `window.reel` API
+- [Mobile collection](/developer-docs/data-collection/mobile) — Android, iOS, Flutter
+- [Datasource query filters](/developer-docs/guides/datasource-query-filters) — querying collected events directly

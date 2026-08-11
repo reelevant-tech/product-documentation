@@ -1,0 +1,149 @@
+---
+title: 'Collecte mobile'
+description: 'Collecter les événements comportementaux des applications Android, iOS et Flutter avec les SDK mobiles Reelevant'
+---
+
+## Vue d'ensemble
+
+Les SDK mobiles construisent les événements avec des helpers typés et les envoient au même collecteur que le tag web. Une seule instance gère la collecte et la [personnalisation](/fr/developer-docs/mobile-integration/sdk/overview) : l'identité est donc partagée.
+
+<CodeGroup>
+
+```kotlin Android
+val rlvt = ReelevantSDK(
+    context = applicationContext,
+    companyId = "your-company-id",
+    datasourceId = "your-datasource-id"
+)
+
+rlvt.setUser("user@example.com")
+rlvt.send(rlvt.productPage("SKU-12345", mapOf("locale" to "EN-GB")))
+```
+
+```swift iOS
+let configuration = ReelevantAnalytics.Configuration(
+    companyId: "your-company-id",
+    datasourceId: "your-datasource-id"
+)
+let rlvt = ReelevantAnalytics.SDK(configuration: configuration)
+
+rlvt.setUser(userId: "user@example.com")
+rlvt.send(event: ReelevantAnalytics.EventBuilder.product_page(
+    productId: "SKU-12345",
+    labels: ["locale": "EN-GB"]
+))
+```
+
+```dart Flutter
+final rlvt = ReelevantAnalytics(
+  companyId: 'your-company-id',
+  datasourceId: 'your-datasource-id',
+);
+
+await rlvt.setUser('user@example.com');
+await rlvt.send(rlvt.productPage(id: 'SKU-12345', labels: {'locale': 'EN-GB'}));
+```
+
+</CodeGroup>
+
+Sur toutes les plateformes, un événement se construit puis s'envoie en deux temps : un builder retourne l'événement, `send()` l'envoie. La construction n'a aucun effet de bord : vous pouvez enrichir ou abandonner l'événement avant l'envoi.
+
+Les instructions d'installation de chaque plateforme sont sur les pages [Android](/fr/developer-docs/mobile-integration/sdk/android), [iOS](/fr/developer-docs/mobile-integration/sdk/ios) et [Flutter](/fr/developer-docs/mobile-integration/sdk/flutter).
+
+## Constructeurs d'événements
+
+| Événement | Android | iOS | Flutter |
+|-----------|---------|-----|---------|
+| `page_view` | `pageView(labels)` | `EventBuilder.page_view(labels:)` | `pageView(labels:)` |
+| `product_page` | `productPage(id, labels)` | `EventBuilder.product_page(productId:labels:)` | `productPage(id:labels:)` |
+| `product_hover` | `productHover(id, labels)` | `EventBuilder.product_hover(productId:labels:)` | `productHover(id:labels:)` |
+| `category_view` | `categoryView(id, labels)` | `EventBuilder.category_view(categoryId:labels:)` | `categoryView(id:labels:)` |
+| `brand_view` | `brandView(id, labels)` | `EventBuilder.brand_view(brandId:labels:)` | `brandView(id:labels:)` |
+| `add_cart` | `addCart(ids, labels)` | `EventBuilder.add_cart(ids:labels:)` | `addCart(ids:labels:)` |
+| `purchase` | `purchase(ids, totalAmount, transId, labels)` | `EventBuilder.purchase(ids:totalAmount:labels:transId:)` | `purchase(ids:totalAmount:labels:transId:)` |
+| personnalisé | `custom(name, labels)` | `EventBuilder.custom(name:labels:)` | `custom(name:labels:)` |
+
+<Warning>
+  L'ordre des arguments de `purchase` diffère selon la plateforme : Android attend `transId` avant `labels`, iOS et Flutter l'attendent en dernier. Utilisez les arguments nommés quand le langage le permet.
+</Warning>
+
+Les labels sont des paires clé/valeur `String` stockées comme labels interrogeables sur l'événement. Réservez-les aux dimensions que vous filtrez dans un Workflow — locale, magasin, version de l'application — et non aux données à forte cardinalité.
+
+## Identité
+
+`setUser()` stocke l'identité sur l'appareil (SharedPreferences sur Android, UserDefaults sur iOS, shared preferences sur Flutter) et envoie un événement `identify` lorsque la valeur change. Appelez-la après le login et après restauration d'une session au démarrage — les appels répétés avec la même valeur n'ont aucun effet.
+
+D'ici là, les événements ne portent que l'identité anonyme de l'appareil (`tmpId`) : l'identifiant publicitaire sur Android quand le suivi est autorisé, `identifierForVendor` sur iOS, sinon un identifiant aléatoire généré une fois et persisté.
+
+```kotlin
+// Android — restaurer l'identité au démarrage, avant tout envoi d'événement
+class ReelevantHolder(context: Context, private val session: SessionStore) {
+    val sdk = ReelevantSDK(
+        context = context,
+        companyId = BuildConfig.RLVT_COMPANY_ID,
+        datasourceId = BuildConfig.RLVT_DATASOURCE_ID
+    )
+
+    suspend fun restoreIdentity() {
+        val userId = session.currentUserId() ?: return
+        sdk.setUser(userId)
+    }
+}
+```
+
+iOS expose `ReelevantAnalytics.clearStorage()` pour effacer l'identifiant utilisateur stocké, l'identifiant temporaire et la file de retry — à appeler à la déconnexion sur un appareil partagé.
+
+## Contexte d'écran
+
+Chaque événement porte un champ `url`. Dans une application il vaut `unknown` par défaut : renseignez-le à la navigation pour pouvoir filtrer les événements par écran.
+
+<CodeGroup>
+
+```kotlin Android
+rlvt.setCurrentURL("app://catalogue/product/SKU-12345")
+```
+
+```swift iOS
+rlvt.setCurrentURL(url: "app://catalogue/product/SKU-12345")
+```
+
+```dart Flutter
+rlvt.setCurrentURL('app://catalogue/product/SKU-12345');
+```
+
+</CodeGroup>
+
+Utilisez un schéma et une structure de chemin stables : le champ est indexé en texte, des chemins cohérents simplifient les filtres dans un Workflow.
+
+## Garanties de livraison
+
+Les trois SDK se comportent de la même façon en cas d'échec :
+
+| Comportement | Détail |
+|--------------|--------|
+| **File de retry** | Les requêtes échouées sont persistées sur l'appareil et réessayées toutes les 60 secondes : les événements survivent au redémarrage de l'application. |
+| **Expiration** | Les événements en file depuis plus de 15 minutes sont abandonnés au lieu d'être réessayés. |
+| **Horodatage** | Chaque événement porte l'horodatage client de l'appel initial : les événements réessayés conservent leur heure réelle. |
+
+`send()` ne remonte pas les échecs de transport à l'appelant : ils sont journalisés et mis en file. La méthode peut en revanche lever une erreur si elle est appelée avant que le SDK ait initialisé l'identité de l'appareil ; encadrez donc les appels effectués tôt dans le cycle de vie de l'application.
+
+```dart
+// Flutter — un événement d'achat ne doit jamais casser le tunnel de commande
+try {
+  await rlvt.send(rlvt.purchase(
+    ids: ['SKU-12345', 'SKU-67890'],
+    totalAmount: 129.90,
+    labels: {'store': 'FR-online'},
+    transId: 'order-456',
+  ));
+} catch (error, stackTrace) {
+  logger.warning('Reelevant purchase event failed', error, stackTrace);
+}
+```
+
+## Ressources associées
+
+- [Vue d'ensemble de la collecte](/fr/developer-docs/data-collection/overview) — chaîne de traitement, identité, consentement
+- [Référence des événements](/fr/developer-docs/data-collection/events-reference) — enveloppe, catalogue, règles de validation
+- [SDK mobile](/fr/developer-docs/mobile-integration/sdk/overview) — la personnalisation avec la même instance
+- [Collecte web](/fr/developer-docs/data-collection/web) — l'équivalent web

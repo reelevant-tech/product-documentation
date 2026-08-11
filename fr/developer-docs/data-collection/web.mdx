@@ -1,0 +1,154 @@
+---
+title: 'Collecte web'
+description: 'Collecter les événements comportementaux de votre site avec le tag Reelevant, l''API window.reel ou le template Google Tag Manager'
+---
+
+## Vue d'ensemble
+
+Le tag de tracking est un petit script d'amorçage qui charge le tracker Reelevant et expose `window.reel`. Deux lignes suffisent pour envoyer un événement :
+
+```html
+<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}" async></script>
+<script>
+  window.reel.identify('user@example.com')
+  window.reel.event('product_page', { ids: ['SKU-12345'], locale: 'EN-GB' })
+</script>
+```
+
+Ces deux appels sont sûrs avant la fin du chargement du tracker : le script d'amorçage définit `window.reel` de façon synchrone et met les appels en file dans `window.reel.queue`, que le tracker vide une fois par seconde après son initialisation.
+
+Le snippet exact, avec vos `companyId` et `datasourceId` déjà substitués, est affiché par l'étape **Configure Reelevant Script** de l'assistant de la Datasource de tracking.
+
+## Installation
+
+<CodeGroup>
+
+```html Tag
+<!-- Dans <head>, ou avant </body> -->
+<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}" async></script>
+```
+
+```typescript SPA
+// Chargez le tag une fois, puis suivez vous-même les changements de route.
+// Les types ne sont pas publiés — déclarez la surface que vous utilisez.
+declare global {
+  interface Window {
+    reel: {
+      queue: [string, Record<string, unknown>?][]
+      event(name: string, data?: Record<string, unknown>): void
+      identify(clientId: string): void
+      loadZones(): Promise<void>
+      getClientId(): string | undefined
+    }
+  }
+}
+
+export const trackProductView = (productId: string, locale: string): void => {
+  if (typeof window.reel === 'undefined') return
+  window.reel.event('product_page', { ids: [productId], locale })
+}
+```
+
+</CodeGroup>
+
+Le tag injecte le tracker depuis la même origine (`/rlvt?company=…&datasource=…`). Le tracker est mis en cache 5 minutes, ou 60 secondes lorsque la company a des intégrations on-site : les changements de tag ou de Workflow se propagent sans déploiement.
+
+Charger le tag deux fois n'a aucun effet : l'amorçage s'arrête immédiatement si `window.reel` existe déjà.
+
+## API `window.reel`
+
+| Méthode | Signature | Description |
+|---------|-----------|-------------|
+| `event` | `(name: string, data?: Record<string, unknown>) => void` | Envoie un événement. `data` doit être un objet simple — tableaux et primitives sont rejetés avec une erreur console. |
+| `identify` | `(clientId: string) => void` | Stocke l'identité connue dans `rlvt_clientId` et envoie un événement `identify`. |
+| `getClientId` | `() => string \| undefined` | Identité connue actuelle (`rlvt_clientId`, ou `rlvt_id` si le visiteur arrive d'un lien Reelevant). |
+| `loadZones` | `() => Promise<void>` | Rescanne le DOM à la recherche des zones `[rlvt]` et des intégrations on-site. À appeler après une navigation côté client. |
+
+`window.reel.event` et `window.reel.identify` sont remplacées par les implémentations réelles au chargement du tracker ; avant cela, elles poussent dans `window.reel.queue`.
+
+Des événements et des identités sont aussi lus dans la page sans aucun appel de votre part :
+
+| Source | Effet |
+|--------|-------|
+| Paramètre `?rlvt-u=`, `?rlvt_u=`, `?clientUid=`, ou fragment `#rlvt-u=` | Stocké dans `rlvt_clientId` |
+| Variable globale `window.reelevant_user` | Stockée dans `rlvt_clientId` |
+| Paramètre `?rlvt_id=` | Stocké dans `rlvt_id` — l'identité destinataire d'un lien Reelevant, utilisée à la place de `clientId` sur les événements suivants |
+| Clés contenant `locale`, `language` ou `country` dans le dataLayer | Ajoutées en majuscules à chaque payload sous `locale` / `country` |
+
+<Note>
+  `page_view` est écarté par le tracker web — l'URL de la page est déjà portée par le champ `url` de tous les autres événements. Utilisez un nom d'événement personnalisé si vous avez besoin d'un événement explicite au niveau page.
+</Note>
+
+## Google Tag Manager
+
+Le [template GTM côté client](https://github.com/reelevant-tech/gtm-template-website-tracker-client) encapsule le même tag. Configurez un tag par type d'événement :
+
+| Champ du template | Valeur |
+|-------------------|--------|
+| **Company ID** / **Datasource ID** | Identifiants issus de l'assistant de la Datasource |
+| **Event** | `init`, `identify`, `product_page`, `product_hover`, `category_view`, `brand_view`, `add_cart`, `purchase`, `purchase_references` ou `custom` |
+| **Global labels** | Paires clé/valeur fusionnées dans tous les événements envoyés depuis le conteneur |
+| **Labels** | Paires clé/valeur fusionnées dans cet événement uniquement |
+
+Déclenchez d'abord l'événement `init` : il injecte le tracker et préserve les événements déjà en file. Les autres tags poussent dans `window.reel.queue`, l'ordre de déclenchement n'a donc pas d'importance.
+
+`purchase_references` est la variante par référence de `purchase` : utilisez-la lorsque votre dataLayer expose des références catalogue au lieu d'identifiants produit, afin que l'[attribution sur la même référence](/fr/product-guide/analytics/attribution) puisse relier l'achat au Content affiché.
+
+## Cookies d'identité
+
+| Cookie | Durée de vie | Défini par |
+|--------|--------------|------------|
+| `rlvt_tmpId` | 365 jours | Le tracker, au premier chargement — un cuid, toujours envoyé comme `tmpId` |
+| `rlvt_clientId` | 180 jours | `identify()`, un paramètre d'URL, ou `window.reelevant_user` |
+| `rlvt_id` | 30 jours | Le paramètre d'URL `rlvt_id` d'un lien Reelevant |
+
+Les cookies sont écrits sur le domaine enregistrable (`.example.com`, `.example.co.uk`) : l'identité est donc partagée entre sous-domaines.
+
+`identify()` rejette les valeurs qui sont techniquement des chaînes mais ne portent aucune identité — `undefined`, `null`, `unknown`, `inconnu`, `0`, `-1`, `NaN`, `ko`, `true`, `false`, `{}`, `[]` et la chaîne vide. Vérifiez ce que produit votre template avant la mise en production :
+
+```typescript
+const clientId = document.querySelector<HTMLMetaElement>('meta[name="user-id"]')?.content
+
+// Se protéger des valeurs de repli de templating comme « undefined » ou « 0 »
+if (typeof clientId === 'string' && /^[^\s]{2,}$/.test(clientId)) {
+  window.reel.identify(clientId)
+} else {
+  console.warn('Reelevant: no usable identity on this page, tracking stays anonymous')
+}
+```
+
+## Garanties de livraison
+
+Le tracker envoie chaque événement en `XMLHttpRequest` et applique trois règles à prendre en compte :
+
+| Comportement | Détail |
+|--------------|--------|
+| **Déduplication** | Les couples `name` + `data` identiques ne sont envoyés qu'une fois par chargement de page. Ajoutez un label discriminant si vous avez besoin d'événements identiques répétés. |
+| **File de retry** | Les échecs réseau et les réponses `5xx` sont stockés dans la clé localStorage `rlvt_fail_queue` et réessayés toutes les 60 secondes. |
+| **Expiration** | Les événements en file depuis plus de 30 minutes sont abandonnés au lieu d'être réessayés. |
+
+Les événements ne sont pas envoyés sur `beforeunload`. Envoyez-les au moment de l'interaction, pas au départ de l'utilisateur.
+
+## Vérifier une intégration
+
+<Steps>
+  <Step title="Envoyer des événements depuis le navigateur">
+    Ouvrez votre page, vérifiez que `window.reel.getClientId()` renvoie votre identité de test, puis déclenchez les événements intégrés.
+  </Step>
+  <Step title="Contrôler les appels réseau">
+    Chaque événement est un `POST` vers `https://collector.reelevant.com/collect/{datasourceId}/rlvt` renvoyant `200`. Un `404` signale un `datasourceId` erroné ; un `4xx` avec une Datasource en pause signale une collecte arrêtée.
+  </Step>
+  <Step title="Contrôler la console">
+    Les problèmes de payload sont journalisés côté client avec le préfixe `Reelevant error:` ou `Reelevant warning:`, et l'événement n'est pas envoyé.
+  </Step>
+  <Step title="Contrôler l'ingestion">
+    Les champs rejetés sont signalés dans les [logs de la Datasource](/fr/advanced-guide/datahub/logs). Le collecteur répond toujours `200` : les erreurs d'ingestion ne sont visibles que là.
+  </Step>
+</Steps>
+
+## Ressources associées
+
+- [Vue d'ensemble de la collecte](/fr/developer-docs/data-collection/overview) — chaîne de traitement, identité, consentement
+- [Référence des événements](/fr/developer-docs/data-collection/events-reference) — enveloppe, catalogue, règles de validation
+- [Script côté client](/fr/developer-docs/web-integration/client-side-script/overview) — utiliser le même tag pour injecter du contenu personnalisé
+- [Collecte mobile](/fr/developer-docs/data-collection/mobile) — l'équivalent applicatif
