@@ -231,13 +231,13 @@ L'activation de SCIM et la gestion des tokens passent par l'API REST habituelle,
 
 | Méthode et chemin | Objet |
 |---|---|
-| `GET /v2/scim/config` | Configuration courante et `baseUrl` à transmettre au fournisseur d'identité. |
-| `PATCH /v2/scim/config` | Met à jour `enabled`, `groupSync`, `roleSource`, `roleMapping`, `defaultRoleId`, `deprovisionMode`. |
-| `GET /v2/scim/tokens` | Liste les tokens avec leur libellé, leurs dates de création, de dernière utilisation et de révocation. |
-| `POST /v2/scim/tokens` | Crée un token. Le secret est renvoyé une seule fois ; `409` au-delà de deux tokens actifs. |
-| `DELETE /v2/scim/tokens/{id}` | Révoque un token. |
+| [`GET /v2/scim/config`](/api-reference/scim/get-the-scim-provisioning-configuration) | Configuration courante et `baseUrl` à transmettre au fournisseur d'identité. |
+| [`PATCH /v2/scim/config`](/api-reference/scim/update-the-scim-provisioning-configuration) | Met à jour `enabled`, `groupSync`, `roleSource`, `roleMapping`, `defaultRoleId`, `deprovisionMode`. |
+| [`GET /v2/scim/tokens`](/api-reference/scim/list-the-scim-tokens-of-the-company) | Liste les tokens avec leur libellé, leurs dates de création, de dernière utilisation et de révocation. |
+| [`POST /v2/scim/tokens`](/api-reference/scim/generate-a-scim-token) | Crée un token. Le secret est renvoyé une seule fois ; `409` au-delà de deux tokens actifs. |
+| [`DELETE /v2/scim/tokens/{id}`](/api-reference/scim/revoke-a-scim-token) | Révoque un token. |
 
-Chaque requête SCIM et chaque changement de configuration est enregistré dans la piste d'audit, lisible via `GET /v2/audit-logs` par tout appelant disposant du droit `update` sur les utilisateurs, les rôles ou les Teams.
+Chaque requête SCIM et chaque changement de configuration est enregistré dans la piste d'audit, lisible via [`GET /v2/audit-logs`](/api-reference/auditlog/list-audit-logs) par tout appelant disposant du droit `update` sur les utilisateurs, les rôles ou les Teams.
 
 ## Ressources liées
 

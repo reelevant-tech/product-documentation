@@ -456,6 +456,14 @@
               {
                 "group": "Datasources Collector",
                 "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
+              },
+              {
+                "group": "Entity Manager API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/entity-manager"
+              },
+              {
+                "group": "Statistics API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/statistics"
               }
             ]
           },
@@ -908,6 +916,14 @@
               {
                 "group": "Datasources Collector",
                 "openapi": "https://openapi.production.reelevant.io/v1/render/datasources-collector"
+              },
+              {
+                "group": "Entity Manager API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/entity-manager"
+              },
+              {
+                "group": "Statistics API",
+                "openapi": "https://openapi.production.reelevant.io/v1/render/statistics"
               }
             ]
           },

@@ -231,13 +231,13 @@ Enabling SCIM and managing tokens is done through the regular REST API, authenti
 
 | Method and path | Purpose |
 |---|---|
-| `GET /v2/scim/config` | Current configuration plus the `baseUrl` to hand to the identity provider. |
-| `PATCH /v2/scim/config` | Update `enabled`, `groupSync`, `roleSource`, `roleMapping`, `defaultRoleId`, `deprovisionMode`. |
-| `GET /v2/scim/tokens` | List the tokens with their label, creation, last use and revocation dates. |
-| `POST /v2/scim/tokens` | Create a token. The secret is returned once; `409` past two active tokens. |
-| `DELETE /v2/scim/tokens/{id}` | Revoke a token. |
+| [`GET /v2/scim/config`](/api-reference/scim/get-the-scim-provisioning-configuration) | Current configuration plus the `baseUrl` to hand to the identity provider. |
+| [`PATCH /v2/scim/config`](/api-reference/scim/update-the-scim-provisioning-configuration) | Update `enabled`, `groupSync`, `roleSource`, `roleMapping`, `defaultRoleId`, `deprovisionMode`. |
+| [`GET /v2/scim/tokens`](/api-reference/scim/list-the-scim-tokens-of-the-company) | List the tokens with their label, creation, last use and revocation dates. |
+| [`POST /v2/scim/tokens`](/api-reference/scim/generate-a-scim-token) | Create a token. The secret is returned once; `409` past two active tokens. |
+| [`DELETE /v2/scim/tokens/{id}`](/api-reference/scim/revoke-a-scim-token) | Revoke a token. |
 
-Every SCIM request and every configuration change is recorded in the audit trail, readable through `GET /v2/audit-logs` by any caller with `update` rights on users, roles or Teams.
+Every SCIM request and every configuration change is recorded in the audit trail, readable through [`GET /v2/audit-logs`](/api-reference/auditlog/list-audit-logs) by any caller with `update` rights on users, roles or Teams.
 
 ## Related
 
