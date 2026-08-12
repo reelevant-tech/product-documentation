@@ -1,6 +1,6 @@
 ---
 title: "Authentication & SSO"
-description: "Platform access control, single sign-on (SSO) configuration, API authentication, and the RBAC/ABAC authorisation model."
+description: "Platform access control, single sign-on (SSO) configuration, SCIM 2.0 user provisioning, API authentication, and the RBAC/ABAC authorisation model."
 ---
 
 ## Authentication Layers
@@ -44,7 +44,17 @@ Reelevant supports SSO integration with your organisation's identity provider. W
 
 **User provisioning:**
 
-Reelevant does not currently support JIT provisioning or SCIM. User accounts are managed via the platform's [User Management API](/developer-docs/api-reference/introduction) or through the UI. When SSO is enabled, users must have an existing account in Reelevant that matches their IdP identity to authenticate.
+Three options, which can be combined:
+
+| Option | How accounts appear | Offboarding |
+|--------|---------------------|-------------|
+| **SCIM 2.0** | Your IdP pushes users and groups to Reelevant — creation, profile updates, role and Team assignment | Automatic: deactivation (sessions revoked immediately) or permanent deletion, your choice |
+| **JIT on SSO login** | The account is created on the user's first successful SSO login, with the company default role and Teams | Manual |
+| **API or UI** | Invitations sent from the platform or the [User Management API](/developer-docs/api-reference/introduction) | Manual |
+
+SCIM 2.0 (RFC 7643/7644) covers `/Users` and `/Groups` with a company-scoped bearer token, and works with the standard Okta and Microsoft Entra ID connectors. IdP groups map to Reelevant Teams, and roles can be driven from a SCIM role attribute or from group-to-role mappings. Every provisioning request is recorded in the in-product audit log.
+
+See the [SCIM developer reference](/developer-docs/api-reference/scim) for the protocol detail, or the [setup guide](/product-guide/account/scim-provisioning) for the configuration options.
 
 <Info>
 SSO configuration is managed at the organisation level. Contact your Reelevant account team or support@reelevant.com to enable and configure SSO for your organisation.

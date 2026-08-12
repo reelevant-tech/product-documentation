@@ -1,6 +1,6 @@
 ---
 title: "Authentification et SSO"
-description: "Contrôle d'accès à la plateforme, configuration du single sign-on (SSO), authentification API et modèle d'autorisation RBAC/ABAC."
+description: "Contrôle d'accès à la plateforme, configuration du single sign-on (SSO), provisionnement des utilisateurs SCIM 2.0, authentification API et modèle d'autorisation RBAC/ABAC."
 ---
 
 ## Couches d'authentification
@@ -44,7 +44,17 @@ Reelevant supporte l'intégration SSO avec le fournisseur d'identité de votre o
 
 **Provisionnement des utilisateurs :**
 
-Reelevant ne supporte pas actuellement le provisionnement JIT ni SCIM. Les comptes utilisateur sont gérés via l'[API de gestion des utilisateurs](/fr/developer-docs/api-reference/introduction) de la plateforme ou via l'interface. Lorsque le SSO est activé, les utilisateurs doivent avoir un compte existant dans Reelevant qui correspond à leur identité IdP pour s'authentifier.
+Trois options, combinables :
+
+| Option | Comment les comptes apparaissent | Départs |
+|--------|----------------------------------|---------|
+| **SCIM 2.0** | Votre IdP pousse les utilisateurs et les groupes vers Reelevant : création, mise à jour du profil, attribution du rôle et des Teams | Automatique : désactivation (sessions révoquées immédiatement) ou suppression définitive, à votre choix |
+| **JIT à la connexion SSO** | Le compte est créé à la première connexion SSO réussie, avec le rôle et les Teams par défaut de l'entreprise | Manuel |
+| **API ou interface** | Invitations envoyées depuis la plateforme ou l'[API de gestion des utilisateurs](/fr/developer-docs/api-reference/introduction) | Manuel |
+
+SCIM 2.0 (RFC 7643/7644) couvre `/Users` et `/Groups` avec un token bearer propre à l'entreprise, et fonctionne avec les connecteurs standard d'Okta et de Microsoft Entra ID. Les groupes de l'IdP correspondent aux Teams Reelevant, et les rôles peuvent être pilotés par un attribut de rôle SCIM ou par des associations groupe/rôle. Chaque requête de provisionnement est enregistrée dans le journal d'audit de la plateforme.
+
+Consultez la [référence développeur SCIM](/fr/developer-docs/api-reference/scim) pour le détail du protocole, ou le [guide de configuration](/fr/product-guide/account/scim-provisioning) pour les options.
 
 <Info>
 La configuration SSO est gérée au niveau de l'organisation. Contactez votre équipe de compte Reelevant ou support@reelevant.com pour activer et configurer le SSO pour votre organisation.
