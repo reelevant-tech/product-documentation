@@ -1,7 +1,7 @@
 ---
 title: "Architecture & Lifecycle"
 description: "System architecture, data flow, and request lifecycle of the Reelevant personalisation engine — from image request to individualised response."
-keywords: ["architecture", "request lifecycle", "environments", "sandbox", "QA tenant", "infrastructure"]
+keywords: ["architecture", "request lifecycle", "environments", "sandbox", "QA Team", "infrastructure"]
 ---
 
 ## Request Lifecycle
@@ -68,18 +68,19 @@ sequenceDiagram
 
 ## Environments
 
-Reelevant operates a **single production platform**. There is no customer-facing sandbox, development, or test environment.
+Reelevant operates a **single production platform**. There is no separate sandbox, development, or test environment for customers.
 
-Isolation is enforced by the authorisation model rather than by a separate deployment: a QA namespace is a dedicated tenant inside production, scoped by the same company and Team attributes that isolate every other tenant. See [Authentication & SSO](/why-reelevant/technical-evaluators/authentication) for the RBAC/ABAC model.
+Your organisation gets **one tenant**, and separation between environments happens inside it: you create dedicated Teams — QA, pre-production, or per-market — and the RBAC/ABAC model scopes every Workflow, Content, Datasource, user, and API token to the Team that owns it. See [Authentication & SSO](/why-reelevant/technical-evaluators/authentication) for the model and [Teams](/product-guide/account/teams) for the configuration.
 
 | Property | Behaviour |
 |----------|-----------|
-| QA / testing | A dedicated tenant (company) in production, isolated by the RBAC/ABAC scoping — same platform version, same performance, same APIs, so it is fully representative |
-| Separation from live traffic | Its own Workflows, Contents, Datasources, users, API tokens, and usage counters |
+| QA / pre-production | Dedicated Teams within your tenant, each with its own Workflows, Contents, Datasources, users, and API tokens |
+| Representativeness | The same platform version, infrastructure, performance, and APIs as your live Workflows — nothing is stubbed |
+| Isolation | Enforced by the RBAC/ABAC scoping: a token or user granted the QA Team cannot read or write resources of another Team |
+| Pre-release validation inside a Team | Workflow states (Draft / Live / Inactive), Real-Time Testing, and debug mode with a short-lived token |
 | Reelevant internal environments | Private, never exposed to customers, and fully disconnected from each other — separate physical servers, no shared data path |
-| Pre-release validation without a second tenant | Workflow states (Draft / Live / Inactive), Real-Time Testing, and debug mode with a short-lived token |
 
-API tokens are scoped to the tenant they were issued for, so a QA integration can never write to live Workflows or live Datasources.
+Because QA runs on the production platform, what you validate is exactly what your recipients get.
 
 ## Next Steps
 
