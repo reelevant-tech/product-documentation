@@ -1,6 +1,7 @@
 ---
 title: "Architecture et cycle de vie"
 description: "Architecture système, flux de données et cycle de vie des requêtes du moteur de personnalisation Reelevant — de la requête d'image à la réponse individualisée."
+keywords: ["architecture", "cycle de vie", "environnements", "sandbox", "Team de QA", "infrastructure"]
 ---
 
 ## Cycle de vie d'une requête
@@ -65,11 +66,30 @@ sequenceDiagram
 | Débit | 100 M+ rendus de Content personnalisé/mois par client |
 | Failover | Multi-région actif-actif |
 
+## Environnements
+
+Reelevant exploite une **plateforme de production unique**. Il n'existe pas d'environnement sandbox, de développement ou de test distinct pour les clients.
+
+Votre organisation dispose d'**un seul tenant**, et la séparation entre environnements se fait à l'intérieur : vous créez des Teams dédiées — QA, préproduction, ou par marché — et le modèle RBAC/ABAC cloisonne chaque Workflow, Content, Datasource, utilisateur et jeton d'API sur la Team qui le détient. Voir [Authentification et SSO](/fr/why-reelevant/technical-evaluators/authentication) pour le modèle et [Teams](/fr/product-guide/account/teams) pour la configuration.
+
+| Propriété | Comportement |
+|-----------|--------------|
+| QA / préproduction | Des Teams dédiées au sein de votre tenant, chacune avec ses propres Workflows, Contents, Datasources, utilisateurs et jetons d'API |
+| Représentativité | Même version de plateforme, même infrastructure, mêmes performances et mêmes API que vos Workflows en production — rien n'est simulé |
+| Isolation | Assurée par le cloisonnement RBAC/ABAC : un jeton ou un utilisateur rattaché à la Team de QA ne peut ni lire ni écrire les ressources d'une autre Team |
+| Validation avant publication au sein d'une Team | États des Workflows (Draft / Live / Inactive), Real-Time Testing, et mode debug avec un jeton à durée de vie courte |
+| Environnements internes Reelevant | Privés, jamais exposés aux clients, et totalement déconnectés les uns des autres — serveurs physiques distincts, aucun chemin de données partagé |
+
+La QA s'exécutant sur la plateforme de production, ce que vous validez correspond exactement à ce que reçoivent vos destinataires.
+
 ## Prochaines étapes
 
 <CardGroup cols={2}>
 <Card title="Ingestion de données" icon="database" href="/fr/why-reelevant/technical-evaluators/data-ingestion">
 Types de sources DataHub et modes d'ingestion.
+</Card>
+<Card title="Accès et export des données" icon="table" href="/fr/why-reelevant/technical-evaluators/data-access">
+Vues BigQuery, API analytics et alimentation de votre data platform.
 </Card>
 <Card title="Canaux d'intégration" icon="plug" href="/fr/why-reelevant/technical-evaluators/integrations">
 Patterns d'intégration email, web, mobile et JSON API.

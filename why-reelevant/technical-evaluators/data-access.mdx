@@ -1,0 +1,76 @@
+---
+title: "Data Access & Export"
+description: "How to access and export data produced by the platform — in-platform analysis, REST APIs, and BigQuery views granted to your own service account."
+keywords: ["data export", "BigQuery view", "authorized view", "reverse ETL", "data platform", "analytics API"]
+---
+
+## Overview
+
+Data produced by the platform — exposure and click events, executed Branches, attributed conversions, and the records held in your Datasources — is accessible in three complementary ways.
+
+| Method | Best for | Interface |
+|--------|----------|-----------|
+| **In-platform analysis** | Business users exploring performance and Incremental Value | Dashboards and Data Exploration |
+| **REST APIs** | Programmatic access from your own systems | OAuth 2.0 + JSON |
+| **BigQuery view** | Feeding your data platform at warehouse scale | SQL, queried from your own GCP project |
+
+## In-Platform Analysis
+
+Dashboards cover Performance, Conversions, Individualisation, [Uplift](/product-guide/analytics/dashboards/uplift), Audience, and Usage. [Data Exploration](/product-guide/analytics/data-exploration) builds ad-hoc queries over the same measures and dimensions — including executed Branch, individualisation, qualification tags, and execution return code — and queries can be saved and reused.
+
+Access is governed by the `Statistics` resource: `Access` to read, `Export` to extract. See [Permissions](/product-guide/account/permissions).
+
+## REST APIs
+
+Every platform capability is exposed over REST with OAuth 2.0 Bearer tokens, so any dataset visible in the UI can be pulled programmatically in JSON:
+
+- Analytics queries — same measures and dimensions as Data Exploration
+- Datasource records and Datagraph entities
+- Workflow, Content, and Datasource configuration
+- Users, Roles, Teams, and audit logs
+
+Workflow events are also exposed as a Datasource inside the DataHub, so they can be reused in Workflow logic as well as extracted.
+
+See the [API Reference](/developer-docs/api-reference/introduction).
+
+## BigQuery View
+
+For warehouse-scale access, Reelevant can expose a **BigQuery view** over your event data and grant it directly to a service account in your own GCP project. Your data team then queries Reelevant data from its own warehouse, with no export pipeline to build or operate on either side.
+
+| Property | Detail |
+|----------|--------|
+| Location | Reelevant-managed dataset, EU region |
+| Access | Granted to the GCP service accounts you nominate — read-only, view only, never the underlying tables |
+| Scope | Scoped to your company: one view per use case, with only the columns you need |
+| Content | Workflow events (exposures, clicks, executed Branch, Workflow and Content names), purchase and conversion data, and attributed touchpoints |
+| Change management | Views are version-controlled and reviewed like code, with dry-run validation before any change reaches production |
+| Compatibility | Treated as an external contract: changes are additive, and a view is never renamed or removed without prior coordination with you |
+
+Common uses include joining exposure data with your own customer or transaction tables, rebuilding Reelevant metrics in your BI tool, and auditing attributed revenue touchpoint by touchpoint with the same last-touch, linear, or decay credit as the analytics API.
+
+<Info>
+Views are defined per use case during the integration phase. Provide the service account that should read the view and the columns your models need, and Reelevant provisions it.
+</Info>
+
+## What Is Not Available
+
+There is no reverse-ETL connector pushing data from Reelevant into an arbitrary destination. The S3, GCS, BigQuery, Snowflake, Kafka, and SFTP connectors described in [Data Ingestion](/why-reelevant/technical-evaluators/data-ingestion) are inbound only.
+
+To feed a data platform, use the BigQuery view (Reelevant grants access, you schedule the reads) or pull from the REST APIs on your own schedule.
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Data Ingestion" icon="database" href="/why-reelevant/technical-evaluators/data-ingestion">
+Source types, ingestion modes, and Datasource categories.
+</Card>
+<Card title="API Reference" icon="book" href="/developer-docs/api-reference/introduction">
+Full REST API documentation and OpenAPI specifications.
+</Card>
+<Card title="Attribution" icon="chart-line" href="/advanced-guide/analytics/attribution">
+How conversions are credited to Workflow interactions.
+</Card>
+<Card title="Security & Compliance" icon="shield-check" href="/why-reelevant/technical-evaluators/security">
+Encryption, data residency, retention, and vendors.
+</Card>
+</CardGroup>

@@ -1,0 +1,76 @@
+---
+title: "Accès et export des données"
+description: "Comment accéder et exporter les données produites par la plateforme — analyse dans la plateforme, API REST, et vue BigQuery accordée à votre propre compte de service."
+keywords: ["export de données", "vue BigQuery", "vue autorisée", "reverse ETL", "data platform", "API analytics"]
+---
+
+## Vue d'ensemble
+
+Les données produites par la plateforme — événements d'exposition et de clic, Branches exécutées, conversions attribuées, et enregistrements contenus dans vos Datasources — sont accessibles de trois manières complémentaires.
+
+| Méthode | Usage principal | Interface |
+|---------|-----------------|-----------|
+| **Analyse dans la plateforme** | Équipes métier qui explorent la performance et l'Incremental Value | Dashboards et Data Exploration |
+| **API REST** | Accès programmatique depuis vos propres systèmes | OAuth 2.0 + JSON |
+| **Vue BigQuery** | Alimenter votre data platform à l'échelle de l'entrepôt | SQL, interrogé depuis votre propre projet GCP |
+
+## Analyse dans la plateforme
+
+Les dashboards couvrent Performance, Conversions, Individualisation, [Uplift](/fr/product-guide/analytics/dashboards/uplift), Audience et Usage. [Data Exploration](/fr/product-guide/analytics/data-exploration) permet de construire des requêtes libres sur les mêmes mesures et dimensions — dont la Branch exécutée, l'individualisation, les tags de qualification et le code de retour d'exécution — et les requêtes peuvent être sauvegardées puis réutilisées.
+
+L'accès est gouverné par la ressource `Statistics` : `Access` pour consulter, `Export` pour extraire. Voir [Permissions](/fr/product-guide/account/permissions).
+
+## API REST
+
+Toutes les capacités de la plateforme sont exposées en REST avec des jetons Bearer OAuth 2.0 : chaque jeu de données visible dans l'interface peut être récupéré programmatiquement en JSON.
+
+- Requêtes analytics — mêmes mesures et dimensions que Data Exploration
+- Enregistrements des Datasources et entités Datagraph
+- Configuration des Workflows, Contents et Datasources
+- Utilisateurs, rôles, Teams et journaux d'audit
+
+Les événements de Workflow sont également exposés comme Datasource dans le DataHub : ils sont donc réutilisables dans la logique des Workflows en plus d'être extractibles.
+
+Voir la [référence API](/fr/developer-docs/api-reference/introduction).
+
+## Vue BigQuery
+
+Pour un accès à l'échelle de l'entrepôt de données, Reelevant peut exposer une **vue BigQuery** sur vos données d'événements et l'accorder directement à un compte de service de votre propre projet GCP. Votre équipe data interroge alors les données Reelevant depuis son entrepôt, sans pipeline d'export à construire ni à exploiter de part et d'autre.
+
+| Propriété | Détail |
+|-----------|--------|
+| Localisation | Dataset géré par Reelevant, région UE |
+| Accès | Accordé aux comptes de service GCP que vous désignez — lecture seule, sur la vue uniquement, jamais sur les tables sous-jacentes |
+| Périmètre | Limité à votre société : une vue par cas d'usage, avec uniquement les colonnes nécessaires |
+| Contenu | Événements de Workflow (expositions, clics, Branch exécutée, noms de Workflow et de Content), données d'achat et de conversion, et points de contact attribués |
+| Gestion du changement | Les vues sont versionnées et revues comme du code, avec validation en dry-run avant toute mise en production |
+| Compatibilité | Traitées comme un contrat externe : les évolutions sont additives, et une vue n'est jamais renommée ni supprimée sans coordination préalable avec vous |
+
+Usages courants : jointure des données d'exposition avec vos propres tables clients ou transactions, reconstruction des métriques Reelevant dans votre outil de BI, et audit du chiffre d'affaires attribué point de contact par point de contact, avec le même crédit last-touch, linéaire ou decay que l'API analytics.
+
+<Info>
+Les vues sont définies par cas d'usage pendant la phase d'intégration. Communiquez le compte de service qui doit lire la vue et les colonnes attendues par vos modèles, et Reelevant la provisionne.
+</Info>
+
+## Ce qui n'est pas disponible
+
+Il n'existe pas de connecteur reverse-ETL poussant les données de Reelevant vers une destination arbitraire. Les connecteurs S3, GCS, BigQuery, Snowflake, Kafka et SFTP décrits dans [Ingestion de données](/fr/why-reelevant/technical-evaluators/data-ingestion) sont uniquement entrants.
+
+Pour alimenter une data platform, utilisez la vue BigQuery (Reelevant accorde l'accès, vous planifiez les lectures) ou interrogez les API REST au rythme que vous choisissez.
+
+## Prochaines étapes
+
+<CardGroup cols={2}>
+<Card title="Ingestion de données" icon="database" href="/fr/why-reelevant/technical-evaluators/data-ingestion">
+Types de sources, modes d'ingestion et catégories de Datasource.
+</Card>
+<Card title="Référence API" icon="book" href="/fr/developer-docs/api-reference/introduction">
+Documentation REST complète et spécifications OpenAPI.
+</Card>
+<Card title="Attribution" icon="chart-line" href="/fr/advanced-guide/analytics/attribution">
+Comment les conversions sont créditées aux interactions avec les Workflows.
+</Card>
+<Card title="Sécurité et conformité" icon="shield-check" href="/fr/why-reelevant/technical-evaluators/security">
+Chiffrement, résidence des données, rétention et fournisseurs.
+</Card>
+</CardGroup>

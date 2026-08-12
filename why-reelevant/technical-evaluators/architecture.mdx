@@ -1,6 +1,7 @@
 ---
 title: "Architecture & Lifecycle"
 description: "System architecture, data flow, and request lifecycle of the Reelevant personalisation engine — from image request to individualised response."
+keywords: ["architecture", "request lifecycle", "environments", "sandbox", "QA Team", "infrastructure"]
 ---
 
 ## Request Lifecycle
@@ -65,11 +66,30 @@ sequenceDiagram
 | Throughput | 100M+ personalised Content renders/month per client |
 | Failover | Multi-region active-active |
 
+## Environments
+
+Reelevant operates a **single production platform**. There is no separate sandbox, development, or test environment for customers.
+
+Your organisation gets **one tenant**, and separation between environments happens inside it: you create dedicated Teams — QA, pre-production, or per-market — and the RBAC/ABAC model scopes every Workflow, Content, Datasource, user, and API token to the Team that owns it. See [Authentication & SSO](/why-reelevant/technical-evaluators/authentication) for the model and [Teams](/product-guide/account/teams) for the configuration.
+
+| Property | Behaviour |
+|----------|-----------|
+| QA / pre-production | Dedicated Teams within your tenant, each with its own Workflows, Contents, Datasources, users, and API tokens |
+| Representativeness | The same platform version, infrastructure, performance, and APIs as your live Workflows — nothing is stubbed |
+| Isolation | Enforced by the RBAC/ABAC scoping: a token or user granted the QA Team cannot read or write resources of another Team |
+| Pre-release validation inside a Team | Workflow states (Draft / Live / Inactive), Real-Time Testing, and debug mode with a short-lived token |
+| Reelevant internal environments | Private, never exposed to customers, and fully disconnected from each other — separate physical servers, no shared data path |
+
+Because QA runs on the production platform, what you validate is exactly what your recipients get.
+
 ## Next Steps
 
 <CardGroup cols={2}>
 <Card title="Data Ingestion" icon="database" href="/why-reelevant/technical-evaluators/data-ingestion">
 DataHub source types and ingestion modes.
+</Card>
+<Card title="Data Access & Export" icon="table" href="/why-reelevant/technical-evaluators/data-access">
+BigQuery views, analytics API, and feeding your own data platform.
 </Card>
 <Card title="Integration Channels" icon="plug" href="/why-reelevant/technical-evaluators/integrations">
 Email, web, mobile, and JSON API patterns.
