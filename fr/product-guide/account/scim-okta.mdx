@@ -1,0 +1,155 @@
+---
+title: 'Provisionnement avec Okta'
+description: 'Connectez Okta à Reelevant pour synchroniser automatiquement les utilisateurs, les groupes et les départs'
+---
+
+Ce guide connecte Okta à Reelevant, afin qu'Okta crée, mette à jour et désactive les comptes Reelevant à votre place.
+
+Lisez d'abord [Provisionnement automatique des utilisateurs](/fr/product-guide/account/scim-provisioning) : cette page explique les réglages que vous choisissez ici.
+
+## Avant de commencer
+
+- Activez le provisionnement dans Reelevant, puis copiez l'adresse de base et générez une clé d'accès.
+- Vous devez être administrateur dans Okta.
+- Créez dans Reelevant les [rôles](/fr/product-guide/account/roles) que les utilisateurs Okta doivent recevoir.
+
+## Étape 1 — Créer l'application dans Okta
+
+<Steps>
+  <Step title="Ouvrir la liste des applications">
+    Dans la console d'administration Okta, allez dans **Applications** et cliquez sur **Create App Integration**.
+  </Step>
+  <Step title="Choisir le type d'intégration">
+    Choisissez **SWA** ou **SAML 2.0** selon la façon dont vos collaborateurs se connectent, puis nommez l'application, par exemple « Reelevant ».
+  </Step>
+  <Step title="Affecter les personnes">
+    Dans l'onglet **Assignments**, affectez les groupes ou les personnes qui doivent disposer d'un compte Reelevant.
+  </Step>
+</Steps>
+
+{/* TODO : capture d'écran de la création de l'application Okta — en attente de la validation dans un vrai tenant Okta */}
+
+<Info>
+  La connexion est gérée par l'authentification unique, et le provisionnement se configure séparément ci-dessous. C'est l'affectation dans Okta qui crée le compte Reelevant.
+</Info>
+
+## Étape 2 — Connecter le provisionnement
+
+<Steps>
+  <Step title="Ouvrir l'onglet Provisioning">
+    Ouvrez l'application, allez dans **Provisioning**, puis ouvrez les paramètres de l'intégration pour saisir les valeurs Reelevant.
+  </Step>
+  <Step title="Coller les valeurs Reelevant">
+    | Champ Okta | Ce qu'il faut coller |
+    |---|---|
+    | **Base URL** | L'adresse de base affichée dans les paramètres de provisionnement Reelevant. |
+    | **Unique identifier field for users** | `userName` |
+    | **Authentication Mode** | HTTP Header |
+    | **Authorization** | La clé d'accès générée dans Reelevant. |
+  </Step>
+  <Step title="Tester la connexion">
+    Lancez le test des identifiants. Okta vérifie ce que Reelevant prend en charge et confirme la connexion.
+
+    Si le test échoue, vérifiez que le provisionnement est activé dans Reelevant et que la clé d'accès n'a pas été révoquée.
+  </Step>
+  <Step title="Choisir les actions à activer">
+    Enregistrez, puis cliquez sur **Edit** en face de **Provisioning to App** et activez :
+
+    - **Create Users**
+    - **Update User Attributes**
+    - **Deactivate Users**
+  </Step>
+</Steps>
+
+{/* TODO : capture d'écran de la configuration du provisionnement Okta — en attente de la validation dans un vrai tenant Okta */}
+
+## Étape 3 — Associer les attributs
+
+Ouvrez **Provisioning → To App → Attribute Mappings**. Conservez ces associations et retirez les autres : les attributs supplémentaires sont ignorés.
+
+| Attribut Okta | Champ Reelevant | Remarques |
+|---|---|---|
+| `userName` | Adresse email | Obligatoire. Sert aussi à reconnaître un compte existant. |
+| `givenName` | Prénom | |
+| `familyName` | Nom | |
+| `title` | Fonction | |
+| `primaryPhone` | Téléphone | Seule la première valeur est conservée. |
+| `preferredLanguage` | Langue de l'interface | Seuls l'anglais et le français sont pris en charge. Toute autre valeur est ignorée. |
+| `active` | Statut du compte | Une désactivation dans Okta désactive le compte Reelevant. |
+| `roles` | [Rôle](/fr/product-guide/account/roles) | Utilisé uniquement si vous avez choisi **depuis l'attribut de rôle** dans Reelevant. La valeur doit correspondre à un nom de rôle Reelevant. |
+
+<Info>
+  L'adresse email et le nom d'utilisateur correspondent toujours : si Okta envoie les deux et qu'ils diffèrent, le nom d'utilisateur gagne.
+</Info>
+
+## Étape 4 — Pousser les groupes
+
+À faire uniquement si vous avez conservé la synchronisation des groupes dans Reelevant.
+
+<Steps>
+  <Step title="Ouvrir Push Groups">
+    Dans l'application, ouvrez l'onglet **Push Groups**.
+  </Step>
+  <Step title="Ajouter les groupes à pousser">
+    Cliquez sur **Push Groups**, puis choisissez les groupes Okta qui doivent devenir des [Teams](/fr/product-guide/account/teams) Reelevant.
+  </Step>
+  <Step title="Enregistrer et laisser Okta pousser">
+    Chaque groupe poussé crée un Team du même nom, et ses membres rejoignent ce Team.
+  </Step>
+</Steps>
+
+{/* TODO : capture d'écran de l'onglet Push Groups d'Okta — en attente de la validation dans un vrai tenant Okta */}
+
+<Tip>
+  Si vous avez choisi **depuis les groupes** pour décider des rôles, utilisez ici exactement les noms de groupes listés dans l'association de rôles Reelevant. Les noms sont comparés sans tenir compte des majuscules.
+</Tip>
+
+## Étape 5 — Tester avec une personne
+
+<Steps>
+  <Step title="Affecter une personne de test">
+    Affectez une seule personne de test à l'application dans Okta.
+  </Step>
+  <Step title="Vérifier le compte dans Reelevant">
+    Ouvrez la page [Utilisateurs](/fr/product-guide/account/users). Le compte apparaît avec le rôle et les Teams attendus.
+
+    La personne n'a pas de mot de passe : elle se connecte par l'authentification unique. Aucun email d'invitation n'est envoyé.
+  </Step>
+  <Step title="Désactiver la personne de test">
+    Désactivez-la dans Okta, ou retirez son affectation à l'application.
+  </Step>
+  <Step title="Vérifier le résultat">
+    Dans Reelevant, le compte est désormais désactivé ou supprimé, selon le choix fait dans les paramètres de provisionnement.
+
+    Les sessions ouvertes sont fermées immédiatement : la personne perd l'accès aussitôt.
+  </Step>
+  <Step title="Consulter le journal d'audit">
+    Le [journal d'audit](/fr/product-guide/account/audit-log) montre chacun de ces événements, avec l'heure exacte et le résultat.
+  </Step>
+</Steps>
+
+## Si cela ne fonctionne pas
+
+| Symptôme | Ce qu'il faut vérifier |
+|---|---|
+| Okta n'arrive pas à se connecter | Le provisionnement est désactivé dans Reelevant, ou la clé d'accès a été révoquée ou mal recopiée. |
+| Une personne est créée sans le rôle attendu | Le nom du rôle ne correspond pas, ou le groupe manque dans votre association de rôles. Consultez le [journal d'audit](/fr/product-guide/account/audit-log). |
+| Les groupes n'apparaissent pas comme des Teams | La synchronisation des groupes est désactivée dans Reelevant, ou le groupe n'a pas été poussé dans Okta. |
+| Une désactivation est refusée | Reelevant ne désactive jamais le dernier administrateur. Donnez d'abord le rôle à quelqu'un d'autre. |
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Paramètres de provisionnement" icon="gear" href="/fr/product-guide/account/scim-provisioning">
+    Revoyez les rôles, les Teams et le comportement lors d'un départ.
+  </Card>
+  <Card title="Journal d'audit" icon="list-check" href="/fr/product-guide/account/audit-log">
+    Vérifiez ce qui a été créé, modifié ou désactivé.
+  </Card>
+  <Card title="Microsoft Entra ID" icon="microsoft" href="/fr/product-guide/account/scim-entra-id">
+    La même configuration avec Microsoft Entra ID.
+  </Card>
+  <Card title="Utilisateurs" icon="users" href="/fr/product-guide/account/users">
+    Consultez les personnes provisionnées et leur statut.
+  </Card>
+</CardGroup>

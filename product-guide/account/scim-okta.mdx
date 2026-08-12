@@ -1,0 +1,155 @@
+---
+title: 'Provisioning With Okta'
+description: 'Connect Okta to Reelevant so users, groups, and departures are synchronised automatically'
+---
+
+This guide connects Okta to Reelevant, so Okta creates, updates, and deactivates Reelevant accounts for you.
+
+Read [Automatic User Provisioning](/product-guide/account/scim-provisioning) first — it explains the settings you choose here.
+
+## Before You Begin
+
+- Turn provisioning on in Reelevant, then copy the base address and generate an access key.
+- You need administrator rights in Okta.
+- Create in Reelevant the [roles](/product-guide/account/roles) you want Okta users to receive.
+
+## Step 1 — Create The Application In Okta
+
+<Steps>
+  <Step title="Open the applications list">
+    In the Okta admin console, go to **Applications** and click **Create App Integration**.
+  </Step>
+  <Step title="Pick the integration type">
+    Choose **SWA** or **SAML 2.0** depending on how your people log in, then give the application a name such as "Reelevant".
+  </Step>
+  <Step title="Assign people">
+    On the **Assignments** tab, assign the groups or the individuals who should have a Reelevant account.
+  </Step>
+</Steps>
+
+{/* TODO: screenshot of the Okta application creation — pending validation in a real Okta tenant */}
+
+<Info>
+  Logging in is handled by single sign-on, and provisioning is configured separately below. Assigning someone in Okta is what creates their Reelevant account.
+</Info>
+
+## Step 2 — Connect Provisioning
+
+<Steps>
+  <Step title="Open the Provisioning tab">
+    Open the application, go to **Provisioning**, then open the integration settings so you can enter the Reelevant values.
+  </Step>
+  <Step title="Paste the Reelevant values">
+    | Okta field | What to paste |
+    |---|---|
+    | **Base URL** | The base address shown in the Reelevant provisioning settings. |
+    | **Unique identifier field for users** | `userName` |
+    | **Authentication Mode** | HTTP Header |
+    | **Authorization** | The access key you generated in Reelevant. |
+  </Step>
+  <Step title="Test the connection">
+    Run the credentials test. Okta checks what Reelevant supports and confirms the connection.
+
+    If the test fails, check that provisioning is switched on in Reelevant and that the access key has not been revoked.
+  </Step>
+  <Step title="Choose the actions to enable">
+    Save, then click **Edit** next to **Provisioning to App** and enable:
+
+    - **Create Users**
+    - **Update User Attributes**
+    - **Deactivate Users**
+  </Step>
+</Steps>
+
+{/* TODO: screenshot of the Okta provisioning configuration — pending validation in a real Okta tenant */}
+
+## Step 3 — Map The Attributes
+
+Open **Provisioning → To App → Attribute Mappings**. Keep these mappings, and remove anything else — extra attributes are ignored.
+
+| Okta attribute | Reelevant field | Notes |
+|---|---|---|
+| `userName` | Email address | Required. Also used to recognise an existing account. |
+| `givenName` | First name | |
+| `familyName` | Last name | |
+| `title` | Job title | |
+| `primaryPhone` | Phone | Only the first value is kept. |
+| `preferredLanguage` | Interface language | Only English and French are supported. Anything else is ignored. |
+| `active` | Account status | Deactivating in Okta deactivates the Reelevant account. |
+| `roles` | [Role](/product-guide/account/roles) | Only used if you chose **from the role attribute** in Reelevant. The value must match a Reelevant role name. |
+
+<Info>
+  Email addresses and user names always match: if Okta sends both and they differ, the user name wins.
+</Info>
+
+## Step 4 — Push Groups
+
+Only do this if you kept group synchronisation on in Reelevant.
+
+<Steps>
+  <Step title="Open Push Groups">
+    In the application, open the **Push Groups** tab.
+  </Step>
+  <Step title="Add the groups to push">
+    Click **Push Groups**, then pick the Okta groups that should become Reelevant [Teams](/product-guide/account/teams).
+  </Step>
+  <Step title="Save and let Okta push">
+    Each pushed group creates a Team of the same name, and its members join that Team.
+  </Step>
+</Steps>
+
+{/* TODO: screenshot of the Okta Push Groups tab — pending validation in a real Okta tenant */}
+
+<Tip>
+  If you chose **from groups** to decide roles, use here exactly the group names you listed in the Reelevant role mapping. Names are compared ignoring upper and lower case.
+</Tip>
+
+## Step 5 — Test With One Person
+
+<Steps>
+  <Step title="Assign a test person">
+    Assign one test person to the application in Okta.
+  </Step>
+  <Step title="Check the account in Reelevant">
+    Open the [Users](/product-guide/account/users) page. The account appears with the expected role and Teams.
+
+    The person has no password: they log in through single sign-on. No invitation email is sent.
+  </Step>
+  <Step title="Deactivate the test person">
+    Deactivate them in Okta, or remove their assignment to the application.
+  </Step>
+  <Step title="Check the result">
+    In Reelevant, the account is now deactivated or deleted, following the choice you made in the provisioning settings.
+
+    Open sessions are closed immediately, so the person loses access straight away.
+  </Step>
+  <Step title="Read the audit log">
+    The [audit log](/product-guide/account/audit-log) shows each of these events, with the exact time and outcome.
+  </Step>
+</Steps>
+
+## If Something Does Not Work
+
+| Symptom | What to check |
+|---|---|
+| Okta cannot connect | Provisioning is off in Reelevant, or the access key was revoked or mistyped. |
+| A person is created without the expected role | The role name does not match, or the group is missing from your role mapping. Check the [audit log](/product-guide/account/audit-log). |
+| Groups do not appear as Teams | Group synchronisation is off in Reelevant, or the group was not pushed in Okta. |
+| A deactivation is refused | Reelevant never deactivates the last remaining administrator. Give the role to somebody else first. |
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Provisioning settings" icon="gear" href="/product-guide/account/scim-provisioning">
+    Review roles, Teams, and what happens when someone leaves.
+  </Card>
+  <Card title="Audit log" icon="list-check" href="/product-guide/account/audit-log">
+    Check what was created, changed, or deactivated.
+  </Card>
+  <Card title="Microsoft Entra ID" icon="microsoft" href="/product-guide/account/scim-entra-id">
+    The same setup with Microsoft Entra ID.
+  </Card>
+  <Card title="Users" icon="users" href="/product-guide/account/users">
+    See provisioned people and their status.
+  </Card>
+</CardGroup>

@@ -1,0 +1,129 @@
+---
+title: 'Provisionnement automatique des utilisateurs (SCIM)'
+description: "Laissez votre fournisseur d'identité créer, mettre à jour et supprimer les utilisateurs Reelevant automatiquement"
+---
+
+Le provisionnement automatique permet à votre fournisseur d'identité de gérer les comptes Reelevant à votre place. Votre fournisseur d'identité est l'outil avec lequel votre entreprise gère les comptes de ses collaborateurs, comme Okta ou Microsoft Entra ID.
+
+{/* TODO : capture d'écran des paramètres de provisionnement — en attente de l'interface d'administration */}
+
+## Ce que cela vous apporte
+
+Une fois le provisionnement activé, votre fournisseur d'identité maintient Reelevant aligné sur votre annuaire :
+
+| Événement chez votre fournisseur d'identité | Ce qui se passe dans Reelevant |
+|---|---|
+| Une personne reçoit l'application Reelevant | Un compte est créé, avec un [rôle](/fr/product-guide/account/roles) et au moins un [Team](/fr/product-guide/account/teams). |
+| Son nom, sa fonction, son téléphone ou sa langue changent | Le profil Reelevant est mis à jour. |
+| Elle entre dans un groupe ou en sort | Son appartenance aux [Teams](/fr/product-guide/account/teams) suit, et son rôle aussi si vous l'avez demandé. |
+| Elle est désactivée ou quitte l'entreprise | Son compte Reelevant est désactivé ou supprimé, selon votre choix ci-dessous. |
+
+Plus personne n'a besoin d'être invité à la main, et personne ne conserve d'accès après son départ.
+
+<Info>
+  Le provisionnement crée et maintient les comptes. Il ne remplace pas l'authentification unique, qui est ce qui permet de se connecter. Les deux se configurent séparément, et le provisionnement fonctionne avec ou sans authentification unique.
+</Info>
+
+## Avant de commencer
+
+- Vous devez pouvoir modifier les paramètres de l'entreprise dans Reelevant.
+- Vous devez être administrateur chez votre fournisseur d'identité.
+- Décidez quels groupes doivent devenir des [Teams](/fr/product-guide/account/teams) Reelevant.
+- Créez les [rôles](/fr/product-guide/account/roles) que les personnes provisionnées doivent recevoir.
+
+## Activer le provisionnement
+
+<Steps>
+  <Step title="Ouvrir les paramètres de provisionnement">
+    Rendez-vous dans la section d'administration du compte et ouvrez les paramètres de provisionnement.
+
+    {/* TODO : capture d'écran des paramètres de provisionnement — en attente de l'interface d'administration */}
+  </Step>
+  <Step title="Activer le provisionnement">
+    Activez le provisionnement. Sans cela, votre fournisseur d'identité est refusé, même avec une clé d'accès valide.
+  </Step>
+  <Step title="Copier l'adresse de base">
+    La page affiche une adresse de base à coller chez votre fournisseur d'identité. Elle est identique pour toutes les entreprises.
+  </Step>
+  <Step title="Générer une clé d'accès">
+    Cliquez sur le bouton de génération d'une clé d'accès. La valeur est affichée **une seule fois** : copiez-la immédiatement.
+
+    <Warning>
+      La clé d'accès ne peut pas être réaffichée. Si vous la perdez, révoquez-la et générez-en une nouvelle.
+    </Warning>
+  </Step>
+  <Step title="Coller les deux valeurs chez votre fournisseur d'identité">
+    Suivez le guide de votre outil : [Okta](/fr/product-guide/account/scim-okta) ou [Microsoft Entra ID](/fr/product-guide/account/scim-entra-id).
+  </Step>
+</Steps>
+
+Vous pouvez conserver **deux** clés d'accès actives en même temps. Cela vous permet de transmettre une nouvelle clé avant de révoquer l'ancienne, sans interruption.
+
+<Tip>
+  Donnez un libellé à chaque clé, par exemple « Okta production ». La page indique la dernière utilisation de chaque clé, ce qui permet de repérer celle que vous pouvez retirer.
+</Tip>
+
+## Choisir comment le rôle est décidé
+
+Chaque utilisateur Reelevant possède exactement un [rôle](/fr/product-guide/account/roles). Vous choisissez d'où vient ce rôle :
+
+| Réglage | Ce qui décide du rôle |
+|---|---|
+| **Non géré** (par défaut) | Reelevant décide. Les personnes provisionnées reçoivent le rôle par défaut de l'entreprise, et vous le modifiez ensuite. |
+| **Depuis l'attribut de rôle** | Votre fournisseur d'identité envoie un nom de rôle. Il doit correspondre exactement à un nom de rôle Reelevant, majuscules et minuscules exceptées. |
+| **Depuis les groupes** | Vous construisez une liste ordonnée de paires : un nom de groupe de votre fournisseur d'identité, et le rôle Reelevant qu'il accorde. Le premier groupe qui correspond gagne. |
+
+Si la valeur reçue ne correspond à rien, Reelevant applique le rôle par défaut que vous avez choisi et enregistre l'écart dans le [journal d'audit](/fr/product-guide/account/audit-log). Une valeur erronée ne bloque jamais toute la synchronisation.
+
+<Warning>
+  Avec **depuis les groupes**, une personne retirée d'un groupe associé revient au rôle par défaut. C'est volontaire : perdre le groupe doit retirer les droits supplémentaires.
+</Warning>
+
+## Associer les groupes aux Teams
+
+La synchronisation des groupes est active par défaut. Chaque groupe envoyé par votre fournisseur d'identité devient un [Team](/fr/product-guide/account/teams) Reelevant, et ses membres deviennent membres de ce Team.
+
+- Les Teams créés ainsi sont plats, sans parent ni enfant.
+- Vous pouvez ensuite les organiser en hiérarchie dans Reelevant. Le provisionnement ne défait jamais ce travail.
+- Un Team qui appartient à une hiérarchie ne peut pas être supprimé par votre fournisseur d'identité. Retirez d'abord les liens parent et enfant.
+- Chaque personne conserve toujours au moins un Team. Si le dernier lui est retiré, Reelevant la replace dans les Teams par défaut de l'entreprise.
+
+Si vous préférez gérer les Teams entièrement dans Reelevant, désactivez la synchronisation des groupes. Votre fournisseur d'identité ne gère alors que les personnes.
+
+## Choisir ce qui se passe lors d'un départ
+
+Deux comportements sont disponibles. C'est un réglage Reelevant : votre fournisseur d'identité ne peut pas choisir personne par personne.
+
+| Réglage | Ce qui se passe | Réversible |
+|---|---|---|
+| **Désactiver** (par défaut) | Le compte est conservé mais désactivé. La personne ne peut plus se connecter, ses sessions ouvertes sont fermées et ses liens vers les applications de messagerie sont supprimés. | Oui — la réactivation restitue le même rôle et les mêmes Teams. |
+| **Supprimer définitivement** | Le compte, ses sessions, ses liens vers les applications de messagerie et toute invitation en attente sont effacés. | Non |
+
+<Warning>
+  **Supprimer définitivement** est irréversible. Si la personne revient, un compte entièrement nouveau est créé, et toute référence antérieure à elle apparaît comme inconnue. Les statistiques et les données d'usage enregistrées ailleurs dans Reelevant ne sont pas effacées. Ne choisissez cette option que si votre entreprise a une obligation contractuelle d'effacement.
+</Warning>
+
+Reelevant refuse toujours de désactiver ou de supprimer le dernier administrateur, afin qu'une mauvaise affectation de groupe ne puisse pas verrouiller votre entreprise. Le refus est enregistré dans le [journal d'audit](/fr/product-guide/account/audit-log).
+
+## Vérifier que cela fonctionne
+
+- Les paramètres de provisionnement indiquent la date de la dernière synchronisation réussie.
+- Le [journal d'audit](/fr/product-guide/account/audit-log) liste chaque compte créé, mis à jour, désactivé ou supprimé, ainsi que chaque valeur qui n'a pas pu être associée.
+- La page [Utilisateurs](/fr/product-guide/account/users) affiche les personnes désactivées, ce qui permet de confirmer un départ.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Configurer Okta" icon="key" href="/fr/product-guide/account/scim-okta">
+    Configuration pas à pas du provisionnement dans Okta.
+  </Card>
+  <Card title="Configurer Microsoft Entra ID" icon="microsoft" href="/fr/product-guide/account/scim-entra-id">
+    Configuration pas à pas du provisionnement dans Microsoft Entra ID.
+  </Card>
+  <Card title="Journal d'audit" icon="list-check" href="/fr/product-guide/account/audit-log">
+    Consultez ce qui est arrivé aux comptes, et quand.
+  </Card>
+  <Card title="Teams" icon="sitemap" href="/fr/product-guide/account/teams">
+    Comprenez comment les Teams contrôlent l'accès aux ressources.
+  </Card>
+</CardGroup>

@@ -1,0 +1,77 @@
+---
+title: "Journal d'audit"
+description: "Consultez le relevé des connexions, de l'authentification unique, du provisionnement et des modifications de comptes de votre entreprise"
+---
+
+Le journal d'audit est un relevé en lecture seule de tout ce qui touche aux identités de votre entreprise. Il couvre les connexions, l'authentification unique, le provisionnement automatique et les modifications des utilisateurs, des rôles et des [Teams](/fr/product-guide/account/teams).
+
+{/* TODO : capture d'écran du journal d'audit — en attente de l'interface d'administration */}
+
+## À quoi cela vous sert
+
+- Répondre à « pourquoi cette personne n'a-t-elle pas été créée ? » après un provisionnement.
+- Savoir qui a désactivé un compte, et quand.
+- Vérifier qu'un départ a bien retiré l'accès immédiatement.
+- Montrer à un auditeur comment les accès sont accordés et retirés.
+
+## Ce qui est enregistré
+
+| Catégorie | Exemples d'événements enregistrés |
+|---|---|
+| **Authentification** | Connexions réussies et échouées, avec le motif de l'échec : mot de passe erroné, compte verrouillé ou compte désactivé. Déconnexions, réinitialisations de mot de passe, activation ou désactivation de l'authentification à deux facteurs. |
+| **Authentification unique** | Tentatives de connexion acceptées ou refusées, avec le motif. Comptes créés à la première connexion. Refus liés à l'authentification unique obligatoire. |
+| **Provisionnement** | Chaque demande de votre fournisseur d'identité : comptes créés, repris, mis à jour, désactivés, réactivés ou supprimés. Valeurs qui n'ont pas pu être associées. Refus, comme la désactivation du dernier administrateur. Clés d'accès générées ou révoquées, et modifications des paramètres de provisionnement. |
+| **Utilisateurs et permissions** | Utilisateurs créés, mis à jour, désactivés, réactivés et supprimés. Changements de rôle. Changements d'appartenance aux Teams. Invitations créées et utilisées. |
+| **Accès des applications** | Autorisations accordées ou refusées aux applications connectées, et accès renouvelés pour elles. |
+
+Chaque entrée enregistre l'heure, l'auteur et ce qui est concerné. L'auteur est une personne, votre fournisseur d'identité ou Reelevant. Chaque entrée indique aussi le résultat, avec une référence d'erreur en cas d'échec.
+
+<Info>
+  Les mots de passe, les clés d'accès et les messages d'authentification unique ne sont jamais enregistrés. Les valeurs sensibles sont remplacées avant l'enregistrement d'une entrée.
+</Info>
+
+## Qui peut le consulter
+
+Toute personne qui peut déjà administrer les identités de votre entreprise peut lire le journal d'audit. Concrètement, il s'agit de toute personne dont le [rôle](/fr/product-guide/account/roles) permet de modifier les utilisateurs, les rôles ou les Teams.
+
+Il n'y a rien à activer et aucune permission supplémentaire à accorder. Si vous pouvez inviter et retirer des personnes, vous pouvez lire le journal.
+
+## Filtrer les entrées
+
+Vous pouvez restreindre la liste par :
+
+| Filtre | Utilité |
+|---|---|
+| **Catégorie** | N'afficher que les événements d'authentification, d'authentification unique, de provisionnement, d'utilisateurs, de permissions ou d'applications. |
+| **Action** | N'afficher qu'un événement précis, par exemple une désactivation de compte. |
+| **Auteur** | Afficher ce qu'une personne ou votre fournisseur d'identité a fait. |
+| **Élément concerné** | Afficher tout ce qui est arrivé à un utilisateur, un rôle ou un Team. |
+| **Période** | Afficher un intervalle, par exemple le jour d'un départ. |
+
+## Bon à savoir
+
+- Le journal est en **lecture seule**. Personne ne peut modifier ou supprimer une entrée, y compris les administrateurs.
+- Les entrées ne concernent que votre propre entreprise.
+- Les entrées sont conservées pendant la durée de rétention de votre entreprise, 90 jours par défaut. Les plus anciennes sont supprimées automatiquement.
+- Exportez les entrées nécessaires avant leur expiration si votre entreprise doit les conserver plus longtemps.
+
+<Warning>
+  Les entrées ne peuvent pas être récupérées une fois la durée de rétention écoulée. Prévoyez vos exports si vous avez une obligation de conservation à long terme.
+</Warning>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Provisionnement automatique" icon="rotate" href="/fr/product-guide/account/scim-provisioning">
+    Comprenez les événements de provisionnement visibles dans le journal.
+  </Card>
+  <Card title="Utilisateurs" icon="users" href="/fr/product-guide/account/users">
+    Invitez, désactivez et gérez les personnes.
+  </Card>
+  <Card title="Rôles" icon="shield" href="/fr/product-guide/account/roles">
+    Contrôlez qui peut administrer les identités, et donc lire ce journal.
+  </Card>
+  <Card title="Teams" icon="sitemap" href="/fr/product-guide/account/teams">
+    Organisez les personnes en Teams pour le contrôle des accès.
+  </Card>
+</CardGroup>

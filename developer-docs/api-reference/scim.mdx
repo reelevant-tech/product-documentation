@@ -1,0 +1,247 @@
+---
+title: 'SCIM 2.0 provisioning'
+description: 'Inbound SCIM 2.0 endpoints for user and group provisioning: resources, filters, error envelope and limits'
+---
+
+Reelevant exposes an inbound SCIM 2.0 service (RFC 7643/7644) so an identity provider can create, update, deactivate and delete users, and keep Teams (Resource Groups) in sync with its own groups.
+
+```typescript
+const SCIM_BASE_URL = 'https://api.reelevant.com/v2/scim/v2'
+
+const listUserByUserName = async (userName: string): Promise<unknown> => {
+  const url = new URL(`${SCIM_BASE_URL}/Users`)
+  url.searchParams.set('filter', `userName eq "${userName}"`)
+  url.searchParams.set('startIndex', '1')
+  url.searchParams.set('count', '100')
+
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${process.env.REELEVANT_SCIM_TOKEN ?? ''}`,
+      'Accept': 'application/scim+json',
+    },
+  })
+
+  const body: unknown = await response.json()
+  if (response.ok === false) {
+    const error = body as { status: string; scimType?: string; detail: string }
+    throw new Error(`SCIM ${error.status} ${error.scimType ?? ''}: ${error.detail}`)
+  }
+  return body
+}
+```
+
+## Base URL and authentication
+
+| Item | Value |
+|---|---|
+| Base URL | `https://api.reelevant.com/v2/scim/v2` |
+| Authentication | `Authorization: Bearer <scim token>` |
+| Content type | `application/scim+json` (`application/json` is also parsed) |
+
+SCIM tokens are per company, long-lived, prefixed with `scim_`, stored hashed and returned once at creation. Two tokens can be active at the same time so the credential can be rotated without downtime. The company is resolved from the token, so an identity provider can never address another tenant.
+
+A request is rejected with `401` when the token is missing, unknown or revoked, and when SCIM is disabled on the company. User access tokens and the internal service headers are not accepted on these routes.
+
+<Info>
+SCIM responses are not wrapped in the JSend envelope used by the rest of the API, and these routes are absent from the OpenAPI specification: SCIM mandates its own body shapes and tolerates unknown attributes sent by connectors.
+</Info>
+
+## Resources and operations
+
+| Method and path | Behaviour |
+|---|---|
+| `GET /Users` | Paginated list, optional `filter`. |
+| `POST /Users` | Create, or adopt an existing account of the same company. Returns `201`. |
+| `GET /Users/{id}` | Single user. |
+| `PUT /Users/{id}` | Full replace: mapped attributes absent from the body are cleared. |
+| `PATCH /Users/{id}` | `add`, `replace`, `remove` on the mapped attributes. |
+| `DELETE /Users/{id}` | Deactivates or erases, per company configuration. Returns `204`. |
+| `GET /Groups` | Paginated list, optional `filter`. |
+| `POST /Groups` | Creates a flat Team (Resource Group). Returns `201`. |
+| `GET /Groups/{id}` | Single group. |
+| `PUT /Groups/{id}` | Replaces `displayName`, `externalId` and the whole member list. |
+| `PATCH /Groups/{id}` | `add`, `replace`, `remove` on `members`, `displayName`, `externalId`. |
+| `DELETE /Groups/{id}` | Removes the Team and its memberships. Returns `204`. |
+| `GET /ServiceProviderConfig` | Advertised capabilities. |
+| `GET /ResourceTypes`, `GET /ResourceTypes/{name}` | `User` and `Group` resource types. |
+| `GET /Schemas`, `GET /Schemas/{id}` | Core `User` and `Group` schemas. |
+
+Any other path — including `/Bulk` and `/Me` — returns `404` with a SCIM error body. Service accounts are invisible to SCIM: they are never listed, updated or deactivated.
+
+## User attribute mapping
+
+| SCIM attribute | Reelevant field | Notes |
+|---|---|---|
+| `id` | user id | Opaque, immutable, 24-character hexadecimal. |
+| `userName` | email | Lowercased. Immutable: a `PUT` changing it returns `400` `mutability`. |
+| `externalId` | provisioning external id | Stored and filterable. |
+| `emails[].value` | email | Fallback when `userName` is absent; `userName` wins on disagreement. |
+| `active` | account status (inverted) | `false` deactivates, `true` reactivates in place. |
+| `name.givenName` / `name.familyName` | first name / last name | `displayName` and `name.formatted` are derived, read-only. |
+| `title` | job title | |
+| `phoneNumbers[0].value` | phone | |
+| `preferredLanguage` | interface language | `fr`, `en`, and tags such as `fr-FR` are accepted; anything else is ignored. Defaults to `fr` on creation. |
+| `roles[0].value` | role | Only read when `roleSource` is `scim-roles`; matched against role names, case-insensitive. |
+| `groups` | Teams (Resource Groups) | Read-only on `/Users`: membership is driven by `/Groups`. |
+| `meta.created` / `meta.lastModified` | timestamps | |
+
+Users created through SCIM get a random, unusable password and authenticate through SSO. They never receive an invitation email, and a pending invitation for the same address is marked as used.
+
+## Lifecycle semantics
+
+| Operation | Effect |
+|---|---|
+| `active: false`, or `DELETE` in `soft` mode | The user is disabled, every access and refresh token is revoked, and the linked accounts (Slack, Teams) are deleted. The document, role and Teams are kept. |
+| `active: true` on a disabled user | Reactivated in place with the same id, role and Teams. Linked accounts are not restored. |
+| `DELETE` in `hard` mode | The user, its tokens, its linked accounts and its pending invitations are erased. Irreversible, and not cascaded to other services: usage and statistics data are untouched. |
+| `POST /Users` on an existing address of the same company | Adoption: the account keeps its id, and the mapped attributes plus `externalId` are updated. |
+| `POST /Users` on an address held by another company | `409` `uniqueness`. Email addresses are globally unique and accounts are never moved between companies. |
+| Deactivating or deleting the last administrator | `400` `mutability`, with an audit entry. |
+
+The deprovisioning mode is a Reelevant-side setting (`soft` by default), not something the request can choose.
+
+## Roles and groups
+
+`/Groups` maps one-to-one to Teams (Resource Groups). Groups created through SCIM are flat: hierarchy remains an administrator decision made through the REST API, and SCIM never rewires it. `DELETE /Groups/{id}` on a Team that has parents or children returns `400` `mutability`.
+
+A user always keeps at least one Team: removing the last one falls back to the company default Teams. When group synchronisation is disabled on the company, every `/Groups` route returns `501`.
+
+A user has exactly one role, so the role cannot be a group membership. The source is a per-company setting:
+
+| `roleSource` | Resolution |
+|---|---|
+| `none` (default) | The role is never set from SCIM; provisioned users get the company default role. |
+| `scim-roles` | `roles[0].value` matched against the role names of the company, case-insensitive. |
+| `groups` | First match in the ordered `group name → role` mapping, evaluated against the Teams of the user. |
+
+An unresolvable value never fails the request: the configured default role is applied and an audit entry records the miss. Under `groups`, losing the mapped group demotes the user to the default role.
+
+## Pagination and filters
+
+| Parameter | Type | Default | Notes |
+|---|---|---|---|
+| `startIndex` | integer | `1` | 1-based, RFC 7644 §3.4.2.4. Values below `1` are read as `1`. |
+| `count` | integer | `100` | Capped at `200`. `count=0` returns `totalResults` only. |
+| `filter` | string | — | Single `attribute eq "value"` expression. |
+
+Filterable attributes are `userName` and `externalId` on `/Users`, `displayName` and `externalId` on `/Groups`. Any other attribute, or any grammar beyond `eq` (`and`, `or`, `co`, `sw`), returns `400` `invalidFilter` rather than silently listing the whole tenant.
+
+Lists use the SCIM `ListResponse` envelope:
+
+```json
+{
+  "schemas": ["urn:ietf:params:scim:api:messages:2.0:ListResponse"],
+  "totalResults": 1,
+  "startIndex": 1,
+  "itemsPerPage": 1,
+  "Resources": [
+    {
+      "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
+      "id": "6626ef1a2d1f4c0012ab34cd",
+      "externalId": "00u1a2b3c4d5e6f7g8h9",
+      "userName": "alice@corp.com",
+      "active": true,
+      "name": { "givenName": "Alice", "familyName": "Martin", "formatted": "Alice Martin" },
+      "emails": [{ "value": "alice@corp.com", "type": "work", "primary": true }],
+      "roles": [{ "value": "Marketing Editor", "primary": true }],
+      "groups": [{ "value": "6626ef1a2d1f4c0012ab34ce", "display": "Marketing", "type": "direct" }],
+      "meta": {
+        "resourceType": "User",
+        "created": "2026-08-11T09:12:00.000Z",
+        "lastModified": "2026-08-12T07:31:00.000Z",
+        "location": "https://api.reelevant.com/v2/scim/v2/Users/6626ef1a2d1f4c0012ab34cd"
+      }
+    }
+  ]
+}
+```
+
+## PATCH operations
+
+`Operations` and `operations` are both accepted, with or without the `PatchOp` schema. Paths are case-insensitive, `value` may be an object or an array, and booleans may arrive as strings — Entra ID and Okta send all of these variants.
+
+```typescript
+const deactivate = async (userId: string): Promise<void> => {
+  const response = await fetch(`https://api.reelevant.com/v2/scim/v2/Users/${userId}`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${process.env.REELEVANT_SCIM_TOKEN ?? ''}`,
+      'Content-Type': 'application/scim+json',
+    },
+    body: JSON.stringify({
+      schemas: ['urn:ietf:params:scim:api:messages:2.0:PatchOp'],
+      Operations: [{ op: 'replace', path: 'active', value: false }],
+    }),
+  })
+
+  if (response.status !== 200) {
+    const error = (await response.json()) as { status: string; scimType?: string; detail: string }
+    throw new Error(`Deactivation refused: ${error.detail} (${error.scimType ?? 'no scimType'})`)
+  }
+}
+```
+
+On `/Groups`, member operations accept both a list of `members` and the value filter form `members[value eq "<userId>"]`. Any other value filter returns `400` `invalidPath`.
+
+## Error envelope
+
+Errors use the RFC 7644 §3.12 `Error` object, served as `application/scim+json`:
+
+```json
+{
+  "schemas": ["urn:ietf:params:scim:api:messages:2.0:Error"],
+  "status": "409",
+  "scimType": "uniqueness",
+  "detail": "User alice@corp.com already exists"
+}
+```
+
+| Status | `scimType` | Cause |
+|---|---|---|
+| `400` | `invalidFilter` | Unsupported filter grammar or attribute. |
+| `400` | `invalidValue` | Missing `userName` or `displayName`, non-numeric `startIndex` or `count`. |
+| `400` | `invalidSyntax` | `PATCH` without operations, or with an unsupported schema or `op`. |
+| `400` | `invalidPath` | `PATCH` path with an unsupported value filter. |
+| `400` | `noTarget` | `remove` without a path, or an unknown member in a value filter. |
+| `400` | `mutability` | `userName` change, deactivation or deletion of the last administrator, deletion of a Team inside a hierarchy. |
+| `401` | — | Missing, unknown or revoked token, or SCIM disabled on the company. |
+| `404` | — | Unknown resource id, or an unsupported SCIM route. |
+| `409` | `uniqueness` | The address belongs to another company, or the group name already exists. |
+| `501` | — | A `/Groups` route while group synchronisation is disabled. |
+| `500` | — | Unexpected error. Safe to retry with a backoff; every other status is deterministic. |
+
+## Advertised capabilities and limits
+
+`GET /ServiceProviderConfig` advertises exactly what is implemented, so connectors degrade gracefully instead of failing:
+
+| Capability | Supported |
+|---|---|
+| `patch` | Yes |
+| `filter` | Yes, `maxResults` 200, `eq` only |
+| `bulk` | No |
+| `sort` | No |
+| `etag` | No |
+| `changePassword` | No |
+
+Known limits: one role per user, groups created by SCIM are flat, a user always keeps at least one Team, and email addresses are globally unique so a cross-company address returns `uniqueness`.
+
+## Administration endpoints
+
+Enabling SCIM and managing tokens is done through the regular REST API, authenticated with a user access token (see [Authentication](/developer-docs/api-reference/authentication)). `read Company` is required to read, `update Company` to write.
+
+| Method and path | Purpose |
+|---|---|
+| [`GET /v2/scim/config`](/api-reference/scim/get-the-scim-provisioning-configuration) | Current configuration plus the `baseUrl` to hand to the identity provider. |
+| [`PATCH /v2/scim/config`](/api-reference/scim/update-the-scim-provisioning-configuration) | Update `enabled`, `groupSync`, `roleSource`, `roleMapping`, `defaultRoleId`, `deprovisionMode`. |
+| [`GET /v2/scim/tokens`](/api-reference/scim/list-the-scim-tokens-of-the-company) | List the tokens with their label, creation, last use and revocation dates. |
+| [`POST /v2/scim/tokens`](/api-reference/scim/generate-a-scim-token) | Create a token. The secret is returned once; `409` past two active tokens. |
+| [`DELETE /v2/scim/tokens/{id}`](/api-reference/scim/revoke-a-scim-token) | Revoke a token. |
+
+Every SCIM request and every configuration change is recorded in the audit trail, readable through [`GET /v2/audit-logs`](/api-reference/auditlog/list-audit-logs) by any caller with `update` rights on users, roles or Teams.
+
+## Related
+
+- [Authentication](/developer-docs/api-reference/authentication) — obtaining the access token used by the administration endpoints
+- [API reference introduction](/developer-docs/api-reference/introduction) — conventions of the rest of the API
+- [Automatic user provisioning](/product-guide/account/scim-provisioning) — the administrator-facing setup guide
+- [Audit log](/product-guide/account/audit-log) — what is recorded and who can read it

@@ -1,6 +1,7 @@
 ---
 title: "Authentication & SSO"
-description: "Platform access control, single sign-on (SSO) configuration, API authentication, and the RBAC/ABAC authorisation model."
+description: "Platform access control, single sign-on (SSO) configuration, SCIM 2.0 user provisioning, API authentication, and the RBAC/ABAC authorisation model."
+keywords: ["SSO", "SAML 2.0", "SCIM 2.0", "JIT provisioning", "user provisioning", "Okta", "Microsoft Entra ID", "OAuth 2.0", "RBAC", "ABAC"]
 ---
 
 ## Authentication Layers
@@ -39,12 +40,38 @@ Reelevant supports SSO integration with your organisation's identity provider. W
 | Identity Provider URL | Your IdP's SSO endpoint |
 | Entity ID | Reelevant's identifier in your IdP |
 | Certificate | X.509 certificate for trust verification between Reelevant and your IdP |
-| Attribute mapping | Map IdP user attributes to Reelevant user fields |
+| Attribute mapping | Map IdP assertion attributes to Reelevant user fields (email, first name, last name, job title, phone, preferred language) |
 | Default role | Role assigned to users created via the platform |
+| User mode | `invitation` (default) or `create` — see JIT provisioning below |
 
 **User provisioning:**
 
-Reelevant does not currently support JIT provisioning or SCIM. User accounts are managed via the platform's [User Management API](/developer-docs/api-reference/introduction) or through the UI. When SSO is enabled, users must have an existing account in Reelevant that matches their IdP identity to authenticate.
+Three options, which can be combined:
+
+| Option | How accounts appear | Offboarding |
+|--------|---------------------|-------------|
+| **SCIM 2.0** | Your IdP pushes users and groups to Reelevant — creation, profile updates, role and Team assignment | Automatic: deactivation (sessions revoked immediately) or permanent deletion, your choice |
+| **JIT on SSO login** | The account is created on first successful SSO login, if SSO user mode is `create` | Manual |
+| **API or UI** | Invitations sent from the platform or the [User Management API](/developer-docs/api-reference/introduction) | Manual |
+
+### JIT Provisioning
+
+The SSO user mode decides what happens when a valid assertion arrives for an email that has no Reelevant account:
+
+| Mode | Behaviour |
+|------|-----------|
+| `invitation` (default) | The login is rejected unless the address already has an account or a pending invitation. Use this to keep the account list closed. |
+| `create` | The account is created from the assertion — just-in-time provisioning. No invitation needed. |
+
+A JIT-created user gets its profile from your attribute mapping, and its role and Teams from the pending invitation when there is one, otherwise from the company defaults. An invitation's role and Teams are re-validated against the company before they are honoured. Creation is recorded in the audit log as an `sso` event attributed to `sso-jit`.
+
+JIT covers arrivals only: profile drift, role and Team changes, and departures are not propagated, since the IdP never contacts Reelevant except during a login. SCIM covers all four.
+
+### SCIM 2.0
+
+SCIM 2.0 (RFC 7643/7644) covers `/Users` and `/Groups` with a company-scoped bearer token, and works with the standard Okta and Microsoft Entra ID connectors. IdP groups map to Reelevant Teams, and roles can be driven from a SCIM role attribute or from group-to-role mappings. Deactivation revokes sessions immediately. Every provisioning request is recorded in the in-product audit log.
+
+See the [SCIM developer reference](/developer-docs/api-reference/scim) for the protocol detail, or the [setup guide](/product-guide/account/scim-provisioning) for the configuration options.
 
 <Info>
 SSO configuration is managed at the organisation level. Contact your Reelevant account team or support@reelevant.com to enable and configure SSO for your organisation.

@@ -1,0 +1,77 @@
+---
+title: 'Audit Log'
+description: 'Read the record of logins, single sign-on, provisioning, and account changes in your company'
+---
+
+The audit log is a read-only record of everything that happens to identities in your company. It covers logins, single sign-on, automatic provisioning, and changes to users, roles, and [Teams](/product-guide/account/teams).
+
+{/* TODO: screenshot of the audit log view — pending the admin interface */}
+
+## What You Can Do With It
+
+- Answer "why was this person not created?" after a provisioning run.
+- Find out who deactivated an account, and when.
+- Check that a departure removed access straight away.
+- Show an auditor how access is granted and removed.
+
+## What Is Recorded
+
+| Category | Examples of recorded events |
+|---|---|
+| **Authentication** | Successful and failed logins, with the reason for a failure — wrong password, locked account, or deactivated account. Logouts, password resets, two-factor authentication switched on or off. |
+| **Single sign-on** | Login attempts accepted or rejected, with the reason. Accounts created on first login. Rejections caused by mandatory single sign-on. |
+| **Provisioning** | Every request from your identity provider: accounts created, adopted, updated, deactivated, reactivated, or deleted. Values that could not be matched. Refusals, such as deactivating the last administrator. Access keys generated or revoked, and provisioning settings changed. |
+| **Users and permissions** | Users created, updated, deactivated, reactivated, and deleted. Role changes. Team membership changes. Invitations created and used. |
+| **Application access** | Authorisations granted or rejected to connected applications, and access renewed for them. |
+
+Each entry records the time, the author, and what it affected. The author is a person, your identity provider, or Reelevant itself. Each entry also records whether it succeeded, plus an error reference when it failed.
+
+<Info>
+  Passwords, access keys, and single sign-on messages are never recorded. Sensitive values are replaced before an entry is saved.
+</Info>
+
+## Who Can See It
+
+Anyone who can already administer identities in your company can read the audit log. In practice, this means anybody whose [role](/product-guide/account/roles) can update users, roles, or Teams.
+
+There is nothing to switch on and no extra permission to grant. If you can invite and offboard people, you can read the log.
+
+## Filtering The Entries
+
+You can narrow the list down by:
+
+| Filter | Use it to |
+|---|---|
+| **Category** | Show only authentication, single sign-on, provisioning, user, permission, or application events. |
+| **Action** | Show one precise event, such as an account deactivation. |
+| **Who did it** | Show what one person or your identity provider did. |
+| **What it affected** | Show everything that happened to one user, role, or Team. |
+| **Date range** | Show a period, for example the day somebody left. |
+
+## Good To Know
+
+- The log is **read-only**. Nobody can edit or delete an entry, including administrators.
+- Entries only cover your own company.
+- Entries are kept for the retention period of your company, 90 days by default. Older entries are removed automatically.
+- Export the entries you need before they expire if your company has to keep them longer.
+
+<Warning>
+  Entries cannot be recovered once the retention period has passed. Plan your exports if you have a long-term obligation to keep them.
+</Warning>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Automatic provisioning" icon="rotate" href="/product-guide/account/scim-provisioning">
+    Understand the provisioning events you see in the log.
+  </Card>
+  <Card title="Users" icon="users" href="/product-guide/account/users">
+    Invite, deactivate, and manage people.
+  </Card>
+  <Card title="Roles" icon="shield" href="/product-guide/account/roles">
+    Control who can administer identities, and therefore read this log.
+  </Card>
+  <Card title="Teams" icon="sitemap" href="/product-guide/account/teams">
+    Organise people into Teams for access control.
+  </Card>
+</CardGroup>
