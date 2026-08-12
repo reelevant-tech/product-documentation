@@ -3,7 +3,7 @@ title: 'Audit Log'
 description: 'Read the record of logins, single sign-on, provisioning, and account changes in your company'
 ---
 
-The audit log is a read-only record of everything that happens to identities in your company: logins, single sign-on, automatic provisioning, and changes to users, roles, and [Teams](/product-guide/account/teams).
+The audit log is a read-only record of everything that happens to identities in your company. It covers logins, single sign-on, automatic provisioning, and changes to users, roles, and [Teams](/product-guide/account/teams).
 
 {/* TODO: screenshot of the audit log view — pending the admin interface */}
 
@@ -24,7 +24,7 @@ The audit log is a read-only record of everything that happens to identities in 
 | **Users and permissions** | Users created, updated, deactivated, reactivated, and deleted. Role changes. Team membership changes. Invitations created and used. |
 | **Application access** | Authorisations granted or rejected to connected applications, and access renewed for them. |
 
-Each entry records the time, who did it (a person, your identity provider, or Reelevant itself), what it affected, whether it succeeded, and an error reference when it failed.
+Each entry records the time, the author, and what it affected. The author is a person, your identity provider, or Reelevant itself. Each entry also records whether it succeeded, plus an error reference when it failed.
 
 <Info>
   Passwords, access keys, and single sign-on messages are never recorded. Sensitive values are replaced before an entry is saved.
