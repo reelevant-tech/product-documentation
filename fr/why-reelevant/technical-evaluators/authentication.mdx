@@ -1,17 +1,19 @@
 ---
 title: "Authentification et SSO"
-description: "Contrôle d'accès à la plateforme, configuration du single sign-on (SSO), authentification API et modèle d'autorisation RBAC/ABAC."
+description: "Contrôle d'accès à la plateforme, configuration du single sign-on (SSO), provisionnement SCIM 2.0, authentification API et modèle d'autorisation RBAC/ABAC."
+keywords: ["SSO", "SAML 2.0", "SCIM 2.0", "provisionnement", "déprovisionnement", "JIT", "OAuth 2.0", "RBAC", "ABAC"]
 ---
 
 ## Couches d'authentification
 
-Reelevant sépare l'authentification en deux couches distinctes :
+Reelevant sépare l'authentification en couches distinctes :
 
 | Couche | Mécanisme | Quand il s'applique |
 |--------|-----------|---------------------|
 | **Intégration de Content** | URL publiques — pas d'authentification | Requêtes Runner (`reelevant.run`) |
 | **Accès plateforme** | Email/mot de passe ou SSO | Tableau de bord (`app.reelevant.com`) |
 | **API plateforme** | Tokens Bearer OAuth 2.0 | Accès programmatique à toutes les capacités de la plateforme |
+| **Provisionnement d'annuaire** | Jeton bearer SCIM 2.0 | Provisionnement des comptes et des groupes piloté par votre IdP |
 
 ## Intégration de Content (publique)
 
@@ -44,10 +46,40 @@ Reelevant supporte l'intégration SSO avec le fournisseur d'identité de votre o
 
 **Provisionnement des utilisateurs :**
 
-Reelevant ne supporte pas actuellement le provisionnement JIT ni SCIM. Les comptes utilisateur sont gérés via l'[API de gestion des utilisateurs](/fr/developer-docs/api-reference/introduction) de la plateforme ou via l'interface. Lorsque le SSO est activé, les utilisateurs doivent avoir un compte existant dans Reelevant qui correspond à leur identité IdP pour s'authentifier.
+Deux modes de provisionnement sont disponibles, et ils peuvent être combinés :
+
+| Mode | Comportement |
+|------|--------------|
+| **Invitation** (par défaut) | L'utilisateur doit déjà disposer d'un compte Reelevant, ou d'une invitation en attente, correspondant à son identité IdP |
+| **Just-in-time (JIT)** | Le compte est créé à la première assertion SAML valide, avec le rôle et les Teams par défaut de la société, et les champs de profil issus des attributs d'assertion mappés |
 
 <Info>
 La configuration SSO est gérée au niveau de l'organisation. Contactez votre équipe de compte Reelevant ou support@reelevant.com pour activer et configurer le SSO pour votre organisation.
+</Info>
+
+### Provisionnement SCIM 2.0
+
+Reelevant expose un service provider **SCIM 2.0** entrant : votre IdP (Entra ID, Okta, Ping, ou tout client SCIM 2.0) devient la source de vérité des comptes. SCIM se configure indépendamment du SSO — vous pouvez provisionner via SCIM tout en conservant la connexion par mot de passe, ou l'inverse.
+
+| Capacité | Support |
+|----------|---------|
+| Ressources | `/Users` et `/Groups` — création, lecture, remplacement (`PUT`), modification partielle (`PATCH`), suppression |
+| Découverte | `/ServiceProviderConfig`, `/ResourceTypes`, `/Schemas` |
+| Authentification | Un jeton bearer SCIM propre à la société ; le tenant est toujours déduit du jeton, jamais d'une valeur envoyée par l'IdP |
+| Gestion des jetons | Jusqu'à deux jetons actifs simultanément pour permettre la rotation sans interrompre l'IdP ; le secret n'est affiché qu'une fois, stocké haché, et révocable |
+| Désactivation | `active: false` désactive immédiatement le compte : toutes les voies d'authentification sont fermées et les sessions existantes révoquées. Le repasser à `true` restaure le même rôle et les mêmes Teams |
+| Déprovisionnement | Configurable par société : `soft` (le `DELETE` désactive le compte, comportement par défaut) ou `hard` (le compte et ses dépendances sont effacés) |
+| Synchronisation des groupes | Les Groups SCIM sont associés aux Teams Reelevant, ce qui maintient le cloisonnement des ressources aligné sur votre annuaire |
+| Attribution des rôles | Depuis l'attribut SCIM `roles`, ou depuis l'appartenance aux groupes via un mapping groupe → rôle que vous définissez ; une valeur non résolue retombe sur un rôle par défaut configurable au lieu de faire échouer l'opération |
+| Mapping d'attributs | `userName`, `externalId`, `active`, `name.givenName` / `familyName`, `title`, `phoneNumbers`, `preferredLanguage`, `roles`, `groups` |
+| Filtres et pagination | Filtres `eq` simples et `startIndex` / `count`, jusqu'à 200 résultats par page |
+| Non supporté | Opérations bulk, `/Me`, tri, ETags, et changement de mot de passe via SCIM |
+| Traçabilité | Chaque opération de provisionnement est enregistrée dans le [journal d'audit](/fr/why-reelevant/technical-evaluators/security), attribuée au jeton SCIM qui l'a exécutée |
+
+Les comptes de service ne sont jamais touchés par SCIM : ils sont gérés dans Reelevant, de sorte qu'une synchronisation IdP ne peut pas désactiver les identités machine dont dépendent vos intégrations. Un compte créé auparavant par invitation ou par JIT SSO est repris en place au premier appel SCIM correspondant, plutôt que dupliqué.
+
+<Info>
+L'activation de SCIM fournit l'URL de base à configurer dans votre IdP ainsi que le jeton bearer. Contactez votre équipe de compte Reelevant ou support@reelevant.com pour l'activer.
 </Info>
 
 ## Modèle d'autorisation
