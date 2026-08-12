@@ -16,7 +16,9 @@ For the most up-to-date security documentation, certifications, and audit report
 |----------|--------|--------|
 | **SOC 2 Type II** | Certified | Annual audit covering Security, Availability, and Confidentiality trust service criteria |
 | **GDPR** | Full compliance | Configurable retention, data minimisation, right to erasure, DPA available |
-| **Penetration testing** | Annual | Independent third-party assessment of all externally-accessible systems |
+| **Penetration testing** | Annual | Independent third-party assessment of all externally-accessible systems — performed exclusively by an external provider |
+| **Continuous automated audit** | Ongoing | Automated code, dependency and cloud-configuration scanning on every change, plus AI-assisted code review |
+| **ISO 27001 / Article 42 certification** | Not held | Compliance is demonstrated through SOC 2 Type II, the DPA, and the controls described on this page |
 
 ## Data Protection
 
@@ -25,13 +27,15 @@ For the most up-to-date security documentation, certifications, and audit report
 | Layer | Standard |
 |-------|----------|
 | Data in transit | TLS 1.3 (minimum TLS 1.2) |
-| Data at rest | AES-256 disk encryption on all servers, workstations, and cloud storage |
+| Data at rest | AES-256 disk encryption everywhere: full-volume encryption with TPM-sealed keys on servers, MDM-enforced disk encryption on workstations, native encryption on cloud storage |
 | Database encryption | Application-level encryption for sensitive fields; HTTPS for all database connections |
+| Credentials | User passwords are never stored in clear text — hashed with bcrypt using a unique salt per password |
 | File transfer | Always over secure links (HTTPS, SFTP, or FTPS); PGP encryption can be added on top |
 
 ### Data Residency
 
-- **Primary region:** EU (additional regions planned)
+- **Primary region:** EU (additional regions planned) — customer data is stored and processed exclusively in the EU, with no transfer outside the EU
+- **No customer data outside the EU:** the only globally-distributed service is public DNS resolution, which processes no personal data
 - **Multi-tenant architecture:** The platform operates a single production environment with strict logical tenant isolation — each customer's data is segregated through application-level access controls and scoping
 
 ### Data Minimisation
@@ -58,10 +62,10 @@ For the most up-to-date security documentation, certifications, and audit report
 
 ### Production Systems
 
-- Remote access restricted to authorised personnel with valid MFA token
-- VPN (IPSec / SSL) required for all remote production access
-- SSH key-based authentication for system-level access
-- Terminated employees have access revoked within 24 hours
+- Remote access restricted to authorised personnel; MFA required on all cloud and administrative consoles
+- **SSH key-based authentication only** for system-level access — password authentication and root login are disabled, and brute-force protection blocks repeated failed attempts
+- Production servers communicate over an **encrypted private network** that is not reachable from the internet; no RDP or remote desktop access is exposed
+- Terminated employees have access revoked within 24 hours, covering identity and device management as well as system-level SSH keys
 
 ## Vulnerability Management
 
@@ -69,6 +73,7 @@ For the most up-to-date security documentation, certifications, and audit report
 
 | Activity | Frequency |
 |----------|-----------|
+| Automated code, dependency and configuration scanning | Continuous, on every change |
 | Internal vulnerability scans | At least quarterly |
 | External vulnerability scans | At least quarterly |
 | Third-party penetration testing | Annually |
@@ -84,7 +89,29 @@ For the most up-to-date security documentation, certifications, and audit report
 
 ### Patch Management
 
-All system patches are obtained from trusted sources and deployed at least monthly, with critical patches escalated for immediate deployment.
+All system patches are obtained from trusted sources and deployed at least monthly, with critical patches escalated for immediate deployment. Servers apply unattended security updates automatically, with failures reported to the infrastructure team. Workstation and application updates are enforced through device management and applied within 15 days of release.
+
+## Endpoint & Workplace Security
+
+- **Device management** — all workstations are enrolled in a mobile device management (MDM) platform that enforces configuration policies, disk encryption, inventory and update cadence. Workstations are not joined to an Active Directory domain
+- **Endpoint detection and response** — next-generation endpoint protection with behavioural detection, automated response and remote isolation of a compromised device, deployed on every workstation
+- **Corporate identity** — accounts and application access are managed in Google Workspace with MFA enforced
+- **Servers** — an antivirus engine is installed on every production host with scheduled scans and centralised reporting of results
+- Acceptable use is governed by a published IT policy that applies to all staff
+
+## Network & System Security
+
+- **Default-deny host firewalls** on every server; only the SSH and private-network ports are reachable from the internet
+- **Encrypted private network** between all servers, segmented per environment (production, staging, tooling) and not routable from the internet
+- **Anti-DDoS** protection provided at network level by our hosting provider on all public endpoints
+- **In-house gateway** in front of the API and Runner validates and filters every inbound request (request schema validation, authentication and authorisation checks, restricted route exposure)
+- **DNSSEC** enabled on Reelevant domains
+- **Host-based intrusion detection and file integrity monitoring** on all servers, with alerts and firewall events shipped to centralised, access-controlled log storage
+- **Secrets management** — infrastructure secrets are stored encrypted at rest in an encrypted vault whose key is itself protected, and application secrets are injected at runtime; no secrets are kept in source code
+
+## Email & Domain Security
+
+Corporate email runs on Google Workspace with anti-spam and anti-malware filtering, and **SPF, DKIM and DMARC** are published on Reelevant sending domains.
 
 ## Incident Response
 
@@ -127,6 +154,7 @@ Reelevant runs on a short, deliberately limited list of infrastructure vendors:
 | **OVHcloud** | Bare metal servers | France | Hosts the platform: application services, databases, and event processing |
 | **Google Cloud** | BigQuery | Belgium | Analytics warehouse used for event storage and reporting queries |
 | **AWS** | Route 53 (DNS) | Global (anycast, as DNS requires) | Public DNS resolution for Reelevant domains — no customer data |
+| **Vercel** | Static asset hosting | Global CDN | Serves static front-end assets only — no customer data, therefore not a subprocessor |
 
 ## Audit Logging
 
@@ -139,11 +167,14 @@ Reelevant runs on a short, deliberately limited list of infrastructure vendors:
 
 ## Reporting a Security Issue
 
-Report suspected vulnerabilities or security incidents to **[security@reelevant.com](mailto:security@reelevant.com)**.
+**[security@reelevant.com](mailto:security@reelevant.com)** is the single entry point for any security or data protection request — vulnerability reports, incident notifications and data subject requests.
 
 | Contact | Role |
 |---------|------|
 | Valentin Marchaud | CTO — security contact and owner of the Information Security Programme |
+| Vincent Martinet | CEO — data protection referent for GDPR matters |
+
+No Data Protection Officer has been appointed, as designation is not mandatory under Article 37 for our processing activities. Article 30 record-keeping obligations and processing details are covered in customer contracts and the DPA.
 
 Include reproduction steps and affected endpoints where possible. Reports are triaged by the Incident Response Team and remediated according to the timelines above.
 
@@ -153,6 +184,7 @@ Include reproduction steps and affected endpoints where possible. Reports are tr
 - Annual refresher training required
 - Background checks performed on all new hires
 - Confidentiality agreements signed before system access is granted
+- Security is owned by the CTO with a Risk Committee and Incident Response Team, and reinforced by external assurance (annual SOC 2 audit, annual external penetration test, continuous automated scanning)
 
 ## Learn More
 

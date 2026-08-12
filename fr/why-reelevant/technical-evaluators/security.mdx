@@ -16,7 +16,9 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 |----------|--------|--------|
 | **SOC 2 Type II** | Certifié | Audit annuel couvrant les critères de services de confiance Sécurité, Disponibilité et Confidentialité |
 | **RGPD** | Pleine conformité | Rétention configurable, minimisation des données, droit à l'effacement, DPA disponible |
-| **Tests de pénétration** | Annuel | Évaluation indépendante par un tiers de tous les systèmes accessibles de l'extérieur |
+| **Tests de pénétration** | Annuel | Évaluation indépendante de tous les systèmes accessibles de l'extérieur — réalisée exclusivement par un prestataire externe |
+| **Audit automatisé continu** | En continu | Analyse automatisée du code, des dépendances et de la configuration cloud à chaque modification, complétée par une revue de code assistée par IA |
+| **Certification ISO 27001 / article 42** | Non détenue | La conformité est démontrée par la certification SOC 2 Type II, le DPA et les mesures décrites sur cette page |
 
 ## Protection des données
 
@@ -25,13 +27,15 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 | Couche | Standard |
 |--------|----------|
 | Données en transit | TLS 1.3 (minimum TLS 1.2) |
-| Données au repos | Chiffrement de disque AES-256 sur tous les serveurs, postes de travail et stockage cloud |
+| Données au repos | Chiffrement AES-256 partout : chiffrement intégral des volumes avec clés scellées dans le TPM sur les serveurs, chiffrement disque imposé par le MDM sur les postes de travail, chiffrement natif des stockages cloud |
 | Chiffrement de base de données | Chiffrement au niveau applicatif pour les champs sensibles ; HTTPS pour toutes les connexions base de données |
+| Identifiants | Les mots de passe des utilisateurs ne sont jamais stockés en clair — hachés avec bcrypt et un sel unique par mot de passe |
 | Transfert de fichiers | Toujours via des liens sécurisés (HTTPS, SFTP ou FTPS) ; le chiffrement PGP peut être ajouté en plus |
 
 ### Résidence des données
 
-- **Région principale :** UE (régions supplémentaires prévues)
+- **Région principale :** UE (régions supplémentaires prévues) — les données clients sont stockées et traitées exclusivement dans l'UE, sans aucun transfert hors UE
+- **Aucune donnée client hors UE :** le seul service à portée mondiale est la résolution DNS publique, qui ne traite aucune donnée personnelle
 - **Architecture multi-tenant :** La plateforme opère un environnement de production unique avec une isolation logique stricte des tenants — les données de chaque client sont ségrégées par des contrôles d'accès et un scoping au niveau applicatif
 
 ### Minimisation des données
@@ -58,10 +62,10 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 
 ### Systèmes de production
 
-- Accès distant restreint au personnel autorisé avec un token MFA valide
-- VPN (IPSec / SSL) requis pour tout accès distant à la production
-- Authentification SSH par clé pour l'accès au niveau système
-- Les accès des employés partis sont révoqués dans les 24 heures
+- Accès distant restreint au personnel autorisé ; MFA exigée sur toutes les consoles cloud et d'administration
+- **Authentification SSH par clé uniquement** pour l'accès au niveau système — l'authentification par mot de passe et la connexion root sont désactivées, et une protection anti-force brute bloque les tentatives répétées
+- Les serveurs de production communiquent sur un **réseau privé chiffré** non joignable depuis Internet ; aucun accès RDP ou bureau distant n'est exposé
+- Les accès des employés partis sont révoqués dans les 24 heures, comptes et postes via la gestion des identités et des terminaux, accès système via le retrait des clés SSH
 
 ## Gestion des vulnérabilités
 
@@ -69,6 +73,7 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 
 | Activité | Fréquence |
 |----------|-----------|
+| Analyse automatisée du code, des dépendances et de la configuration | En continu, à chaque modification |
 | Scans de vulnérabilités internes | Au moins trimestriel |
 | Scans de vulnérabilités externes | Au moins trimestriel |
 | Tests de pénétration par un tiers | Annuel |
@@ -84,7 +89,29 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 
 ### Gestion des correctifs
 
-Tous les correctifs système sont obtenus depuis des sources de confiance et déployés au moins mensuellement, avec les correctifs critiques escaladés pour un déploiement immédiat.
+Tous les correctifs système sont obtenus depuis des sources de confiance et déployés au moins mensuellement, avec les correctifs critiques escaladés pour un déploiement immédiat. Les serveurs appliquent automatiquement les mises à jour de sécurité, les échecs étant remontés à l'équipe infrastructure. Les mises à jour des postes et des applications sont imposées par la gestion de parc et appliquées dans les 15 jours suivant leur publication.
+
+## Sécurité des postes de travail
+
+- **Gestion de parc** — tous les postes sont enrôlés dans une solution MDM qui applique les politiques de configuration, le chiffrement disque, l'inventaire et la cadence de mise à jour. Les postes ne sont pas joints à un domaine Active Directory
+- **Détection et réponse sur les postes (EDR)** — protection nouvelle génération avec détection comportementale, réponse automatisée et isolement à distance d'un poste compromis, déployée sur l'ensemble du parc
+- **Identités d'entreprise** — comptes et accès applicatifs gérés dans Google Workspace avec MFA obligatoire
+- **Serveurs** — un moteur antivirus est installé sur chaque hôte de production, avec scans planifiés et remontée centralisée des résultats
+- L'usage des ressources informatiques est encadré par une charte informatique publiée, applicable à tous les collaborateurs
+
+## Sécurité réseau et système
+
+- **Pare-feu hôte en refus par défaut** sur chaque serveur ; seuls les ports SSH et du réseau privé sont joignables depuis Internet
+- **Réseau privé chiffré** entre tous les serveurs, segmenté par environnement (production, staging, outillage) et non routable depuis Internet
+- **Anti-DDoS** assuré au niveau réseau par notre hébergeur sur tous les points d'entrée publics
+- **Gateway développée en interne** en frontal de l'API et du Runner : elle valide et filtre chaque requête entrante (validation de schéma, contrôles d'authentification et d'autorisation, exposition restreinte des routes)
+- **DNSSEC** activé sur les domaines Reelevant
+- **Détection d'intrusion et monitoring d'intégrité des fichiers** sur tous les serveurs, avec remontée des alertes et des événements pare-feu vers un stockage de logs centralisé et à accès contrôlé
+- **Gestion des secrets** — les secrets d'infrastructure sont stockés chiffrés au repos dans un coffre dont la clé est elle-même protégée, et les secrets applicatifs sont injectés à l'exécution ; aucun secret n'est conservé dans le code source
+
+## Sécurité de la messagerie et des domaines
+
+La messagerie d'entreprise repose sur Google Workspace avec filtrage anti-spam et anti-malware, et **SPF, DKIM et DMARC** sont publiés sur les domaines d'envoi Reelevant.
 
 ## Réponse aux incidents
 
@@ -127,6 +154,7 @@ Reelevant s'appuie sur une liste courte et volontairement limitée de fournisseu
 | **OVHcloud** | Serveurs bare metal | France | Héberge la plateforme : services applicatifs, bases de données et traitement des événements |
 | **Google Cloud** | BigQuery | Belgique | Entrepôt analytique utilisé pour le stockage des événements et les requêtes de reporting |
 | **AWS** | Route 53 (DNS) | Global (anycast, comme l'exige le DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client |
+| **Vercel** | Hébergement d'assets statiques | CDN mondial | Diffuse uniquement les assets statiques du front-end — aucune donnée client, donc pas un sous-traitant |
 
 ## Journalisation des audits
 
@@ -139,11 +167,14 @@ Reelevant s'appuie sur une liste courte et volontairement limitée de fournisseu
 
 ## Signaler une faille de sécurité
 
-Signalez toute vulnérabilité suspectée ou incident de sécurité à **[security@reelevant.com](mailto:security@reelevant.com)**.
+**[security@reelevant.com](mailto:security@reelevant.com)** est le point d'entrée unique pour toute demande de sécurité ou de protection des données — signalement de vulnérabilité, notification d'incident et exercice des droits des personnes.
 
 | Contact | Rôle |
 |---------|------|
 | Valentin Marchaud | CTO — contact sécurité et responsable du programme de sécurité de l'information |
+| Vincent Martinet | CEO — référent protection des données pour les sujets RGPD |
+
+Aucun Délégué à la Protection des Données n'a été désigné, la désignation n'étant pas obligatoire au titre de l'article 37 pour nos traitements. Les obligations de registre au titre de l'article 30 et le détail des traitements sont couverts par les contrats clients et le DPA.
 
 Indiquez si possible les étapes de reproduction et les endpoints concernés. Les signalements sont triés par l'Incident Response Team et corrigés selon les délais ci-dessus.
 
@@ -153,6 +184,7 @@ Indiquez si possible les étapes de reproduction et les endpoints concernés. Le
 - Formation de rappel annuelle obligatoire
 - Vérifications d'antécédents effectuées sur toutes les nouvelles embauches
 - Accords de confidentialité signés avant l'octroi de l'accès aux systèmes
+- La sécurité est portée par le CTO, avec un comité des risques et une Incident Response Team, et renforcée par des assurances externes (audit SOC 2 annuel, test de pénétration externe annuel, analyse automatisée continue)
 
 ## En savoir plus
 
