@@ -1,0 +1,132 @@
+---
+title: 'Single Sign-On (SAML)'
+description: 'Let your users log in to Reelevant with your own identity provider'
+---
+
+Single sign-on lets your users log in to Reelevant with the account they already use at work. Your identity provider is the tool your company uses to manage staff accounts, such as Okta, Microsoft Entra ID, or Google Workspace.
+
+You configure it yourself from the account administration section. Nobody at Reelevant needs to do it for you.
+
+{/* TODO: screenshot of the single sign-on settings */}
+
+## What It Does For You
+
+- People log in through your identity provider instead of a Reelevant password.
+- You keep control of who can log in, from one place.
+- You can create Reelevant accounts automatically on first login, so nobody has to be invited by hand.
+- You can make single sign-on the only way in, once you are confident it works.
+
+<Info>
+  Single sign-on decides how people log in. It does not create or remove accounts on its own the way [automatic provisioning](/product-guide/account/scim-provisioning) does. The two are configured separately, and they work well together.
+</Info>
+
+## Before You Begin
+
+- You need permission to update company settings in Reelevant.
+- You need an administrator account in your identity provider.
+- Export the metadata of your identity provider. It is a file, or a page of text starting with `<EntityDescriptor`.
+- List the email domains your staff use, such as `acme.com`.
+- Create the [roles](/product-guide/account/roles) and [Teams](/product-guide/account/teams) that new people should get.
+
+## Setting It Up
+
+The setup goes both ways: you describe your identity provider to Reelevant, then you declare Reelevant in your identity provider.
+
+<Steps>
+  <Step title="Open the single sign-on settings">
+    Go to the account administration section and open **Single sign-on**.
+  </Step>
+  <Step title="Add your email domains">
+    Fill in **Email domains**. Anyone whose email address ends with one of these domains is sent to your identity provider to log in.
+
+    <Warning>
+      A domain can only be claimed by one company. If it is already used elsewhere, saving is refused and you are told so.
+    </Warning>
+  </Step>
+  <Step title="Paste the metadata of your identity provider">
+    Paste the exported text into **Identity provider metadata (XML)**. Reelevant checks it before saving and tells you if it cannot be used.
+  </Step>
+  <Step title="Choose how accounts are created">
+    Pick a **User provisioning** option:
+
+    | Option | What happens on a first login |
+    |---|---|
+    | **Invitation only** | Only people you already invited can log in. Anyone else is refused. |
+    | **Create users on first login** | A Reelevant account is created automatically, with the company default role and Teams. |
+  </Step>
+  <Step title="Check the attribute mapping">
+    **Attribute mapping** tells Reelevant where to read each piece of information your identity provider sends. A mapping for `email` is always required. Add a line per extra property, such as the first name or the last name.
+
+    <Tip>
+      Each line is written the way the value is nested in the message from your identity provider, with a dot between levels: `attributes.email`.
+    </Tip>
+  </Step>
+  <Step title="Save the configuration">
+    Click **Save configuration**. Reelevant then generates a signing certificate for your company, on its own.
+  </Step>
+  <Step title="Declare Reelevant in your identity provider">
+    The section **What to declare in your identity provider** lists the values to copy across. Each one has a copy button.
+
+    | Value | What your identity provider calls it |
+    |---|---|
+    | **Entity ID (audience)** | Identifier, audience, or entity ID |
+    | **Reply URL (ACS)** | Reply URL, single sign-on URL, or assertion consumer service |
+    | **Service provider metadata URL** | Metadata address, if your tool prefers importing it |
+    | **Signing certificate** | Certificate used to check messages coming from Reelevant |
+    | **Login URLs** | The address to give your users, one per domain |
+  </Step>
+  <Step title="Test a login">
+    Open a **Login URL** in a private browser window and log in with your own account. The [audit log](/product-guide/account/audit-log) records the attempt, accepted or refused, with the reason.
+  </Step>
+</Steps>
+
+## Making Single Sign-On Mandatory
+
+By default single sign-on is optional: people can still log in with their Reelevant password. Turn on **Require single sign-on** to refuse every other way in for your domains.
+
+The toggle stays unavailable until one login through your identity provider has succeeded. That is deliberate: it makes it impossible to lock your whole company out with a wrong setting.
+
+<Warning>
+  Changing the metadata or the domains of a working configuration makes the toggle unavailable again, until a login proves the new setting works.
+</Warning>
+
+## Renewing The Signing Certificate
+
+Use **Rotate certificate** when your security policy asks for a new certificate, or if you believe the current one is compromised.
+
+<Warning>
+  Logins fail until the new certificate is declared in your identity provider. Plan the change, and copy the new value across straight away.
+</Warning>
+
+## Turning Single Sign-On Off
+
+Turn **Require single sign-on** off first, so people can log in with their password again. **Delete configuration** is only offered once enforcement is off.
+
+Deleting removes the configuration, the certificate, and the redirection of your domains. Users, [roles](/product-guide/account/roles) and [Teams](/product-guide/account/teams) are untouched.
+
+## If Something Does Not Work
+
+| What you see | What to check |
+|---|---|
+| Saving is refused because the metadata cannot be used | Export the metadata again. It must contain the login address of your identity provider and its certificate. |
+| Saving is refused because a domain is already used | The domain is claimed by another company. Contact your Reelevant contact. |
+| A user is refused at login | With **Invitation only**, invite the person first. Otherwise check the [audit log](/product-guide/account/audit-log) for the reason. |
+| A user is created without an email address | Check the `email` line of the attribute mapping against what your identity provider sends. |
+| Nobody can log in after renewing the certificate | The new certificate is not declared yet in your identity provider. Copy it again. |
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Automatic provisioning (SCIM)" icon="rotate" href="/product-guide/account/scim-provisioning">
+    Let your identity provider create and remove accounts too.
+  </Card>
+  <Card title="Audit log" icon="list-check" href="/product-guide/account/audit-log">
+    Read every login attempt and its outcome.
+  </Card>
+  <Card title="Users" icon="users" href="/product-guide/account/users">
+    Check who has access, and their login URL.
+  </Card>
+  <Card title="Roles" icon="shield" href="/product-guide/account/roles">
+    Decide what people can do once they are in.
+  </Card>
+</CardGroup>

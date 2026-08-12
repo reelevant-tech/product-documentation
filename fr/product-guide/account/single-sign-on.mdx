@@ -1,0 +1,132 @@
+---
+title: 'Authentification unique (SAML)'
+description: "Laissez vos utilisateurs se connecter à Reelevant avec votre propre fournisseur d'identité"
+---
+
+L'authentification unique permet à vos utilisateurs de se connecter à Reelevant avec le compte qu'ils utilisent déjà au travail. Votre fournisseur d'identité est l'outil avec lequel votre entreprise gère les comptes de ses collaborateurs, comme Okta, Microsoft Entra ID ou Google Workspace.
+
+Vous la configurez vous-même depuis la section d'administration du compte. Personne chez Reelevant n'a besoin de le faire pour vous.
+
+{/* TODO : capture d'écran des paramètres d'authentification unique */}
+
+## Ce que cela vous apporte
+
+- Les personnes se connectent via votre fournisseur d'identité, sans mot de passe Reelevant.
+- Vous gardez la maîtrise des accès depuis un seul endroit.
+- Vous pouvez créer les comptes Reelevant automatiquement à la première connexion, sans invitation à la main.
+- Vous pouvez imposer l'authentification unique dès que vous êtes sûr qu'elle fonctionne.
+
+<Info>
+  L'authentification unique décide comment les personnes se connectent. Elle ne crée ni ne supprime les comptes comme le fait le [provisionnement automatique](/fr/product-guide/account/scim-provisioning). Les deux se configurent séparément et se complètent très bien.
+</Info>
+
+## Avant de commencer
+
+- Vous devez pouvoir modifier les paramètres de l'entreprise dans Reelevant.
+- Vous devez être administrateur chez votre fournisseur d'identité.
+- Exportez les métadonnées de votre fournisseur d'identité : un fichier, ou un texte qui commence par `<EntityDescriptor`.
+- Listez les domaines de messagerie de vos collaborateurs, par exemple `acme.com`.
+- Créez les [rôles](/fr/product-guide/account/roles) et les [Teams](/fr/product-guide/account/teams) que les nouvelles personnes doivent recevoir.
+
+## Mettre en place la configuration
+
+La mise en place se fait dans les deux sens : vous décrivez votre fournisseur d'identité à Reelevant, puis vous déclarez Reelevant chez votre fournisseur d'identité.
+
+<Steps>
+  <Step title="Ouvrir les paramètres d'authentification unique">
+    Rendez-vous dans la section d'administration du compte et ouvrez **Authentification unique**.
+  </Step>
+  <Step title="Ajouter vos domaines de messagerie">
+    Renseignez **Domaines de messagerie**. Toute personne dont l'adresse se termine par l'un de ces domaines est envoyée vers votre fournisseur d'identité pour se connecter.
+
+    <Warning>
+      Un domaine ne peut être revendiqué que par une seule entreprise. S'il est déjà utilisé ailleurs, l'enregistrement est refusé et vous en êtes informé.
+    </Warning>
+  </Step>
+  <Step title="Coller les métadonnées de votre fournisseur d'identité">
+    Collez le texte exporté dans **Métadonnées du fournisseur d'identité (XML)**. Reelevant les vérifie avant d'enregistrer et vous prévient si elles ne sont pas exploitables.
+  </Step>
+  <Step title="Choisir comment les comptes sont créés">
+    Choisissez une option de **Création des utilisateurs** :
+
+    | Option | Ce qui se passe à la première connexion |
+    |---|---|
+    | **Sur invitation uniquement** | Seules les personnes déjà invitées peuvent se connecter. Les autres sont refusées. |
+    | **Créer les utilisateurs à la première connexion** | Un compte Reelevant est créé automatiquement, avec le rôle et les Teams par défaut de l'entreprise. |
+  </Step>
+  <Step title="Vérifier la correspondance des attributs">
+    La **Correspondance des attributs** indique à Reelevant où lire chaque information envoyée par votre fournisseur d'identité. Une correspondance pour `email` est toujours obligatoire. Ajoutez une ligne par propriété supplémentaire, comme le prénom ou le nom.
+
+    <Tip>
+      Chaque ligne s'écrit comme la valeur est imbriquée dans le message de votre fournisseur d'identité, avec un point entre les niveaux : `attributes.email`.
+    </Tip>
+  </Step>
+  <Step title="Enregistrer la configuration">
+    Cliquez sur **Enregistrer la configuration**. Reelevant génère alors, de lui-même, un certificat de signature pour votre entreprise.
+  </Step>
+  <Step title="Déclarer Reelevant chez votre fournisseur d'identité">
+    La section **À déclarer dans votre fournisseur d'identité** liste les valeurs à recopier. Chacune dispose d'un bouton de copie.
+
+    | Valeur | Nom courant chez votre fournisseur d'identité |
+    |---|---|
+    | **Entity ID (audience)** | Identifiant, audience ou entity ID |
+    | **URL de réponse (ACS)** | URL de réponse, URL de connexion ou assertion consumer service |
+    | **URL des métadonnées du fournisseur de service** | Adresse des métadonnées, si votre outil préfère les importer |
+    | **Certificat de signature** | Certificat servant à vérifier les messages venant de Reelevant |
+    | **URL de connexion** | L'adresse à communiquer à vos utilisateurs, une par domaine |
+  </Step>
+  <Step title="Tester une connexion">
+    Ouvrez une **URL de connexion** dans une fenêtre de navigation privée et connectez-vous avec votre propre compte. Le [journal d'audit](/fr/product-guide/account/audit-log) enregistre la tentative, acceptée ou refusée, avec le motif.
+  </Step>
+</Steps>
+
+## Imposer l'authentification unique
+
+Par défaut, l'authentification unique est optionnelle : les personnes peuvent encore se connecter avec leur mot de passe Reelevant. Activez **Imposer l'authentification unique** pour refuser tout autre mode de connexion sur vos domaines.
+
+L'option reste indisponible jusqu'à ce qu'une connexion via votre fournisseur d'identité ait réussi. C'est volontaire : il devient impossible de bloquer l'accès de toute votre entreprise avec un réglage erroné.
+
+<Warning>
+  Modifier les métadonnées ou les domaines d'une configuration qui fonctionne rend l'option de nouveau indisponible, jusqu'à ce qu'une connexion valide le nouveau réglage.
+</Warning>
+
+## Renouveler le certificat de signature
+
+Utilisez **Renouveler le certificat** lorsque votre politique de sécurité l'exige, ou si vous pensez que le certificat actuel est compromis.
+
+<Warning>
+  Les connexions échouent tant que le nouveau certificat n'est pas déclaré chez votre fournisseur d'identité. Prévoyez l'opération et recopiez la nouvelle valeur immédiatement.
+</Warning>
+
+## Désactiver l'authentification unique
+
+Désactivez d'abord **Imposer l'authentification unique**, afin que les personnes puissent se reconnecter avec leur mot de passe. **Supprimer la configuration** n'est proposé qu'une fois cette obligation levée.
+
+La suppression retire la configuration, le certificat et la redirection de vos domaines. Les utilisateurs, les [rôles](/fr/product-guide/account/roles) et les [Teams](/fr/product-guide/account/teams) ne sont pas touchés.
+
+## Si quelque chose ne fonctionne pas
+
+| Ce que vous voyez | Ce qu'il faut vérifier |
+|---|---|
+| L'enregistrement est refusé car les métadonnées sont inexploitables | Exportez-les à nouveau. Elles doivent contenir l'adresse de connexion de votre fournisseur d'identité et son certificat. |
+| L'enregistrement est refusé car un domaine est déjà utilisé | Le domaine est revendiqué par une autre entreprise. Contactez votre interlocuteur Reelevant. |
+| Une personne est refusée à la connexion | Avec **Sur invitation uniquement**, invitez-la d'abord. Sinon, consultez le motif dans le [journal d'audit](/fr/product-guide/account/audit-log). |
+| Une personne est créée sans adresse e-mail | Vérifiez la ligne `email` de la correspondance des attributs par rapport à ce qu'envoie votre fournisseur d'identité. |
+| Plus personne ne peut se connecter après un renouvellement | Le nouveau certificat n'est pas encore déclaré chez votre fournisseur d'identité. Recopiez-le. |
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Provisionnement automatique (SCIM)" icon="rotate" href="/fr/product-guide/account/scim-provisioning">
+    Laissez aussi votre fournisseur d'identité créer et supprimer les comptes.
+  </Card>
+  <Card title="Journal d'audit" icon="list-check" href="/fr/product-guide/account/audit-log">
+    Consultez chaque tentative de connexion et son résultat.
+  </Card>
+  <Card title="Utilisateurs" icon="users" href="/fr/product-guide/account/users">
+    Vérifiez qui a accès, et son URL de connexion.
+  </Card>
+  <Card title="Rôles" icon="shield" href="/fr/product-guide/account/roles">
+    Décidez ce que les personnes peuvent faire une fois connectées.
+  </Card>
+</CardGroup>
