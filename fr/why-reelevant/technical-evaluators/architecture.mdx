@@ -65,11 +65,29 @@ sequenceDiagram
 | Débit | 100 M+ rendus de Content personnalisé/mois par client |
 | Failover | Multi-région actif-actif |
 
+## Environnements
+
+Reelevant exploite une **plateforme de production unique**. Il n'existe pas d'environnement sandbox, de développement ou de test mis à disposition des clients.
+
+L'isolation est assurée par le modèle d'autorisation plutôt que par un déploiement séparé : un namespace de QA est un tenant dédié au sein de la production, cloisonné par les mêmes attributs de société et de Team que ceux qui isolent tous les autres tenants. Voir [Authentification et SSO](/fr/why-reelevant/technical-evaluators/authentication) pour le modèle RBAC/ABAC.
+
+| Propriété | Comportement |
+|-----------|--------------|
+| QA / recette | Un tenant (société) dédié en production, isolé par le cloisonnement RBAC/ABAC — même version de plateforme, mêmes performances, mêmes API : il est donc pleinement représentatif |
+| Séparation du trafic live | Ses propres Workflows, Contents, Datasources, utilisateurs, jetons d'API et compteurs de consommation |
+| Environnements internes Reelevant | Privés, jamais exposés aux clients, et totalement déconnectés les uns des autres — serveurs physiques distincts, aucun chemin de données partagé |
+| Validation avant publication sans second tenant | États des Workflows (Draft / Live / Inactive), Real-Time Testing, et mode debug avec un jeton à durée de vie courte |
+
+Les jetons d'API sont limités au tenant pour lequel ils ont été émis : une intégration de QA ne peut donc jamais écrire dans des Workflows ou des Datasources de production.
+
 ## Prochaines étapes
 
 <CardGroup cols={2}>
 <Card title="Ingestion de données" icon="database" href="/fr/why-reelevant/technical-evaluators/data-ingestion">
 Types de sources DataHub et modes d'ingestion.
+</Card>
+<Card title="Accès et export des données" icon="table" href="/fr/why-reelevant/technical-evaluators/data-access">
+Vues BigQuery, API analytics et alimentation de votre data platform.
 </Card>
 <Card title="Canaux d'intégration" icon="plug" href="/fr/why-reelevant/technical-evaluators/integrations">
 Patterns d'intégration email, web, mobile et JSON API.

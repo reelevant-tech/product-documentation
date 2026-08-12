@@ -65,11 +65,29 @@ sequenceDiagram
 | Throughput | 100M+ personalised Content renders/month per client |
 | Failover | Multi-region active-active |
 
+## Environments
+
+Reelevant operates a **single production platform**. There is no customer-facing sandbox, development, or test environment.
+
+Isolation is enforced by the authorisation model rather than by a separate deployment: a QA namespace is a dedicated tenant inside production, scoped by the same company and Team attributes that isolate every other tenant. See [Authentication & SSO](/why-reelevant/technical-evaluators/authentication) for the RBAC/ABAC model.
+
+| Property | Behaviour |
+|----------|-----------|
+| QA / testing | A dedicated tenant (company) in production, isolated by the RBAC/ABAC scoping — same platform version, same performance, same APIs, so it is fully representative |
+| Separation from live traffic | Its own Workflows, Contents, Datasources, users, API tokens, and usage counters |
+| Reelevant internal environments | Private, never exposed to customers, and fully disconnected from each other — separate physical servers, no shared data path |
+| Pre-release validation without a second tenant | Workflow states (Draft / Live / Inactive), Real-Time Testing, and debug mode with a short-lived token |
+
+API tokens are scoped to the tenant they were issued for, so a QA integration can never write to live Workflows or live Datasources.
+
 ## Next Steps
 
 <CardGroup cols={2}>
 <Card title="Data Ingestion" icon="database" href="/why-reelevant/technical-evaluators/data-ingestion">
 DataHub source types and ingestion modes.
+</Card>
+<Card title="Data Access & Export" icon="table" href="/why-reelevant/technical-evaluators/data-access">
+BigQuery views, analytics API, and feeding your own data platform.
 </Card>
 <Card title="Integration Channels" icon="plug" href="/why-reelevant/technical-evaluators/integrations">
 Email, web, mobile, and JSON API patterns.
