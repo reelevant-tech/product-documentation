@@ -1,0 +1,150 @@
+---
+title: 'Provisionnement avec Microsoft Entra ID'
+description: 'Connectez Microsoft Entra ID à Reelevant pour synchroniser automatiquement les utilisateurs, les groupes et les départs'
+---
+
+Ce guide connecte Microsoft Entra ID à Reelevant, afin qu'Entra ID crée, mette à jour et désactive les comptes Reelevant à votre place.
+
+Lisez d'abord [Provisionnement automatique des utilisateurs](/fr/product-guide/account/scim-provisioning) : cette page explique les réglages que vous choisissez ici.
+
+## Avant de commencer
+
+- Activez le provisionnement dans Reelevant, puis copiez l'adresse de base et générez une clé d'accès.
+- Vous devez être administrateur dans Microsoft Entra ID.
+- Créez dans Reelevant les [rôles](/fr/product-guide/account/roles) que les personnes provisionnées doivent recevoir.
+
+## Étape 1 — Créer l'application
+
+<Steps>
+  <Step title="Ajouter une application d'entreprise">
+    Dans le centre d'administration Microsoft Entra, allez dans **Enterprise applications** et cliquez sur **New application**.
+  </Step>
+  <Step title="Créer votre propre application">
+    Choisissez **Create your own application**, nommez-la « Reelevant » et sélectionnez l'option pour une application absente de la galerie.
+  </Step>
+  <Step title="Affecter les personnes et les groupes">
+    Ouvrez **Users and groups** et affectez les personnes ou les groupes qui doivent disposer d'un compte Reelevant.
+  </Step>
+</Steps>
+
+{/* TODO : capture d'écran de la création de l'application Entra ID — en attente de la validation dans un vrai tenant Entra ID */}
+
+<Info>
+  Seules les personnes affectées à cette application sont provisionnées. La connexion est gérée par l'authentification unique, qui se configure séparément.
+</Info>
+
+## Étape 2 — Connecter le provisionnement
+
+<Steps>
+  <Step title="Ouvrir Provisioning">
+    Dans l'application, ouvrez **Provisioning**, cliquez sur **Get started** et choisissez le mode **Automatic**.
+  </Step>
+  <Step title="Coller les valeurs Reelevant">
+    | Champ Entra ID | Ce qu'il faut coller |
+    |---|---|
+    | **Tenant URL** | L'adresse de base affichée dans les paramètres de provisionnement Reelevant. |
+    | **Secret Token** | La clé d'accès générée dans Reelevant. |
+  </Step>
+  <Step title="Tester la connexion">
+    Cliquez sur **Test Connection**. Entra ID vérifie ce que Reelevant prend en charge et valide les identifiants.
+
+    Si le test échoue, vérifiez que le provisionnement est activé dans Reelevant et que la clé d'accès n'a pas été révoquée.
+  </Step>
+  <Step title="Enregistrer et démarrer">
+    Cliquez sur **Save**, puis passez **Provisioning Status** sur **On**. Entra ID synchronise environ toutes les 40 minutes.
+  </Step>
+</Steps>
+
+{/* TODO : capture d'écran de la configuration du provisionnement Entra ID — en attente de la validation dans un vrai tenant Entra ID */}
+
+## Étape 3 — Associer les attributs
+
+Ouvrez **Mappings → Provision Microsoft Entra ID Users**. Conservez ces associations et supprimez les autres : les attributs supplémentaires sont ignorés.
+
+| Attribut Entra ID | Champ Reelevant | Remarques |
+|---|---|---|
+| `userPrincipalName` ou `mail` | Adresse email | Obligatoire. Associez-le à `userName`. Sert aussi à reconnaître un compte existant. |
+| `givenName` | Prénom | |
+| `surname` | Nom | |
+| `jobTitle` | Fonction | |
+| `telephoneNumber` | Téléphone | Seule la première valeur est conservée. |
+| `preferredLanguage` | Langue de l'interface | Seuls l'anglais et le français sont pris en charge. Toute autre valeur est ignorée. |
+| `Switch([IsSoftDeleted]…)` | Statut du compte | Conservez l'association par défaut vers `active`. Désactiver une personne désactive son compte Reelevant. |
+| `roles` | [Rôle](/fr/product-guide/account/roles) | Utilisé uniquement si vous avez choisi **depuis l'attribut de rôle** dans Reelevant. La plupart des clients Entra ID préfèrent **depuis les groupes**. |
+
+<Info>
+  Conservez `userName` comme attribut de correspondance. Si l'adresse email et le nom d'utilisateur diffèrent, le nom d'utilisateur gagne.
+</Info>
+
+## Étape 4 — Synchroniser les groupes
+
+À faire uniquement si vous avez conservé la synchronisation des groupes dans Reelevant.
+
+<Steps>
+  <Step title="Activer l'association des groupes">
+    Dans **Mappings**, ouvrez **Provision Microsoft Entra ID Groups** et vérifiez qu'elle est activée.
+  </Step>
+  <Step title="Affecter les groupes à l'application">
+    Revenez dans **Users and groups** et affectez les groupes qui doivent devenir des [Teams](/fr/product-guide/account/teams) Reelevant.
+  </Step>
+  <Step title="Laisser la synchronisation s'exécuter">
+    Chaque groupe affecté crée un Team du même nom, et ses membres rejoignent ce Team.
+  </Step>
+</Steps>
+
+{/* TODO : capture d'écran de l'association des groupes Entra ID — en attente de la validation dans un vrai tenant Entra ID */}
+
+<Tip>
+  Si vous avez choisi **depuis les groupes** pour décider des rôles, utilisez ici exactement les noms de groupes listés dans l'association de rôles Reelevant. Les noms sont comparés sans tenir compte des majuscules.
+</Tip>
+
+## Étape 5 — Tester avec une personne
+
+<Steps>
+  <Step title="Provisionner à la demande">
+    Utilisez **Provision on demand** avec une seule personne de test, pour ne pas attendre le prochain cycle.
+  </Step>
+  <Step title="Vérifier le compte dans Reelevant">
+    Ouvrez la page [Utilisateurs](/fr/product-guide/account/users). Le compte apparaît avec le rôle et les Teams attendus.
+
+    La personne n'a pas de mot de passe : elle se connecte par l'authentification unique. Aucun email d'invitation n'est envoyé.
+  </Step>
+  <Step title="Désactiver la personne de test">
+    Désactivez le compte dans Entra ID, ou retirez son affectation à l'application.
+  </Step>
+  <Step title="Vérifier le résultat">
+    Dans Reelevant, le compte est désormais désactivé ou supprimé, selon le choix fait dans les paramètres de provisionnement.
+
+    Les sessions ouvertes sont fermées immédiatement : la personne perd l'accès aussitôt.
+  </Step>
+  <Step title="Consulter le journal d'audit">
+    Le [journal d'audit](/fr/product-guide/account/audit-log) montre chacun de ces événements, avec l'heure exacte et le résultat.
+  </Step>
+</Steps>
+
+## Si cela ne fonctionne pas
+
+| Symptôme | Ce qu'il faut vérifier |
+|---|---|
+| Le test de connexion échoue | Le provisionnement est désactivé dans Reelevant, ou la clé d'accès a été révoquée ou mal recopiée. |
+| Rien n'est créé | Personne n'est affecté à l'application, ou le statut de provisionnement est encore désactivé. |
+| Une personne est créée sans le rôle attendu | Le nom du rôle ne correspond pas, ou le groupe manque dans votre association de rôles. Consultez le [journal d'audit](/fr/product-guide/account/audit-log). |
+| Les groupes n'apparaissent pas comme des Teams | La synchronisation des groupes est désactivée dans Reelevant, ou l'association des groupes est désactivée dans Entra ID. |
+| Une désactivation est refusée | Reelevant ne désactive jamais le dernier administrateur. Donnez d'abord le rôle à quelqu'un d'autre. |
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Paramètres de provisionnement" icon="gear" href="/fr/product-guide/account/scim-provisioning">
+    Revoyez les rôles, les Teams et le comportement lors d'un départ.
+  </Card>
+  <Card title="Journal d'audit" icon="list-check" href="/fr/product-guide/account/audit-log">
+    Vérifiez ce qui a été créé, modifié ou désactivé.
+  </Card>
+  <Card title="Okta" icon="key" href="/fr/product-guide/account/scim-okta">
+    La même configuration avec Okta.
+  </Card>
+  <Card title="Utilisateurs" icon="users" href="/fr/product-guide/account/users">
+    Consultez les personnes provisionnées et leur statut.
+  </Card>
+</CardGroup>

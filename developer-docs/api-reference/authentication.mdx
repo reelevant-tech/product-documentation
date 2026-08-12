@@ -197,6 +197,10 @@ curl -XDELETE https://api.reelevant.com/v2/auth/token/<token_id>
 
 Revoking a refresh token also revokes all access tokens derived from it.
 
+## SCIM Provisioning
+
+Inbound provisioning uses company-scoped bearer tokens instead of OAuth user tokens. See [SCIM 2.0 provisioning](/developer-docs/api-reference/scim).
+
 ## SSO Authentication
 
 Companies with SSO configured are automatically redirected to their identity provider during the OAuth authorize flow. If SSO is mandatory for the company, password-based login is disabled (except for service accounts).

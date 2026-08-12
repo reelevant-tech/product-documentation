@@ -197,6 +197,10 @@ curl -XDELETE https://api.reelevant.com/v2/auth/token/<token_id>
 
 Révoquer un refresh token révoque également tous les tokens d'accès qui en sont dérivés.
 
+## Provisionnement SCIM
+
+Le provisionnement entrant utilise des tokens bearer propres à une entreprise, et non des tokens OAuth utilisateur. Voir [Provisionnement SCIM 2.0](/fr/developer-docs/api-reference/scim).
+
 ## Authentification SSO
 
 Les entreprises ayant configuré le SSO sont automatiquement redirigées vers leur fournisseur d'identité pendant le flux d'autorisation OAuth. Si le SSO est obligatoire pour l'entreprise, la connexion par mot de passe est désactivée (sauf pour les comptes de service).

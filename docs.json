@@ -175,7 +175,11 @@
                   "product-guide/account/permissions",
                   "product-guide/account/users",
                   "product-guide/account/roles",
-                  "product-guide/account/teams"
+                  "product-guide/account/teams",
+                  "product-guide/account/scim-provisioning",
+                  "product-guide/account/scim-okta",
+                  "product-guide/account/scim-entra-id",
+                  "product-guide/account/audit-log"
                 ]
               },
               {
@@ -363,7 +367,8 @@
                 "pages": [
                   "developer-docs/introduction",
                   "developer-docs/api-reference/introduction",
-                  "developer-docs/api-reference/authentication"
+                  "developer-docs/api-reference/authentication",
+                  "developer-docs/api-reference/scim"
                 ]
               },
               {
@@ -622,7 +627,11 @@
                   "fr/product-guide/account/permissions",
                   "fr/product-guide/account/users",
                   "fr/product-guide/account/roles",
-                  "fr/product-guide/account/teams"
+                  "fr/product-guide/account/teams",
+                  "fr/product-guide/account/scim-provisioning",
+                  "fr/product-guide/account/scim-okta",
+                  "fr/product-guide/account/scim-entra-id",
+                  "fr/product-guide/account/audit-log"
                 ]
               },
               {
@@ -810,7 +819,8 @@
                 "pages": [
                   "fr/developer-docs/introduction",
                   "fr/developer-docs/api-reference/introduction",
-                  "fr/developer-docs/api-reference/authentication"
+                  "fr/developer-docs/api-reference/authentication",
+                  "fr/developer-docs/api-reference/scim"
                 ]
               },
               {

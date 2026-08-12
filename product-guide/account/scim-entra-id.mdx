@@ -1,0 +1,150 @@
+---
+title: 'Provisioning With Microsoft Entra ID'
+description: 'Connect Microsoft Entra ID to Reelevant so users, groups, and departures are synchronised automatically'
+---
+
+This guide connects Microsoft Entra ID to Reelevant, so Entra ID creates, updates, and deactivates Reelevant accounts for you.
+
+Read [Automatic User Provisioning](/product-guide/account/scim-provisioning) first — it explains the settings you choose here.
+
+## Before You Begin
+
+- Turn provisioning on in Reelevant, then copy the base address and generate an access key.
+- You need administrator rights in Microsoft Entra ID.
+- Create in Reelevant the [roles](/product-guide/account/roles) you want provisioned people to receive.
+
+## Step 1 — Create The Application
+
+<Steps>
+  <Step title="Add an enterprise application">
+    In the Microsoft Entra admin centre, go to **Enterprise applications** and click **New application**.
+  </Step>
+  <Step title="Create your own application">
+    Choose **Create your own application**, name it "Reelevant", and pick the option for an application not in the gallery.
+  </Step>
+  <Step title="Assign people and groups">
+    Open **Users and groups** and assign the people or groups who should have a Reelevant account.
+  </Step>
+</Steps>
+
+{/* TODO: screenshot of the Entra ID application creation — pending validation in a real Entra ID tenant */}
+
+<Info>
+  Only people assigned to this application are provisioned. Logging in is handled by single sign-on, which is configured separately.
+</Info>
+
+## Step 2 — Connect Provisioning
+
+<Steps>
+  <Step title="Open Provisioning">
+    In the application, open **Provisioning**, click **Get started**, and set the mode to **Automatic**.
+  </Step>
+  <Step title="Paste the Reelevant values">
+    | Entra ID field | What to paste |
+    |---|---|
+    | **Tenant URL** | The base address shown in the Reelevant provisioning settings. |
+    | **Secret Token** | The access key you generated in Reelevant. |
+  </Step>
+  <Step title="Test the connection">
+    Click **Test Connection**. Entra ID checks what Reelevant supports and confirms the credentials.
+
+    If the test fails, check that provisioning is switched on in Reelevant and that the access key has not been revoked.
+  </Step>
+  <Step title="Save and start">
+    Click **Save**, then set **Provisioning Status** to **On**. Entra ID synchronises roughly every 40 minutes.
+  </Step>
+</Steps>
+
+{/* TODO: screenshot of the Entra ID provisioning configuration — pending validation in a real Entra ID tenant */}
+
+## Step 3 — Map The Attributes
+
+Open **Mappings → Provision Microsoft Entra ID Users**. Keep these mappings and delete the rest — extra attributes are ignored.
+
+| Entra ID attribute | Reelevant field | Notes |
+|---|---|---|
+| `userPrincipalName` or `mail` | Email address | Required. Map it to `userName`. Also used to recognise an existing account. |
+| `givenName` | First name | |
+| `surname` | Last name | |
+| `jobTitle` | Job title | |
+| `telephoneNumber` | Phone | Only the first value is kept. |
+| `preferredLanguage` | Interface language | Only English and French are supported. Anything else is ignored. |
+| `Switch([IsSoftDeleted]…)` | Account status | Keep the default mapping to `active`. Disabling somebody deactivates their Reelevant account. |
+| `roles` | [Role](/product-guide/account/roles) | Only used if you chose **from the role attribute** in Reelevant. Most Entra ID customers use **from groups** instead. |
+
+<Info>
+  Keep `userName` as the matching attribute. If the email address and the user name disagree, the user name wins.
+</Info>
+
+## Step 4 — Synchronise Groups
+
+Only do this if you kept group synchronisation on in Reelevant.
+
+<Steps>
+  <Step title="Enable the group mapping">
+    In **Mappings**, open **Provision Microsoft Entra ID Groups** and make sure it is enabled.
+  </Step>
+  <Step title="Assign the groups to the application">
+    Back in **Users and groups**, assign the groups that should become Reelevant [Teams](/product-guide/account/teams).
+  </Step>
+  <Step title="Let the synchronisation run">
+    Each assigned group creates a Team of the same name, and its members join that Team.
+  </Step>
+</Steps>
+
+{/* TODO: screenshot of the Entra ID group mapping — pending validation in a real Entra ID tenant */}
+
+<Tip>
+  If you chose **from groups** to decide roles, use here exactly the group names you listed in the Reelevant role mapping. Names are compared ignoring upper and lower case.
+</Tip>
+
+## Step 5 — Test With One Person
+
+<Steps>
+  <Step title="Provision on demand">
+    Use **Provision on demand** and pick one test person, so you do not have to wait for the next cycle.
+  </Step>
+  <Step title="Check the account in Reelevant">
+    Open the [Users](/product-guide/account/users) page. The account appears with the expected role and Teams.
+
+    The person has no password: they log in through single sign-on. No invitation email is sent.
+  </Step>
+  <Step title="Disable the test person">
+    Disable the account in Entra ID, or remove their assignment to the application.
+  </Step>
+  <Step title="Check the result">
+    In Reelevant, the account is now deactivated or deleted, following the choice you made in the provisioning settings.
+
+    Open sessions are closed immediately, so the person loses access straight away.
+  </Step>
+  <Step title="Read the audit log">
+    The [audit log](/product-guide/account/audit-log) shows each of these events, with the exact time and outcome.
+  </Step>
+</Steps>
+
+## If Something Does Not Work
+
+| Symptom | What to check |
+|---|---|
+| The connection test fails | Provisioning is off in Reelevant, or the access key was revoked or mistyped. |
+| Nothing is created | Nobody is assigned to the application, or provisioning status is still off. |
+| A person is created without the expected role | The role name does not match, or the group is missing from your role mapping. Check the [audit log](/product-guide/account/audit-log). |
+| Groups do not appear as Teams | Group synchronisation is off in Reelevant, or the group mapping is disabled in Entra ID. |
+| A deactivation is refused | Reelevant never deactivates the last remaining administrator. Give the role to somebody else first. |
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Provisioning settings" icon="gear" href="/product-guide/account/scim-provisioning">
+    Review roles, Teams, and what happens when someone leaves.
+  </Card>
+  <Card title="Audit log" icon="list-check" href="/product-guide/account/audit-log">
+    Check what was created, changed, or deactivated.
+  </Card>
+  <Card title="Okta" icon="key" href="/product-guide/account/scim-okta">
+    The same setup with Okta.
+  </Card>
+  <Card title="Users" icon="users" href="/product-guide/account/users">
+    See provisioned people and their status.
+  </Card>
+</CardGroup>

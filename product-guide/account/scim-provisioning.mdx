@@ -1,0 +1,129 @@
+---
+title: 'Automatic User Provisioning (SCIM)'
+description: 'Let your identity provider create, update, and remove Reelevant users automatically'
+---
+
+Automatic user provisioning lets your identity provider (the tool your company uses to manage staff accounts, such as Okta or Microsoft Entra ID) manage Reelevant accounts for you.
+
+{/* TODO: screenshot of the SCIM provisioning settings — pending the admin interface */}
+
+## What It Does For You
+
+Once provisioning is switched on, your identity provider keeps Reelevant in step with your staff directory:
+
+| Event in your identity provider | What happens in Reelevant |
+|---|---|
+| Someone is assigned the Reelevant application | An account is created, with a [role](/product-guide/account/roles) and at least one [Team](/product-guide/account/teams). |
+| Someone's name, job title, phone, or language changes | The Reelevant profile is updated. |
+| Someone is added to or removed from a group | Their [Team](/product-guide/account/teams) membership follows, and their role too if you asked for that. |
+| Someone is deactivated or leaves the company | Their Reelevant account is deactivated or deleted, depending on your choice below. |
+
+Nobody has to be invited by hand any more, and nobody keeps access after leaving.
+
+<Info>
+  Provisioning creates and maintains accounts. It does not replace single sign-on, which is what lets people log in. The two are configured separately, and provisioning works with or without single sign-on.
+</Info>
+
+## Before You Begin
+
+- You need permission to update company settings in Reelevant.
+- You need an administrator account in your identity provider.
+- Decide which of your groups should become Reelevant [Teams](/product-guide/account/teams).
+- Create the [roles](/product-guide/account/roles) you want provisioned people to get.
+
+## Enabling Provisioning
+
+<Steps>
+  <Step title="Open the provisioning settings">
+    Go to the account administration section and open the provisioning settings.
+
+    {/* TODO: screenshot of the provisioning settings — pending the admin interface */}
+  </Step>
+  <Step title="Turn provisioning on">
+    Switch provisioning on. Until you do, your identity provider is refused access, even with a valid access key.
+  </Step>
+  <Step title="Copy the base address">
+    The settings page shows a base address to paste into your identity provider. It is the same for every company.
+  </Step>
+  <Step title="Generate an access key">
+    Click the button to generate an access key. The value is shown **once** — copy it straight away.
+
+    <Warning>
+      The access key cannot be displayed again. If you lose it, revoke it and generate a new one.
+    </Warning>
+  </Step>
+  <Step title="Paste both values into your identity provider">
+    Follow the guide for your tool: [Okta](/product-guide/account/scim-okta) or [Microsoft Entra ID](/product-guide/account/scim-entra-id).
+  </Step>
+</Steps>
+
+You can keep **two** access keys active at the same time. That lets you hand a new key to your identity provider before revoking the old one, with no interruption.
+
+<Tip>
+  Give each key a label, such as "Okta production". The settings page shows when each key was last used, which makes it easy to spot the one you can retire.
+</Tip>
+
+## Choosing How Roles Are Decided
+
+Every Reelevant user has exactly one [role](/product-guide/account/roles). You choose where that role comes from:
+
+| Setting | What decides the role |
+|---|---|
+| **Not managed** (default) | Reelevant decides. Provisioned people get the company default role, and you change it yourself afterwards. |
+| **From the role attribute** | Your identity provider sends a role name. It has to match a Reelevant role name exactly, apart from upper and lower case. |
+| **From groups** | You build an ordered list of pairs: a group name from your identity provider, and the Reelevant role it grants. The first matching group wins. |
+
+If the incoming value matches nothing, Reelevant falls back to the default role you picked, and records the miss in the [audit log](/product-guide/account/audit-log). One wrong value never breaks the whole synchronisation.
+
+<Warning>
+  With **from groups**, someone removed from a mapped group is moved back to the default role. That is deliberate: losing the group has to remove the extra rights.
+</Warning>
+
+## Mapping Groups To Teams
+
+Group synchronisation is on by default. Each group your identity provider pushes becomes a Reelevant [Team](/product-guide/account/teams), and its members become members of that Team.
+
+- Teams created this way are flat, with no parent or child.
+- You can still arrange them into a hierarchy in Reelevant. Provisioning never undoes that.
+- A Team that is part of a hierarchy cannot be deleted by your identity provider. Remove the parent and child links first.
+- Everyone always keeps at least one Team. If the last one is taken away, Reelevant puts the person back into the company default Teams.
+
+If you would rather manage Teams entirely in Reelevant, switch group synchronisation off. Your identity provider then only manages people.
+
+## Choosing What Happens When Someone Leaves
+
+Two behaviours are available. This is a Reelevant setting — your identity provider cannot choose per person.
+
+| Setting | What happens | Reversible |
+|---|---|---|
+| **Deactivate** (default) | The account is kept but disabled. The person can no longer log in, open sessions are closed, and messaging app links are removed. | Yes — reactivating restores the same role and Teams. |
+| **Delete permanently** | The account, its sessions, its messaging app links, and any pending invitation are erased. | No |
+
+<Warning>
+  **Delete permanently** cannot be undone. If the same person comes back, a brand new account is created, and any earlier reference to them shows as unknown. Statistics and usage data recorded elsewhere in Reelevant are not erased. Choose it only if your company has a contractual obligation to erase staff records.
+</Warning>
+
+Reelevant always refuses to deactivate or delete the last remaining administrator, so a wrong group assignment cannot lock your company out. The refusal is recorded in the [audit log](/product-guide/account/audit-log).
+
+## Checking That It Works
+
+- The provisioning settings show the date of the last successful synchronisation.
+- The [audit log](/product-guide/account/audit-log) lists every account created, updated, deactivated, or deleted, and every value that could not be matched.
+- The [Users](/product-guide/account/users) page shows deactivated people, so you can confirm a departure was applied.
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Set up Okta" icon="key" href="/product-guide/account/scim-okta">
+    Step-by-step provisioning setup in Okta.
+  </Card>
+  <Card title="Set up Microsoft Entra ID" icon="microsoft" href="/product-guide/account/scim-entra-id">
+    Step-by-step provisioning setup in Microsoft Entra ID.
+  </Card>
+  <Card title="Audit log" icon="list-check" href="/product-guide/account/audit-log">
+    Read what happened to accounts, and when.
+  </Card>
+  <Card title="Teams" icon="sitemap" href="/product-guide/account/teams">
+    Understand how Teams control access to resources.
+  </Card>
+</CardGroup>
