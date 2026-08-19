@@ -1,0 +1,26 @@
+---
+title: 'Public IPs'
+description: 'Reelevant public IP addresses used when Datasources fetch data and Contents fetch images'
+---
+
+## Overview
+
+Reelevant connects from a published set of public IP addresses when it pulls data from your systems and when it retrieves remote images for Contents.
+
+Allowlist those addresses if your Datasource, warehouse, FTP host, or image host restricts inbound traffic.
+
+The current list is in [public_ips.json](https://github.com/reelevant-tech/.github/blob/main/public_ips.json). Use every **active** address unless your Technical Account Manager tells you to restrict by region.
+
+## When these IPs are used
+
+| Use | What Reelevant fetches |
+|-----|------------------------|
+| [Datasource](/product-guide/datahub/overview) sync | Data from URL, FTP/SFTP, and other outbound Datasource sources |
+| Live (proxy) Datasource | Data from your upstream host on every query |
+| [Content](/product-guide/contents/overview) images | Remote image files bound in the [Image component](/product-guide/contents/components/image) |
+
+Reelevant does not fetch from private or internal IP ranges. The host must be publicly reachable, then allowlisted to the published addresses.
+
+<Tip>
+  If a Datasource sync or a Content image fails with a timeout or connection refused, confirm the published IPs are allowed on the remote host.
+</Tip>

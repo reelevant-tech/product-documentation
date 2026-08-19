@@ -293,7 +293,7 @@ The response returns the parsed rows in `entries`, the total `count`, and pagina
 ```
 
 <Warning>
-  The upstream host must be publicly reachable. Requests that resolve to private or internal IP ranges are rejected with `UrlNotReachable`, both when configuring the source and on every live query.
+  The upstream host must be publicly reachable. Requests that resolve to private or internal IP ranges are rejected with `UrlNotReachable`, both when configuring the source and on every live query. If the host allowlists inbound traffic, add the [Reelevant public IPs](/advanced-guide/datahub/public-ips).
 </Warning>
 
 ## Related
@@ -302,4 +302,5 @@ The response returns the parsed rows in `entries`, the total `count`, and pagina
 - [Query a datasource](/api-reference/datasource/query-a-datasource) — the endpoint used to test the live Datasource.
 - [Datasources API reference](/api-reference/introduction) — full endpoint reference.
 - [Custom Fetchers](/advanced-guide/datahub/custom-fetchers) — Proxy Lock and Proxy Aggregation for real-time Datasources.
+- [Public IPs](/advanced-guide/datahub/public-ips) — CIDRs to allowlist on the upstream host.
 - [Datasource Data Node](/advanced-guide/workflows/data-nodes/datasources) — querying a Datasource inside a Workflow.

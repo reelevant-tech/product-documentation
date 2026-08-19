@@ -1,0 +1,26 @@
+---
+title: 'IPs publiques'
+description: 'Adresses IP publiques Reelevant utilisées lorsque les Datasources récupèrent des données et les Contents récupèrent des images'
+---
+
+## Présentation
+
+Reelevant se connecte depuis un ensemble publié d'adresses IP publiques lorsqu'il tire des données depuis vos systèmes et lorsqu'il récupère des images distantes pour les Contents.
+
+Autorisez ces adresses si votre Datasource, entrepôt, hôte FTP ou hôte d'images restreint le trafic entrant.
+
+La liste actuelle est dans [public_ips.json](https://github.com/reelevant-tech/.github/blob/main/public_ips.json). Utilisez toutes les adresses **actives**, sauf si votre Technical Account Manager vous demande de restreindre par région.
+
+## Quand ces IPs sont utilisées
+
+| Usage | Ce que Reelevant récupère |
+|-------|---------------------------|
+| Synchronisation de [Datasource](/fr/product-guide/datahub/overview) | Données depuis URL, FTP/SFTP et autres sources Datasource sortantes |
+| Datasource live (proxy) | Données depuis votre hôte amont à chaque requête |
+| Images de [Content](/fr/product-guide/contents/overview) | Fichiers image distants liés dans le [composant Image](/fr/product-guide/contents/components/image) |
+
+Reelevant ne récupère pas depuis des plages IP privées ou internes. L'hôte doit être joignable publiquement, puis autorisé pour les adresses publiées.
+
+<Tip>
+  Si une synchronisation de Datasource ou une image de Content échoue par timeout ou connexion refusée, vérifiez que les IPs publiées sont autorisées sur l'hôte distant.
+</Tip>
