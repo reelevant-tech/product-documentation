@@ -293,7 +293,7 @@ La réponse renvoie les lignes analysées dans `entries`, le total `count` et le
 ```
 
 <Warning>
-  L'hôte externe doit être joignable publiquement. Les requêtes qui se résolvent vers des plages d'IP privées ou internes sont rejetées avec `UrlNotReachable`, à la fois lors de la configuration de la source et à chaque requête en direct.
+  L'hôte externe doit être joignable publiquement. Les requêtes qui se résolvent vers des plages d'IP privées ou internes sont rejetées avec `UrlNotReachable`, à la fois lors de la configuration de la source et à chaque requête en direct. Si l'hôte autorise le trafic entrant par IP, ajoutez les [IPs publiques Reelevant](/fr/advanced-guide/datahub/public-ips).
 </Warning>
 
 ## Pages associées
@@ -302,4 +302,5 @@ La réponse renvoie les lignes analysées dans `entries`, le total `count` et le
 - [Query a datasource](/api-reference/datasource/query-a-datasource) — l'endpoint utilisé pour tester la Datasource en direct.
 - [Référence de l'API datasources](/fr/developer-docs/api-reference/introduction) — référence complète des endpoints.
 - [Custom Fetchers](/fr/advanced-guide/datahub/custom-fetchers) — Proxy Lock et Proxy Aggregation pour les Datasources en temps réel.
+- [IPs publiques](/fr/advanced-guide/datahub/public-ips) — CIDR à autoriser sur l'hôte amont.
 - [Data Node Datasource](/fr/advanced-guide/workflows/data-nodes/datasources) — interroger une Datasource dans un Workflow.

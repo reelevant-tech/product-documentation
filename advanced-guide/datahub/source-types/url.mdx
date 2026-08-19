@@ -155,6 +155,10 @@ Variables can be referenced in the URL, headers, body, and query parameters. Thi
 4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
 5. On subsequent syncs, the URL is re-fetched and the data is updated.
 
+<Info>
+  If the host restricts inbound traffic, allow the [Reelevant public IPs](/advanced-guide/datahub/public-ips).
+</Info>
+
 <Tip>
   Make sure your URL returns data in a supported format. The platform auto-detects the format from the response content type and content.
 </Tip>
