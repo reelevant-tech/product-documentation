@@ -5,6 +5,10 @@ description: 'Connect your Datasources into a single data model so Workflows can
 
 The Datagraph is the part of the [DataHub](/product-guide/datahub/overview) where you describe how your Datasources relate to each other.
 
+<Warning>
+  The Datagraph is in beta. Its pages and options can still change. Talk to your Technical Account Manager before you rely on it in a live Workflow.
+</Warning>
+
 ## Why Use the Datagraph?
 
 Each Datasource holds one set of data — products, stores, purchases, or customers. On its own, a Datasource cannot answer a question that needs two sets of data at once.
@@ -27,7 +31,11 @@ Open **DataHub** in the sidebar, then choose **Datagraph**. You will see three p
 
 On the **Schema** page, the **Tables** panel on the left lists the Datasources in the model. Selecting a table shows its **Columns** and its **Relations** (the links to other tables).
 
-![Datagraph Schema page with the Tables panel on the left and the selected table's Columns and Relations tabs on the right](/images/datahub/datagraph-schema-table-editor.png)
+![Datagraph Schema page for a property listings model, with five SeLoger tables on the left and the columns of the selected users table on the right](/images/datahub/datagraph-seloger-schema.png)
+
+The **Relations** tab shows which other tables the selected table is linked to, and on which fields.
+
+![Relations tab of a Datagraph table, showing two links from the recommendations table to the users table and the listings table](/images/datahub/datagraph-seloger-schema-relations.png)
 
 ## Understanding the Explorer
 
@@ -39,13 +47,15 @@ The **Explorer** is the most useful page if you simply want to understand your d
 4. Open the **Relations** tab to review each link one by one.
 5. Open the **Datasources** tab to list the Datasources used in the model, with their fields.
 
-![Datagraph Explorer inviting you to create a Schema first, because no Schema exists yet](/images/datahub/datagraph-explorer-empty.png)
+![Datagraph Explorer Diagram tab, showing five linked property Datasources as boxes connected by lines](/images/datahub/datagraph-seloger-explorer.png)
 
 <Info>
   If the Explorer asks you to create a Schema first, the Datagraph has not been set up yet. Ask your data team or your Technical Account Manager to build it.
 </Info>
 
 On the **Relations** tab, each link shows a **Join match** percentage. It tells you how well the values on both sides of the link actually overlap in your data.
+
+![Relations tab of the Datagraph Explorer, listing five links with their join match percentages](/images/datahub/datagraph-seloger-relations.png)
 
 | Filter | What it shows |
 |--------|---------------|
@@ -70,11 +80,35 @@ The **Schema** and each Entity have their own version, shown as a status.
 
 Nothing you see in a Draft affects your live personalisation until someone publishes it.
 
-![Datagraph Entity page with the entity name field, the editor area, and the Publish button](/images/datahub/datagraph-entity-editor.png)
+![Datagraph Entities page listing five Entities with their Draft or Live status](/images/datahub/datagraph-seloger-entities.png)
 
-On an Entity page, the **Input / Output** panel lists the **Parameters** the Entity expects, and the answer it returns.
+## What Entities Can Answer
 
-![Input and Output panel of a Datagraph Entity, showing the Parameters list and the returned answer](/images/datahub/datagraph-entity-input-output.png)
+An Entity answers one question about one person, one product, or one area. Your data team writes it once, and every Workflow can reuse it.
+
+Here are typical examples for a property listings account:
+
+| Entity | The question it answers |
+|--------|-------------------------|
+| **Listings matching a user search** | Which listings sit in the area this person is searching, within their budget? |
+| **Listings with a recent price drop** | Which listings in an area just became cheaper, biggest drop first? |
+| **Market prices in the user area** | What is the median price per square metre and the trend where this person is searching? |
+| **Recommended listings for a user** | Which listings does our recommendation data suggest for this person? |
+| **Editorial content for an area** | Which guides and market articles are published for this area? |
+
+The same patterns work for other businesses. A retail account might ask for the last items a person bought, the stock left in their favourite store, or the best sellers of their preferred category.
+
+<Tip>
+  Describe the question you need in plain words, with the data it should return. Your data team turns it into an Entity, then you pick it in your Workflow.
+</Tip>
+
+On an Entity page, the **Preview & results** panel shows a sample of the answer, so you can check the data before it goes live.
+
+![Datagraph Entity page showing the entity name, the editor, and two matching listings in the Preview and results panel](/images/datahub/datagraph-seloger-entity-editor.png)
+
+The **Input / Output** panel lists the **Parameters** the Entity expects, and the fields it returns.
+
+![Input and Output panel of a Datagraph Entity, showing the user_id parameter and the returned fields with their types](/images/datahub/datagraph-seloger-entity-input-output.png)
 
 ## Using an Entity in a Workflow
 

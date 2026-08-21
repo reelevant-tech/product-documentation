@@ -49,6 +49,24 @@ LIMIT 5
 
 La requête doit référencer au moins une table Datasource, sinon elle est rejetée.
 
+## Exemples concrets
+
+Les schémas ci-dessous proviennent d'un modèle d'annonces immobilières construit sur cinq Datasources : utilisateurs, annonces, prix au mètre carré par zone, recommandations pré-calculées et contenus éditoriaux.
+
+| Entity | Principe | Paramètres | Retourne |
+|--------|----------|------------|----------|
+| `listings_matching_search` | Joindre les utilisateurs aux annonces sur la zone recherchée, puis filtrer sur le budget. | `user_id` (`string`) | Les annonces triées par score de qualité, limitées à 6. |
+| `listings_price_drop` | Filtrer les annonces d'une zone sur une variation de prix minimale, calculée depuis le prix précédent. | `zone_id` (`string`), `min_drop_pct` (`number`) | Les annonces triées par pourcentage de baisse. |
+| `market_prices_area` | Lire la table de marché pour la zone recherchée par un utilisateur, avec la tendance sur 12 mois. | `user_id` (`string`) | Une ligne : prix médian au mètre carré, tendance, délai de vente moyen. |
+| `recommended_listings` | Joindre une table de recommandations pré-calculées aux annonces, en conservant le rang de l'algorithme. | `user_id` (`string`) | Les annonces recommandées triées par rang. |
+| `editorial_content_area` | Filtrer les contenus éditoriaux sur la zone, en ne gardant que ceux dont la fenêtre de publication est ouverte. | `zone_id` (`string`) | Les guides et articles de marché de cette zone. |
+
+Ces mêmes principes se transposent à d'autres modèles : derniers articles achetés par un client, stock restant dans le magasin préféré, meilleures ventes d'une catégorie, ou produits complémentaires d'une commande.
+
+<Info>
+  Les filtres qui combinent plusieurs préférences utilisateur — fourchette de budget et nombre de pièces minimum, par exemple — peuvent légitimement ne retourner aucune ligne. Prévisualisez chaque Entity avec un identifiant réel avant publication, et assouplissez la condition la moins critique si le résultat est vide.
+</Info>
+
 ## Paramètres
 
 Les paramètres sont déclarés dans le panneau **Input** et associés aux emplacements SQL. Cliquez sur **Add** pour en créer un.

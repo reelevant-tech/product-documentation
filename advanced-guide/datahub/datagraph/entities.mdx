@@ -49,6 +49,24 @@ LIMIT 5
 
 The statement must reference at least one Datasource table, otherwise the query is rejected.
 
+## Worked Examples
+
+The patterns below come from a property listings model built on five Datasources: users, listings, price-per-square-metre by area, pre-computed recommendations, and editorial content.
+
+| Entity | Pattern | Parameters | Returns |
+|--------|---------|------------|---------|
+| `listings_matching_search` | Join users to listings on the searched area, then filter on the user budget. | `user_id` (`string`) | Listings ordered by quality score, limited to 6. |
+| `listings_price_drop` | Filter listings of one area on a minimum price variation, computed from the previous price. | `zone_id` (`string`), `min_drop_pct` (`number`) | Listings ordered by drop percentage. |
+| `market_prices_area` | Read the market table for the area a user is searching, with the 12-month trend. | `user_id` (`string`) | One row: median price per square metre, trend, average selling time. |
+| `recommended_listings` | Join a pre-computed recommendation table to listings, keeping the algorithm rank. | `user_id` (`string`) | Recommended listings ordered by rank. |
+| `editorial_content_area` | Filter editorial content on the area, restricted to items whose publication window is open. | `zone_id` (`string`) | Guides and market articles for that area. |
+
+The same patterns transfer to other models: last items purchased by a customer, remaining stock in a preferred store, best sellers of a category, or complementary products of an order.
+
+<Info>
+  Filters that combine several user preferences — budget range plus minimum number of rooms, for example — can legitimately return zero rows. Preview each Entity with a real identifier before publishing, and relax the least critical condition when the result set is empty.
+</Info>
+
 ## Parameters
 
 Parameters are declared in the **Input** panel and bound to SQL placeholders. Click **Add** to create one.
