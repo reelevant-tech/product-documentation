@@ -1,0 +1,92 @@
+---
+title: 'Datagraph'
+description: 'Reliez vos Datasources dans un modèle de données unique pour que vos Workflows réutilisent les mêmes données fiables'
+---
+
+Le Datagraph est la partie du [DataHub](/fr/product-guide/datahub/overview) où vous décrivez comment vos Datasources sont liées entre elles.
+
+## Pourquoi utiliser le Datagraph ?
+
+Chaque Datasource contient un seul ensemble de données : produits, magasins, achats ou clients. Seule, une Datasource ne peut pas répondre à une question qui croise deux ensembles de données.
+
+Le Datagraph relie les Datasources entre elles. Votre équipe data peut ensuite préparer des Entities réutilisables (des questions enregistrées, par exemple « les cinq produits les plus achetés par cette personne ») que n'importe quel Workflow peut réutiliser.
+
+<Tip>
+  Vous n'avez pas à construire le Datagraph vous-même. Il est généralement mis en place une fois par votre équipe data ou votre Technical Account Manager Reelevant, puis réutilisé par tout le monde.
+</Tip>
+
+## Où le trouver
+
+Ouvrez **DataHub** dans la barre latérale, puis choisissez **Datagraph**. Vous y trouverez trois pages :
+
+| Page | À quoi elle sert |
+|------|------------------|
+| **Schema** | Le modèle de données : quelles Datasources font partie du Datagraph, et comment elles sont liées. |
+| **Explorer** | Une carte visuelle de ce modèle, avec un contrôle de santé sur chaque lien. |
+| **Entities** | Les questions réutilisables construites sur ce modèle, prêtes à être utilisées dans les Workflows. |
+
+## Comprendre l'Explorer
+
+L'**Explorer** est la page la plus utile si vous souhaitez simplement comprendre vos données.
+
+1. Ouvrez **DataHub → Datagraph → Explorer**.
+2. Restez sur l'onglet **Diagram** pour voir chaque Datasource sous forme de bloc, avec les lignes qui montrent les liens.
+3. Faites glisser le diagramme pour vous déplacer, et utilisez les boutons de zoom pour vous rapprocher.
+4. Ouvrez l'onglet **Relations** pour examiner chaque lien un par un.
+5. Ouvrez l'onglet **Datasources** pour lister les Datasources utilisées dans le modèle, avec leurs champs.
+
+Sur l'onglet **Relations**, chaque lien affiche un pourcentage **Join match**. Il indique à quel point les valeurs des deux côtés du lien se recoupent réellement dans vos données.
+
+| Filtre | Ce qu'il affiche |
+|--------|------------------|
+| **All** | Tous les liens du modèle. |
+| **Good** | Les liens dont les valeurs se recoupent bien. |
+| **Weak** | Les liens dont le recoupement est faible — à examiner avec votre équipe data. |
+| **Invalid** | Les liens qui n'ont pas pu être vérifiés du tout. |
+
+<Warning>
+  Un lien faible ou invalide signifie généralement que les deux Datasources ne partagent pas les mêmes identifiants. Une personnalisation construite sur ce lien peut ne rien retourner : signalez-le à votre équipe data avant de l'utiliser dans un Workflow.
+</Warning>
+
+## Versions Draft et Published
+
+La page **Schema** et chaque Entity possèdent leur propre version, affichée sous forme de statut.
+
+| Statut | Signification |
+|--------|---------------|
+| **Draft** | Travail en cours. Visible uniquement dans les pages du Datagraph. |
+| **Published** (ou **Live**) | La version réellement utilisée par les Workflows. |
+| **Inactive** | Une version publiée précédemment, conservée pour l'historique. |
+
+Rien de ce que vous voyez dans un Draft n'affecte votre personnalisation en production avant publication.
+
+## Utiliser une Entity dans un Workflow
+
+Une fois une Entity publiée, elle peut être utilisée dans un Workflow avec le Data Node **Query an entity** (un Node qui récupère des données externes pour le Workflow).
+
+1. Ouvrez votre Workflow dans l'[éditeur de Workflow](/fr/product-guide/workflows/editor).
+2. Ajoutez le Data Node **Query an entity**.
+3. Sélectionnez l'Entity publiée dont vous avez besoin.
+4. Renseignez les paramètres de l'Entity, avec une valeur fixe ou avec une variable du Workflow.
+5. Utilisez les données retournées dans votre [Content](/fr/product-guide/contents/overview) ou dans une [Condition](/fr/product-guide/workflows/logic-nodes/conditions).
+
+<Info>
+  Seuls les utilisateurs avec le rôle tech admin peuvent configurer ce Node. Demandez à votre administrateur si le Node apparaît en lecture seule. Voir [Permissions](/fr/product-guide/account/permissions) pour les permissions Datagraph Schema et Datagraph Entity.
+</Info>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Vue d'ensemble du DataHub" icon="database" href="/fr/product-guide/datahub/overview">
+    Découvrez comment les Datasources sont importées et configurées.
+  </Card>
+  <Card title="Datagraph en détail" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/overview">
+    Comprenez le modèle de données, les versions et les Entities en détail.
+  </Card>
+  <Card title="Explorer" icon="magnifying-glass-chart" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Lisez une analyse de join match et corrigez les liens faibles.
+  </Card>
+  <Card title="Permissions" icon="lock" href="/fr/product-guide/account/permissions">
+    Voyez qui peut consulter, modifier et publier les objets du Datagraph.
+  </Card>
+</CardGroup>

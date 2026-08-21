@@ -1,0 +1,138 @@
+---
+title: 'Datagraph Entities'
+description: 'Write parameterised SQL against the Datagraph model, preview results, and publish for Workflows'
+---
+
+## Overview
+
+A Datagraph Entity is a named SQL query over the Datagraph model, with declared parameters and inferred output columns. Open **DataHub → Datagraph → Entities** — *Manage datagraph entities for your account*.
+
+The listing shows each Entity with its **Name**, **Status** (**Draft** or **Live**), and **Last update**, plus two actions: **Edit** and **Query**. **Create entity** opens the editor on a new Draft.
+
+## Before You Begin
+
+- The Datagraph Schema must be published, because output columns are inferred against the Live model. See [Datagraph Schema](/advanced-guide/datahub/datagraph/schema).
+- Every Datasource referenced by the SQL needs a Live version.
+- Datasources protected by row-level filters cannot be queried from an Entity.
+
+## Editor Layout
+
+| Panel | Content |
+|-------|---------|
+| **SQL query** | The statement executed for this Entity. **Format SQL** re-indents it, and **Run query** executes it. |
+| **Input / Output** | **Input** lists the parameters passed to the SQL query. **Output** lists the computed answer returned by the Entity, and is read-only. |
+| **Preview & results** | A sample of query results, up to 10 rows, with the row count and a **Trace ID**. |
+
+Both side panels can be collapsed, and the toolbar shows the keyboard shortcut for saving, formatting, and toggling each panel.
+
+| Field | Description |
+|-------|-------------|
+| **Entity name** | The Entity identifier. Use snake_case, for example `top_products_bought`. |
+| **Description** | What the Entity answers, in business terms. |
+
+## Writing the SQL
+
+Datasource tables are referenced by their Datasource identifier, quoted:
+
+```sql
+SELECT
+  products.name,
+  products.image_url,
+  products.price
+FROM "6a1f9c24e0b84f0f9a2d7c31" AS purchases
+JOIN "8b53d7f1c2a94e6ea0b41d77" AS products
+  ON products.reference_id = purchases.product_reference
+WHERE purchases.user_id = $1
+ORDER BY purchases.purchased_at DESC
+LIMIT 5
+```
+
+The statement must reference at least one Datasource table, otherwise the query is rejected.
+
+## Parameters
+
+Parameters are declared in the **Input** panel and bound to SQL placeholders. Click **Add** to create one.
+
+| Field | Description |
+|-------|-------------|
+| **Name** | The parameter name, for example `user_id`. |
+| **Short description** | Displayed in the UI. Maximum 100 characters. |
+| **Full description** | Optional detailed description. |
+| **Type** | The scalar type accepted at query time. |
+| **Optional** | When enabled, the parameter can be omitted or left empty when running the query. |
+| **SQL placeholder index** | Maps the parameter to `$1`, `$2`, … in the SQL query. |
+
+Accepted parameter types:
+
+| Type | Expected value |
+|------|----------------|
+| `string` | A text value. A bare number is rejected. |
+| `number` | A numeric value. |
+| `boolean` | `true` or `false`. |
+| `datetime` | A datetime value. |
+| `datetime_iso` | An ISO 8601 datetime, for example `2024-01-01T00:00:00.000Z`. |
+| `string[]` / `number[]` | A JSON array of strings or numbers. |
+| `string{}` / `number{}` | A JSON object whose values are strings or numbers. |
+
+<Info>
+  A NULL parameter compared with `=` or `<>` never matches. The editor flags it and asks you to use `IS NULL` or `IS NOT NULL` in the SQL query instead.
+</Info>
+
+## Output Columns
+
+The **Output** panel lists the **Column** and **Type** of every value the Entity returns, under **Return types**. The list is computed from the SQL against the Live Datagraph model and recalculated on every save — it cannot be edited by hand. An empty list means the SQL has not been resolved yet, or that it references an unknown column.
+
+## Previewing Results
+
+1. Save the Entity — a preview cannot run on unsaved changes only. The editor shows *Save the entity before running a preview*.
+2. Click **Run query**.
+3. In the **Query parameters** dialog, fill each parameter. **Fill sample values** looks up realistic values in the data for you.
+4. Confirm with **Run query**.
+
+The **Preview** panel returns up to 10 rows with the row count and a **Trace ID** for support requests.
+
+| Editor message | Meaning |
+|----------------|---------|
+| *Write a query with FROM "datasource-id" and click run to see a preview* | The SQL does not reference a Datasource yet. |
+| *Column "…" does not exist in the datasource* | The column is not part of the Live Datagraph model. |
+| *Enter a valid ISO 8601 datetime* | A `datetime_iso` parameter value is malformed. |
+| *Unable to find sample values from the data* | No sample could be derived; enter the values manually. |
+
+The **Entity queries** page — reachable with the **Query** action or **Open query page** — runs a saved Entity on its own, outside the editor. Results are paginated at 10 rows per page.
+
+## Publishing
+
+Click **Publish** to promote the Draft to Live. The previous Live version becomes Inactive, and a new Draft copy is created so editing can continue. Only Live Entities are selectable in Workflows.
+
+## Using an Entity in a Workflow
+
+Add the **Query an entity** Data Node — *Run a datagraph entity query and expose its results to the workflow*.
+
+| Setting | Description |
+|---------|-------------|
+| **Entity** | The published Entity to run. The dropdown shows *No published entity is available yet* until one is Live. |
+| **Entity parameters** | One input per declared parameter. Values can be static or taken from a Workflow variable. |
+| **Result limit** | The maximum number of rows exposed to the Workflow. |
+
+**Open entity in Datahub** jumps from the Node to the Entity editor. Only tech admins can configure the Node.
+
+<Info>
+  Parameter values coming from Workflow variables are converted to the declared parameter type. A variable that cannot be converted — free text into a `number` parameter, for example — makes the Node fail at execution time rather than at configuration time.
+</Info>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
+    Add the columns and relations your SQL needs.
+  </Card>
+  <Card title="Explorer" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
+    Check that a join actually overlaps before you rely on it.
+  </Card>
+  <Card title="Datasource Data Node" icon="database" href="/advanced-guide/workflows/data-nodes/datasources">
+    Compare with querying a single Datasource in a Workflow.
+  </Card>
+  <Card title="Datagraph Schema API" icon="terminal" href="/developer-docs/guides/datagraph-schema-api">
+    Manage the model programmatically.
+  </Card>
+</CardGroup>

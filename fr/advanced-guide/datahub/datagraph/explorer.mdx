@@ -1,0 +1,89 @@
+---
+title: 'Datagraph Explorer'
+description: 'Visualisez le modèle du Datagraph et mesurez la qualité réelle de ses jointures'
+---
+
+## Vue d'ensemble
+
+La page **Explorer** — *Explore your data model and the relations between datasources* — valide le modèle du Datagraph et mesure le recoupement réel de chaque relation. Ouvrez **DataHub → Datagraph → Explorer**.
+
+## Avant de commencer
+
+Un Datagraph Schema doit exister. Sans lui, l'Explorer affiche *No schema found* et propose **Go to schema**. Voir [Datagraph Schema](/fr/advanced-guide/datahub/datagraph/schema).
+
+## Onglets
+
+| Onglet | Contenu |
+|--------|---------|
+| **Diagram** | Un diagramme entité-relation du modèle. Faites glisser pour vous déplacer, utilisez la molette avec la touche de modification pour zoomer, ou les boutons **Zoom in**, **Zoom out** et **Reset**. |
+| **Relations** | Une ligne par paire de colonnes en relation, avec ses côtés **From** et **To** et son pourcentage **Join match**. |
+| **Datasources** | Les Datasources utilisées dans le modèle, avec leur nombre de champs, leur nombre de relations et le marqueur de clé primaire (**PK**). |
+
+## Résumé de validation
+
+L'Explorer valide le modèle à chaque chargement et signale trois types de constat.
+
+| Constat | Signification |
+|---------|---------------|
+| **Structural issues** | La définition elle-même est invalide — par exemple une table référencée inconnue ou une colonne en doublon. |
+| **Low join match** | La relation est structurellement valide, mais les valeurs des deux côtés se recoupent à peine. |
+| **Invalid relation analysis** | Le recoupement n'a pas pu être calculé, généralement parce qu'une Datasource est introuvable ou n'a pas de version Live. |
+
+Corrigez d'abord les problèmes structurels : l'analyse des relations ne s'exécute que lorsque la définition est structurellement valide.
+
+## Join match
+
+Pour chaque paire de colonnes en relation, le Datagraph compte les valeurs distinctes des deux côtés et les compare.
+
+| Métrique | Définition |
+|----------|------------|
+| **Matching distinct values** | La plus petite des deux quantités de valeurs distinctes. |
+| **Match percentage** | Les valeurs distinctes correspondantes divisées par la plus grande quantité, en pourcentage. |
+| **Distinct values (from)** | Valeurs distinctes dans la colonne source. |
+| **Distinct values (to)** | Valeurs distinctes dans la colonne référencée. |
+
+Les relations sont ensuite regroupées, et l'onglet **Relations** peut être filtré en conséquence.
+
+| Filtre | Sélection |
+|--------|-----------|
+| **All** | Toutes les relations. |
+| **Good** | Match percentage supérieur ou égal à 50 %. |
+| **Weak** | Match percentage inférieur à 50 %. |
+| **Invalid** | Relations dont l'analyse a retourné une erreur. |
+
+<Info>
+  Un match percentage à `—` signifie que l'analyse n'a pas pu s'exécuter. Vérifiez que les deux Datasources ont une version Live, puis rechargez l'Explorer.
+</Info>
+
+## Inspecter une jointure
+
+Cliquez sur **Inspect join match** sur une relation pour ouvrir la fenêtre **Join match analysis** — *How well the join keys overlap between the two datasources*. Elle indique le statut (**Good**, **Weak**, **Invalid** ou **Unavailable**), la **Table**, la **Column** et le **Datasource ID** des côtés **From** et **To**, ainsi que les métriques ci-dessus.
+
+### Lire un résultat faible
+
+Une table d'achats jointe à un catalogue produits sur la référence produit retourne 12 000 références distinctes côté achats et 400 000 côté catalogue. Le match percentage est de 3 %.
+
+C'est attendu : seule une petite part du catalogue a déjà été achetée. Un résultat faible est un signal à interpréter, pas toujours un défaut. Investiguez lorsque vous attendez un recoupement élevé, par exemple un identifiant client partagé entre une Datasource CRM et une Datasource d'événements site.
+
+| Symptôme | Cause probable |
+|----------|----------------|
+| Match percentage proche de 0 % | Les deux colonnes contiennent des formats d'identifiants différents, par exemple un ID brut face à un ID préfixé. |
+| Match percentage très en dessous de l'attendu | Un côté est obsolète, partiellement importé, ou filtré à la source. |
+| L'analyse retourne une erreur | La Datasource n'a pas de version Live, ou elle a été supprimée après l'écriture du modèle. |
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
+    Corrigez les relations signalées par le résumé de validation.
+  </Card>
+  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+    Interrogez le modèle validé.
+  </Card>
+  <Card title="Logs" icon="list-check" href="/fr/advanced-guide/datahub/logs">
+    Vérifiez si l'import d'une Datasource est obsolète.
+  </Card>
+  <Card title="Datagraph dans le DataHub" icon="database" href="/fr/product-guide/datahub/datagraph">
+    Partagez la visite de l'interface avec les équipes campagne.
+  </Card>
+</CardGroup>

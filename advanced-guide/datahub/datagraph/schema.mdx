@@ -1,0 +1,126 @@
+---
+title: 'Datagraph Schema'
+description: 'Define the Datagraph tables, columns, and relations, then publish the model'
+---
+
+## Overview
+
+The **Schema** page — *Design and manage your data model schema* — is where the Datagraph data model is built. Open **DataHub → Datagraph → Schema**. One Datagraph Schema exists per account, with a Draft and a Live version.
+
+## Before You Begin
+
+- The Datasources you want to model must already exist in the [DataHub](/product-guide/datahub/overview).
+- Column names and types are read from the Datasource field mapping, so review the [field mapping](/advanced-guide/datahub/field-mapping) first.
+- Publishing requires the update permission on **Datagraph Schema**.
+
+## Editor Layout
+
+The editor offers two views, switched with the **Visual** and **JSON** toggle.
+
+| View | Use it to |
+|------|-----------|
+| **Visual** | Add tables, pick their Datasource, and edit columns and relations through forms. |
+| **JSON** | Read or paste the whole model at once. The editor reports **Valid** or **Invalid** with an error count, and **Format** re-indents the definition. |
+
+Two side panels support the work:
+
+| Panel | Content |
+|-------|---------|
+| **Tables** | The tables already defined. Select one to edit it. |
+| **Datasources** | A searchable list of the account Datasources. Click one to add it as a table. |
+
+**Preview** opens the model as a **Diagram** or as **JSON**, with **Copy JSON** and a zoom **Reset** control. **Open in Explorer** hands the model over to the [Explorer](/advanced-guide/datahub/datagraph/explorer) for validation.
+
+## Adding a Table
+
+1. Click **Add table**.
+2. Select the Datasource in the **Datasource** field. The table name always matches the selected Datasource.
+3. Optionally fill the **Description** to document what the table holds.
+4. Add columns on the **Columns** tab, then relations on the **Relations** tab.
+5. Click **Save** to store the Draft.
+
+Removing a table uses **Delete table** and asks for confirmation.
+
+## Columns
+
+Click **Add column** on the **Columns** tab. A column always mirrors a Datasource field.
+
+| Field | Description |
+|-------|-------------|
+| **Name** | The column name used in Entity SQL. Must be unique within the table. |
+| **Datasource field** | The Datasource field feeding the column. Required. |
+| **Type** | The data type, inherited from the Datasource field mapping (for example `string`, `number`, `price`, `datetime_iso`, `array_string`). |
+| **Description** | Optional documentation for the column. |
+| **Nullable** | Whether the column accepts null values. |
+
+<Info>
+  **Add column** is disabled when the table has no Datasource yet, or when every Datasource field is already a column. The column list shows the current count, so you can check coverage at a glance.
+</Info>
+
+Optionally, a column can declare a default value. The default must match the column type: a number for a `number` column, a boolean for a `boolean` column, a string for a `string` column.
+
+## Relations
+
+Relations are the links the Datagraph joins on. Click **Add relation** on the **Relations** tab.
+
+| Field | Description |
+|-------|-------------|
+| **Type** | The relation type. |
+| **Columns** | The columns from this table taking part in the relation. |
+| **References → Table** | The referenced table. Select it before choosing its columns. |
+| **References → Columns** | The columns in the referenced table, in the same order as the local columns. |
+
+Both sides must list the same number of columns, and every referenced column must exist.
+
+### Worked Example
+
+A product catalogue Datasource and a purchases Datasource share a product reference.
+
+| Table | Column | Relation |
+|-------|--------|----------|
+| `purchases` | `product_reference` | References `products.reference_id` |
+| `products` | `reference_id` | Declared as a unique key |
+
+With that relation in place, an Entity can join purchases to the catalogue and return product names, prices, and images for a person's past orders.
+
+## Validation Errors
+
+Saving validates the whole model. The following definitions are rejected:
+
+| Error | Cause |
+|-------|-------|
+| Duplicate table | Two tables point at the same Datasource. |
+| Duplicate column | Two columns in a table share a name, or a virtual column reuses a real column name. |
+| Unknown column | A relation, unique key, or index references a column that does not exist. |
+| Unknown referenced table | A relation points at a table that is not in the model. |
+| Column count mismatch | A relation lists a different number of local and referenced columns. |
+| Invalid default | A column default does not match the column type. |
+
+## Publishing
+
+Click **Publish** to promote the Draft. The confirmation dialog states that the Draft version will be promoted to Live. After publishing:
+
+- The previous Live version becomes **Inactive**.
+- A new Draft copy of the Live definition is created, so editing can continue.
+- Entity output columns are recomputed against the new Live model.
+
+<Info>
+  Structural validity is not the same as data quality. A model can be perfectly valid and still contain relations whose values barely overlap. Check the join match in the Explorer before publishing.
+</Info>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Explorer" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
+    Inspect the diagram and the join match of every relation.
+  </Card>
+  <Card title="Entities" icon="code" href="/advanced-guide/datahub/datagraph/entities">
+    Query the model and expose the results to Workflows.
+  </Card>
+  <Card title="Field Mapping" icon="arrows-left-right" href="/advanced-guide/datahub/field-mapping">
+    Review how raw Datasource fields become typed fields.
+  </Card>
+  <Card title="Datagraph Schema API" icon="terminal" href="/developer-docs/guides/datagraph-schema-api">
+    Automate schema updates and validation.
+  </Card>
+</CardGroup>

@@ -1,0 +1,126 @@
+---
+title: 'Datagraph Schema'
+description: 'Définissez les tables, colonnes et relations du Datagraph, puis publiez le modèle'
+---
+
+## Vue d'ensemble
+
+La page **Schema** — *Design and manage your data model schema* — est l'endroit où le modèle de données du Datagraph est construit. Ouvrez **DataHub → Datagraph → Schema**. Il existe un Datagraph Schema par compte, avec une version Draft et une version Live.
+
+## Avant de commencer
+
+- Les Datasources que vous souhaitez modéliser doivent déjà exister dans le [DataHub](/fr/product-guide/datahub/overview).
+- Les noms et types de colonnes sont lus depuis le field mapping de la Datasource : consultez d'abord le [field mapping](/fr/advanced-guide/datahub/field-mapping).
+- La publication nécessite la permission de mise à jour sur **Datagraph Schema**.
+
+## Disposition de l'éditeur
+
+L'éditeur propose deux vues, via le sélecteur **Visual** / **JSON**.
+
+| Vue | À utiliser pour |
+|-----|-----------------|
+| **Visual** | Ajouter des tables, choisir leur Datasource, et modifier colonnes et relations via des formulaires. |
+| **JSON** | Lire ou coller l'ensemble du modèle d'un coup. L'éditeur indique **Valid** ou **Invalid** avec un nombre d'erreurs, et **Format** réindente la définition. |
+
+Deux panneaux latéraux accompagnent le travail :
+
+| Panneau | Contenu |
+|---------|---------|
+| **Tables** | Les tables déjà définies. Sélectionnez-en une pour la modifier. |
+| **Datasources** | La liste recherchable des Datasources du compte. Cliquez sur l'une d'elles pour l'ajouter en tant que table. |
+
+**Preview** ouvre le modèle sous forme de **Diagram** ou de **JSON**, avec **Copy JSON** et un contrôle de zoom **Reset**. **Open in Explorer** transmet le modèle à l'[Explorer](/fr/advanced-guide/datahub/datagraph/explorer) pour validation.
+
+## Ajouter une table
+
+1. Cliquez sur **Add table**.
+2. Sélectionnez la Datasource dans le champ **Datasource**. Le nom de la table correspond toujours à la Datasource sélectionnée.
+3. Renseignez éventuellement la **Description** pour documenter le contenu de la table.
+4. Ajoutez les colonnes dans l'onglet **Columns**, puis les relations dans l'onglet **Relations**.
+5. Cliquez sur **Save** pour enregistrer le Draft.
+
+La suppression d'une table se fait via **Delete table** et demande une confirmation.
+
+## Colonnes
+
+Cliquez sur **Add column** dans l'onglet **Columns**. Une colonne reflète toujours un champ de la Datasource.
+
+| Champ | Description |
+|-------|-------------|
+| **Name** | Le nom de colonne utilisé dans le SQL des Entities. Doit être unique dans la table. |
+| **Datasource field** | Le champ de la Datasource qui alimente la colonne. Obligatoire. |
+| **Type** | Le type de données, héritée du field mapping de la Datasource (par exemple `string`, `number`, `price`, `datetime_iso`, `array_string`). |
+| **Description** | Documentation optionnelle de la colonne. |
+| **Nullable** | Si la colonne accepte les valeurs nulles. |
+
+<Info>
+  **Add column** est désactivé quand la table n'a pas encore de Datasource, ou quand tous les champs de la Datasource sont déjà des colonnes. La liste affiche le nombre de colonnes, ce qui permet de vérifier la couverture d'un coup d'œil.
+</Info>
+
+Une colonne peut déclarer une valeur par défaut. Celle-ci doit correspondre au type : un nombre pour une colonne `number`, un booléen pour une colonne `boolean`, une chaîne pour une colonne `string`.
+
+## Relations
+
+Les relations sont les liens sur lesquels le Datagraph effectue ses jointures. Cliquez sur **Add relation** dans l'onglet **Relations**.
+
+| Champ | Description |
+|-------|-------------|
+| **Type** | Le type de relation. |
+| **Columns** | Les colonnes de cette table qui participent à la relation. |
+| **References → Table** | La table référencée. Sélectionnez-la avant de choisir ses colonnes. |
+| **References → Columns** | Les colonnes de la table référencée, dans le même ordre que les colonnes locales. |
+
+Les deux côtés doivent lister le même nombre de colonnes, et chaque colonne référencée doit exister.
+
+### Exemple concret
+
+Une Datasource de catalogue produits et une Datasource d'achats partagent une référence produit.
+
+| Table | Colonne | Relation |
+|-------|---------|----------|
+| `purchases` | `product_reference` | Référence `products.reference_id` |
+| `products` | `reference_id` | Déclarée comme clé unique |
+
+Avec cette relation, une Entity peut joindre les achats au catalogue et retourner les noms, prix et images des produits déjà commandés par une personne.
+
+## Erreurs de validation
+
+L'enregistrement valide l'ensemble du modèle. Les définitions suivantes sont rejetées :
+
+| Erreur | Cause |
+|--------|-------|
+| Table en doublon | Deux tables pointent vers la même Datasource. |
+| Colonne en doublon | Deux colonnes d'une table portent le même nom, ou une colonne virtuelle réutilise le nom d'une colonne réelle. |
+| Colonne inconnue | Une relation, une clé unique ou un index référence une colonne qui n'existe pas. |
+| Table référencée inconnue | Une relation pointe vers une table absente du modèle. |
+| Nombre de colonnes incohérent | Une relation liste un nombre différent de colonnes locales et référencées. |
+| Valeur par défaut invalide | La valeur par défaut d'une colonne ne correspond pas à son type. |
+
+## Publication
+
+Cliquez sur **Publish** pour promouvoir le Draft. La fenêtre de confirmation indique que la version Draft sera promue en Live. Après publication :
+
+- La version Live précédente devient **Inactive**.
+- Une nouvelle copie Draft de la définition Live est créée, pour poursuivre les modifications.
+- Les colonnes de sortie des Entities sont recalculées sur le nouveau modèle Live.
+
+<Info>
+  La validité structurelle n'est pas la qualité des données. Un modèle peut être parfaitement valide et contenir des relations dont les valeurs se recoupent à peine. Vérifiez le join match dans l'Explorer avant de publier.
+</Info>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Explorer" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Inspectez le diagramme et le join match de chaque relation.
+  </Card>
+  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+    Interrogez le modèle et exposez les résultats aux Workflows.
+  </Card>
+  <Card title="Field Mapping" icon="arrows-left-right" href="/fr/advanced-guide/datahub/field-mapping">
+    Revoyez comment les champs bruts deviennent des champs typés.
+  </Card>
+  <Card title="API Datagraph Schema" icon="terminal" href="/fr/developer-docs/guides/datagraph-schema-api">
+    Automatisez les mises à jour et la validation du modèle.
+  </Card>
+</CardGroup>
