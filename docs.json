@@ -81,7 +81,8 @@
                       "product-guide/workflows/data-nodes/weather",
                       "product-guide/workflows/data-nodes/website-events",
                       "product-guide/workflows/data-nodes/live-polling",
-                      "product-guide/workflows/data-nodes/transform"
+                      "product-guide/workflows/data-nodes/transform",
+                      "product-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -256,7 +257,8 @@
                       "advanced-guide/workflows/data-nodes/weather",
                       "advanced-guide/workflows/data-nodes/website-events",
                       "advanced-guide/workflows/data-nodes/live-polling",
-                      "advanced-guide/workflows/data-nodes/transform"
+                      "advanced-guide/workflows/data-nodes/transform",
+                      "advanced-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -555,7 +557,8 @@
                       "fr/product-guide/workflows/data-nodes/weather",
                       "fr/product-guide/workflows/data-nodes/website-events",
                       "fr/product-guide/workflows/data-nodes/live-polling",
-                      "fr/product-guide/workflows/data-nodes/transform"
+                      "fr/product-guide/workflows/data-nodes/transform",
+                      "fr/product-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -730,7 +733,8 @@
                       "fr/advanced-guide/workflows/data-nodes/weather",
                       "fr/advanced-guide/workflows/data-nodes/website-events",
                       "fr/advanced-guide/workflows/data-nodes/live-polling",
-                      "fr/advanced-guide/workflows/data-nodes/transform"
+                      "fr/advanced-guide/workflows/data-nodes/transform",
+                      "fr/advanced-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {

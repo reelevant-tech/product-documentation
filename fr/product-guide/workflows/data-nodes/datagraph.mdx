@@ -1,0 +1,76 @@
+---
+title: 'Interroger une Entity'
+description: 'Utiliser une Entity Datagraph publiée dans un Workflow pour alimenter vos Contents avec des données croisées'
+---
+
+![Node de données Interroger une entité configuré avec une Entity publiée, une valeur de paramètre et une limite de résultats](/images/workflows/node-datagraph-query.png)
+
+## Vue d'ensemble
+
+Le Data Node **Interroger une entité** (une étape qui récupère des données externes pour le Workflow) exécute une Entity [Datagraph](/fr/product-guide/datahub/datagraph) publiée. Il met ensuite les lignes obtenues à disposition des Nodes suivants.
+
+Utilisez-le quand les données dont vous avez besoin se trouvent dans plusieurs Datasources à la fois. L'Entity Datagraph les relie déjà pour vous : votre Workflow demande simplement la réponse.
+
+<Warning>
+  Le Datagraph est en bêta, et ce Node n'est disponible que pour les administrateurs techniques. Contactez votre Technical Account Manager si vous ne le voyez pas dans le menu **Data**.
+</Warning>
+
+## Ajouter le Node
+
+1. Ouvrez votre Workflow dans l'[éditeur de Workflow](/fr/product-guide/workflows/editor).
+2. Survolez le bouton **Data** (icône de base de données) dans la barre d'outils du bas.
+3. Cliquez sur **Interroger une entité**.
+
+![Menu Data de l'éditeur de Workflow avec l'option Interroger une entité en bas de la liste](/images/workflows/node-picker-data-datagraph.png)
+
+## Configurer le Node
+
+1. Choisissez l'**Entity** dont vous avez besoin. Seules les Entities publiées apparaissent dans la liste.
+2. Renseignez chaque champ sous **Paramètres de l'entité**. Ces champs dépendent de l'Entity choisie.
+3. Définissez une **Limite de résultats** pour plafonner le nombre de lignes renvoyées.
+4. Cliquez sur **Confirmer**.
+
+Le Node affiche alors sur le canvas le nom de l'Entity sélectionnée.
+
+![Node Interroger une entité sur le canvas du Workflow, affichant le nom de l'Entity sélectionnée](/images/workflows/node-datagraph-query-canvas.png)
+
+### Paramètres de l'Entity
+
+Chaque paramètre accepte soit une valeur fixe que vous saisissez, soit une valeur issue du Workflow. Le sélecteur vous permet de choisir entre les deux.
+
+![Sélecteur de valeur de paramètre du Node Interroger une entité, avec une valeur saisie et les Datasources disponibles dans le Workflow](/images/workflows/node-datagraph-query-parameter.png)
+
+<Tip>
+  Passer une valeur du Workflow, par exemple un identifiant de personne capté avec un Node [URL Parameter](/fr/product-guide/workflows/data-nodes/url-parameter), est ce qui rend le résultat personnalisé pour chaque destinataire.
+</Tip>
+
+### Limite de résultats
+
+La **Limite de résultats** accepte de 1 à 200 lignes. Elle reste grisée jusqu'à ce que vous sélectionniez une Entity.
+
+Restez proche de ce que votre [Content](/fr/product-guide/contents/overview) affiche réellement. Demander trois produits quand vous en affichez trois garde votre Workflow rapide.
+
+## Utiliser les données ensuite
+
+Les champs renvoyés par l'Entity deviennent disponibles pour les Nodes suivants, via le **Variable Picker**. Vous pouvez les utiliser dans votre Content, ou dans une [Condition](/fr/product-guide/workflows/logic-nodes/conditions) pour adapter ce que chaque personne voit.
+
+<Info>
+  Si le Node indique qu'aucune Entity publiée n'est disponible, l'Entity attendue est encore en brouillon. Demandez à votre équipe data de la publier dans **DataHub → Datagraph → Entities**.
+</Info>
+
+## Bonnes pratiques
+
+- Prévisualisez d'abord l'Entity dans le DataHub pour connaître les champs renvoyés. La petite icône à côté du champ **Entité** l'ouvre directement.
+- Donnez une valeur à chaque paramètre. Une Entity dont un paramètre obligatoire manque ne renvoie rien.
+- Rouvrez le Node après la publication d'une nouvelle version de l'Entity, pour vérifier que les paramètres correspondent toujours.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Datagraph" icon="diagram-project" href="/fr/product-guide/datahub/datagraph">
+    Comprendre d'où viennent les Entities et comment elles sont construites.
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/fr/product-guide/workflows/data-nodes">
+    Revoir les autres façons d'apporter des données dans un Workflow.
+  </Card>
+</CardGroup>
