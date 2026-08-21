@@ -1,34 +1,101 @@
 ---
 title: 'Split (A/B Testing)'
-description: 'Répartissez le trafic en plusieurs Branches selon des pourcentages de population'
+description: 'Configurer une répartition fixe avec Split, mesurer les Branches exécutées et modifier manuellement le Workflow selon les résultats'
 ---
 
-![Panneau de configuration du Node Split affichant la distribution des groupes avec un curseur de pourcentage](/images/workflows/node-split.png)
+Split répartit une audience entre des Branches selon des pourcentages fixes. Utilisez-le pour comparer du Content, mesurer chaque Branch exécutée et prendre une décision manuelle dans le Workflow.
 
-## Vue d'ensemble
+## Avant de commencer
 
-Les Nodes Split répartissent le trafic en plusieurs Branches selon des **pourcentages de population**. Cela est utilisé pour les tests A/B ou les tests multivariés.
+Définissez le Content et les mesures de réussite pour chaque Branch. Vérifiez que le Workflow contient un Channel et un Output Node pour chaque Branch.
 
-## Configuration
+## 1. Ajouter le Node Split et définir les parts des groupes
 
-- **Nombre de variantes** — Ajoutez deux groupes ou plus en utilisant le bouton **Add**. Les groupes sont automatiquement nommés A, B, C, etc.
-- **Part de population** — Utilisez le curseur pour définir le pourcentage de trafic que chaque groupe reçoit. Le total de tous les groupes est toujours égal à 100 %.
-- **Supprimer** — Cliquez sur le bouton de suppression sur la ligne d'un groupe pour le retirer (minimum deux groupes requis).
+![Sélecteur de Logic Nodes affichant le Node Split](/images/workflows/node-picker-branches.png)
 
-## Exemple
+1. Ouvrez le sélecteur de Logic Nodes.
+2. Sélectionnez **Split**.
+3. Conservez les deux groupes créés automatiquement ou sélectionnez **Add group**.
+4. Configurez les poignées du curseur selon les parts souhaitées.
 
-| Groupe | Part de population |
-|--------|-------------------|
-| Variante A | 50 % |
-| Variante B | 30 % |
-| Contrôle | 20 % |
+Le panneau affiche **Group**, **Population Share** et **Action**. Les noms sont dérivés sous la forme **Group A**, **Group B**, **Group C**, etc.
 
-## Fonctionnement
+L'interface utilise des seuils cumulatifs. Pour une répartition 50 % / 30 % / 20 %, les seuils sont 50, 80 et 100. Le dernier seuil est fixé à 100, ce qui produit une répartition complète dans l'interface.
 
-Lorsqu'un utilisateur déclenche le Workflow, le Node Split l'affecte aléatoirement à l'un des groupes en fonction des pourcentages configurés. L'affectation est déterministe par utilisateur — le même utilisateur suivra toujours le même Branch.
+Le panneau impose au moins deux groupes. Aucun maximum n'est défini.
 
-## Bonnes pratiques
+<Info>
+Ajouter un groupe divise la part actuelle du dernier groupe. Supprimer un groupe non final conserve le seuil cumulatif suivant, qui absorbe donc la part supprimée. Supprimer le groupe final fixe le seuil précédent à 100.
+</Info>
 
-- Incluez toujours un **groupe de contrôle** (ex. : 10-20 %) pour mesurer l'impact de la personnalisation.
-- Exécutez les tests suffisamment longtemps pour atteindre une significativité statistique avant de tirer des conclusions.
-- Utilisez les [catégories de Branch](/fr/product-guide/workflows/branches) pour taguer les Branches de split pour l'Analytics.
+Les groupes ne peuvent pas être renommés. Un nom personnalisé peut être attribué séparément à une Branch via sa qualification, sans renommer le groupe généré.
+
+## 2. Construire chaque Branch
+
+![Panneau de configuration du Node Split affichant les parts des groupes](/images/workflows/node-split.png)
+
+Sélectionnez le contrôle de continuation sous chaque Branch et ajoutez les Nodes requis. Reliez chaque Branch à son Output Node prévu.
+
+La configuration Split modifie uniquement les seuils. Ajouter ou supprimer un groupe Split ne connecte ni ne reconnecte automatiquement les Nodes en aval.
+
+Consultez la page [Branches](/fr/product-guide/workflows/branches) pour les concepts de qualification des Branches.
+
+## 3. Taguer les Branches pour les mesurer
+
+![Panneau de qualification d'une Branch pour ajouter une catégorie et des tags](/images/workflows/branch-qualification-drawer.png)
+
+Utilisez la qualification d'une Branch pour lui attribuer un nom personnalisé, une catégorie ou des tags personnalisés. Ces paramètres sont des métadonnées d'analyse, pas des paramètres d'allocation Split.
+
+Lors de la publication, les catégories de Branches et les tags personnalisés sont résolus sur l'identifiant complet de la Branch. Ces métadonnées sont disponibles dans Analytics pour la Branch exécutée.
+
+## 4. Lire les résultats
+
+### Statistiques dans le Workflow Builder
+
+Activez **Display branch statistics** depuis la barre d'outils du Workflow. Le Builder regroupe les mesures de displays et de clicks selon la dimension de la Branch exécutée, puis affiche **Displays** et **Clicks** sur les Branches des Logic Nodes.
+
+### Dimensions et métadonnées Analytics
+
+Dans l'[exploration des données Analytics](/fr/product-guide/analytics/data-exploration), utilisez la dimension **Workflow Branch** pour regrouper les événements par Branch exécutée.
+
+Les catégories de Branches et les tags personnalisés sont résolus lors de la publication sur l'identifiant complet de la Branch. Leurs valeurs peuvent ensuite être utilisées dans Analytics.
+
+La Branch exécutée est un identifiant séparé par des virgules. Il contient les identifiants des Branches Split sélectionnées et l'identifiant de l'Output Node. Il ne s'agit pas du libellé A/B/C généré dans l'interface.
+
+## 5. Mécanique d'attribution
+
+Pour un Split qui affecte une Branch, le Personalisation Engine calcule le hash MD5 de l'identifiant utilisateur. Il applique un modulo 100, ce qui produit un bucket compris entre 0 et 99.
+
+Le Personalisation Engine évalue les Branches Split dans l'ordre croissant des seuils cumulatifs. Le premier seuil supérieur au bucket reçoit l'utilisateur. L'attribution reste donc stable pour un même identifiant utilisateur entre les exécutions.
+
+Lorsque plusieurs Splits se trouvent sur une même Branch, l'identifiant du Node Split courant est ajouté à la graine du hash. Cela évite que plusieurs Splits filtrent le même segment de population, tout en conservant une attribution déterministe par utilisateur et par Node Split.
+
+Si les seuils configurés n'atteignent pas 100, les utilisateurs des buckets restants ne correspondent à aucune Branch. La traversée s'arrête et l'exécution ne continue pas dans une Branch Split. Le Personalisation Engine ne normalise ni ne valide le total des seuils.
+
+## 6. Agir sur le gagnant
+
+Split ne propose aucune sélection automatique du gagnant, optimisation, seuil de confiance ou action de fin. La répartition reste fixe jusqu'à la modification du Workflow.
+
+Après avoir examiné les statistiques des Branches, modifiez manuellement le Workflow. Vous pouvez modifier les seuils, mettre à jour le Content, supprimer des Branches ou supprimer le Node Split.
+
+Publiez une nouvelle version du Workflow après avoir vérifié les Branches obtenues.
+
+## Référence de configuration du Split
+
+| Paramètre | Comportement |
+| --- | --- |
+| Groupes | L'interface crée deux groupes et empêche leur suppression sous ce seuil. Aucun maximum explicite n'est défini. |
+| Libellés des groupes | Générés selon les seuils cumulatifs triés : A, B, C, etc. Ils ne sont pas modifiables. |
+| Curseur | Contrôle tous les seuils cumulatifs sauf le dernier, fixé à 100. |
+| Add group | Divise la part actuelle du dernier groupe entre celui-ci et le nouveau groupe. |
+| Suppression | Supprime la Branch sélectionnée. L'interface ajuste le seuil final lors de la suppression du dernier groupe. |
+| Attribution utilisateur | MD5 de l'identifiant utilisateur modulo 100 pour un Split. |
+| Plusieurs Splits | L'identifiant du Node Split courant est ajouté à la graine lorsque plusieurs Splits partagent une Branch. |
+| Total invalide | Des seuils inférieurs à 100 laissent certains utilisateurs sans Branch correspondante ; la traversée s'arrête. |
+| Optimisation | Aucune. La sélection du gagnant et les changements du Workflow sont manuels. |
+
+## Split ou Real-Time Testing ?
+
+Utilisez Split pour une répartition fixe et une analyse manuelle. Utilisez [Real-Time Testing](/fr/product-guide/workflows/logic-nodes/real-time-testing) pour optimiser automatiquement la répartition selon les performances.
+
+Pour les bases de l'interface, consultez les [instructions Split du guide produit](/fr/product-guide/workflows/logic-nodes/split).

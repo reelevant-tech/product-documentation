@@ -1,34 +1,101 @@
 ---
 title: 'Split (A/B Testing)'
-description: 'Répartir le trafic en plusieurs Branches selon des pourcentages de population'
+description: 'Réaliser un test A/B en répartissant votre audience entre des Branches, en mesurant les résultats et en modifiant votre Workflow'
 ---
 
-![Panneau de configuration du Node Split montrant la répartition des groupes avec un curseur de pourcentage](/images/workflows/node-split.png)
+Utilisez un Node Split pour répartir votre audience entre des Branches, comparer leurs résultats et choisir la prochaine modification.
 
-## Vue d'ensemble
+## Avant de commencer
 
-Les Nodes Split répartissent le trafic en plusieurs Branches selon des **pourcentages de population**. Ils sont utilisés pour les tests A/B ou les tests multivariés.
+Préparez le Content à comparer. Créez le Workflow et reliez son Channel à un Logic Node.
 
-## Configuration
+## 1. Ajouter le Node Split et définir les parts des groupes
 
-- **Nombre de variantes** — Ajoutez deux groupes ou plus à l'aide du bouton **Add**. Les groupes sont automatiquement nommés A, B, C, et ainsi de suite.
-- **Part de population** — Utilisez le curseur pour définir le pourcentage de trafic que chaque groupe reçoit. Le total de tous les groupes est toujours égal à 100 %.
-- **Remove** — Cliquez sur le bouton de suppression sur n'importe quelle ligne de groupe pour le retirer (minimum deux groupes requis).
+![Sélecteur de Logic Nodes affichant le Node Split](/images/workflows/node-picker-branches.png)
 
-## Exemple
+1. Ouvrez le sélecteur de Logic Nodes.
+2. Sélectionnez **Split**.
+3. Conservez les deux groupes créés automatiquement ou sélectionnez **Add group**.
+4. Déplacez les poignées du curseur pour définir la part de chaque groupe.
 
-| Groupe | Part de population |
-|-------|-----------------|
-| Variant A | 50 % |
-| Variant B | 30 % |
-| Control | 20 % |
+Le panneau affiche **Group**, **Population Share** et **Action**. Les groupes sont nommés **Group A**, **Group B**, **Group C**, etc.
 
-## Comment ça fonctionne
+Deux groupes au minimum sont requis. Le dernier groupe reçoit la part restante, afin que les parts affichées totalisent 100 %.
 
-Lorsqu'un utilisateur déclenche le Workflow, le Node Split l'assigne aléatoirement à l'un des groupes selon les pourcentages configurés. L'assignation est déterministe par utilisateur — le même utilisateur empruntera toujours la même Branch.
+<Tip>
+Ajouter un groupe divise la part du dernier groupe entre le groupe existant et le nouveau groupe.
+</Tip>
 
-## Bonnes pratiques
+<Warning>
+L'icône de corbeille supprime un groupe. La suppression est impossible lorsqu'il ne reste que deux groupes.
+</Warning>
 
-- Incluez toujours un **groupe de contrôle** (ex. 10-20 %) pour mesurer l'impact de la personnalisation.
-- Laissez les tests se dérouler suffisamment longtemps pour atteindre une significativité statistique avant de tirer des conclusions.
-- Utilisez les [catégories de Branches](/fr/product-guide/workflows/branches) pour taguer les Branches de split dans Analytics.
+Les groupes ne peuvent pas être renommés. Leurs lettres sont générées selon leur ordre et leurs parts.
+
+## 2. Construire chaque Branch
+
+![Panneau de configuration du Node Split affichant les parts des groupes](/images/workflows/node-split.png)
+
+Sélectionnez le contrôle de continuation sous chaque Branch. Ajoutez les Nodes et le Content propres à cette Branch.
+
+Donnez à chaque Branch le Content à comparer. Vérifiez que chaque Branch continue vers un Output Node.
+
+Consultez les pages [Branches](/fr/product-guide/workflows/branches) et [Output Nodes](/fr/product-guide/workflows/output-nodes).
+
+## 3. Taguer les Branches pour les mesurer
+
+![Panneau de qualification d'une Branch pour ajouter une catégorie et des tags](/images/workflows/branch-qualification-drawer.png)
+
+Ouvrez le menu d'une Branch et sélectionnez ses paramètres de qualification. Ajoutez un nom personnalisé, une catégorie ou des tags personnalisés.
+
+Utilisez le même modèle de nom pour chaque groupe. Par exemple : `A`, `B` et `Control`.
+
+Les catégories et les tags de Branches facilitent la lecture des résultats dans Analytics. Ils ne modifient pas la répartition du Split.
+
+## 4. Lire les résultats
+
+Ouvrez le mode statistiques du Workflow depuis la barre d'outils. Chaque Branch d'un Logic Node affiche **Displays** et **Clicks**, avec les totaux et les pourcentages.
+
+Vous pouvez aussi comparer les Branches dans [Analytics](/fr/product-guide/analytics/overview). Utilisez la dimension **Workflow Branch** pour regrouper les résultats par Branch exécutée.
+
+Attendez d'avoir suffisamment d'activité pour comparer les résultats. Tenez compte de votre objectif avant de choisir un gagnant.
+
+## 5. Agir sur le gagnant
+
+Un Node Split ne choisit pas de gagnant et ne termine pas automatiquement la comparaison. Modifiez le Workflow lorsque vous êtes prêt à agir.
+
+Vous pouvez :
+
+- Conserver la Branch gagnante et supprimer les autres.
+- Modifier les parts des groupes.
+- Mettre à jour le Content de chaque Branch.
+- Supprimer le Node Split et conserver une Branch.
+
+Publiez le Workflow mis à jour après avoir vérifié vos modifications.
+
+## Référence de configuration du Split
+
+| Paramètre | Détails |
+| --- | --- |
+| Groupes | Le panneau nécessite au moins deux groupes. |
+| Noms des groupes | Générés comme **A**, **B**, **C**, etc. Ils ne peuvent pas être renommés. |
+| Population Share | Défini avec le curseur de pourcentage. Le dernier groupe reçoit la part restante. |
+| Add group | Divise la part du dernier groupe entre deux groupes. |
+| Suppression | Sélectionnez l'icône de corbeille. La suppression est impossible sous deux groupes. |
+| Attribution | Un utilisateur reçoit une attribution stable selon son identifiant utilisateur. |
+| Optimisation | Aucune optimisation ou sélection automatique du gagnant. Modifiez le Workflow manuellement. |
+
+## Split ou Real-Time Testing ?
+
+Choisissez Split pour définir des parts fixes et prendre une décision manuelle. Choisissez [Real-Time Testing](/fr/product-guide/workflows/logic-nodes/real-time-testing) pour une optimisation automatique.
+
+## Et maintenant ?
+
+<CardGroup cols={2}>
+  <Card title="Branches" icon="code-branch" href="/fr/product-guide/workflows/branches">
+    Découvrez comment qualifier et organiser les Branches.
+  </Card>
+  <Card title="Vue d'ensemble d'Analytics" icon="chart-line" href="/fr/product-guide/analytics/overview">
+    Explorez les performances des Workflows dans Analytics.
+  </Card>
+</CardGroup>
