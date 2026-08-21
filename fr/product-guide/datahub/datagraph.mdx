@@ -25,6 +25,10 @@ Ouvrez **DataHub** dans la barre latérale, puis choisissez **Datagraph**. Vous 
 | **Explorer** | Une carte visuelle de ce modèle, avec un contrôle de santé sur chaque lien. |
 | **Entities** | Les questions réutilisables construites sur ce modèle, prêtes à être utilisées dans les Workflows. |
 
+Sur la page **Schema**, le panneau **Tables** à gauche liste les Datasources du modèle. Sélectionner une table affiche ses **Columns** et ses **Relations** (les liens vers les autres tables).
+
+![Page Schema du Datagraph avec le panneau Tables à gauche et les onglets Columns et Relations de la table sélectionnée à droite](/images/datahub/datagraph-schema-table-editor.png)
+
 ## Comprendre l'Explorer
 
 L'**Explorer** est la page la plus utile si vous souhaitez simplement comprendre vos données.
@@ -34,6 +38,12 @@ L'**Explorer** est la page la plus utile si vous souhaitez simplement comprendre
 3. Faites glisser le diagramme pour vous déplacer, et utilisez les boutons de zoom pour vous rapprocher.
 4. Ouvrez l'onglet **Relations** pour examiner chaque lien un par un.
 5. Ouvrez l'onglet **Datasources** pour lister les Datasources utilisées dans le modèle, avec leurs champs.
+
+![Explorer du Datagraph invitant à créer un Schema, car aucun Schema n'existe encore](/images/datahub/datagraph-explorer-empty.png)
+
+<Info>
+  Si l'Explorer vous demande de créer d'abord un Schema, le Datagraph n'a pas encore été mis en place. Demandez à votre équipe data ou à votre Technical Account Manager de le construire.
+</Info>
 
 Sur l'onglet **Relations**, chaque lien affiche un pourcentage **Join match**. Il indique à quel point les valeurs des deux côtés du lien se recoupent réellement dans vos données.
 
@@ -59,6 +69,12 @@ La page **Schema** et chaque Entity possèdent leur propre version, affichée so
 | **Inactive** | Une version publiée précédemment, conservée pour l'historique. |
 
 Rien de ce que vous voyez dans un Draft n'affecte votre personnalisation en production avant publication.
+
+![Page Entity du Datagraph avec le champ du nom, la zone d'édition et le bouton Publish](/images/datahub/datagraph-entity-editor.png)
+
+Sur la page d'une Entity, le panneau **Input / Output** liste les **Parameters** attendus par l'Entity, et la réponse qu'elle retourne.
+
+![Panneau Input et Output d'une Entity du Datagraph, avec la liste des Parameters et la réponse retournée](/images/datahub/datagraph-entity-input-output.png)
 
 ## Utiliser une Entity dans un Workflow
 

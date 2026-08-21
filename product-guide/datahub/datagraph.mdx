@@ -25,6 +25,10 @@ Open **DataHub** in the sidebar, then choose **Datagraph**. You will see three p
 | **Explorer** | A visual map of that model, with a health check on every link. |
 | **Entities** | The reusable questions built on top of the model, ready to be used in Workflows. |
 
+On the **Schema** page, the **Tables** panel on the left lists the Datasources in the model. Selecting a table shows its **Columns** and its **Relations** (the links to other tables).
+
+![Datagraph Schema page with the Tables panel on the left and the selected table's Columns and Relations tabs on the right](/images/datahub/datagraph-schema-table-editor.png)
+
 ## Understanding the Explorer
 
 The **Explorer** is the most useful page if you simply want to understand your data.
@@ -34,6 +38,12 @@ The **Explorer** is the most useful page if you simply want to understand your d
 3. Drag the diagram to move around, and use the zoom buttons to get closer.
 4. Open the **Relations** tab to review each link one by one.
 5. Open the **Datasources** tab to list the Datasources used in the model, with their fields.
+
+![Datagraph Explorer inviting you to create a Schema first, because no Schema exists yet](/images/datahub/datagraph-explorer-empty.png)
+
+<Info>
+  If the Explorer asks you to create a Schema first, the Datagraph has not been set up yet. Ask your data team or your Technical Account Manager to build it.
+</Info>
 
 On the **Relations** tab, each link shows a **Join match** percentage. It tells you how well the values on both sides of the link actually overlap in your data.
 
@@ -59,6 +69,12 @@ The **Schema** and each Entity have their own version, shown as a status.
 | **Inactive** | A previously published version, kept for history. |
 
 Nothing you see in a Draft affects your live personalisation until someone publishes it.
+
+![Datagraph Entity page with the entity name field, the editor area, and the Publish button](/images/datahub/datagraph-entity-editor.png)
+
+On an Entity page, the **Input / Output** panel lists the **Parameters** the Entity expects, and the answer it returns.
+
+![Input and Output panel of a Datagraph Entity, showing the Parameters list and the returned answer](/images/datahub/datagraph-entity-input-output.png)
 
 ## Using an Entity in a Workflow
 
