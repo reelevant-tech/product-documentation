@@ -1,0 +1,89 @@
+---
+title: 'Datagraph Explorer'
+description: 'Visualise the Datagraph model and measure how well its relations actually join'
+---
+
+## Overview
+
+The **Explorer** page — *Explore your data model and the relations between datasources* — validates the Datagraph model and measures the real overlap of every relation. Open **DataHub → Datagraph → Explorer**.
+
+## Before You Begin
+
+A Datagraph Schema must exist. Without one, the Explorer shows *No schema found* and offers **Go to schema**. See [Datagraph Schema](/advanced-guide/datahub/datagraph/schema).
+
+## Tabs
+
+| Tab | Content |
+|-----|---------|
+| **Diagram** | An entity-relationship diagram of the model. Drag to pan, scroll with the modifier key to zoom, or use **Zoom in**, **Zoom out**, and **Reset**. |
+| **Relations** | One row per relation column pair, with its **From** and **To** side and its **Join match** percentage. |
+| **Datasources** | The Datasources used in the model, with their field count, relation count, and primary key marker (**PK**). |
+
+## Validation Summary
+
+The Explorer validates the model whenever it loads and reports three kinds of finding.
+
+| Finding | Meaning |
+|---------|---------|
+| **Structural issues** | The definition itself is invalid — for example an unknown referenced table or a duplicate column. |
+| **Low join match** | The relation is structurally valid, but the values on both sides barely overlap. |
+| **Invalid relation analysis** | The overlap could not be computed, usually because a Datasource could not be resolved or has no Live version. |
+
+Fix structural issues first: relation analysis only runs once the definition is structurally valid.
+
+## Join Match
+
+For each relation column pair, the Datagraph counts the distinct values on both sides and compares them.
+
+| Metric | Definition |
+|--------|------------|
+| **Matching distinct values** | The smaller of the two distinct counts. |
+| **Match percentage** | Matching distinct values divided by the larger distinct count, as a percentage. |
+| **Distinct values (from)** | Distinct values in the source column. |
+| **Distinct values (to)** | Distinct values in the referenced column. |
+
+Relations are then grouped, and the **Relations** tab can be filtered accordingly.
+
+| Filter | Selection |
+|--------|-----------|
+| **All** | Every relation. |
+| **Good** | Match percentage of 50% or above. |
+| **Weak** | Match percentage below 50%. |
+| **Invalid** | Relations whose analysis returned an error. |
+
+<Info>
+  A match percentage of `—` means the analysis could not run. Check that both Datasources have a Live version, then reload the Explorer.
+</Info>
+
+## Inspecting a Join
+
+Click **Inspect join match** on a relation to open the **Join match analysis** dialog — *How well the join keys overlap between the two datasources*. It reports the status (**Good**, **Weak**, **Invalid**, or **Unavailable**), the **Table**, **Column**, and **Datasource ID** on the **From** and **To** sides, and the join metrics above.
+
+### Reading a Weak Result
+
+A purchases table joined to a product catalogue on the product reference returns 12,000 distinct references on the purchases side and 400,000 on the catalogue side. The match percentage is 3%.
+
+That is expected: only a small share of the catalogue has ever been bought. A weak result is a signal to interpret, not always a defect. Investigate when you expect the two sides to overlap closely, for example a customer identifier shared between a CRM Datasource and a website events Datasource.
+
+| Symptom | Likely cause |
+|---------|--------------|
+| Match percentage near 0% | The two columns hold different identifier formats, for example a raw ID versus a prefixed one. |
+| Match percentage far below expectation | One side is stale, partially imported, or filtered at the source. |
+| Analysis returns an error | The Datasource has no Live version, or it was deleted after the model was written. |
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
+    Correct the relations flagged by the validation summary.
+  </Card>
+  <Card title="Entities" icon="code" href="/advanced-guide/datahub/datagraph/entities">
+    Query the validated model.
+  </Card>
+  <Card title="Logs" icon="list-check" href="/advanced-guide/datahub/logs">
+    Check whether a Datasource import is stale.
+  </Card>
+  <Card title="Datagraph in the DataHub" icon="database" href="/product-guide/datahub/datagraph">
+    Share the UI walkthrough with campaign teams.
+  </Card>
+</CardGroup>

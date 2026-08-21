@@ -1,0 +1,76 @@
+---
+title: 'Query an Entity'
+description: 'Use a published Datagraph Entity inside a Workflow to bring joined data into your Content'
+---
+
+![Query an entity Data Node configured with a published Entity, a parameter value and a result limit](/images/workflows/node-datagraph-query.png)
+
+## Overview
+
+The **Query an entity** Data Node (a Node that fetches external data for the Workflow) runs a published [Datagraph](/product-guide/datahub/datagraph) Entity. It then makes the returned rows available to the Nodes that follow.
+
+Use it when the data you need lives in several Datasources at once. The Datagraph Entity already joins them for you, so your Workflow simply asks for the answer.
+
+<Warning>
+  The Datagraph is in beta, and this Node is only available to technical administrators. Ask your Technical Account Manager if you cannot see it in the **Data** menu.
+</Warning>
+
+## Adding the Node
+
+1. Open your Workflow in the [Workflow editor](/product-guide/workflows/editor).
+2. Hover over the **Data** button (database icon) in the bottom toolbar.
+3. Click **Query an entity**.
+
+![Data menu of the Workflow editor with the Query an entity option at the bottom of the list](/images/workflows/node-picker-data-datagraph.png)
+
+## Configuring the Node
+
+1. Pick the **Entity** you need. Only published Entities appear in the list.
+2. Fill in each field under **Entity parameters**. The fields change with the Entity you picked.
+3. Set a **Result limit** to cap how many rows the Node returns.
+4. Click **Confirm**.
+
+The Node on the canvas then shows the name of the Entity you selected.
+
+![Query an entity Node on the Workflow canvas, showing the name of the selected Entity](/images/workflows/node-datagraph-query-canvas.png)
+
+### Entity Parameters
+
+Each parameter accepts either a fixed value you type yourself, or a value coming from the Workflow. Use the picker to choose between the two.
+
+![Parameter value picker of the Query an entity Node, with a typed value and the Datasources available in the Workflow](/images/workflows/node-datagraph-query-parameter.png)
+
+<Tip>
+  Passing a Workflow value, such as a person identifier captured with a [URL Parameter](/product-guide/workflows/data-nodes/url-parameter) Node, is what makes the result personalised for each recipient.
+</Tip>
+
+### Result Limit
+
+The **Result limit** accepts between 1 and 200 rows. It stays greyed out until you select an Entity.
+
+Keep it close to what your [Content](/product-guide/contents/overview) really displays. Asking for three products when you show three products keeps your Workflow fast.
+
+## Using the Data Downstream
+
+The fields returned by the Entity become available to the Nodes that follow, through the **Variable Picker**. You can use them in your Content, or in a [Condition](/product-guide/workflows/logic-nodes/conditions) to change what each person sees.
+
+<Info>
+  If the Node tells you that no published Entity is available, the Entity you need is still a draft. Ask your data team to publish it in **DataHub → Datagraph → Entities**.
+</Info>
+
+## Best Practices
+
+- Preview the Entity in the DataHub first, so you know which fields it returns. The small icon next to the **Entity** field opens it directly.
+- Give every parameter a value. An Entity that misses a mandatory parameter returns nothing.
+- Re-open the Node after your data team publishes a new version of the Entity, to check that the parameters still match.
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Datagraph" icon="diagram-project" href="/product-guide/datahub/datagraph">
+    Understand where Entities come from and how they are built.
+  </Card>
+  <Card title="Data Nodes" icon="database" href="/product-guide/workflows/data-nodes">
+    Review the other ways of bringing data into a Workflow.
+  </Card>
+</CardGroup>

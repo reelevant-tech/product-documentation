@@ -81,7 +81,8 @@
                       "product-guide/workflows/data-nodes/weather",
                       "product-guide/workflows/data-nodes/website-events",
                       "product-guide/workflows/data-nodes/live-polling",
-                      "product-guide/workflows/data-nodes/transform"
+                      "product-guide/workflows/data-nodes/transform",
+                      "product-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -141,7 +142,8 @@
                   "product-guide/datahub/overview",
                   "product-guide/datahub/catalog",
                   "product-guide/datahub/creating-a-datasource",
-                  "product-guide/datahub/listing"
+                  "product-guide/datahub/listing",
+                  "product-guide/datahub/datagraph"
                 ]
               },
               {
@@ -219,6 +221,15 @@
                       "advanced-guide/datahub/source-types/datasource-reference"
                     ]
                   },
+                  {
+                    "group": "Datagraph",
+                    "pages": [
+                      "advanced-guide/datahub/datagraph/overview",
+                      "advanced-guide/datahub/datagraph/schema",
+                      "advanced-guide/datahub/datagraph/explorer",
+                      "advanced-guide/datahub/datagraph/entities"
+                    ]
+                  },
                   "advanced-guide/datahub/csv-options",
                   "advanced-guide/datahub/field-mapping",
                   "advanced-guide/datahub/pgp-decryption",
@@ -246,7 +257,8 @@
                       "advanced-guide/workflows/data-nodes/weather",
                       "advanced-guide/workflows/data-nodes/website-events",
                       "advanced-guide/workflows/data-nodes/live-polling",
-                      "advanced-guide/workflows/data-nodes/transform"
+                      "advanced-guide/workflows/data-nodes/transform",
+                      "advanced-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -440,7 +452,8 @@
                   "developer-docs/guides/browser-extension-content-script",
                   "developer-docs/guides/real-time-api-datasource",
                   "developer-docs/guides/datasource-query-filters",
-                  "developer-docs/guides/runner-failures"
+                  "developer-docs/guides/runner-failures",
+                  "developer-docs/guides/datagraph-schema-api"
                 ]
               },
               {
@@ -544,7 +557,8 @@
                       "fr/product-guide/workflows/data-nodes/weather",
                       "fr/product-guide/workflows/data-nodes/website-events",
                       "fr/product-guide/workflows/data-nodes/live-polling",
-                      "fr/product-guide/workflows/data-nodes/transform"
+                      "fr/product-guide/workflows/data-nodes/transform",
+                      "fr/product-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -604,7 +618,8 @@
                   "fr/product-guide/datahub/overview",
                   "fr/product-guide/datahub/catalog",
                   "fr/product-guide/datahub/creating-a-datasource",
-                  "fr/product-guide/datahub/listing"
+                  "fr/product-guide/datahub/listing",
+                  "fr/product-guide/datahub/datagraph"
                 ]
               },
               {
@@ -682,6 +697,15 @@
                       "fr/advanced-guide/datahub/source-types/datasource-reference"
                     ]
                   },
+                  {
+                    "group": "Datagraph",
+                    "pages": [
+                      "fr/advanced-guide/datahub/datagraph/overview",
+                      "fr/advanced-guide/datahub/datagraph/schema",
+                      "fr/advanced-guide/datahub/datagraph/explorer",
+                      "fr/advanced-guide/datahub/datagraph/entities"
+                    ]
+                  },
                   "fr/advanced-guide/datahub/csv-options",
                   "fr/advanced-guide/datahub/field-mapping",
                   "fr/advanced-guide/datahub/pgp-decryption",
@@ -709,7 +733,8 @@
                       "fr/advanced-guide/workflows/data-nodes/weather",
                       "fr/advanced-guide/workflows/data-nodes/website-events",
                       "fr/advanced-guide/workflows/data-nodes/live-polling",
-                      "fr/advanced-guide/workflows/data-nodes/transform"
+                      "fr/advanced-guide/workflows/data-nodes/transform",
+                      "fr/advanced-guide/workflows/data-nodes/datagraph"
                     ]
                   },
                   {
@@ -903,7 +928,8 @@
                   "fr/developer-docs/guides/browser-extension-content-script",
                   "fr/developer-docs/guides/real-time-api-datasource",
                   "fr/developer-docs/guides/datasource-query-filters",
-                  "fr/developer-docs/guides/runner-failures"
+                  "fr/developer-docs/guides/runner-failures",
+                  "fr/developer-docs/guides/datagraph-schema-api"
                 ]
               },
               {

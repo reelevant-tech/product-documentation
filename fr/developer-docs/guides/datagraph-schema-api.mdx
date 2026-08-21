@@ -1,0 +1,299 @@
+---
+title: 'API Datagraph Schema'
+description: 'Validez, créez, mettez à jour et publiez le Datagraph Schema depuis votre code'
+---
+
+<Warning>
+  Le Datagraph est en bêta. Les endpoints, les noms de champs et les règles de validation peuvent changer sans période de dépréciation.
+</Warning>
+
+## Démarrage rapide
+
+Validez une définition de Datagraph Schema et lisez l'analyse des jointures de ses relations :
+
+```typescript
+import assert from 'node:assert'
+
+const API_BASE_URL = 'https://api.reelevant.com/v2'
+
+type DatagraphColumn = {
+  name: string
+  type: string
+  nullable: boolean
+  default?: string | number | boolean | null
+  description?: string
+}
+
+type DatagraphRelation = {
+  type: 'Relation'
+  columns: string[]
+  reference: {
+    datasourceId: string
+    table: string
+    columns: string[]
+  }
+  description?: string
+}
+
+type DatagraphTable = {
+  name: string
+  datasourceId: string
+  description?: string
+  columns: DatagraphColumn[]
+  relations?: DatagraphRelation[]
+  uniqueKeys?: { type: 'UniqueKey'; columns: string[] }[]
+  indexes?: { type: 'Index'; columns: string[] }[]
+}
+
+type RelationAnalysisResult = {
+  fromDatasourceId: string
+  fromTable: string
+  fromColumn: string
+  fromDistinctCount: number | null
+  toDatasourceId: string
+  toTable: string
+  toColumn: string
+  toDistinctCount: number | null
+  matchCount: number | null
+  matchPercentage: number | null
+  error?: string
+}
+
+type ValidateSchemaResponse = {
+  validation:
+    | { success: true; data: DatagraphTable[] }
+    | { success: false; error: { issues: { path: (string | number)[]; message: string; code: string }[] } }
+  relations: RelationAnalysisResult[]
+}
+
+const accessToken = process.env.REELEVANT_ACCESS_TOKEN
+assert(accessToken, 'REELEVANT_ACCESS_TOKEN is required')
+
+const productsDatasourceId = '8b53d7f1c2a94e6ea0b41d77'
+const purchasesDatasourceId = '6a1f9c24e0b84f0f9a2d7c31'
+
+const schema: DatagraphTable[] = [
+  {
+    name: productsDatasourceId,
+    datasourceId: productsDatasourceId,
+    description: 'Product catalogue',
+    columns: [
+      { name: 'reference_id', type: 'reference_id', nullable: false },
+      { name: 'name', type: 'name', nullable: false },
+      { name: 'price', type: 'price', nullable: true },
+    ],
+    uniqueKeys: [{ type: 'UniqueKey', columns: ['reference_id'] }],
+  },
+  {
+    name: purchasesDatasourceId,
+    datasourceId: purchasesDatasourceId,
+    description: 'Purchase history',
+    columns: [
+      { name: 'user_id', type: 'string', nullable: false },
+      { name: 'product_reference', type: 'string', nullable: false },
+      { name: 'purchased_at', type: 'datetime_iso', nullable: false },
+    ],
+    relations: [
+      {
+        type: 'Relation',
+        columns: ['product_reference'],
+        reference: {
+          datasourceId: productsDatasourceId,
+          table: productsDatasourceId,
+          columns: ['reference_id'],
+        },
+      },
+    ],
+  },
+]
+
+const response = await fetch(`${API_BASE_URL}/datagraph/schemas/validate`, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ schema }),
+})
+
+const payload = (await response.json()) as { status: string; data: ValidateSchemaResponse }
+
+if (payload.data.validation.success === false) {
+  for (const issue of payload.data.validation.error.issues) {
+    console.error(`${issue.path.join('.')}: ${issue.message} (${issue.code})`)
+  }
+} else {
+  for (const relation of payload.data.relations) {
+    console.log(
+      `${relation.fromTable}.${relation.fromColumn} → ${relation.toTable}.${relation.toColumn}: ` +
+        `${relation.matchPercentage ?? 'n/a'}%`,
+    )
+  }
+}
+```
+
+Chaque endpoint ci-dessous nécessite un token d'accès OAuth 2.0. Voir [Authentification](/fr/developer-docs/api-reference/authentication).
+
+## Endpoints
+
+| Méthode | Chemin | Description |
+|---------|--------|-------------|
+| `POST` | `/datagraph/schemas` | Crée le Datagraph Schema avec une version Draft. |
+| `POST` | `/datagraph/schemas/validate` | Valide une définition et analyse ses relations. Rien n'est persisté. |
+| `GET` | `/datagraph/schemas` | Liste les Datagraph Schemas (`page`, `perPage`). |
+| `GET` | `/datagraph/schemas/{id}` | Lit un Datagraph Schema avec ses versions Draft et Live. |
+| `PATCH` | `/datagraph/schemas/{id}` | Remplace la définition du Draft. |
+| `POST` | `/datagraph/schemas/{id}/publish` | Promeut la version Draft en Live. |
+| `DELETE` | `/datagraph/schemas/{id}` | Supprime le Datagraph Schema et ses versions. |
+
+Les schémas complets de requête et de réponse sont dans la [référence API](/api-reference/datagraph/list-datagraph-schemas).
+
+## Format de la définition
+
+Le champ `schema` du body est un tableau de tables.
+
+| Champ | Type | Obligatoire | Défaut | Description |
+|-------|------|-------------|--------|-------------|
+| `name` | `string` | Oui | — | Nom de la table. Correspond à l'identifiant de la Datasource dans l'interface. |
+| `datasourceId` | `string` | Oui | — | Datasource qui alimente la table. |
+| `description` | `string` | Non | — | Documentation uniquement. |
+| `columns` | `Column[]` | Oui | — | Colonnes associées aux champs de la Datasource. |
+| `virtualColumns` | `VirtualColumn[]` | Non | `[]` | Colonnes calculées par une expression `query`. |
+| `uniqueKeys` | `{ type: 'UniqueKey', columns: string[] }[]` | Non | `[]` | Groupes de colonnes à valeurs uniques. |
+| `indexes` | `{ type: 'Index', columns: string[] }[]` | Non | `[]` | Groupes de colonnes sur lesquels indexer les données. |
+| `relations` | `Relation[]` | Non | `[]` | Liens de type clé étrangère vers d'autres tables. |
+
+`Column` :
+
+| Champ | Type | Obligatoire | Défaut | Description |
+|-------|------|-------------|--------|-------------|
+| `name` | `string` | Oui | — | Unique dans la table, y compris face aux `virtualColumns`. |
+| `type` | `FieldMapType` | Oui | — | Type de field mapping du champ Datasource, par exemple `string`, `number`, `price`, `datetime_iso`, `array_string`. |
+| `nullable` | `boolean` | Oui | — | Si les valeurs nulles sont acceptées. |
+| `default` | `string \| number \| boolean \| Date \| null` | Non | — | Doit correspondre à `type`. |
+| `description` | `string` | Non | — | Documentation uniquement. |
+
+`VirtualColumn` ajoute une expression `query` obligatoire aux champs de `Column`, sans `default`.
+
+`Relation` :
+
+| Champ | Type | Obligatoire | Description |
+|-------|------|-------------|-------------|
+| `type` | `'Relation'` | Oui | Discriminant. |
+| `columns` | `string[]` | Oui | Colonnes locales. |
+| `reference.datasourceId` | `string` | Oui | Datasource référencée. |
+| `reference.table` | `string` | Oui | Table référencée, qui doit exister dans la même définition. |
+| `reference.columns` | `string[]` | Oui | Colonnes référencées. Même longueur que `columns`. |
+| `description` | `string` | Non | Documentation uniquement. |
+
+## Réponse de validation
+
+`POST /datagraph/schemas/validate` effectue d'abord la validation structurelle, puis analyse les relations uniquement si la définition est structurellement valide.
+
+Une définition structurellement invalide retourne `200` avec `validation.success` à `false` et un tableau `relations` vide :
+
+```json
+{
+  "status": "success",
+  "code": 200,
+  "message": "ok",
+  "data": {
+    "validation": {
+      "success": false,
+      "error": {
+        "issues": [
+          {
+            "path": [1, "relations", 0, "reference", "table"],
+            "message": "Referenced table does not exist in the schema",
+            "code": "custom"
+          }
+        ]
+      }
+    },
+    "relations": []
+  }
+}
+```
+
+Quand `validation.success` vaut `true`, `validation.data` contient la définition normalisée et `relations` contient une entrée par paire de colonnes en relation :
+
+```json
+{
+  "fromDatasourceId": "6a1f9c24e0b84f0f9a2d7c31",
+  "fromTable": "6a1f9c24e0b84f0f9a2d7c31",
+  "fromColumn": "product_reference",
+  "fromDistinctCount": 12000,
+  "toDatasourceId": "8b53d7f1c2a94e6ea0b41d77",
+  "toTable": "8b53d7f1c2a94e6ea0b41d77",
+  "toColumn": "reference_id",
+  "toDistinctCount": 400000,
+  "matchCount": 12000,
+  "matchPercentage": 3
+}
+```
+
+`matchCount` est la plus petite des deux quantités de valeurs distinctes, et `matchPercentage` vaut `matchCount / max(fromDistinctCount, toDistinctCount) * 100`. L'interface considère toute valeur inférieure à `50` comme une jointure faible. Un `error` par relation est retourné quand une Datasource est introuvable, et les compteurs valent alors `null`.
+
+## Publication
+
+```typescript
+const publishResponse = await fetch(`${API_BASE_URL}/datagraph/schemas/${schemaId}/publish`, {
+  method: 'POST',
+  headers: { Authorization: `Bearer ${accessToken}` },
+})
+
+if (!publishResponse.ok) {
+  const error = (await publishResponse.json()) as { message: string; code: number }
+  throw new Error(`Publish failed (${error.code}): ${error.message}`)
+}
+```
+
+La publication promeut la version Draft en Live, marque la version Live précédente comme inactive, et crée une nouvelle copie Draft de la définition Live. Les colonnes de sortie des Entities sont recalculées sur la nouvelle définition Live, et les caches du Datagraph sont invalidés.
+
+## Gestion des erreurs
+
+| Statut | Condition | Traitement |
+|--------|-----------|------------|
+| `400` | La définition est structurellement invalide, ou la version Draft est absente à la publication. | Appelez `/datagraph/schemas/validate` et exposez `validation.error.issues`. |
+| `403` | Le token n'a pas la permission `DatagraphSchema` pour cette action. | Vérifiez le rôle. Voir [Permissions](/fr/product-guide/account/permissions). |
+| `404` | `id` de schéma inconnu, ou Datasource référencée non lisible par le token. | Vérifiez les identifiants dans le périmètre de la company courante. |
+| `409` | Un Datagraph Schema existe déjà pour la company. | Il existe un seul Datagraph Schema par company : faites un `PATCH` sur l'existant au lieu d'en créer un autre. |
+
+```typescript
+const createResponse = await fetch(`${API_BASE_URL}/datagraph/schemas`, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ schema }),
+})
+
+if (createResponse.status === 409) {
+  const listResponse = await fetch(`${API_BASE_URL}/datagraph/schemas`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+  const { data: schemas } = (await listResponse.json()) as { data: { _id: string }[] }
+  const existingSchemaId = schemas[0]._id
+
+  await fetch(`${API_BASE_URL}/datagraph/schemas/${existingSchemaId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ schema }),
+  })
+}
+```
+
+## Datagraph Entities
+
+Les Datagraph Entities — les requêtes SQL paramétrées exécutées sur le Datagraph Schema Live — ne sont pas exposées dans l'API publique. Créez-les, publiez-les et exécutez-les depuis le DataHub, puis consommez-les dans un Workflow avec le Data Node **Query an entity**. Deux contraintes s'appliquent au SQL des Entities : chaque Datasource référencée doit avoir une version Live, et les Datasources protégées par des filtres au niveau des lignes ne peuvent pas être interrogées.
+
+## Voir aussi
+
+- [Filtres de requête Datasource](/fr/developer-docs/guides/datasource-query-filters)
+- [Datasource API temps réel](/fr/developer-docs/guides/real-time-api-datasource)
+- [Authentification](/fr/developer-docs/api-reference/authentication)
+- [Datagraph Entities](/fr/advanced-guide/datahub/datagraph/entities)

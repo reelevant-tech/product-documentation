@@ -93,6 +93,21 @@ terms:
     definition: "The platform's data management center for importing and configuring external data."
     synonyms_forbidden: ["data hub", "data center", "data layer"]
 
+  datagraph:
+    canonical_name: "Datagraph"
+    definition: "The DataHub data model that links Datasources together so they can be queried as related tables."
+    synonyms_forbidden: ["data graph", "data-graph", "graph", "data model layer"]
+
+  datagraph_schema:
+    canonical_name: "Datagraph Schema"
+    definition: "The Datagraph definition: one table per Datasource, with typed columns and relations between tables."
+    synonyms_forbidden: ["data model", "graph schema", "datagraph model"]
+
+  datagraph_entity:
+    canonical_name: "Datagraph Entity"
+    definition: "A named SQL query over the Datagraph Schema, with declared parameters and inferred output columns, consumable by a Workflow."
+    synonyms_forbidden: ["entity query", "saved query", "dataset", "view"]
+
   resource_group:
     canonical_name: "Team"
     definition: "An organisational unit (Resource Group) for controlling access to Workflows, Contents, and Datasources."

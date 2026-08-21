@@ -1,0 +1,79 @@
+---
+title: 'Datagraph Overview'
+description: 'How the Datagraph models relations between Datasources and exposes reusable Entities to Workflows'
+---
+
+<Warning>
+  The Datagraph is in beta. Its pages, options, and validation rules can still change. Confirm with your Technical Account Manager before you rely on it in a production Workflow.
+</Warning>
+
+## Overview
+
+The Datagraph turns independent Datasources into a single relational data model. It has two objects:
+
+| Object | Purpose |
+|--------|---------|
+| **Datagraph Schema** | The data model: one table per Datasource, with typed columns and relations between tables. |
+| **Datagraph Entity** | A named SQL query written against that model, with declared parameters and inferred output columns. |
+
+A published Entity is consumable by the **Query an entity** Data Node in a Workflow, so the same logic is written once and reused across Workflows.
+
+## Before You Begin
+
+- Every table in the Datagraph Schema points to an existing Datasource, so create and publish your Datasources first. See [Creating a Datasource](/product-guide/datahub/creating-a-datasource).
+- Column types come from the Datasource [field mapping](/advanced-guide/datahub/field-mapping) — the Datagraph does not re-type your data.
+- A Datasource must have a Live version before it can be queried through an Entity.
+- Datasources that use row-level filters cannot be queried through an Entity.
+
+## Model Structure
+
+A Datagraph Schema is a list of tables. Each table carries the following attributes.
+
+| Attribute | Description |
+|-----------|-------------|
+| **Datasource** | The Datasource backing the table. Required. |
+| **Description** | Optional free text documenting the table. |
+| **Columns** | Typed columns mapped to Datasource fields, each nullable or not, with an optional default and description. |
+| **Virtual columns** | Columns computed from an expression instead of being stored in the Datasource. |
+| **Unique keys** | Column groups whose values are unique in the data. |
+| **Indexes** | Column groups the data can be indexed on. |
+| **Relations** | Local columns pointing at columns of a referenced table. |
+
+Table names always match the selected Datasource, which keeps the model and the DataHub aligned. Relations behave like foreign keys: a list of local columns pointing at the same number of columns in a referenced table.
+
+## Versions and Publishing
+
+Both objects follow the same lifecycle.
+
+| Status | Meaning |
+|--------|---------|
+| **Draft** | The editable version. Saving updates the Draft only. |
+| **Published** / **Live** | The version used by Workflows and by the Explorer analysis. |
+| **Inactive** | A previously published version, retained for history. |
+
+Publishing promotes the Draft to Live, marks the previous Live version Inactive, then creates a fresh Draft copy of the new Live definition. You therefore always have a Draft to work in, and publishing never leaves you without an editable version.
+
+<Info>
+  Entity output columns are recomputed against the **Live** Datagraph Schema. If you add a column in the Schema Draft, publish the Schema before relying on that column in an Entity.
+</Info>
+
+## Permissions
+
+Access is controlled by two separate permissions, both scoped to Company and Team: **Datagraph Schema** and **Datagraph Entity**. Each supports access, create, update, and delete actions. Configuring the **Query an entity** Data Node in a Workflow is restricted to tech admins. See [Permissions](/product-guide/account/permissions).
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
+    Define tables, columns, and relations.
+  </Card>
+  <Card title="Explorer" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
+    Validate the model and inspect join matches.
+  </Card>
+  <Card title="Entities" icon="code" href="/advanced-guide/datahub/datagraph/entities">
+    Write parameterised SQL and publish it for Workflows.
+  </Card>
+  <Card title="Datagraph Schema API" icon="terminal" href="/developer-docs/guides/datagraph-schema-api">
+    Manage the Datagraph Schema programmatically.
+  </Card>
+</CardGroup>

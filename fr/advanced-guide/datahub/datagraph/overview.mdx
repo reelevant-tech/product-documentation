@@ -1,0 +1,79 @@
+---
+title: "Vue d'ensemble du Datagraph"
+description: 'Comment le Datagraph modélise les relations entre Datasources et expose des Entities réutilisables aux Workflows'
+---
+
+<Warning>
+  Le Datagraph est en bêta. Ses pages, ses options et ses règles de validation peuvent encore évoluer. Validez avec votre Technical Account Manager avant de vous appuyer dessus dans un Workflow en production.
+</Warning>
+
+## Vue d'ensemble
+
+Le Datagraph transforme des Datasources indépendantes en un modèle de données relationnel unique. Il comporte deux objets :
+
+| Objet | Rôle |
+|-------|------|
+| **Datagraph Schema** | Le modèle de données : une table par Datasource, avec des colonnes typées et des relations entre les tables. |
+| **Datagraph Entity** | Une requête SQL nommée écrite sur ce modèle, avec des paramètres déclarés et des colonnes de sortie inférées. |
+
+Une Entity publiée est consommable par le Data Node **Query an entity** dans un Workflow : la logique est écrite une fois et réutilisée dans plusieurs Workflows.
+
+## Avant de commencer
+
+- Chaque table du Datagraph Schema pointe vers une Datasource existante : créez et publiez vos Datasources d'abord. Voir [Créer une Datasource](/fr/product-guide/datahub/creating-a-datasource).
+- Les types de colonnes proviennent du [field mapping](/fr/advanced-guide/datahub/field-mapping) de la Datasource — le Datagraph ne retype pas vos données.
+- Une Datasource doit avoir une version Live pour être interrogée via une Entity.
+- Les Datasources utilisant des filtres au niveau des lignes ne peuvent pas être interrogées via une Entity.
+
+## Structure du modèle
+
+Un Datagraph Schema est une liste de tables. Chaque table porte les attributs suivants.
+
+| Attribut | Description |
+|----------|-------------|
+| **Datasource** | La Datasource qui alimente la table. Obligatoire. |
+| **Description** | Texte libre optionnel documentant la table. |
+| **Colonnes** | Colonnes typées associées aux champs de la Datasource, nullables ou non, avec une valeur par défaut et une description optionnelles. |
+| **Colonnes virtuelles** | Colonnes calculées par une expression au lieu d'être stockées dans la Datasource. |
+| **Clés uniques** | Groupes de colonnes dont les valeurs sont uniques dans les données. |
+| **Index** | Groupes de colonnes sur lesquels les données peuvent être indexées. |
+| **Relations** | Colonnes locales pointant vers des colonnes d'une table référencée. |
+
+Le nom de la table correspond toujours à la Datasource sélectionnée, ce qui garde le modèle et le DataHub alignés. Les relations se comportent comme des clés étrangères : une liste de colonnes locales pointant vers le même nombre de colonnes d'une table référencée.
+
+## Versions et publication
+
+Les deux objets suivent le même cycle de vie.
+
+| Statut | Signification |
+|--------|---------------|
+| **Draft** | La version modifiable. L'enregistrement ne met à jour que le Draft. |
+| **Published** / **Live** | La version utilisée par les Workflows et par l'analyse de l'Explorer. |
+| **Inactive** | Une version publiée précédemment, conservée pour l'historique. |
+
+La publication promeut le Draft en Live, marque la version Live précédente comme Inactive, puis crée une nouvelle copie Draft de la définition Live. Vous disposez donc toujours d'un Draft de travail, et publier ne vous laisse jamais sans version modifiable.
+
+<Info>
+  Les colonnes de sortie d'une Entity sont recalculées sur le Datagraph Schema **Live**. Si vous ajoutez une colonne dans le Draft du Schema, publiez le Schema avant de vous appuyer sur cette colonne dans une Entity.
+</Info>
+
+## Permissions
+
+L'accès est contrôlé par deux permissions distinctes, toutes deux au périmètre Company et Team : **Datagraph Schema** et **Datagraph Entity**. Chacune couvre les actions d'accès, de création, de mise à jour et de suppression. La configuration du Data Node **Query an entity** dans un Workflow est réservée aux tech admins. Voir [Permissions](/fr/product-guide/account/permissions).
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
+    Définissez les tables, les colonnes et les relations.
+  </Card>
+  <Card title="Explorer" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Validez le modèle et inspectez les join matches.
+  </Card>
+  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+    Écrivez du SQL paramétré et publiez-le pour les Workflows.
+  </Card>
+  <Card title="API Datagraph Schema" icon="terminal" href="/fr/developer-docs/guides/datagraph-schema-api">
+    Gérez le Datagraph Schema par programmation.
+  </Card>
+</CardGroup>

@@ -17,6 +17,9 @@ description: 'Canonical terminology used across all Reelevant documentation'
 | **Data Node** | A Workflow Node that fetches or provides data (Datasource query, URL Parameter, Geolocation, Weather, Transform). |
 | **Logic Node** | A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing). |
 | **DataHub** | The platform's data management center for importing and configuring external data. |
+| **Datagraph** | The DataHub data model that links Datasources together so they can be queried as related tables. |
+| **Datagraph Schema** | The Datagraph definition: one table per Datasource, with typed columns and relations between tables. |
+| **Datagraph Entity** | A named SQL query over the Datagraph Schema, with declared parameters and inferred output columns, consumable by a Workflow. |
 | **Content Editor** | The visual drag-and-drop editor for designing Content templates with dynamic data bindings. |
 | **Team** | An organisational unit for controlling access to Workflows, Contents, and Datasources. |
 | **Personalisation Engine** | The service that executes a Workflow and returns personalised content (formerly called the Runner). |

@@ -1,0 +1,99 @@
+---
+title: 'Interroger une Entity'
+description: 'Exécuter une Entity Datagraph publiée depuis un Workflow et lier ses paramètres à des valeurs du Workflow'
+---
+
+![Node de données Interroger une entité configuré avec une Entity publiée, un paramètre lié et une limite de résultats](/images/workflows/node-datagraph-query.png)
+
+## Vue d'ensemble
+
+Le Data Node **Interroger une entité** exécute la version Live d'une [Entity Datagraph](/fr/advanced-guide/datahub/datagraph/entities) et expose les lignes obtenues aux Nodes suivants. C'est le seul moyen de consommer le modèle Datagraph dans un Workflow.
+
+Contrairement à un Node Datasource, qui lit une seule Datasource, ce Node exécute le SQL joint préparé dans l'Entity. Les filtres, les jointures et le tri vivent donc dans l'Entity, pas dans le Node.
+
+<Warning>
+  Le Datagraph est en bêta, et le Node est réservé aux tech admins. Les autres utilisateurs ne le voient pas dans le menu **Data** de l'éditeur.
+</Warning>
+
+## Ajouter le Node
+
+Survolez le bouton **Data** de la barre d'outils de l'éditeur et sélectionnez **Interroger une entité**. Voir [Data Nodes](/fr/advanced-guide/workflows/data-nodes) pour la procédure générale.
+
+![Menu Data de l'éditeur de Workflow avec l'option Interroger une entité en bas de la liste](/images/workflows/node-picker-data-datagraph.png)
+
+## Configuration
+
+| Champ | Description |
+|-------|-------------|
+| **Entité** | L'Entity à exécuter. Le sélecteur ne liste que les Entities disposant d'une version **Live** ; les brouillons sont exclus. S'il n'existe qu'une seule Entity Live, elle est présélectionnée. |
+| **Paramètres de l'entité** | Un champ par paramètre déclaré dans la définition Live de l'Entity sélectionnée. Affiché seulement après la sélection d'une Entity. |
+| **Limite de résultats** | Nombre maximum de lignes renvoyées, entre 1 et 200. Désactivé jusqu'à la sélection d'une Entity, et facultatif. |
+
+L'icône située à côté du champ **Entité** ouvre l'Entity dans **DataHub → Datagraph → Entities**, dans un nouvel onglet et dans le scope de compte courant.
+
+Changer l'Entity sélectionnée efface les valeurs de paramètres déjà saisies, car les noms de paramètres appartiennent à la définition de l'Entity.
+
+<Info>
+  Publier une nouvelle version d'Entity qui renomme ou ajoute un paramètre ne met pas à jour les Nodes déjà configurés. Rouvrez chaque Node pour lier les nouveaux paramètres, sinon les paramètres obligatoires manqueront à l'exécution.
+</Info>
+
+## Lier les paramètres
+
+Chaque paramètre est lié soit à une valeur statique, soit à une valeur produite en amont dans le Workflow, via le **Variable Picker**. Le contrôle affiché suit le type déclaré du paramètre.
+
+| Type de paramètre | Contrôle |
+|-------------------|----------|
+| `string`, `id` | Valeur texte ou valeur du Workflow |
+| `number` | Valeur numérique ou valeur du Workflow |
+| `datetime`, `datetime_iso` | Valeur de date ou valeur du Workflow |
+| `boolean` | Valeur texte ou valeur du Workflow |
+
+![Sélecteur de valeur de paramètre du Node Interroger une entité, avec une valeur saisie et les Datasources disponibles dans le Workflow](/images/workflows/node-datagraph-query-parameter.png)
+
+Un paramètre prend une seule valeur. Les valeurs multiples pour un même paramètre ne sont pas prises en charge.
+
+Les paramètres obligatoires doivent être liés. Si un paramètre obligatoire n'a pas de valeur à l'exécution, l'Entity est rejetée avec une erreur de paramètre invalide, plutôt que de renvoyer un résultat vide.
+
+<Info>
+  Quand l'Entity déclare un paramètre `client_id` et que le Workflow résout exactement une personne suivie, cet identifiant est utilisé pour `client_id` si vous avez laissé le champ vide. Une valeur liée explicitement est toujours prioritaire.
+</Info>
+
+## Sortie
+
+Le Node renvoie une liste de lignes. Chaque ligne contient les colonnes de sortie inférées par l'Entity, avec des valeurs texte, numériques ou vides.
+
+Ces colonnes sont exposées aux Nodes suivants dans le **Variable Picker**, sous le nom de l'Entity, et peuvent alimenter un [Content](/fr/product-guide/contents/overview) ou une [Condition](/fr/advanced-guide/workflows/logic-nodes/conditions).
+
+Le Node affiché sur le canvas porte le nom de l'Entity sélectionnée : un Workflow utilisant plusieurs Entities reste lisible.
+
+![Node Interroger une entité sur le canvas du Workflow, affichant le nom de l'Entity sélectionnée](/images/workflows/node-datagraph-query-canvas.png)
+
+## Exemple concret
+
+Un Datagraph d'annonces immobilières relie les utilisateurs, les annonces, les recommandations et les prix du marché. L'Entity `listings_matching_a_user_search` déclare un paramètre, `user_id`, et renvoie une ligne par annonce correspondante avec sa référence, sa surface, sa ville et son prix.
+
+Dans le Workflow :
+
+1. Un Node **URL Parameter** capte `user_id` depuis l'appel réalisé par l'outil d'envoi.
+2. Un Node **Interroger une entité** sélectionne `listings_matching_a_user_search`, lie `user_id` à ce URL Parameter et fixe la **Limite de résultats** à 6.
+3. Le Content parcourt les lignes renvoyées pour construire un bloc de six annonces.
+
+Comme les jointures vivent dans l'Entity, la même configuration de Node fonctionne pour chaque destinataire, et le modèle peut être corrigé sans toucher au Workflow.
+
+## Points opérationnels
+
+- Alignez la limite de résultats sur ce que le Content affiche. Les lignes récupérées mais jamais affichées coûtent quand même du temps d'exécution.
+- Testez l'Entity avec **Run query** dans l'éditeur d'Entity avant de la brancher dans un Workflow, avec les mêmes valeurs de paramètres.
+- Les relations dont le taux de correspondance est faible produisent des résultats partiels. Vérifiez-les dans l'[Explorer Datagraph](/fr/advanced-guide/datahub/datagraph/explorer) avant de mettre en cause le Node.
+- Une Entity dont les Datasources sont protégées par des filtres au niveau des lignes ne peut pas être exécutée depuis un Workflow.
+
+## Pour aller plus loin
+
+<CardGroup cols={2}>
+  <Card title="Entities Datagraph" icon="table" href="/fr/advanced-guide/datahub/datagraph/entities">
+    Écrire le SQL paramétré, inférer les colonnes de sortie et publier une Entity.
+  </Card>
+  <Card title="Datagraph" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/overview">
+    Comprendre le modèle sur lequel les Entities sont construites.
+  </Card>
+</CardGroup>

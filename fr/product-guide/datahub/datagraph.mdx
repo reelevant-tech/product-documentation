@@ -1,0 +1,144 @@
+---
+title: 'Datagraph'
+description: 'Reliez vos Datasources dans un modèle de données unique pour que vos Workflows réutilisent les mêmes données fiables'
+---
+
+Le Datagraph est la partie du [DataHub](/fr/product-guide/datahub/overview) où vous décrivez comment vos Datasources sont liées entre elles. Vos Workflows réutilisent ainsi les mêmes données fiables.
+
+<Warning>
+  Le Datagraph est en bêta. Ses pages et ses options peuvent encore évoluer. Échangez avec votre Technical Account Manager avant de vous appuyer dessus dans un Workflow en production.
+</Warning>
+
+## Pourquoi utiliser le Datagraph ?
+
+Chaque Datasource contient un seul ensemble de données : produits, magasins, achats ou clients. Seule, une Datasource ne peut pas répondre à une question qui croise deux ensembles de données.
+
+Le Datagraph relie les Datasources entre elles. Votre équipe data peut ensuite préparer des Entities réutilisables (des questions enregistrées, par exemple « les cinq produits les plus achetés par cette personne ») que n'importe quel Workflow peut réutiliser.
+
+<Tip>
+  Vous n'avez pas à construire le Datagraph vous-même. Il est généralement mis en place une fois par votre équipe data ou votre Technical Account Manager Reelevant, puis réutilisé par tout le monde.
+</Tip>
+
+## Où le trouver
+
+Ouvrez **DataHub** dans la barre latérale, puis choisissez **Datagraph**. Vous y trouverez trois pages :
+
+| Page | À quoi elle sert |
+|------|------------------|
+| **Schema** | Le modèle de données : quelles Datasources font partie du Datagraph, et comment elles sont liées. |
+| **Explorer** | Une carte visuelle de ce modèle, avec un contrôle de santé sur chaque lien. |
+| **Entities** | Les questions réutilisables construites sur ce modèle, prêtes à être utilisées dans les Workflows. |
+
+Sur la page **Schema**, le panneau **Tables** à gauche liste les Datasources du modèle. Sélectionner une table affiche ses **Columns** et ses **Relations** (les liens vers les autres tables).
+
+![Page Schema du Datagraph pour un modèle d'annonces immobilières, avec cinq tables SeLoger à gauche et les colonnes de la table utilisateurs sélectionnée à droite](/images/datahub/datagraph-seloger-schema.png)
+
+L'onglet **Relations** montre à quelles autres tables la table sélectionnée est liée, et sur quels champs.
+
+![Onglet Relations d'une table du Datagraph, avec deux liens de la table de recommandations vers la table utilisateurs et la table annonces](/images/datahub/datagraph-seloger-schema-relations.png)
+
+## Comprendre l'Explorer
+
+L'**Explorer** est la page la plus utile si vous souhaitez simplement comprendre vos données.
+
+1. Ouvrez **DataHub → Datagraph → Explorer**.
+2. Restez sur l'onglet **Diagram** pour voir chaque Datasource sous forme de bloc, avec les lignes qui montrent les liens.
+3. Faites glisser le diagramme pour vous déplacer, et utilisez les boutons de zoom pour vous rapprocher.
+4. Ouvrez l'onglet **Relations** pour examiner chaque lien un par un.
+5. Ouvrez l'onglet **Datasources** pour lister les Datasources utilisées dans le modèle, avec leurs champs.
+
+![Onglet Diagram de l'Explorer du Datagraph, avec cinq Datasources immobilières liées sous forme de blocs reliés par des lignes](/images/datahub/datagraph-seloger-explorer.png)
+
+<Info>
+  Si l'Explorer vous demande de créer d'abord un Schema, le Datagraph n'a pas encore été mis en place. Demandez à votre équipe data ou à votre Technical Account Manager de le construire.
+</Info>
+
+Sur l'onglet **Relations**, chaque lien affiche un pourcentage **Join match**. Il indique à quel point les valeurs des deux côtés du lien se recoupent réellement dans vos données.
+
+![Onglet Relations de l'Explorer du Datagraph, listant cinq liens avec leur pourcentage de join match](/images/datahub/datagraph-seloger-relations.png)
+
+| Filtre | Ce qu'il affiche |
+|--------|------------------|
+| **All** | Tous les liens du modèle. |
+| **Good** | Les liens dont les valeurs se recoupent bien. |
+| **Weak** | Les liens dont le recoupement est faible — à examiner avec votre équipe data. |
+| **Invalid** | Les liens qui n'ont pas pu être vérifiés du tout. |
+
+<Warning>
+  Un lien faible ou invalide signifie généralement que les deux Datasources ne partagent pas les mêmes identifiants. Une personnalisation construite sur ce lien peut ne rien retourner : signalez-le à votre équipe data avant de l'utiliser dans un Workflow.
+</Warning>
+
+## Versions Draft et Published
+
+La page **Schema** et chaque Entity possèdent leur propre version, affichée sous forme de statut.
+
+| Statut | Signification |
+|--------|---------------|
+| **Draft** | Travail en cours. Visible uniquement dans les pages du Datagraph. |
+| **Published** (ou **Live**) | La version réellement utilisée par les Workflows. |
+| **Inactive** | Une version publiée précédemment, conservée pour l'historique. |
+
+Rien de ce que vous voyez dans un Draft n'affecte votre personnalisation en production avant publication.
+
+![Page Entities du Datagraph listant cinq Entities avec leur statut Draft ou Live](/images/datahub/datagraph-seloger-entities.png)
+
+## Ce qu'une Entity peut répondre
+
+Une Entity répond à une question sur une personne, un produit ou une zone. Votre équipe data l'écrit une fois, et tous les Workflows peuvent la réutiliser.
+
+Voici des exemples typiques pour un compte d'annonces immobilières :
+
+| Entity | La question à laquelle elle répond |
+|--------|------------------------------------|
+| **Listings matching a user search** | Quelles annonces se trouvent dans la zone recherchée par cette personne, dans son budget ? |
+| **Listings with a recent price drop** | Quelles annonces d'une zone viennent de baisser, la plus forte baisse d'abord ? |
+| **Market prices in the user area** | Quel est le prix médian au mètre carré et la tendance dans la zone recherchée ? |
+| **Recommended listings for a user** | Quelles annonces nos données de recommandation suggèrent-elles pour cette personne ? |
+| **Editorial content for an area** | Quels guides et articles de marché sont publiés pour cette zone ? |
+
+Les mêmes principes fonctionnent pour d'autres secteurs. Un compte retail peut demander les derniers articles achetés, le stock restant dans le magasin préféré, ou les meilleures ventes de la catégorie préférée.
+
+<Tip>
+  Décrivez la question dont vous avez besoin en langage courant, avec les données attendues. Votre équipe data la transforme en Entity, puis vous la choisissez dans votre Workflow.
+</Tip>
+
+Sur la page d'une Entity, le panneau **Preview & results** affiche un échantillon de la réponse, pour vérifier les données avant la mise en production.
+
+![Page Entity du Datagraph avec le nom de l'Entity, l'éditeur et deux annonces correspondantes dans le panneau Preview and results](/images/datahub/datagraph-seloger-entity-editor.png)
+
+Le panneau **Input / Output** liste les **Parameters** attendus par l'Entity, et les champs qu'elle retourne.
+
+![Panneau Input et Output d'une Entity du Datagraph, avec le paramètre user_id et les champs retournés avec leur type](/images/datahub/datagraph-seloger-entity-input-output.png)
+
+## Utiliser une Entity dans un Workflow
+
+Une fois une Entity publiée, elle peut être utilisée dans un Workflow avec le Data Node **Query an entity** (un Node qui récupère des données externes pour le Workflow).
+
+1. Ouvrez votre Workflow dans l'[éditeur de Workflow](/fr/product-guide/workflows/editor).
+2. Ajoutez le Data Node **Query an entity**.
+3. Sélectionnez l'Entity publiée dont vous avez besoin.
+4. Renseignez les paramètres de l'Entity, avec une valeur fixe ou avec une variable du Workflow.
+5. Utilisez les données retournées dans votre [Content](/fr/product-guide/contents/overview) ou dans une [Condition](/fr/product-guide/workflows/logic-nodes/conditions).
+
+Voir [Interroger une Entity](/fr/product-guide/workflows/data-nodes/datagraph) pour la description complète du Node.
+
+<Info>
+  Seuls les utilisateurs avec le rôle tech admin peuvent configurer ce Node. Demandez à votre administrateur si le Node apparaît en lecture seule. Voir [Permissions](/fr/product-guide/account/permissions) pour les permissions Datagraph Schema et Datagraph Entity.
+</Info>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Vue d'ensemble du DataHub" icon="database" href="/fr/product-guide/datahub/overview">
+    Découvrez comment les Datasources sont importées et configurées.
+  </Card>
+  <Card title="Datagraph en détail" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/overview">
+    Comprenez le modèle de données, les versions et les Entities en détail.
+  </Card>
+  <Card title="Explorer" icon="magnifying-glass-chart" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Lisez une analyse de join match et corrigez les liens faibles.
+  </Card>
+  <Card title="Permissions" icon="lock" href="/fr/product-guide/account/permissions">
+    Voyez qui peut consulter, modifier et publier les objets du Datagraph.
+  </Card>
+</CardGroup>
