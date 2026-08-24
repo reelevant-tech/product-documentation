@@ -31,6 +31,8 @@ Chaque mesure est calculée sur la période interrogée, sur les clients que Ree
 
 Les commandes sont comptées comme des transactions et non comme des lignes de commande : un panier contenant sept références produit est une commande.
 
+Le dashboard s'ouvre sur les trois derniers mois. Ces mesures comparent des cohortes de clients et non des affichages : une période plus courte porte trop peu d'achats par client pour être lue, et une période de moins d'un mois est refusée.
+
 ## La comparaison
 
 Chaque mesure est disponible sur deux populations, la Exposed Population et la Non-Exposed Population, via la dimension **Was Exposed** :
@@ -91,6 +93,42 @@ Un distributeur, six mois, 436 496 clients comparables de chaque côté :
 
 Lisez le mécanisme, pas seulement le chiffre principal. La valeur par client progresse de 90,2 %, et l'essentiel vient de clients qui commandent plus souvent plutôt que de clients qui dépensent plus par commande, où l'écart n'est que de 9,5 %. La rétention est supérieure de 7,3 points : le gain vient donc à la fois de la fidélisation des acheteurs établis et de la part des clients touchés qui achètent. L'écart avant la période de 0,6 % est ce qui rend la comparaison exploitable.
 
+## Par ensemble de Channels
+
+Chaque mesure d'Uplift se décompose par ensemble de Channels sur lesquels les clients comparés étaient joignables, via la dimension **Reachable channels**. Le chiffre global se scinde alors en une comparaison par ensemble : `email`, `email + web`, `email + mobile + web`, etc.
+
+Il s'agit d'une comparaison distincte et non d'une simple tranche du chiffre global. La joignabilité fait partie de la clé d'appariement : un client n'est comparé qu'à des clients joignables sur les mêmes Channels. Comparer un client `email + web` à un client joignable uniquement par email mesure l'audience, puisqu'un client joignable sur le web est un client qui navigue sur le site.
+
+Chaque ligne indique si sa comparaison est exploitable, et n'affiche aucun chiffre quand elle ne l'est pas :
+
+| Comparaison | Signification |
+|---|---|
+| **Comparable** | Les deux cohortes comptent assez de clients et n'étaient pas déjà écartées avant la période. L'Uplift est affiché. |
+| **Trop peu de clients** | Une des cohortes est sous le minimum de clients par cohorte. |
+| **Cohortes déjà écartées** | Leur valeur par client différait avant la période : la pondération n'a pas refermé l'écart sur cet ensemble. |
+| **Non comparable** | Le calcul n'avait rien sur quoi s'appuyer, typiquement aucun achat avant la période. |
+| **Aucun client comparable** | Un des deux côtés est vide sur cet ensemble de Channels. |
+
+Les deux effectifs du tableau sont des clients observés de chaque côté, et non la population pondérée. Une poignée de clients non exposés pondérés sur une grande cohorte exposée se lit comme une poignée, ce qui rend une ligne trop mince reconnaissable.
+
+<Info>
+  Lisez les ensembles, pas les Channels. Un client joignable par email et sur le web n'apparaît que dans `email + web`, jamais dans `email` : les lignes découpent donc vos clients au lieu de se recouper. Un Channel présent dans plusieurs ensembles n'a pas d'Uplift unique.
+</Info>
+
+**Personnalisé sur combien de canaux** répond à une question plus étroite : au sein de la Exposed Population, comment les mesures se lisent selon le nombre de Channels sur lesquels l'expérience du client a été personnalisée. Comme la pression d'exposition, c'est une lecture par cohorte et non l'effet d'ajouter un Channel : un client personnalisé sur trois Channels est un client joignable sur trois Channels.
+
+## Quand la comparaison est refusée
+
+Une cohorte trop petite, ou sans historique d'achat sur lequel croître, produit un Uplift qui bouge au rythme d'un seul panier. Ces chiffres sont laissés vides plutôt que reportés, et un Uplift vide n'est pas un Uplift nul.
+
+| Condition | Comportement |
+|---|---|
+| Période de moins d'un mois (28 jours) | Toutes les mesures par client sont refusées, et le dashboard l'indique. Sur une semaine, être touché par Reelevant et être actif sont presque le même événement, ce que la comparaison lirait comme un Uplift. |
+| Moins de clients que **Minimum de clients par cohorte** d'un côté ou de l'autre | Aucun Uplift pour cette cohorte. La valeur par défaut est de 100 clients observés, réglable sous **Fiabilité de la comparaison** dans les [Paramètres Analytics](/fr/product-guide/analytics/settings). |
+| Aucun achat avant la période d'un côté ou de l'autre | Aucun Uplift, faute de croissance à comparer à une croissance. |
+
+Le seuil compte des clients observés des deux côtés : la pondération ne peut donc pas le satisfaire. Relevez-le quand vos Uplifts bougent entre deux requêtes consécutives ; abaissez-le pour lire des ensembles de Channels plus petits, en acceptant des chiffres plus bruités.
+
 ## D'où vient l'écart
 
 Les Uplifts disent de combien les deux populations diffèrent. La matrice de cycle de vie dit où se situe cet écart, en suivant chaque client de son étape de cycle de vie au début de la période à son étape à la fin.
@@ -136,7 +174,7 @@ L'exposition n'est pas randomisée. La pondération rend les deux populations co
 Présentez-le comme la Exposed Population comparée à une Non-Exposed Population comparable. Une affirmation causale exige une Non-Exposed Population randomisée, où une part de vos clients joignables n'est délibérément jamais personnalisée.
 
 <Info>
-  Lisez toujours Clients comparables avant tout autre chiffre. La pondération ne conserve que les clients dont l'historique d'achat existe des deux côtés : une population petite ou très homogène peut donc ne rien laisser à comparer — toutes les mesures valent alors 0, ce qui n'est pas la même réponse que « aucun effet ».
+  Lisez toujours Clients comparables avant tout autre chiffre. La pondération ne conserve que les clients dont l'historique d'achat existe des deux côtés : une population petite ou très homogène peut donc ne rien laisser à comparer. Ces mesures restent alors vides plutôt que de valoir 0, car « non calculable » n'est pas la même réponse que « aucun effet ».
 </Info>
 
 <Info>

@@ -1,6 +1,6 @@
 ---
 title: 'Analytics Settings'
-description: 'Configure attribution, personalisation exposure thresholds and custom tags for your company'
+description: 'Configure attribution, personalisation exposure thresholds, comparison reliability and custom tags for your company'
 ---
 
 ![Analytics Settings Tags tab showing tag keys, cardinality badges, and values](/images/analytics/tag-settings.png)
@@ -69,6 +69,27 @@ Customers above zero but below these thresholds count as neither personalised no
 <Tip>
   Raise both thresholds when almost every Content you send is personalised. Lower them when only a few Contents are.
 </Tip>
+
+## Comparison reliability
+
+This threshold decides when the [Customer Impact](/advanced-guide/analytics/customer-impact) dashboard shows an Uplift figure, and when it leaves it empty.
+
+| Field | Default | What it does |
+|---|---|---|
+| **Minimum customers per cohort** | 100 | How many customers each side of the comparison must hold. |
+
+Both sides need that many customers: the personalised ones and the comparable non-personalised ones. Below it, the dashboard shows the customer counts but no figure.
+
+An average over a handful of customers moves with a single basket. So an empty figure means "we cannot answer this", not "no effect".
+
+1. Navigate to **Analytics > Settings**.
+2. Scroll to **Comparison reliability** on the **General** tab.
+3. Set the threshold, or leave it empty to keep the default.
+4. Click **Save changes**.
+
+<Info>
+  Customer Impact also needs a period of at least one month. Over a shorter one, being reached by Reelevant and being active are almost the same thing. The dashboard opens on the last three months for that reason.
+</Info>
 
 ## Tags
 
