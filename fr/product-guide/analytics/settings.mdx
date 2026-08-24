@@ -70,6 +70,27 @@ Les clients au-dessus de zéro mais sous ces seuils ne comptent ni comme personn
   Relevez les deux seuils quand presque tout le Content que vous envoyez est personnalisé. Abaissez-les quand seuls quelques Contents le sont.
 </Tip>
 
+## Fiabilité de la comparaison
+
+Ce seuil décide quand le dashboard [Impact client](/fr/advanced-guide/analytics/customer-impact) affiche un chiffre d'Uplift, et quand il le laisse vide.
+
+| Champ | Par défaut | Rôle |
+|---|---|---|
+| **Minimum de clients par cohorte** | 100 | Combien de clients chaque côté de la comparaison doit compter. |
+
+Les deux côtés ont besoin de ce nombre de clients : les clients personnalisés et les clients non personnalisés comparables. En dessous, le dashboard affiche les effectifs mais aucun chiffre.
+
+Une moyenne calculée sur une poignée de clients bouge au rythme d'un seul panier. Un chiffre vide signifie donc « nous ne pouvons pas répondre », et non « aucun effet ».
+
+1. Rendez-vous dans **Analytics > Settings**.
+2. Faites défiler jusqu'à **Fiabilité de la comparaison** sur l'onglet **General**.
+3. Définissez le seuil, ou laissez-le vide pour conserver la valeur par défaut.
+4. Cliquez sur **Enregistrer les modifications**.
+
+<Info>
+  Impact client exige aussi une période d'au moins un mois. Sur une période plus courte, être touché par Reelevant et être actif sont presque la même chose. C'est pourquoi le dashboard s'ouvre sur les trois derniers mois.
+</Info>
+
 ## Tags
 
 Les tags donnent à chaque Branch des libellés contrôlés que votre équipe utilise de manière cohérente dans les Workflows et Analytics.

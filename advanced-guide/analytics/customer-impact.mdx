@@ -31,6 +31,8 @@ Every measure is computed over the period you query, on the customers Reelevant 
 
 Orders are counted as transactions, not as order lines: a basket containing seven product references is one order.
 
+The dashboard opens on the last three months. These measures compare cohorts of customers rather than displays, so a shorter period holds too few purchases per customer to read, and a period under a month is refused outright.
+
 ## The comparison
 
 Each measure is available on two populations, the Exposed Population and the Non-Exposed Population, through the **Was Exposed** dimension:
@@ -91,6 +93,42 @@ One retailer, six months, 436,496 comparable customers on each side:
 
 Read the mechanism, not only the headline. Value per customer is up 90.2%, and most of it comes from customers ordering more often rather than spending more per order, which moves 9.5%. Retention is 7.3 points higher, so the gain is partly in holding on to established buyers and partly in how many of the reached customers buy at all. The pre-period gap of 0.6% is what makes the comparison usable.
 
+## Per set of Channels
+
+Each Uplift measure breaks down per set of Channels the customers could be reached on, through the **Reachable channels** dimension. The account-wide figure then splits into one comparison per set: `email`, `email + web`, `email + mobile + web`, and so on.
+
+This is a separate comparison rather than a slice of the account-wide one. Reachability is part of the matching key, so customers are only ever compared with customers reachable on the same Channels. Comparing an `email + web` customer with an email-only one measures the audience: a customer we can reach on the web is a customer browsing the site.
+
+Each row reports whether its comparison can be read at all, and shows no figure when it cannot:
+
+| Comparison | What it means |
+|---|---|
+| **Comparable** | The two cohorts hold enough customers and were together before the period. The Uplift is shown. |
+| **Too few customers** | One cohort is below the minimum customers per cohort. |
+| **Cohorts already apart** | Their value per customer differed before the period, so the weighting did not close the gap on this set. |
+| **Not comparable** | The comparison had nothing to stand on, typically no purchases before the period to grow from. |
+| **No comparable customers** | One side is empty on this set of Channels. |
+
+The two customer counts in the table are observed customers on each side, not the weighted population. A handful of non-exposed customers weighted onto a large exposed cohort reads as a handful, which is what makes a thin row recognisable.
+
+<Info>
+  Read the sets rather than the Channels. A customer reachable on email and on the web appears in `email + web` only, never in `email`, so the rows partition your customers instead of overlapping. A Channel present in several sets has no single Uplift.
+</Info>
+
+**Personalised on how many channels** answers a narrower question: within the Exposed Population, how the measures read against the number of Channels a customer's experience was personalised on. Like exposure pressure, it is a cohort reading and not the effect of adding a Channel — a customer personalised on three Channels is a customer reachable on three Channels.
+
+## When the comparison is refused
+
+A cohort too small, or with no purchase history to grow from, produces an Uplift that moves with a single basket. Those figures are left empty rather than reported, and an empty Uplift is not a zero one.
+
+| Condition | Behaviour |
+|---|---|
+| Period shorter than one month (28 days) | Every per-customer measure is refused, and the dashboard says so. Over a week, being reached by Reelevant and being active are nearly the same event, which the comparison would read as an Uplift. |
+| Fewer customers than **Minimum customers per cohort** on either side | No Uplift for that cohort. The default is 100 observed customers, set under **Comparison reliability** in [Analytics Settings](/product-guide/analytics/settings). |
+| No purchases before the period on either side | No Uplift, since there is no growth to compare growth with. |
+
+The threshold counts observed customers on both sides, so the weighting cannot satisfy it. Raise it when your Uplifts move between two consecutive queries; lower it to read smaller sets of Channels, accepting noisier figures.
+
 ## Where the difference came from
 
 The Uplift measures say how much the two populations differ. The lifecycle matrix says where that difference sits, by following each customer from their lifecycle stage at the start of the period to their stage at the end.
@@ -136,7 +174,7 @@ Exposure is not randomised. Weighting makes the two populations comparable on th
 Report it as the Exposed Population compared with a comparable Non-Exposed Population. A causal claim requires a randomised Non-Exposed Population, where a share of your reachable customers is deliberately never personalised.
 
 <Info>
-  Always read Comparable customers before reading any figure. Weighting only keeps customers whose buying history exists on both sides, so a small or very homogeneous population can leave nothing to compare — every measure then reads 0, which is not the same answer as "no effect".
+  Always read Comparable customers before reading any figure. Weighting only keeps customers whose buying history exists on both sides, so a small or very homogeneous population can leave nothing to compare. Those measures then read empty rather than 0, since "not computable" is not the same answer as "no effect".
 </Info>
 
 <Info>
