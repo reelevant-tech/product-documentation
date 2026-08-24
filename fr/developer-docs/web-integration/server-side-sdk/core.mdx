@@ -117,7 +117,7 @@ switch (result.body.type) {
 | `metadata` | `Record<string, unknown>` | Métadonnées issues de l'Output Node |
 | `properties` | `Record<string, unknown>` | Propriétés de sortie |
 | `runId` | `string \| null` | ID d'exécution du Workflow pour le tracking |
-| `executionPath` | `string[]` | ID des Branches empruntées durant l'exécution |
+| `executionPath` | `string[]` | ID des branches empruntées durant l'exécution |
 | `redirectionUrl` | `string` | URL de redirection au clic préconstruite (Runner avec `mode=click`) |
 | `trackClick` | `() => Promise<void>` | Callback fire-and-forget pour suivre le clic côté serveur |
 

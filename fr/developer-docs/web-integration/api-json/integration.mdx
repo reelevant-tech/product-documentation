@@ -40,7 +40,7 @@ Le Runner renvoie `Content-Type: application/json; charset=utf-8` pour les Outpu
 | Statut | Signification |
 |--------|---------|
 | **200** | Le Workflow s'est exécuté avec succès. Le corps contient le payload JSON. |
-| **204** | Le Workflow s'est exécuté mais aucun contenu n'a été produit (par exemple, toutes les Branches étaient vides). |
+| **204** | Le Workflow s'est exécuté mais aucun contenu n'a été produit (par exemple, toutes les branches étaient vides). |
 | **404** | Workflow introuvable ou non publié. |
 
 ## Exemples de code
@@ -123,7 +123,7 @@ Chaque variable déclare un `type` qui indique au Runner comment résoudre sa d�
 
 | `type` | Champ supplémentaire | Comportement | Exemple de cas d'usage |
 |--------|----------------------|--------------|------------------------|
-| `scalar` | — | Se résout en une valeur unique, sélectionnée automatiquement par Branch | Le nom de l'utilisateur, une recommandation produit unique |
+| `scalar` | — | Se résout en une valeur unique, sélectionnée automatiquement par branche | Le nom de l'utilisateur, une recommandation produit unique |
 | `array` | — | Se résout en un tableau de toutes les valeurs à travers les lignes de la Datasource | Liste de produits recommandés, noms de catégories |
 | `fixed` | `index` (base 0) | Se résout en la valeur à une position fixe de la Datasource | Toujours le 1er (`index: 0`) ou le 3e (`index: 2`) produit |
 
@@ -145,7 +145,7 @@ DELETE /workflows/json-templates/{id}     # Delete a template
 
 Lorsque vous publiez un Workflow qui utilise des Output Nodes JSON Template, la plateforme valide que :
 
-1. **Tous les Nodes JSON Template** du Workflow référencent le **même ID de template** — garantissant une forme de réponse cohérente entre les Branches.
+1. **Tous les Nodes JSON Template** du Workflow référencent le **même ID de template** — garantissant une forme de réponse cohérente entre les branches.
 2. Le template référencé **existe** et appartient à votre entreprise.
 
 Si la validation échoue, la publication est rejetée avec une erreur descriptive.
@@ -160,7 +160,7 @@ L'approche par API JSON fonctionne conjointement avec le Client-Side Script et l
 
 ## Identité et personnalisation
 
-Le paramètre de requête `rlvt-u` pilote la personnalisation. La valeur que vous transmettez détermine quel profil utilisateur le moteur utilise pour sélectionner les Branches et résoudre les requêtes de Datasource.
+Le paramètre de requête `rlvt-u` pilote la personnalisation. La valeur que vous transmettez détermine quel profil utilisateur le moteur utilise pour sélectionner les branches et résoudre les requêtes de Datasource.
 
 Pour de meilleurs résultats :
 - Transmettez un **identifiant utilisateur stable** (email, ID interne) lorsque l'utilisateur est connecté.

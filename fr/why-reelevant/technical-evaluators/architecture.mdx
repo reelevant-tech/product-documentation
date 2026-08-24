@@ -51,7 +51,7 @@ sequenceDiagram
 2. **Routage edge :** Le CDN termine le TLS et route vers la région d'exécution la plus proche.
 3. **Identification du client :** L'URL contient un identifiant client (paramètre de requête) associé aux enregistrements de la Datasource. Cet identifiant est public par conception — utilisez des identifiants opaques.
 4. **Récupération des données :** Le Runner récupère les données actuelles du client depuis les Datasources connectées (depuis le cache en mémoire avec fallback en direct).
-5. **Exécution du Workflow :** Le DAG évalue les Conditions, récupère des données supplémentaires via les Data Nodes, et parcourt les Branches pour sélectionner l'Output Node approprié.
+5. **Exécution du Workflow :** Le DAG évalue les Conditions, récupère des données supplémentaires via les Data Nodes, et parcourt les branches pour sélectionner l'Output Node approprié.
 6. **Rendu du Content :** Le Content sélectionné est rendu avec les données individuelles (images produit, prix, offres, texte) et retourné sous forme d'image, HTML ou JSON.
 7. **Capture d'événement :** Un événement d'impression est enregistré. Les interactions de clic sont capturées via des URL de redirection pour la logique future du Workflow et l'Analytics.
 

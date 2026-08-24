@@ -73,13 +73,13 @@ Le Personalisation Engine examine ces sources dans l'ordre et utilise la premiè
 
 | Priorité | Source | Description |
 |---|---|---|
-| 1 | **Node Context** | Si un node Context est sur la Branch exécutée, sa sortie `user.locale` est utilisée. |
+| 1 | **Node Context** | Si un node Context est sur la branche exécutée, sa sortie `user.locale` est utilisée. |
 | 2 | **Datasource CRM** | Le field locale mappé sur un node Datasource CRM fournit la locale du destinataire. |
 | 3 | **Paramètre `rlvt-l`** | La locale passée sur le lien d'intégration (voir Couche 4). |
 | 4 | **Aucune** | Si rien ne résout, la locale reste vide. |
 
 <Info>
-  Le node Context lit lui-même le field locale du CRM lorsqu'il est présent, si bien que les sources 1 et 2 concordent généralement. La distinction ne compte que lorsque le node Context n'est pas sur la Branch exécutée — le Personalisation Engine lit alors directement le node CRM.
+  Le node Context lit lui-même le field locale du CRM lorsqu'il est présent, si bien que les sources 1 et 2 concordent généralement. La distinction ne compte que lorsque le node Context n'est pas sur la branche exécutée — le Personalisation Engine lit alors directement le node CRM.
 </Info>
 
 ### Comment les Datasources produit l'utilisent
