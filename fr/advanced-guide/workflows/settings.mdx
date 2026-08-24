@@ -168,6 +168,6 @@ Chaque variable représente un **emplacement dynamique** dans le payload JSON :
 Lorsqu'un Workflow avec des Output Nodes JSON Template est publié, le système valide :
 
 1. **Le template existe** — L'ID de template référencé doit pointer vers un template existant.
-2. **Cohérence inter-Branches** — Tous les Nodes JSON Template de tous les Branches doivent référencer le **même template**. Cela garantit que chaque Branch produit la même forme JSON.
+2. **Cohérence inter-branches** — Tous les Nodes JSON Template de tous les branches doivent référencer le **même template**. Cela garantit que chaque branche produit la même forme JSON.
 
-Si la validation échoue, la publication est bloquée avec un message d'erreur clair indiquant quel Node ou Branch présente une incohérence.
+Si la validation échoue, la publication est bloquée avec un message d'erreur clair indiquant quel Node ou branche présente une incohérence.

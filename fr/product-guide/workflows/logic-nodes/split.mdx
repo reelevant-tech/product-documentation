@@ -1,13 +1,13 @@
 ---
 title: 'Split (A/B Testing)'
-description: 'Répartir le trafic en plusieurs Branches selon des pourcentages de population'
+description: 'Répartir le trafic en plusieurs branches selon des pourcentages de population'
 ---
 
 ![Panneau de configuration du Node Split montrant la répartition des groupes avec un curseur de pourcentage](/images/workflows/node-split.png)
 
 ## Vue d'ensemble
 
-Les Nodes Split répartissent le trafic en plusieurs Branches selon des **pourcentages de population**. Ils sont utilisés pour les tests A/B ou les tests multivariés.
+Les Nodes Split répartissent le trafic en plusieurs branches selon des **pourcentages de population**. Ils sont utilisés pour les tests A/B ou les tests multivariés.
 
 ## Configuration
 
@@ -25,10 +25,10 @@ Les Nodes Split répartissent le trafic en plusieurs Branches selon des **pource
 
 ## Comment ça fonctionne
 
-Lorsqu'un utilisateur déclenche le Workflow, le Node Split l'assigne aléatoirement à l'un des groupes selon les pourcentages configurés. L'assignation est déterministe par utilisateur — le même utilisateur empruntera toujours la même Branch.
+Lorsqu'un utilisateur déclenche le Workflow, le Node Split l'assigne aléatoirement à l'un des groupes selon les pourcentages configurés. L'assignation est déterministe par utilisateur — le même utilisateur empruntera toujours la même branche.
 
 ## Bonnes pratiques
 
 - Incluez toujours un **groupe de contrôle** (ex. 10-20 %) pour mesurer l'impact de la personnalisation.
 - Laissez les tests se dérouler suffisamment longtemps pour atteindre une significativité statistique avant de tirer des conclusions.
-- Utilisez les [catégories de branche](/fr/product-guide/workflows/branches) pour taguer les Branches de split dans Analytics.
+- Utilisez les [catégories de branche](/fr/product-guide/workflows/branches) pour taguer les branches de split dans Analytics.

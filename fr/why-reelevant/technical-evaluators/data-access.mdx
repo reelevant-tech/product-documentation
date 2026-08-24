@@ -6,7 +6,7 @@ keywords: ["export de données", "vue BigQuery", "vue autorisée", "reverse ETL"
 
 ## Vue d'ensemble
 
-Les données produites par la plateforme — événements d'exposition et de clic, Branches exécutées, conversions attribuées, et enregistrements contenus dans vos Datasources — sont accessibles de trois manières complémentaires.
+Les données produites par la plateforme — événements d'exposition et de clic, branches exécutées, conversions attribuées, et enregistrements contenus dans vos Datasources — sont accessibles de trois manières complémentaires.
 
 | Méthode | Usage principal | Interface |
 |---------|-----------------|-----------|
@@ -16,7 +16,7 @@ Les données produites par la plateforme — événements d'exposition et de cli
 
 ## Analyse dans la plateforme
 
-Les dashboards couvrent Performance, Conversions, Individualisation, [Uplift](/fr/product-guide/analytics/dashboards/uplift), Audience et Usage. [Data Exploration](/fr/product-guide/analytics/data-exploration) permet de construire des requêtes libres sur les mêmes mesures et dimensions — dont la Branch exécutée, l'individualisation, les tags de qualification et le code de retour d'exécution — et les requêtes peuvent être sauvegardées puis réutilisées.
+Les dashboards couvrent Performance, Conversions, Individualisation, [Uplift](/fr/product-guide/analytics/dashboards/uplift), Audience et Usage. [Data Exploration](/fr/product-guide/analytics/data-exploration) permet de construire des requêtes libres sur les mêmes mesures et dimensions — dont la branche exécutée, l'individualisation, les tags de qualification et le code de retour d'exécution — et les requêtes peuvent être sauvegardées puis réutilisées.
 
 L'accès est gouverné par la ressource `Statistics` : `Access` pour consulter, `Export` pour extraire. Voir [Permissions](/fr/product-guide/account/permissions).
 
@@ -42,7 +42,7 @@ Pour un accès à l'échelle de l'entrepôt de données, Reelevant peut exposer 
 | Localisation | Dataset géré par Reelevant, région UE |
 | Accès | Accordé aux comptes de service GCP que vous désignez — lecture seule, sur la vue uniquement, jamais sur les tables sous-jacentes |
 | Périmètre | Limité à votre société : une vue par cas d'usage, avec uniquement les colonnes nécessaires |
-| Contenu | Événements de Workflow (expositions, clics, Branch exécutée, noms de Workflow et de Content), données d'achat et de conversion, et points de contact attribués |
+| Contenu | Événements de Workflow (expositions, clics, branche exécutée, noms de Workflow et de Content), données d'achat et de conversion, et points de contact attribués |
 | Gestion du changement | Les vues sont versionnées et revues comme du code, avec validation en dry-run avant toute mise en production |
 | Compatibilité | Traitées comme un contrat externe : les évolutions sont additives, et une vue n'est jamais renommée ni supprimée sans coordination préalable avec vous |
 

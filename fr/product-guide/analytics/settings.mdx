@@ -7,7 +7,7 @@ description: "Configurez l'attribution, les seuils d'exposition à la personnali
 
 ## Vue d'ensemble
 
-La page Paramètres Analytics permet de configurer l'attribution, l'exposition à la personnalisation, les tags personnalisés et les catégories de branche de votre entreprise. Utilisez les tags et les catégories pour qualifier les Branches et segmenter Analytics.
+La page Paramètres Analytics permet de configurer l'attribution, l'exposition à la personnalisation, les tags personnalisés et les catégories de branche de votre entreprise. Utilisez les tags et les catégories pour qualifier les branches et segmenter Analytics.
 
 Accédez-y depuis le lien **Settings** dans la navigation latérale d'Analytics.
 
@@ -93,7 +93,7 @@ Une moyenne calculée sur une poignée de clients bouge au rythme d'un seul pani
 
 ## Tags
 
-Les tags donnent à chaque Branch des libellés contrôlés que votre équipe utilise de manière cohérente dans les Workflows et Analytics.
+Les tags donnent à chaque branche des libellés contrôlés que votre équipe utilise de manière cohérente dans les Workflows et Analytics.
 
 Chaque tag contient une **clé de tag** (le libellé à organiser) et une liste de **valeurs**. Par exemple, `Objectif de campagne` peut contenir `Acquisition` et `Fidélisation`.
 
@@ -101,22 +101,22 @@ Seuls les tags personnalisés apparaissent dans cet onglet. Les tags gérés par
 
 ### Comprendre la cardinalité
 
-La cardinalité contrôle le nombre de valeurs d'une clé de tag attribuables à une même Branch. Elle ne limite pas le nombre de valeurs créées.
+La cardinalité contrôle le nombre de valeurs d'une clé de tag attribuables à une même branche. Elle ne limite pas le nombre de valeurs créées.
 
 ![Panneau de création d'une clé de tag présentant les cardinalités Unique et Multiple](/images/analytics/tag-cardinality.png)
 
 | Cardinalité | Comportement dans un Workflow | Exemple |
 |---|---|---|
-| **Unique** | Chaque Branch finale retient une valeur de cette clé de tag. | `Objectif de campagne : Fidélisation` ne peut pas être associé à `Objectif de campagne : Acquisition` sur la même Branch. |
-| **Multiple** | Chaque Branch finale conserve toutes les valeurs attribuées. | `Contexte d'audience : Anniversaire` et `Contexte d'audience : Fidélité` peuvent décrire la même Branch. |
+| **Unique** | Chaque branche finale retient une valeur de cette clé de tag. | `Objectif de campagne : Fidélisation` ne peut pas être associé à `Objectif de campagne : Acquisition` sur la même branche. |
+| **Multiple** | Chaque branche finale conserve toutes les valeurs attribuées. | `Contexte d'audience : Anniversaire` et `Contexte d'audience : Fidélité` peuvent décrire la même branche. |
 
 **La plus en aval** désigne la qualification la plus proche de l'[Output Node](/fr/glossary).
 
 Imaginez un Workflow qui attribue `Objectif de campagne : Acquisition` avant un second Logic Node.
 
-Une qualification ultérieure sur la même Branch finale attribue `Objectif de campagne : Fidélisation`. Analytics utilise `Fidélisation`, car cette valeur est plus proche de l'Output Node.
+Une qualification ultérieure sur la même branche finale attribue `Objectif de campagne : Fidélisation`. Analytics utilise `Fidélisation`, car cette valeur est plus proche de l'Output Node.
 
-Avec la cardinalité **Multiple**, les deux valeurs restent attribuées à la Branch finale.
+Avec la cardinalité **Multiple**, les deux valeurs restent attribuées à la branche finale.
 
 <Tip>
   Choisissez **Unique** lorsqu'une valeur en aval doit remplacer les précédentes. Choisissez **Multiple** pour conserver toutes les valeurs rencontrées.
@@ -157,7 +157,7 @@ Développez **Valeurs**, puis utilisez les icônes de chaque valeur pour la modi
 
 ### Utiliser les tags dans les Workflows et Analytics
 
-Les tags créés deviennent disponibles lorsque vous [qualifiez une Branch](/fr/product-guide/workflows/branches). Les utilisateurs sélectionnent les valeurs contrôlées sans en créer de nouvelles.
+Les tags créés deviennent disponibles lorsque vous [qualifiez une branche](/fr/product-guide/workflows/branches). Les utilisateurs sélectionnent les valeurs contrôlées sans en créer de nouvelles.
 
 Dans Analytics, utilisez les clés et valeurs pour filtrer les résultats ou comparer les performances de vos qualifications.
 
@@ -165,7 +165,7 @@ Dans Analytics, utilisez les clés et valeurs pour filtrer les résultats ou com
 
 ![Onglet des paramètres de catégories de branche affichant l'arbre de catégories](/images/workflows/branch-categories-settings-v2.png)
 
-Les catégories de branche forment un arbre hiérarchique utilisé pour **qualifier les Branches** dans tous vos Workflows. Elles donnent à votre équipe un vocabulaire partagé et alimentent le filtrage Analytics par catégorie.
+Les catégories de branche forment un arbre hiérarchique utilisé pour **qualifier les branches** dans tous vos Workflows. Elles donnent à votre équipe un vocabulaire partagé et alimentent le filtrage Analytics par catégorie.
 
 Ouvrez l'onglet **Catégories de branches** dans les Paramètres Analytics pour les gérer aux côtés de vos tags.
 
@@ -198,7 +198,7 @@ Cliquez sur une catégorie existante dans l'arbre pour ouvrir le panneau de modi
 ### Supprimer une catégorie
 
 <Warning>
-  La suppression d'une catégorie la retire de tous les Workflows où elle est utilisée. Les Branches qui référençaient la catégorie supprimée perdront leur qualification.
+  La suppression d'une catégorie la retire de tous les Workflows où elle est utilisée. Les branches qui référençaient la catégorie supprimée perdront leur qualification.
 </Warning>
 
 1. Sélectionnez la catégorie dans l'arbre.
@@ -214,8 +214,8 @@ Cliquez sur une catégorie existante dans l'arbre pour ouvrir le panneau de modi
 ## Et ensuite ?
 
 <CardGroup cols={3}>
-  <Card title="Branches" icon="code-branch" href="/fr/product-guide/workflows/branches">
-    Attribuez vos valeurs contrôlées lorsque vous qualifiez vos Branches.
+  <Card title="branches" icon="code-branch" href="/fr/product-guide/workflows/branches">
+    Attribuez vos valeurs contrôlées lorsque vous qualifiez vos branches.
   </Card>
   <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
     Filtrez et comparez les performances avec vos clés de tag.

@@ -1,13 +1,13 @@
 ---
 title: "Vue d'ensemble"
-description: "Définir ce qui est renvoyé à la fin d'une Branch de Workflow"
+description: "Définir ce qui est renvoyé à la fin d'une branche de Workflow"
 ---
 
 ![Sélecteur de contenu de sortie montrant les options Visual Content, JSON Template et Empty](/images/workflows/node-picker-content.png)
 
 ## Que sont les Output Nodes ?
 
-Les Output Nodes sont les **Nodes terminaux** d'une Branch de Workflow. Chaque Branch qui commence par un [Channel](/fr/product-guide/workflows/channels) doit se terminer par un Output Node qui définit quel contenu est renvoyé à l'utilisateur.
+Les Output Nodes sont les **Nodes terminaux** d'une branche de Workflow. Chaque branche qui commence par un [Channel](/fr/product-guide/workflows/channels) doit se terminer par un Output Node qui définit quel contenu est renvoyé à l'utilisateur.
 
 ## Types d'Output Nodes
 
@@ -19,7 +19,7 @@ Les Output Nodes sont les **Nodes terminaux** d'une Branch de Workflow. Chaque B
     Renvoie un payload JSON structuré basé sur un template prédéfini avec des variables dynamiques.
   </Card>
   <Card title="Empty" icon="square" href="/fr/product-guide/workflows/output-nodes/empty">
-    Renvoie une réponse vide pour les groupes de contrôle ou les Branches de repli.
+    Renvoie une réponse vide pour les groupes de contrôle ou les branches de repli.
   </Card>
 </CardGroup>
 
@@ -33,12 +33,12 @@ Les Output Nodes sont les **Nodes terminaux** d'une Branch de Workflow. Chaque B
     Choisissez **Visual content**, **JSON template** ou **Empty** parmi les options disponibles.
   </Step>
   <Step title="Connecter et configurer">
-    Connectez l'Output Node à la fin d'une Branch. Si vous avez choisi Visual Content, sélectionnez le template de contenu depuis la bibliothèque de contenus.
+    Connectez l'Output Node à la fin d'une branche. Si vous avez choisi Visual Content, sélectionnez le template de contenu depuis la bibliothèque de contenus.
   </Step>
 </Steps>
 
 ## Conseils
 
-- Chaque Branch doit se terminer par un Output Node pour que le Workflow soit valide et publiable.
-- Un même Workflow peut combiner différents types de sorties entre ses Branches — par exemple, un Content sur la Branch principale et un Empty sur le groupe de contrôle.
-- Lorsque vous sélectionnez un template de contenu, assurez-vous que les données disponibles dans la Branch correspondent aux variables dynamiques du template.
+- Chaque branche doit se terminer par un Output Node pour que le Workflow soit valide et publiable.
+- Un même Workflow peut combiner différents types de sorties entre ses branches — par exemple, un Content sur la branche principale et un Empty sur le groupe de contrôle.
+- Lorsque vous sélectionnez un template de contenu, assurez-vous que les données disponibles dans la branche correspondent aux variables dynamiques du template.
