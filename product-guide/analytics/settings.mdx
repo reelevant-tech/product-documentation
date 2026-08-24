@@ -1,13 +1,13 @@
 ---
 title: 'Analytics Settings'
-description: 'Configure attribution, personalisation exposure thresholds, comparison reliability and custom tags for your company'
+description: 'Configure attribution, personalisation exposure thresholds, comparison reliability, custom tags and branch categories for your company'
 ---
 
 ![Analytics Settings Tags tab showing tag keys, cardinality badges, and values](/images/analytics/tag-settings.png)
 
 ## Overview
 
-The Analytics Settings page lets you configure attribution, personalisation exposure and custom tags for your company. Use tags to qualify Branches and segment Analytics.
+The Analytics Settings page lets you configure attribution, personalisation exposure, custom tags and branch categories for your company. Use tags and categories to qualify Branches and segment Analytics.
 
 Access it from the **Settings** link in the Analytics sidebar navigation.
 
@@ -160,6 +160,56 @@ Expand **Values**, then use each value's action icons to edit or delete it.
 Created tags become available when you [qualify a Branch](/product-guide/workflows/branches). Users select controlled values but cannot create new ones there.
 
 In Analytics, use tag keys and values to filter results or compare performance across your qualification choices.
+
+## Branch categories
+
+![Branch categories settings tab showing the category tree](/images/workflows/branch-categories-settings-v2.png)
+
+Branch categories are a hierarchical tree of categories used to **qualify Branches** across all your Workflows. They give your team a shared vocabulary and power Analytics filtering by category.
+
+Open the **Branch categories** tab in Analytics Settings to manage them alongside your tags.
+
+### Viewing the category tree
+
+The tab displays your category tree as an interactive, expandable hierarchy. Each category shows:
+- **Name** — The category label.
+- **Level** — Its depth in the tree.
+- **Children** — Sub-categories nested underneath.
+
+### Creating a category
+
+<Steps>
+  <Step title="Open the form">
+    Click the **Add** button to open the category creation drawer.
+  </Step>
+  <Step title="Fill in the details">
+    - **Name** — A descriptive name for the category (e.g., "Product Recommendation").
+    - **Parent** — Optionally select a parent category to nest this one underneath.
+  </Step>
+  <Step title="Save">
+    Click **Save** to add the category to the tree.
+  </Step>
+</Steps>
+
+### Editing a category
+
+Click on an existing category in the tree to open the edit drawer. You can update the name or move it under a different parent.
+
+### Deleting a category
+
+<Warning>
+  Deleting a category removes it from all Workflows where it is used. Branches that referenced the deleted category will lose their qualification.
+</Warning>
+
+1. Select the category in the tree.
+2. Click the **Delete** button.
+3. Confirm the deletion in the confirmation modal.
+
+### Best practices
+
+- **Design for analytics** — Structure your category tree around the dimensions you want to analyse (e.g., by strategy type, by content category, by audience segment).
+- **Keep it flat enough** — A deep tree is harder to navigate. Aim for 2-3 levels at most.
+- **Name clearly** — Use descriptive names that any team member can understand without context.
 
 ## What's Next?
 

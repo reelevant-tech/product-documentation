@@ -1,64 +1,17 @@
 ---
 title: 'Paramètres du Workflow'
-description: 'Configurer les catégories de Branches, les Variable Profiles et les JSON Templates pour vos Workflows'
+description: 'Configurer les Variable Profiles et les JSON Templates pour vos Workflows'
 ---
 
 ## Accéder aux paramètres du Workflow
 
-Ouvrez l'application **Workflows** depuis la barre latérale, puis naviguez vers la page **Settings**. La page de paramètres comporte trois onglets :
-- **Branch categories** — Gérer votre hiérarchie de catégories de Branches.
+Ouvrez l'application **Workflows** depuis la barre latérale, puis naviguez vers la page **Settings**. La page de paramètres comporte deux onglets :
 - **Variable profiles** — Configurer des modèles de paramètres d'URL réutilisables.
 - **JSON Templates** — Définir et gérer les templates de sortie JSON pour les intégrations headless.
 
----
-
-## Catégories de Branches
-
-![Onglet des paramètres de catégories de Branches montrant l'arborescence des catégories](/images/workflows/branch-categories-settings-v2.png)
-
-La section des catégories de Branches est une arborescence hiérarchique de catégories utilisée pour **qualifier les Branches** dans tous vos Workflows. Elle fournit un vocabulaire partagé pour votre équipe et alimente le filtrage Analytics par catégorie.
-
-### Consulter l'arborescence des catégories
-
-L'onglet **Branch categories** affiche votre arborescence de catégories sous forme de hiérarchie interactive et dépliable. Chaque catégorie affiche :
-- **Name** — Le libellé de la catégorie.
-- **Level** — Sa profondeur dans l'arborescence.
-- **Children** — Les sous-catégories imbriquées en dessous.
-
-### Créer une catégorie
-
-<Steps>
-  <Step title="Ouvrir le formulaire">
-    Cliquez sur le bouton **Add** pour ouvrir le panneau de création de catégorie.
-  </Step>
-  <Step title="Remplir les détails">
-    - **Name** — Un nom descriptif pour la catégorie (ex. « Product Recommendation »).
-    - **Parent** — Sélectionnez optionnellement une catégorie parente pour l'imbriquer en dessous.
-  </Step>
-  <Step title="Enregistrer">
-    Cliquez sur **Save** pour ajouter la catégorie à l'arborescence.
-  </Step>
-</Steps>
-
-### Modifier une catégorie
-
-Cliquez sur une catégorie existante dans l'arborescence pour ouvrir le panneau d'édition. Vous pouvez mettre à jour le nom ou la déplacer sous un autre parent.
-
-### Supprimer une catégorie
-
-<Warning>
-  Supprimer une catégorie la retire de tous les Workflows où elle est utilisée. Les Branches qui référençaient la catégorie supprimée perdront leur qualification.
-</Warning>
-
-1. Sélectionnez la catégorie dans l'arborescence.
-2. Cliquez sur le bouton **Delete**.
-3. Confirmez la suppression dans la modale de confirmation.
-
-### Bonnes pratiques
-
-- **Concevez pour l'analyse** — Structurez votre arborescence de catégories autour des dimensions que vous souhaitez analyser (ex. par type de stratégie, par catégorie de contenu, par segment d'audience).
-- **Gardez une profondeur raisonnable** — Une arborescence trop profonde est difficile à parcourir. Visez 2 à 3 niveaux maximum.
-- **Nommez clairement** — Utilisez des noms descriptifs que tout membre de l'équipe peut comprendre sans contexte.
+<Note>
+  Les catégories de Branches se configurent désormais avec les tags dans les [paramètres Analytics](/fr/product-guide/analytics/settings), pour regrouper toute votre nomenclature au même endroit.
+</Note>
 
 ---
 
