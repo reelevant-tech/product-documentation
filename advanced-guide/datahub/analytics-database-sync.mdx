@@ -101,10 +101,10 @@ Destinations are set through the Datasource's `patch` step. The payload depends 
 | **Ingester**, **Pubsub** | `storageOptions.destinations` |
 | **Worker** (including purchases Datasources) | `destinations` |
 
-The example below configures a single BigQuery destination on the Ingester Datasource `6718ad69056acb425fbecf1a` (replace the bearer token with your access token — see [Authentication](/developer-docs/api-reference/authentication)):
+The example below configures a single BigQuery destination on the Ingester Datasource `6718ad69056acb0300becf1a` (replace the bearer token with your access token — see [Authentication](/developer-docs/api-reference/authentication)):
 
 ```bash
-curl -XPOST https://api.reelevant.com/v2/datasources/6718ad69056acb425fbecf1a/steps \
+curl -XPOST https://api.reelevant.com/v2/datasources/6718ad69056acb0300becf1a/steps \
   -H "Authorization: Bearer ${access_token}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -124,10 +124,10 @@ curl -XPOST https://api.reelevant.com/v2/datasources/6718ad69056acb425fbecf1a/st
   }'
 ```
 
-On a Worker Datasource, the same destination is sent as a top-level `destinations` field instead:
+On a Worker Datasource — here `68f21c4d5859000100b3c7a2` — the same destination is sent as a top-level `destinations` field instead:
 
 ```bash
-curl -XPOST https://api.reelevant.com/v2/datasources/6718ad69056acb425fbecf1a/steps \
+curl -XPOST https://api.reelevant.com/v2/datasources/68f21c4d5859000100b3c7a2/steps \
   -H "Authorization: Bearer ${access_token}" \
   -H "Content-Type: application/json" \
   -d '{
