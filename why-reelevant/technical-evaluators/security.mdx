@@ -1,7 +1,7 @@
 ---
 title: "Security & Compliance"
-description: "SOC 2 Type II certification, GDPR compliance, encryption standards, vulnerability management, vendors, and Reelevant's security posture for technical evaluators."
-keywords: ["SOC 2", "GDPR", "audit logs", "audit trail", "SCIM provisioning", "subprocessors", "vendors", "security contact", "vulnerability disclosure"]
+description: "SOC 2 Type 2 attestation, GDPR compliance, encryption standards, password policy, vulnerability management, vendors, and Reelevant's security posture for technical evaluators."
+keywords: ["SOC 2", "GDPR", "password policy", "audit logs", "audit trail", "SCIM provisioning", "subprocessors", "vendors", "security contact", "vulnerability disclosure"]
 ---
 
 ## Security Overview
@@ -14,11 +14,15 @@ For the most up-to-date security documentation, certifications, and audit report
 
 | Standard | Status | Detail |
 |----------|--------|--------|
-| **SOC 2 Type II** | Certified | Annual audit covering Security, Availability, and Confidentiality trust service criteria |
+| **SOC 2 Type 2** | Attested | Independent audit of the design and operating effectiveness of our controls against the Security trust services category, repeated annually. The scope is the Reelevant Platform; hosting providers are covered by their own attestations |
 | **GDPR** | Full compliance | Configurable retention, data minimisation, right to erasure, DPA available |
 | **Penetration testing** | Annual | Independent third-party assessment of all externally-accessible systems — performed exclusively by an external provider |
-| **Continuous automated audit** | Ongoing | Automated code, dependency and cloud-configuration scanning on every change, plus AI-assisted code review |
-| **ISO 27001 / Article 42 certification** | Not held | Compliance is demonstrated through SOC 2 Type II, the DPA, and the controls described on this page |
+| **Continuous automated audit** | Ongoing | Automated code, dependency and cloud-configuration scanning on every change |
+| **ISO 27001 / Article 42 certification** | Not held | Compliance is demonstrated through the SOC 2 Type 2 attestation, the DPA, and the controls described on this page |
+
+The current SOC 2 Type 2 report, and those of our hosting providers, are available through the **[Trust Centre](https://trust.reelevant.com)**.
+
+No artificial-intelligence feature is part of the service: Reelevant does not train or run AI models on customer data. AI assistance is used only internally, alongside — never instead of — mandatory human review in our development process.
 
 ## Data Protection
 
@@ -54,15 +58,30 @@ For the most up-to-date security documentation, certifications, and audit report
 
 ### Platform Access
 
-- **Multi-factor authentication (MFA)** required for all users
+- **Two-factor authentication (TOTP)** available to every user, and enforceable for all of your users by making SAML SSO mandatory on your domains — authentication policy is then delegated to your own identity provider
 - **SSO** supported via SAML 2.0 — see [Authentication & SSO](/why-reelevant/technical-evaluators/authentication)
 - **RBAC + ABAC** — Role-based permissions scoped by company and team attributes
 - **Least privilege** — Users receive the minimum access required for their role
 - **Quarterly access reviews** — All production system access reviewed by management
 
+### Password Policy
+
+The password policy is enforced by the platform and configurable per company. Defaults:
+
+| Control | Default |
+|---------|---------|
+| Minimum length | 12 characters, including at least one digit and one special character |
+| Expiry | 6 months, then reset required (can be disabled) |
+| Reuse | The current password and the 3 previous ones are rejected |
+| Failed attempts | Account locked for 10 minutes after 10 failed attempts |
+| Storage | Hashed with bcrypt and a unique salt — never stored in clear text or logged |
+| Reset | Single-use token sent to the account's verified email address |
+
+Minimum length, character requirements, expiry and lockout thresholds can be tightened to match your own policy, or replaced entirely by delegating authentication to your identity provider through SSO.
+
 ### Production Systems
 
-- Remote access restricted to authorised personnel; MFA required on all cloud and administrative consoles
+- Remote access restricted to authorised personnel; MFA required on all cloud and administrative consoles and on any remote access to production
 - **SSH key-based authentication only** for system-level access — password authentication and root login are disabled, and brute-force protection blocks repeated failed attempts
 - Production servers communicate over an **encrypted private network** that is not reachable from the internet; no RDP or remote desktop access is exposed
 - Terminated employees have access revoked within 24 hours, covering identity and device management as well as system-level SSH keys
@@ -156,10 +175,12 @@ Reelevant runs on a short, deliberately limited list of infrastructure vendors:
 | **AWS** | Route 53 (DNS) | Global (anycast, as DNS requires) | Public DNS resolution for Reelevant domains — no customer data |
 | **Vercel** | Static asset hosting | Global CDN | Serves static front-end assets only — no customer data, therefore not a subprocessor |
 
+OVHcloud, Google Cloud and AWS are our only subprocessors. No other party processes customer data in the delivery of the service.
+
 ## Audit Logging
 
-- **In-product [audit log](/product-guide/account/audit-log)** — authentication, SSO, SCIM provisioning, and user, role and Team changes, readable by your own identity administrators and retained per your company's retention setting (90 days by default)
-- **Audit logs retained for 1 year**
+- **In-product [audit log](/product-guide/account/audit-log)** — authentication, SSO, SCIM provisioning, and user, role and Team changes, readable by your own identity administrators
+- **Security logs centrally collected and retained for 1 year** in access-controlled storage
 - All admin actions logged with user attribution and timestamp
 - Authentication events (successful and failed) captured and monitored
 - File integrity monitoring and host-based intrusion detection deployed
@@ -184,6 +205,7 @@ Include reproduction steps and affected endpoints where possible. Reports are tr
 - Annual refresher training required
 - Background checks performed on all new hires
 - Confidentiality agreements signed before system access is granted
+- Specialised secure-development training for engineers, with OWASP practices shared across the team
 - Security is owned by the CTO with a Risk Committee and Incident Response Team, and reinforced by external assurance (annual SOC 2 audit, annual external penetration test, continuous automated scanning)
 
 ## Learn More

@@ -1,7 +1,7 @@
 ---
 title: "Sécurité et conformité"
-description: "Certification SOC 2 Type II, conformité RGPD, standards de chiffrement, gestion des vulnérabilités, fournisseurs et posture de sécurité de Reelevant pour les évaluateurs techniques."
-keywords: ["SOC 2", "RGPD", "logs d'audit", "journal d'audit", "provisionnement SCIM", "sous-traitants", "fournisseurs", "contact sécurité", "divulgation de vulnérabilité"]
+description: "Attestation SOC 2 Type 2, conformité RGPD, standards de chiffrement, politique de mot de passe, gestion des vulnérabilités, fournisseurs et posture de sécurité de Reelevant pour les évaluateurs techniques."
+keywords: ["SOC 2", "RGPD", "politique de mot de passe", "logs d'audit", "journal d'audit", "provisionnement SCIM", "sous-traitants", "fournisseurs", "contact sécurité", "divulgation de vulnérabilité"]
 ---
 
 ## Vue d'ensemble de la sécurité
@@ -14,11 +14,15 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 
 | Standard | Statut | Détail |
 |----------|--------|--------|
-| **SOC 2 Type II** | Certifié | Audit annuel couvrant les critères de services de confiance Sécurité, Disponibilité et Confidentialité |
+| **SOC 2 Type 2** | Attesté | Audit indépendant de la conception et de l'efficacité opérationnelle de nos contrôles au regard de la catégorie Sécurité des Trust Services Criteria, reconduit annuellement. Le périmètre est la plateforme Reelevant ; les hébergeurs sont couverts par leurs propres attestations |
 | **RGPD** | Pleine conformité | Rétention configurable, minimisation des données, droit à l'effacement, DPA disponible |
 | **Tests de pénétration** | Annuel | Évaluation indépendante de tous les systèmes accessibles de l'extérieur — réalisée exclusivement par un prestataire externe |
-| **Audit automatisé continu** | En continu | Analyse automatisée du code, des dépendances et de la configuration cloud à chaque modification, complétée par une revue de code assistée par IA |
-| **Certification ISO 27001 / article 42** | Non détenue | La conformité est démontrée par la certification SOC 2 Type II, le DPA et les mesures décrites sur cette page |
+| **Audit automatisé continu** | En continu | Analyse automatisée du code, des dépendances et de la configuration cloud à chaque modification |
+| **Certification ISO 27001 / article 42** | Non détenue | La conformité est démontrée par l'attestation SOC 2 Type 2, le DPA et les mesures décrites sur cette page |
+
+Le rapport SOC 2 Type 2 en vigueur, ainsi que ceux de nos hébergeurs, sont disponibles via le **[Trust Centre](https://trust.reelevant.com)**.
+
+Aucune fonctionnalité d'intelligence artificielle n'entre dans le périmètre du service : Reelevant n'entraîne ni n'exploite de modèle d'IA sur les données clients. L'IA n'est utilisée qu'en interne, en complément — et jamais en remplacement — de la revue humaine obligatoire dans notre processus de développement.
 
 ## Protection des données
 
@@ -54,15 +58,30 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 
 ### Accès à la plateforme
 
-- **Authentification multi-facteurs (MFA)** requise pour tous les utilisateurs
+- **Authentification à deux facteurs (TOTP)** disponible pour chaque utilisateur, et imposable à l'ensemble de vos utilisateurs en rendant le SSO SAML obligatoire sur vos domaines — la politique d'authentification est alors déléguée à votre propre fournisseur d'identité
 - **SSO** supporté via SAML 2.0 — voir [Authentification et SSO](/fr/why-reelevant/technical-evaluators/authentication)
 - **RBAC + ABAC** — Permissions basées sur les rôles scopées par attributs d'entreprise et de Team
 - **Moindre privilège** — Les utilisateurs reçoivent l'accès minimum requis pour leur rôle
 - **Revues d'accès trimestrielles** — Tous les accès aux systèmes de production sont revus par la direction
 
+### Politique de mot de passe
+
+La politique de mot de passe est appliquée par la plateforme et configurable par entreprise. Valeurs par défaut :
+
+| Contrôle | Par défaut |
+|----------|------------|
+| Longueur minimale | 12 caractères, dont au moins un chiffre et un caractère spécial |
+| Expiration | 6 mois, puis renouvellement exigé (désactivable) |
+| Réutilisation | Le mot de passe courant et les 3 précédents sont refusés |
+| Tentatives échouées | Compte verrouillé 10 minutes après 10 tentatives échouées |
+| Stockage | Haché avec bcrypt et un sel unique — jamais stocké en clair ni journalisé |
+| Réinitialisation | Jeton à usage unique envoyé à l'adresse e-mail vérifiée du compte |
+
+Longueur minimale, exigences de complexité, expiration et seuils de verrouillage peuvent être renforcés pour correspondre à votre propre politique, ou entièrement remplacés en déléguant l'authentification à votre fournisseur d'identité via le SSO.
+
 ### Systèmes de production
 
-- Accès distant restreint au personnel autorisé ; MFA exigée sur toutes les consoles cloud et d'administration
+- Accès distant restreint au personnel autorisé ; MFA exigée sur toutes les consoles cloud et d'administration ainsi que sur tout accès distant à la production
 - **Authentification SSH par clé uniquement** pour l'accès au niveau système — l'authentification par mot de passe et la connexion root sont désactivées, et une protection anti-force brute bloque les tentatives répétées
 - Les serveurs de production communiquent sur un **réseau privé chiffré** non joignable depuis Internet ; aucun accès RDP ou bureau distant n'est exposé
 - Les accès des employés partis sont révoqués dans les 24 heures, comptes et postes via la gestion des identités et des terminaux, accès système via le retrait des clés SSH
@@ -156,10 +175,12 @@ Reelevant s'appuie sur une liste courte et volontairement limitée de fournisseu
 | **AWS** | Route 53 (DNS) | Global (anycast, comme l'exige le DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client |
 | **Vercel** | Hébergement d'assets statiques | CDN mondial | Diffuse uniquement les assets statiques du front-end — aucune donnée client, donc pas un sous-traitant |
 
+OVHcloud, Google Cloud et AWS sont nos seuls sous-traitants. Aucun autre acteur ne traite de données clients dans le cadre de la fourniture du service.
+
 ## Journalisation des audits
 
-- **[Journal d'audit](/fr/product-guide/account/audit-log) dans la plateforme** — authentification, SSO, provisionnement SCIM et modifications des utilisateurs, des rôles et des Teams, consultable par vos propres administrateurs d'identités et conservé selon la durée de rétention de votre entreprise (90 jours par défaut)
-- **Logs d'audit conservés pendant 1 an**
+- **[Journal d'audit](/fr/product-guide/account/audit-log) dans la plateforme** — authentification, SSO, provisionnement SCIM et modifications des utilisateurs, des rôles et des Teams, consultable par vos propres administrateurs d'identités
+- **Logs de sécurité collectés de manière centralisée et conservés 1 an** dans un stockage à accès contrôlé
 - Toutes les actions d'administration sont journalisées avec attribution utilisateur et horodatage
 - Les événements d'authentification (réussis et échoués) sont capturés et surveillés
 - Monitoring d'intégrité des fichiers et détection d'intrusion basée sur l'hôte déployés
@@ -184,6 +205,7 @@ Indiquez si possible les étapes de reproduction et les endpoints concernés. Le
 - Formation de rappel annuelle obligatoire
 - Vérifications d'antécédents effectuées sur toutes les nouvelles embauches
 - Accords de confidentialité signés avant l'octroi de l'accès aux systèmes
+- Formation spécialisée au développement sécurisé pour les ingénieurs, avec partage des pratiques OWASP au sein de l'équipe
 - La sécurité est portée par le CTO, avec un comité des risques et une Incident Response Team, et renforcée par des assurances externes (audit SOC 2 annuel, test de pénétration externe annuel, analyse automatisée continue)
 
 ## En savoir plus
