@@ -1,7 +1,7 @@
 ---
 name: reelevant-slides
 description: >
-  Generate Reelevant-branded slide presentations with python-pptx from the New Masque 2026 template and deliver them as a PDF (the PPTX is kept as a secondary artifact). Trigger when the user asks to create a presentation, deck, slides, or pitch. Never build slides from scratch — always build on the template's slide layouts.
+  Generate Reelevant-branded slide presentations with python-pptx from the New Masque 2026 template and always deliver both the PDF and the PPTX. Trigger when the user asks to create a presentation, deck, slides, or pitch. Never build slides from scratch — always build on the template's slide layouts.
 ---
 
 # Reelevant Slides — Generation Guide
@@ -10,9 +10,9 @@ This skill tells Devin how to generate slide decks using the **New Masque 2026**
 
 ---
 
-## Output Format — PDF (NON-NEGOTIABLE)
+## Output Format — PDF + PPTX (NON-NEGOTIABLE)
 
-**The deliverable is a PDF.** Always convert the generated PPTX to PDF with LibreOffice and attach the PDF to the user (`message_user` attachments). Attach the PPTX only as a secondary file, or when the user explicitly asks for it. Never hand back a PPTX alone. See "Delivering the Deck" below.
+**Always deliver both files.** Convert the generated PPTX to PDF with LibreOffice and attach **the PDF and the PPTX** to the user in the same `message_user` call. Never hand back only one of them. See "Delivering the Deck" below.
 
 ---
 
@@ -478,7 +478,7 @@ Rule of thumb: count the section dividers. **4 or more sections → add an agend
 
 ## Delivering the Deck
 
-**The deliverable is a PDF.** Convert the saved PPTX with LibreOffice and attach the PDF to the user.
+**Always attach both the PDF and the PPTX.** Convert the saved PPTX with LibreOffice, then attach the two files together.
 
 ```bash
 soffice --headless --convert-to pdf --outdir ~/slides-output ~/slides-output/deck.pptx
@@ -488,7 +488,7 @@ soffice --headless --convert-to pdf --outdir ~/slides-output ~/slides-output/dec
 1. Save the PPTX to `OUTPUT_DIR`.
 2. Run the `soffice` command above; it writes `deck.pdf` next to the PPTX.
 3. **Check the PDF before sending**: render a few pages to PNG (`pdftoppm -png -r 50 deck.pdf ~/slides-output/preview`) and look at them — verify fonts rendered as Anton / Inter / Instrument Serif (if letters look like a generic sans-serif, the fonts are not installed: redo the font step in Setup), nothing overlaps the slanted footer, and no text is clipped.
-4. Attach `deck.pdf` via `message_user` attachments. Attach `deck.pptx` too only if the user asked for an editable version.
+4. Attach **both** `deck.pdf` and `deck.pptx` via `message_user` attachments, in the same message.
 
 The PPTX is typically **~5MB** because it carries the template's embedded media (cover imagery, geometric backgrounds, the REELEVANT logo); the PDF is usually a similar size. These assets are part of the design and must not be stripped.
 
