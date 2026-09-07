@@ -323,20 +323,38 @@ def add_content_slide(prs, variant='white', title='SLIDE TITLE'):
     return slide
 
 def add_textbox(slide, left_in, top_in, w_in, h_in, text,
-                font='Inter', size=24, bold=False, color='0C0C0C', italic=False):
-    from pptx.enum.text import PP_ALIGN
+                font='Inter', size=24, bold=False, color='0C0C0C', italic=False,
+                align=None):
+    """text: a plain string (one run styled by the kwargs) OR a list of
+    (txt, font, size, bold, color, italic[, struck]) tuples, one paragraph per tuple."""
     txBox = slide.shapes.add_textbox(Inches(left_in), Inches(top_in), Inches(w_in), Inches(h_in))
     tf = txBox.text_frame
     tf.word_wrap = True
-    p = tf.paragraphs[0]
-    run = p.add_run()
-    run.text = text
-    run.font.name = font
-    run.font.size = Pt(size)
-    run.font.bold = bold
-    run.font.italic = italic
-    run.font.color.rgb = RGBColor.from_string(color)
+    lines = [(text, font, size, bold, color, italic)] if isinstance(text, str) else text
+    for i, spec in enumerate(lines):
+        txt, fn, sz, b, col, it = spec[:6]
+        struck = spec[6] if len(spec) > 6 else False
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        if align is not None:
+            p.alignment = align
+        run = p.add_run()
+        run.text = txt.upper() if fn == 'Anton' else txt
+        run.font.name = fn
+        run.font.size = Pt(sz)
+        run.font.bold = b
+        run.font.italic = it
+        run.font.color.rgb = RGBColor.from_string(col)
+        if struck:
+            run.font._rPr.set('strike', 'sngStrike')
     return txBox
+
+def add_textbox_into(tb, lines, font='Inter', size=18, color='0C0C0C'):
+    """Fill an existing textbox with top-anchored wrapped lines (one paragraph per string)."""
+    tf = tb.text_frame; tf.word_wrap = True
+    for i, ln in enumerate(lines):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        r = p.add_run(); r.text = ln
+        r.font.name = font; r.font.size = Pt(size); r.font.color.rgb = RGBColor.from_string(color)
 
 def add_rect(slide, left_in, top_in, w_in, h_in, fill='EEFF00', line=None):
     shape = slide.shapes.add_shape(1, Inches(left_in), Inches(top_in), Inches(w_in), Inches(h_in))
@@ -362,7 +380,7 @@ def add_punchline(prs, variant='black', text='YOUR PUNCHLINE HERE'):
     layout_name = '5_Title Slide_1_1_1_1' if variant == 'black' else '5_Title Slide_1_2_1'
     slide = prs.slides.add_slide(get_layout(prs, layout_name))
     body_ph = slide.placeholders[1]
-    body_ph.text = text
+    body_ph.text = text.upper()
     for para in body_ph.text_frame.paragraphs:
         for run in para.runs:
             run.font.name = 'Anton'

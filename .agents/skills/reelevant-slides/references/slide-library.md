@@ -2,7 +2,7 @@
 
 A library of **approved, good-looking layouts** organized by how many ideas/blocks the slide conveys. When a content slide carries N distinct ideas, **try the matching library layout first** — it is the preferred first choice.
 
-> **Status:** the concrete designs were removed (they weren't good enough). The framework, rules, backgrounds, and helpers below remain in place. Library entries are to be (re)defined — until a slot has an approved design, fall back to the generic patterns in `content-layouts.md`.
+> **Status:** six approved designs are defined below (S1–S4, S7, S8, S9). For idea counts without an approved design, fall back to the generic patterns in `content-layouts.md`.
 
 > **Paths:** helpers below that load assets take a `skill_dir` argument. Always pass the absolute `SKILL_DIR` defined in `SKILL.md` (the absolute path of this skill directory inside the repo checkout), never the `'.'` default shown in the signatures. Relative paths do not resolve, since your code does not run from inside the skill directory.
 
@@ -22,11 +22,23 @@ No title placeholder on these — add the title as a text box: Anton 44pt upperc
 
 ## Shared helpers
 
+Define these once, together with `add_textbox`/`add_textbox_into` from SKILL.md, before any layout below; `add_textbox` accepts a list of `(txt, font, size, bold, color, italic[, struck])` tuples and an `align=` kwarg.
+
 ```python
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Pt, Inches
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from lxml import etree
+
+SHADOW_XML = ('<a:effectLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+              '<a:outerShdw blurRad="142875" rotWithShape="0" algn="bl" dir="2700000" dist="95250">'
+              '<a:srgbClr val="000000"><a:alpha val="10000"/></a:srgbClr></a:outerShdw></a:effectLst>')
+
+def strip_placeholders(slide):
+    """Remove inherited title/subtitle placeholders so their prompt text doesn't show through."""
+    for ph in list(slide.placeholders):
+        ph._element.getparent().remove(ph._element)
 
 def title_box(slide, text, color='0C0C0C'):
     tb = slide.shapes.add_textbox(Inches(1.23), Inches(0.5), Inches(17.5), Inches(1.3))
@@ -42,20 +54,21 @@ def full_bg(slide, color):
     sp = sh._element; sp.getparent().remove(sp); slide.shapes._spTree.insert(2, sp)
     return sh
 
-def round_card(slide, l, t, w, h, fill, line=None):
+def round_card(slide, l, t, w, h, fill='FFFFFF', line=None, adj=0.10991):
     sh = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(l), Inches(t), Inches(w), Inches(h))
     sh.fill.solid(); sh.fill.fore_color.rgb = RGBColor.from_string(fill)
     if line: sh.line.color.rgb = RGBColor.from_string(line); sh.line.width = Pt(1.2)
     else: sh.line.fill.background()
     sh.shadow.inherit = False
+    try: sh.adjustments[0] = adj
+    except: pass
+    sh._element.spPr.append(etree.fromstring(SHADOW_XML))
     return sh
 
-def hline(slide, l, t, w, color='888888'):
+def hline(slide, l, t, w, color='0C0C0C', weight=1.5):
     ln = slide.shapes.add_connector(2, Inches(l), Inches(t), Inches(l+w), Inches(t))
-    ln.line.color.rgb = RGBColor.from_string(color); ln.line.width = Pt(1)
+    ln.line.color.rgb = RGBColor.from_string(color); ln.line.width = Pt(weight)
     return ln
-
-# add_textbox: (slide,l,t,w,h,lines,align), lines=[(txt,font,size,bold,color,italic),...]
 ```
 
 ---
@@ -89,7 +102,7 @@ def add_two_idea_comparison(prs, title, intro_lines, left, right):
     T, W, H, line_T = 3.75, 8.26, 6.31, 5.49
     for L, (ctitle, fill, rows) in zip([1.23, 10.46], [left, right]):
         round_card(slide, L, T, W, H, fill, adj=0.07889)
-        add_textbox(slide, L+0.3, T+0.25, W-0.6, 1.5, [(ctitle,'Anton',72,False,'0C0C0C',False)], align=PP_ALIGN.CENTER)
+        add_textbox(slide, L+0.3, T+0.25, W-0.6, 1.5, [(ctitle.upper(),'Anton',72,False,'0C0C0C',False)], align=PP_ALIGN.CENTER)
         hline(slide, L+0.51, line_T, 7.24)
         y = line_T + 0.45
         for (label, vlines) in rows:
@@ -101,7 +114,6 @@ def add_two_idea_comparison(prs, title, intro_lines, left, right):
     return slide
 ```
 
-Note: `add_textbox` must support an optional 7th per-line element `struck` that sets `run.font._rPr.set('strike','sngStrike')`.
 
 ## 2 ideas — PREFERRED B: contrast cards (S3 style)
 *Reproduced pixel-for-pixel from the priority deck (S3 "Next Steps").*
@@ -120,7 +132,7 @@ def add_two_idea_contrast(prs, title, subtitle, left_title, left_items, right_ti
     T, W, H = 2.56, 8.26, 7.93
     icon = f'{skill_dir}/assets/icons/icon-black.png'
     round_card(slide, 1.25, T, W, H, 'FFFFFF', adj=0.07889)
-    add_textbox(slide, 1.55, T+0.3, W-0.6, 1.4, [(left_title,'Anton',72,False,'0C0C0C',False)], align=PP_ALIGN.CENTER)
+    add_textbox(slide, 1.55, T+0.3, W-0.6, 1.4, [(left_title.upper(),'Anton',72,False,'0C0C0C',False)], align=PP_ALIGN.CENTER)
     hline(slide, 1.74, 5.49, 7.24)
     icon_T = [5.69, 6.42, 7.11, 7.82, 8.54]; line_T = [6.28, 6.95, 7.66, 8.37, 9.08]
     for it, iy, ly in zip(left_items, icon_T, line_T):
@@ -128,7 +140,7 @@ def add_two_idea_contrast(prs, title, subtitle, left_title, left_items, right_ti
         add_textbox(slide, 2.45, iy-0.04, 6.4, 0.5, [(it,'Inter',20,True,'0C0C0C',False)])
         hline(slide, 1.74, ly, 7.24, weight=0.75)
     round_card(slide, 10.49, T, W, H, '0C0C0C', adj=0.07889)
-    add_textbox(slide, 10.79, T+0.3, W-0.6, 1.4, [(right_title,'Anton',72,False,'FFFFFF',False)], align=PP_ALIGN.CENTER)
+    add_textbox(slide, 10.79, T+0.3, W-0.6, 1.4, [(right_title.upper(),'Anton',72,False,'FFFFFF',False)], align=PP_ALIGN.CENTER)
     hline(slide, 10.97, 5.49, 7.24, color='FFFFFF')
     add_textbox(slide, 10.97, 5.85, 7.0, 3.5, [(t,'Inter',24,b,'FFFFFF',False) for (t,b) in right_lines])
     return slide
@@ -177,7 +189,6 @@ def add_four_cards(prs, title, cards, skill_dir='.'):
     return slide
 ```
 
-Requires `from pptx.enum.text import MSO_ANCHOR` and `from pptx.enum.shapes import MSO_SHAPE`.
 
 ## 3 ideas — PREFERRED: three cards (S1 style)
 *Reproduced pixel-for-pixel from the priority deck (S1 "Une infinité de cas d'usages").*
@@ -187,32 +198,6 @@ Yellow background, three **white rounded cards** with a soft drop shadow. Each c
 Key exact values: cards at left `1.147 / 7.119 / 13.091`, top `3.329`, size `5.762 × 6.540`, roundRect corner `adj=0.10991`; separator line at top `5.089`, width `4.50`; slide title Anton 60pt at `1.23, 0.43`.
 
 ```python
-from pptx.enum.shapes import MSO_SHAPE
-from lxml import etree
-
-SHADOW_XML = ('<a:effectLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
-              '<a:outerShdw blurRad="142875" rotWithShape="0" algn="bl" dir="2700000" dist="95250">'
-              '<a:srgbClr val="000000"><a:alpha val="10000"/></a:srgbClr></a:outerShdw></a:effectLst>')
-
-def strip_placeholders(slide):
-    """Remove inherited title/subtitle placeholders so their prompt text doesn't show through."""
-    for ph in list(slide.placeholders):
-        ph._element.getparent().remove(ph._element)
-
-def round_card(slide, l, t, w, h, fill='FFFFFF', adj=0.10991):
-    sh = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(l), Inches(t), Inches(w), Inches(h))
-    sh.fill.solid(); sh.fill.fore_color.rgb = RGBColor.from_string(fill)
-    sh.line.fill.background(); sh.shadow.inherit = False
-    try: sh.adjustments[0] = adj
-    except: pass
-    sh._element.spPr.append(etree.fromstring(SHADOW_XML))   # exact soft shadow
-    return sh
-
-def hline(slide, l, t, w, color='0C0C0C', weight=1.5):
-    ln = slide.shapes.add_connector(2, Inches(l), Inches(t), Inches(l+w), Inches(t))
-    ln.line.color.rgb = RGBColor.from_string(color); ln.line.width = Pt(weight)
-    return ln
-
 def add_three_idea_cards(prs, title, cards):
     """S1 template. cards = [(card_title, [bullet,...], caption_or_None) x3]."""
     slide = prs.slides.add_slide(get_layout(prs, 'CUSTOM_5_1_1_1_1_1_1_1_2'))  # yellow bg
@@ -223,7 +208,7 @@ def add_three_idea_cards(prs, title, cards):
     for i, (ctitle, bullets, caption) in enumerate(cards):
         L = geom[i]
         round_card(slide, L, T, W, H, 'FFFFFF')
-        add_textbox(slide, L+0.5, T+0.25, W-1.0, 1.4, [(ctitle,'Anton',72,False,'0C0C0C',False)])
+        add_textbox(slide, L+0.5, T+0.25, W-1.0, 1.4, [(ctitle.upper(),'Anton',72,False,'0C0C0C',False)])
         hline(slide, L+0.63, line_T, line_W)
         blines = [(f'\u25cf  {b}','Inter',24,False,'0C0C0C',False) for b in bullets]
         if caption: blines.append((caption,'Inter',24,False,'0C0C0C',True))
@@ -272,7 +257,7 @@ def add_timeline(prs, title, points):
             tf = tb.text_frame; tf.word_wrap=True; tf.vertical_anchor=MSO_ANCHOR.MIDDLE
             for j, line in enumerate(txt.split('\n')):
                 p = tf.paragraphs[0] if j==0 else tf.add_paragraph(); p.alignment=PP_ALIGN.CENTER
-                r = p.add_run(); r.text=line; r.font.name=fn; r.font.size=Pt(sz); r.font.color.rgb=RGBColor.from_string(col)
+                r = p.add_run(); r.text = line.upper() if fn == 'Anton' else line; r.font.name=fn; r.font.size=Pt(sz); r.font.color.rgb=RGBColor.from_string(col)
     return slide
 ```
 
@@ -313,7 +298,7 @@ def add_price_table(prs, title, left_header, right_header, rows, group_label=Non
         sh = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(l), Inches(3.10), Inches(w), Inches(0.53))
         sh.fill.solid(); sh.fill.fore_color.rgb = RGBColor.from_string(fill); sh.line.fill.background(); sh.shadow.inherit = False
         tf = sh.text_frame; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-        r = tf.paragraphs[0].add_run(); r.text = txt; tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+        r = tf.paragraphs[0].add_run(); r.text = txt.upper(); tf.paragraphs[0].alignment = PP_ALIGN.CENTER
         r.font.name='Anton'; r.font.size=Pt(25); r.font.color.rgb=RGBColor.from_string('FFFFFF')
     bar(1.23, 12.20, '0C0C0C', left_header)
     bar(13.55, 4.60, '5B5EFF', right_header)
@@ -326,7 +311,7 @@ def add_price_table(prs, title, left_header, right_header, rows, group_label=Non
         tf = cell.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
         for i, ln in enumerate(lines):
             p = tf.paragraphs[0] if i == 0 else tf.add_paragraph(); p.alignment = align
-            r = p.add_run(); r.text = ln; r.font.name=font; r.font.size=Pt(size); r.font.bold=bold; r.font.color.rgb=RGBColor.from_string(color)
+            r = p.add_run(); r.text = ln.upper() if font == 'Anton' else ln; r.font.name=font; r.font.size=Pt(size); r.font.bold=bold; r.font.color.rgb=RGBColor.from_string(color)
     ri = 0
     for (chan_lines, desc, price) in rows:
         put(tbl.cell(ri,0), chan_lines, '434343', 'Anton', 20, False, 'FFFFFF', PP_ALIGN.CENTER)
@@ -367,7 +352,7 @@ def card_with_pill(slide, l, t, w, body_h, pill_h, title, body_lines):
     try: pill.adjustments[0] = 0.5
     except: pass
     tf = pill.text_frame; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    r = tf.paragraphs[0].add_run(); r.text = title; tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+    r = tf.paragraphs[0].add_run(); r.text = title.upper(); tf.paragraphs[0].alignment = PP_ALIGN.CENTER
     r.font.name='Anton'; r.font.size=Pt(24); r.font.color.rgb=RGBColor.from_string('0C0C0C')
     tb = slide.shapes.add_textbox(Inches(l+0.3), Inches(t+pill_h+0.1), Inches(w-0.6), Inches(body_h-pill_h-0.2))
     add_textbox_into(tb, body_lines, 'Inter', 18, '0C0C0C')  # top-anchored body text
@@ -397,7 +382,7 @@ def add_maturity_pyramid(prs, title, hyper, perso, generic, skill_dir='.'):
     return slide
 ```
 
-Requires `add_pyramid_3d` and `add_freeform_poly` from `content-layouts.md`, plus `from pptx.enum.shapes import MSO_SHAPE` / `from pptx.enum.text import MSO_ANCHOR`. `add_textbox_into` is a small helper that fills an existing textbox with top-anchored wrapped lines.
+Requires `add_pyramid_3d` and `add_freeform_poly` from `content-layouts.md`.
 
 ---
 
