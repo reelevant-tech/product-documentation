@@ -167,6 +167,7 @@
                   "product-guide/analytics/data-exploration",
                   "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/saved-queries",
+                  "product-guide/analytics/reports",
                   "product-guide/analytics/settings"
                 ]
               },
@@ -361,6 +362,7 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "advanced-guide/analytics/attribution",
+                  "advanced-guide/analytics/reports",
                   "advanced-guide/analytics/customer-impact",
                   "advanced-guide/analytics/adoption",
                   "advanced-guide/analytics/messaging-and-mobile-measurement",
