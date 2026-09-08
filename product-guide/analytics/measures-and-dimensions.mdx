@@ -13,23 +13,23 @@ This reference lists the measures and dimensions you can use in Data Exploration
 
 ### Workflow event measures
 
-| Measure | Description |
-|---|---|
-| Average Content Generation Duration | Average time to display a Content. |
-| Unique Opener Count | Unique openers. |
-| Total Opening Count | Number of openings containing at least one Reelevant Content. |
-| Repeat Content Exposition Per User | Number of openings per opener, on average. |
-| Total Display Count | Number of Reelevant Content items that have been displayed. |
-| Total Click Count | Number of clicks on Reelevant Content. |
-| Unique Clicker Count | Number of unique Clickers that interacted with Reelevant Content. |
-| Average Click Per User | Indicates how many times the same person clicks, on average. |
-| Individualized Opening Count | Number of openers that have seen at least one individualized content. |
-| Individualized Display Count | For now, a content is considered individualized if it results from browsing interactions. |
-| Individualized Display Rate | Share of individualized Content among every Content. |
-| Unique Individualized Opener | Number of openers that have seen at least one individualized content. |
-| Unique Individualized Opener Rate | Ratio between exposed openers and the total of openers. |
-| Click To Open Rate | Obtained by looking at all the clicks per the total of openings. |
-| Clicker to Opener Rate | Click-to-Opens-Rate. |
+| Measure | Description | Former name |
+|---|---|---|
+| Average Content Generation Duration | Average time to display a Content (a visual designed in the Content Editor). | — |
+| Reached Individuals | Unique individuals reached on any Channel (a Workflow delivery method, such as Email or Web). | Unique Opener Count |
+| Total Impressions | Times a message containing at least one Reelevant Content was seen. | Total Opening Count |
+| Impressions Per Reached Individual | Average impressions for each reached individual. | Repeat Content Exposition Per User |
+| Total Display Count | Reelevant Content items displayed. One impression can contain several displayed Contents. | — |
+| Total Click Count | Clicks on Reelevant Content. | — |
+| Unique Clicker Count | Unique individuals who clicked Reelevant Content. | — |
+| Average Click Per User | Average clicks by the same individual. | — |
+| Individualized Impressions | Impressions where at least one individualized Content was seen. | Individualized Opening Count |
+| Individualized Display Count | Individualized Content items displayed. | — |
+| Individualized Display Rate | Share of displayed Contents that were individualized. | — |
+| Reached Individuals (Individualized) | Reached individuals who saw at least one individualized Content. | Unique Individualized Opener |
+| Reached Individual Rate (Individualized) | Share of reached individuals who saw individualized Content. | Unique Individualized Opener Rate |
+| Click Rate (Per Impression) | Total clicks divided by total impressions. | Click To Open Rate |
+| Click Rate (Unique Individuals) | Unique clickers divided by reached individuals. | Clicker to Opener Rate |
 
 ### Purchase event measures
 
@@ -65,10 +65,10 @@ This reference lists the measures and dimensions you can use in Data Exploration
 | Workflow Version Id | Group by workflow version. |
 | Is Individualized Content | Distinguish personalised and default content. |
 | Device Type | Group by device. |
-| Email client | Group by email client. |
+| Client app | Group by the application where Content was displayed. |
 | Message (rlvt-m) | Group by the message identifier. |
-| Visual Zone Number | Group by zone position. |
-| Visual Zone Type | Group by zone type. |
+| Zone Number In Message | Group by the zone position within a message. |
+| Channel | Group by Channel type. |
 | User is anonymous | Show whether the user is anonymous. |
 | Interaction type | Group by the interaction type. |
 | Workflow Branch | Group by the Branch used. |

@@ -13,23 +13,23 @@ Cette référence liste les mesures et dimensions que vous pouvez utiliser dans 
 
 ### Mesures des événements de Workflow
 
-| Mesure | Description |
-|---|---|
-| Average Content Generation Duration | Temps moyen pour afficher un Content. |
-| Unique Opener Count | Ouvreurs uniques. |
-| Total Opening Count | Nombre d'ouvertures contenant au moins un Content Reelevant. |
-| Repeat Content Exposition Per User | Nombre d'ouvertures par ouvreur, en moyenne. |
-| Total Display Count | Nombre d'éléments de Content Reelevant qui ont été affichés. |
-| Total Click Count | Nombre de clics sur du Content Reelevant. |
-| Unique Clicker Count | Nombre de cliqueurs uniques ayant interagi avec du Content Reelevant. |
-| Average Click Per User | Indique combien de fois une même personne clique, en moyenne. |
-| Individualized Opening Count | Nombre d'ouvreurs ayant vu au moins un Content individualisé. |
-| Individualized Display Count | Pour l'instant, un Content est considéré comme individualisé s'il résulte d'interactions de navigation. |
-| Individualized Display Rate | Part du Content individualisé parmi l'ensemble du Content. |
-| Unique Individualized Opener | Nombre d'ouvreurs ayant vu au moins un Content individualisé. |
-| Unique Individualized Opener Rate | Ratio entre les ouvreurs exposés et le total des ouvreurs. |
-| Click To Open Rate | Obtenu en rapportant l'ensemble des clics au total des ouvertures. |
-| Clicker to Opener Rate | Click-to-Opens-Rate. |
+| Mesure | Description | Ancien nom |
+|---|---|---|
+| Temps moyen de génération du contenu | Temps moyen pour afficher un Content (un visuel conçu dans le Content Editor). | — |
+| Individus touchés | Individus uniques touchés sur un Channel (un mode de diffusion d'un Workflow). | Unique Opener Count |
+| Nombre total d'impressions | Nombre de fois qu'un message contenant au moins un Content Reelevant a été vu. | Total Opening Count |
+| Impressions par individu touché | Nombre moyen d'impressions par individu touché. | Repeat Content Exposition Per User |
+| Affichage total | Nombre de Contents Reelevant affichés. Une impression peut contenir plusieurs Contents. | — |
+| Clic total | Nombre de clics sur du Content Reelevant. | — |
+| Nombre de cliqueur unique | Nombre d'individus uniques ayant cliqué sur du Content Reelevant. | — |
+| Moyenne de clic par utilisateur | Nombre moyen de clics par individu. | — |
+| Impressions individualisées | Impressions dans lesquelles au moins un Content individualisé a été vu. | Individualized Opening Count |
+| Nombre d'affichage individualisé | Nombre de Contents individualisés affichés. | — |
+| Taux d'affichage individualisé | Part des Contents affichés qui étaient individualisés. | — |
+| Individus touchés (individualisé) | Individus touchés ayant vu au moins un Content individualisé. | Unique Individualized Opener |
+| Taux d'individus touchés (individualisé) | Part des individus touchés ayant vu du Content individualisé. | Unique Individualized Opener Rate |
+| Taux de clic (par impression) | Nombre total de clics divisé par le nombre total d'impressions. | Click To Open Rate |
+| Taux de clic (individus uniques) | Cliqueurs uniques divisés par individus touchés. | Clicker to Opener Rate |
 
 ### Mesures des événements d'achat
 
@@ -65,10 +65,10 @@ Cette référence liste les mesures et dimensions que vous pouvez utiliser dans 
 | Workflow Version Id | Regrouper par version de Workflow. |
 | Is Individualized Content | Distinguer le Content personnalisé et par défaut. |
 | Device Type | Regrouper par appareil. |
-| Email client | Regrouper par client de messagerie. |
+| Application cliente | Regrouper par application dans laquelle le Content a été affiché. |
 | Message (rlvt-m) | Regrouper par l'identifiant de message. |
-| Visual Zone Number | Regrouper par position de zone. |
-| Visual Zone Type | Regrouper par type de zone. |
+| Numéro de zone dans le message | Regrouper par position de zone dans un message. |
+| Canal | Regrouper par type de Channel. |
 | User is anonymous | Indiquer si l'utilisateur est anonyme. |
 | Interaction type | Regrouper par type d'interaction. |
 | Workflow Branch | Regrouper par la branche utilisée. |
