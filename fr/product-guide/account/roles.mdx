@@ -62,12 +62,12 @@ Chaque cellule de la matrice propose jusqu'à trois niveaux d'accès. Un clic su
 |---------|----------------|---------------------------------|
 | Carré vide | **No access** | Personne avec ce rôle. |
 | Coche | **Own teams** | Les utilisateurs, sur les ressources appartenant à leurs [Teams](/fr/product-guide/account/teams), selon les règles standard de la [hiérarchie des Teams](/fr/product-guide/account/teams#team-hierarchy). |
-| Flèche vers le haut | **Own teams and their parent teams** | Comme **Own teams**, plus les ressources appartenant à tout Team parent situé au-dessus des Teams de l'utilisateur — même lorsqu'un Team est [exclu de l'héritage ascendant](/fr/product-guide/account/teams#exclude-from-ancestor-inheritance). |
+| Flèche vers le haut | **Own teams and their parent teams** | Comme **Own teams**, plus les ressources de chaque Team parent situé au-dessus des Teams de l'utilisateur. Cela s'applique même lorsqu'un Team est [exclu de l'héritage ascendant](/fr/product-guide/account/teams#exclude-from-ancestor-inheritance). |
 
 Le niveau **Own teams and their parent teams** n'est proposé que sur les [ressources délimitées par Team](/fr/product-guide/account/permissions#resource-scoping). Les ressources délimitées par entreprise, comme **User** ou **Billing**, alternent uniquement entre **No access** et **Own teams**.
 
 <Tip>
-  Cela permet d'ouvrir les données partagées sans ouvrir tout le reste. Par exemple, donnez à un rôle de marque **Datasource → Read** et **Query** en **Own teams and their parent teams**, et laissez **Workflow** en **Own teams**. Les utilisateurs de la marque utilisent alors les Datasources gérées par le Team marché parent, tout en ne voyant que les Workflows de leur marque.
+  Cela permet d'ouvrir les données partagées sans ouvrir tout le reste. Activez d'abord **Exclude from ancestor inheritance** sur le Team de la marque pour que ses utilisateurs ne voient plus les ressources du Team marché parent. Donnez ensuite au rôle de marque **Datasource → Read** et **Query** en **Own teams and their parent teams**, et laissez **Workflow** en **Own teams**. Les utilisateurs de la marque utilisent alors les Datasources du Team marché, tout en ne voyant que les Workflows de leur marque.
 </Tip>
 
 <Warning>

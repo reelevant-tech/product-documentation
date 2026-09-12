@@ -122,7 +122,7 @@ Every permission on a team-scoped resource carries one of two team scopes, chose
 | **Own teams** | Resources in the user's teams and their sub-teams, plus parent teams unless a team is [excluded from ancestor inheritance](/product-guide/account/teams#exclude-from-ancestor-inheritance). This is the default. |
 | **Own teams and their parent teams** | Everything above, plus resources in every parent team, even when a team is excluded from ancestor inheritance. |
 
-The scope is set per resource **and** per action. A role can therefore read Datasources from parent teams while only managing Workflows in the user's own teams.
+The scope is set per resource **and** per action. On a team that is excluded from ancestor inheritance, a role can therefore reopen parent-team Datasources while Workflows stay limited to the user's own teams.
 
 ## Synced Resources
 

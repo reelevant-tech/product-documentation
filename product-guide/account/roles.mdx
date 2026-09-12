@@ -61,13 +61,13 @@ Each cell of the matrix has up to three access levels. Clicking a cell moves to 
 | Cell | Access level | Who can use the permission |
 |------|--------------|----------------------------|
 | Empty square | **No access** | Nobody with this role. |
-| Check mark | **Own teams** | Users on resources that belong to their [teams](/product-guide/account/teams), following the standard [team hierarchy](/product-guide/account/teams#team-hierarchy) rules. |
-| Up arrow | **Own teams and their parent teams** | Same as **Own teams**, plus resources that belong to any parent team above the user's teams — even when a team is [excluded from ancestor inheritance](/product-guide/account/teams#exclude-from-ancestor-inheritance). |
+| Check mark | **Own teams** | Users on resources that belong to their [teams](/product-guide/account/teams). The standard [team hierarchy](/product-guide/account/teams#team-hierarchy) rules apply. |
+| Up arrow | **Own teams and their parent teams** | Same as **Own teams**, plus resources in every parent team above the user's teams. This applies even when a team is [excluded from ancestor inheritance](/product-guide/account/teams#exclude-from-ancestor-inheritance). |
 
 The **Own teams and their parent teams** level is only offered on [team-scoped resources](/product-guide/account/permissions#resource-scoping). Company-scoped resources such as **User** or **Billing** only switch between **No access** and **Own teams**.
 
 <Tip>
-  This lets you open shared data without opening everything else. For example, give a brand role **Datasource → Read** and **Query** with **Own teams and their parent teams**, and keep **Workflow** on **Own teams**. Brand users can then use the Datasources managed by the parent market team, while still seeing only their own brand's Workflows.
+  This lets you open shared data without opening everything else. First, enable **Exclude from ancestor inheritance** on the brand team so its users stop seeing the parent market team's resources. Then give the brand role **Datasource → Read** and **Query** with **Own teams and their parent teams**, and keep **Workflow** on **Own teams**. Brand users can now use the market team's Datasources while seeing only their own brand's Workflows.
 </Tip>
 
 <Warning>
