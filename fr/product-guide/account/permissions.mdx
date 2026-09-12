@@ -11,7 +11,7 @@ L'évaluation des permissions suit trois couches :
 
 1. **Rôle** — Définit quelles actions l'utilisateur peut effectuer sur quels types de ressources.
 2. **Entreprise** — Chaque règle de permission est automatiquement limitée à l'entreprise de l'utilisateur, garantissant une isolation complète entre locataires.
-3. **Team** — Pour les ressources délimitées par Team, l'utilisateur ne peut accéder qu'aux ressources appartenant à l'un de ses Teams.
+3. **Team** — Pour les ressources délimitées par Team, l'utilisateur ne peut accéder qu'aux ressources appartenant à l'un de ses Teams. Chaque permission du rôle peut élargir cette portée aux Teams parents — voir [portée de Team](#team-scope).
 
 <Note>
   Chaque utilisateur a automatiquement la permission de lire et de mettre à jour son propre profil, quelle que soit la configuration de son rôle. Ces règles intégrées ne peuvent pas être supprimées.
@@ -73,7 +73,7 @@ Les actions définissent les opérations qu'un utilisateur peut effectuer sur un
 
 ## Matrice des permissions
 
-Le tableau ci-dessous indique quelles actions sont disponibles pour chaque ressource. Lors de la configuration d'un [rôle](/fr/product-guide/account/roles), vous pouvez activer chaque action disponible individuellement.
+Le tableau ci-dessous indique quelles actions sont disponibles pour chaque ressource. Lors de la configuration d'un [rôle](/fr/product-guide/account/roles), vous réglez chaque action disponible individuellement, ainsi que sa [portée de Team](#team-scope).
 
 | Ressource | Access | Create | Read | Query | Update | Delete | Export |
 |----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|
@@ -107,11 +107,22 @@ Lorsqu'un utilisateur tente d'effectuer une action, le système vérifie les con
     La ressource ciblée appartient-elle à la même entreprise que l'utilisateur ? Cette vérification est automatique et garantit une isolation complète entre locataires.
   </Step>
   <Step title="Vérification du Team (ressources délimitées par Team uniquement)">
-    L'utilisateur est-il membre d'au moins un Team auquel appartient la ressource ciblée ? L'appartenance à un Team inclut l'accès hérité de la [hiérarchie des Teams](/fr/product-guide/account/teams#team-hierarchy).
+    L'utilisateur est-il membre d'au moins un Team auquel appartient la ressource ciblée ? L'appartenance à un Team inclut l'accès hérité de la [hiérarchie des Teams](/fr/product-guide/account/teams#team-hierarchy), élargi par la [portée de Team](#team-scope) de la permission.
   </Step>
 </Steps>
 
 Si l'une des vérifications échoue, l'action est refusée avec une erreur **403 Forbidden**.
+
+## Portée de Team
+
+Chaque permission sur une ressource délimitée par Team porte l'une des deux portées de Team, choisie dans l'[éditeur de rôles](/fr/product-guide/account/roles#team-scope-per-permission) :
+
+| Portée de Team | Ressources accessibles à l'utilisateur |
+|----------------|----------------------------------------|
+| **Own teams** | Les ressources des Teams de l'utilisateur et de leurs sous-Teams, plus celles des Teams parents sauf si un Team est [exclu de l'héritage ascendant](/fr/product-guide/account/teams#exclude-from-ancestor-inheritance). C'est la portée par défaut. |
+| **Own teams and their parent teams** | Tout ce qui précède, plus les ressources de chaque Team parent, même lorsqu'un Team est exclu de l'héritage ascendant. |
+
+La portée se règle par ressource **et** par action. Un rôle peut donc lire les Datasources des Teams parents tout en ne gérant les Workflows que dans les Teams de l'utilisateur.
 
 ## Ressources synchronisées
 

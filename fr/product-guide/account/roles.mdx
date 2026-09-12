@@ -39,7 +39,9 @@ Utilisez la barre de recherche pour trouver des rôles par nom.
     Choisissez un nom descriptif qui reflète l'objectif du rôle (par exemple, « Marketing Editor », « Data Analyst », « Admin »).
   </Step>
   <Step title="Configurer les permissions">
-    L'éditeur de permissions affiche une matrice de **ressources** (lignes) et d'**actions** (colonnes). Activez chaque case pour accorder ou refuser la permission.
+    L'éditeur de permissions affiche une matrice de **ressources** (lignes) et d'**actions** (colonnes). Cliquez sur une cellule pour passer au niveau d'accès suivant — voir [Portée de Team par permission](#team-scope-per-permission) ci-dessous.
+
+    Utilisez la colonne **All** en début de ligne pour régler toutes les actions d'une ressource d'un coup.
 
     Seules les actions applicables à chaque ressource sont affichées. Par exemple, **Statistics** ne prend en charge que **Access** et **Export**, tandis que **Workflow** prend en charge **Create**, **Read**, **Update** et **Delete**.
 
@@ -49,6 +51,28 @@ Utilisez la barre de recherche pour trouver des rôles par nom.
     Cliquez sur **Create** pour enregistrer le nouveau rôle. Les utilisateurs assignés à ce rôle recevront immédiatement les permissions configurées.
   </Step>
 </Steps>
+
+### Portée de Team par permission
+
+Chaque cellule de la matrice propose jusqu'à trois niveaux d'accès. Un clic sur la cellule passe au niveau suivant.
+
+| Cellule | Niveau d'accès | Qui peut utiliser la permission |
+|---------|----------------|---------------------------------|
+| Carré vide | **No access** | Personne avec ce rôle. |
+| Coche | **Own teams** | Les utilisateurs, sur les ressources appartenant à leurs [Teams](/fr/product-guide/account/teams), selon les règles standard de la [hiérarchie des Teams](/fr/product-guide/account/teams#team-hierarchy). |
+| Flèche vers le haut | **Own teams and their parent teams** | Comme **Own teams**, plus les ressources appartenant à tout Team parent situé au-dessus des Teams de l'utilisateur — même lorsqu'un Team est [exclu de l'héritage ascendant](/fr/product-guide/account/teams#exclude-from-ancestor-inheritance). |
+
+Le niveau **Own teams and their parent teams** n'est proposé que sur les [ressources délimitées par Team](/fr/product-guide/account/permissions#resource-scoping). Les ressources délimitées par entreprise, comme **User** ou **Billing**, alternent uniquement entre **No access** et **Own teams**.
+
+<Tip>
+  Cela permet d'ouvrir les données partagées sans ouvrir tout le reste. Par exemple, donnez à un rôle de marque **Datasource → Read** et **Query** en **Own teams and their parent teams**, et laissez **Workflow** en **Own teams**. Les utilisateurs de la marque utilisent alors les Datasources gérées par le Team marché parent, tout en ne voyant que les Workflows de leur marque.
+</Tip>
+
+<Warning>
+  La portée Teams parents s'applique aussi à **Create**, **Update** et **Delete** si vous la sélectionnez sur ces actions. Les utilisateurs pourraient alors modifier des ressources appartenant aux Teams situés au-dessus du leur. Privilégiez-la sur **Read** et **Query**, sauf si le rôle doit réellement modifier des ressources partagées.
+</Warning>
+
+Dans la colonne **All**, un signe moins indique que la ligne mélange plusieurs niveaux. Un clic dessus remet toute la ligne en **No access**.
 
 ### Permissions synchronisées
 
@@ -73,7 +97,7 @@ Ces règles s'appliquent uniquement à l'utilisateur lui-même et n'accordent pa
 ## Modifier un rôle
 
 1. Cliquez sur le menu d'actions (⋮) sur la ligne d'un rôle et sélectionnez **Edit**.
-2. Mettez à jour le nom du rôle ou activez des permissions dans la matrice.
+2. Mettez à jour le nom du rôle ou cliquez sur les cellules de la matrice pour changer leur niveau d'accès.
 3. Cliquez sur **Save** pour appliquer.
 
 <Warning>
@@ -100,4 +124,4 @@ Cliquez sur le bouton **Export CSV** dans la barre d'outils pour télécharger u
 | **Resource** | Le type de ressource. |
 | **Action** | L'action (create, read, update, etc.). |
 | **Conditions** | Toute condition supplémentaire sur la règle. |
-| **Must Match** | Les contraintes de délimitation (entreprise, Team). |
+| **Must Match** | Les contraintes de délimitation (entreprise, Team). Les permissions en **Own teams and their parent teams** affichent ici la portée Teams parents. |
