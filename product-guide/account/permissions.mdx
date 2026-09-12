@@ -11,7 +11,7 @@ The permission evaluation follows three layers:
 
 1. **Role** — Defines which actions the user can perform on which resource types.
 2. **Company** — Every permission rule is automatically scoped to the user's company, ensuring complete tenant isolation.
-3. **Team** — For team-scoped resources, the user can only access resources that belong to one of their teams.
+3. **Team** — For team-scoped resources, the user can only access resources that belong to one of their teams. Each permission in the role can widen this to the parent teams as well — see [team scope](#team-scope).
 
 <Note>
   Every user automatically has permission to read and update their own profile, regardless of their role configuration. These built-in rules cannot be removed.
@@ -73,7 +73,7 @@ Actions define what operations a user can perform on a given resource. Not every
 
 ## Permissions Matrix
 
-The table below shows which actions are available for each resource. When configuring a [role](/product-guide/account/roles), you can toggle each available action individually.
+The table below shows which actions are available for each resource. When configuring a [role](/product-guide/account/roles), you set each available action individually, together with its [team scope](#team-scope).
 
 | Resource | Access | Create | Read | Query | Update | Delete | Export |
 |----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|
@@ -107,11 +107,22 @@ When a user tries to perform an action, the system checks the following conditio
     Does the target resource belong to the same company as the user? This check is automatic and ensures complete tenant isolation.
   </Step>
   <Step title="Team check (team-scoped resources only)">
-    Is the user a member of at least one team that the target resource belongs to? Team membership includes inherited access from the [team hierarchy](/product-guide/account/teams#team-hierarchy).
+    Is the user a member of at least one team that the target resource belongs to? Team membership includes inherited access from the [team hierarchy](/product-guide/account/teams#team-hierarchy), widened by the permission's [team scope](#team-scope).
   </Step>
 </Steps>
 
 If any check fails, the action is denied with a **403 Forbidden** error.
+
+## Team Scope
+
+Every permission on a team-scoped resource carries one of two team scopes, chosen in the [role editor](/product-guide/account/roles#team-scope-per-permission):
+
+| Team scope | Resources the user can reach |
+|------------|------------------------------|
+| **Own teams** | Resources in the user's teams and their sub-teams, plus parent teams unless a team is [excluded from ancestor inheritance](/product-guide/account/teams#exclude-from-ancestor-inheritance). This is the default. |
+| **Own teams and their parent teams** | Everything above, plus resources in every parent team, even when a team is excluded from ancestor inheritance. |
+
+The scope is set per resource **and** per action. On a team that is excluded from ancestor inheritance, a role can therefore reopen parent-team Datasources while Workflows stay limited to the user's own teams.
 
 ## Synced Resources
 

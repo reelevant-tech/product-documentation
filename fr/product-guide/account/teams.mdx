@@ -79,7 +79,7 @@ Les Teams prennent en charge des relations parent-enfant qui forment une hiérar
 
 ### Comment fonctionne l'héritage
 
-Lorsqu'un utilisateur est assigné à un Team, il obtient automatiquement l'accès aux ressources de tous les **Teams descendants** (enfants, petits-enfants, etc.) situés en dessous.
+Lorsqu'un utilisateur est assigné à un Team, il obtient automatiquement l'accès aux ressources de tous les **Teams descendants** (enfants, petits-enfants, etc.) situés en dessous. Il obtient aussi l'accès aux ressources des **Teams ancêtres** situés au-dessus, sauf si un Team est [exclu de l'héritage ascendant](#exclude-from-ancestor-inheritance).
 
 Par exemple, considérez cette hiérarchie :
 
@@ -91,8 +91,9 @@ Engineering
 ```
 
 - Un utilisateur assigné à **Engineering** peut accéder aux ressources d'Engineering, Backend Team, API Team et Frontend Team.
-- Un utilisateur assigné à **Backend Team** peut accéder aux ressources de Backend Team et API Team, mais **pas** à Engineering ni Frontend Team.
-- Un utilisateur assigné à **API Team** ne peut accéder qu'aux ressources d'API Team.
+- Un utilisateur assigné à **Backend Team** peut accéder aux ressources de Backend Team, API Team et Engineering, mais **pas** à Frontend Team.
+- Un utilisateur assigné à **API Team** peut accéder aux ressources d'API Team, Backend Team et Engineering.
+- Avec **Exclude from ancestor inheritance** activé sur Backend Team, un utilisateur assigné à Backend Team ou API Team n'atteint plus Engineering.
 
 <Tip>
   Assignez les utilisateurs au Team le plus spécifique correspondant à leur rôle. Le système gère automatiquement l'accès plus large grâce à la hiérarchie.
@@ -104,16 +105,16 @@ Engineering
 
 ### Exclure de l'héritage ascendant
 
-Par défaut, l'héritage entre Teams ne se propage que **vers le bas** (du parent vers l'enfant). Le paramètre **Exclude from ancestor inheritance** modifie ce comportement :
+Par défaut, l'héritage entre Teams se propage dans les deux sens : les utilisateurs atteignent leurs sous-Teams **et** leurs Teams parents. Le paramètre **Exclude from ancestor inheritance** coupe la partie ascendante :
 
 | Paramètre | Comportement |
-|---------|----------|
-| **Désactivé** (par défaut) | Comportement standard — les utilisateurs assignés à un Team parent peuvent accéder aux ressources de ce Team et de tous ses descendants. |
-| **Activé** | En plus de l'héritage descendant standard, les utilisateurs assignés à ce Team obtiennent aussi l'accès aux ressources de tous les **Teams ancêtres** (parents, grands-parents, etc.) situés au-dessus — jusqu'à (mais sans inclure) tout ancêtre ayant également ce paramètre activé. |
+|-----------|--------------|
+| **Désactivé** (par défaut) | Les utilisateurs assignés à ce Team (ou à l'un de ses sous-Teams) accèdent aussi aux ressources de ses **Teams ancêtres** (parents, grands-parents, etc.). |
+| **Activé** | Les utilisateurs assignés à ce Team (ou à l'un de ses sous-Teams) s'arrêtent ici : ils n'accèdent pas aux ressources des Teams situés au-dessus. L'héritage descendant vers les sous-Teams est inchangé. |
 
-<Warning>
-  Activer l'héritage ascendant élargit considérablement l'accès. Ne l'utilisez que lorsque les utilisateurs d'un Team enfant ont réellement besoin d'accéder aux ressources gérées à des niveaux supérieurs de la hiérarchie.
-</Warning>
+<Tip>
+  Activez ce paramètre sur un Team de marque ou de marché lorsque ses membres ne doivent pas voir les Workflows et Contents gérés au niveau du groupe. Si certains ont tout de même besoin des Datasources partagées, donnez à leur [rôle](/fr/product-guide/account/roles#team-scope-per-permission) la portée **Own teams and their parent teams** sur Datasource uniquement.
+</Tip>
 
 ### Protection contre les références circulaires
 
@@ -126,7 +127,7 @@ Cliquez sur le menu d'actions et sélectionnez **Edit** pour mettre à jour :
 | Champ | Description |
 |-------|-------------|
 | **Nom du Team** | Mettez à jour le nom du Team. |
-| **Exclude from ancestor inheritance** | Activez pour contrôler si ce Team hérite de l'accès des Teams ancêtres. |
+| **Exclude from ancestor inheritance** | Activez pour empêcher ce Team (et ses sous-Teams) d'accéder aux ressources des Teams ancêtres. |
 | **Teams parents** | Ajoutez ou supprimez des relations parentes. |
 | **Teams enfants** | Ajoutez ou supprimez des relations enfants. |
 

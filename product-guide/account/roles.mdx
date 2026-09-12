@@ -39,7 +39,9 @@ Use the search bar to find roles by name.
     Choose a descriptive name that reflects the role's purpose (e.g., "Marketing Editor", "Data Analyst", "Admin").
   </Step>
   <Step title="Configure permissions">
-    The permission editor displays a matrix of **resources** (rows) and **actions** (columns). Toggle each checkbox to grant or deny the permission.
+    The permission editor displays a matrix of **resources** (rows) and **actions** (columns). Click a cell to cycle through its access levels — see [Team scope per permission](#team-scope-per-permission) below.
+
+    Use the **All** column at the start of a row to set every action of that resource at once.
 
     Only the actions that are applicable to each resource are shown. For example, **Statistics** only supports **Access** and **Export**, while **Workflow** supports **Create**, **Read**, **Update**, and **Delete**.
 
@@ -49,6 +51,30 @@ Use the search bar to find roles by name.
     Click **Create** to save the new role. Users assigned to this role will immediately receive the configured permissions.
   </Step>
 </Steps>
+
+### Team Scope per Permission
+
+Each cell of the matrix has up to three access levels. Clicking a cell moves to the next one.
+
+![Edit role dialog showing the permissions matrix, with Datasource Read and Query set to own teams and their parent teams](/images/account/role-permissions-matrix-v2.png)
+
+| Cell | Access level | Who can use the permission |
+|------|--------------|----------------------------|
+| Empty square | **No access** | Nobody with this role. |
+| Check mark | **Own teams** | Users on resources that belong to their [teams](/product-guide/account/teams). The standard [team hierarchy](/product-guide/account/teams#team-hierarchy) rules apply. |
+| Up arrow | **Own teams and their parent teams** | Same as **Own teams**, plus resources in every parent team above the user's teams. This applies even when a team is [excluded from ancestor inheritance](/product-guide/account/teams#exclude-from-ancestor-inheritance). |
+
+The **Own teams and their parent teams** level is only offered on [team-scoped resources](/product-guide/account/permissions#resource-scoping). Company-scoped resources such as **User** or **Billing** only switch between **No access** and **Own teams**.
+
+<Tip>
+  This lets you open shared data without opening everything else. First, enable **Exclude from ancestor inheritance** on the brand team so its users stop seeing the parent market team's resources. Then give the brand role **Datasource → Read** and **Query** with **Own teams and their parent teams**, keeping **Workflow** on **Own teams**: brand users get the market team's Datasources but only their own Workflows.
+</Tip>
+
+<Warning>
+  Parent-team scope also applies to **Create**, **Update** and **Delete** when you select it on those actions. Users could then modify resources owned by teams above theirs. Prefer using it on **Read** and **Query** unless the role really needs to edit shared resources.
+</Warning>
+
+In the **All** column, a minus sign means the row mixes several levels. Clicking it resets the whole row to **No access**.
 
 ### Synced Permissions
 
@@ -73,7 +99,7 @@ These rules only apply to the user themselves and do not grant access to other u
 ## Editing a Role
 
 1. Click the actions menu (⋮) on a role row and select **Edit**.
-2. Update the role name or toggle permissions in the matrix.
+2. Update the role name or click cells in the matrix to change their access level.
 3. Click **Save** to apply.
 
 <Warning>
@@ -100,4 +126,4 @@ Click the **Export CSV** button in the toolbar to download a CSV file containing
 | **Resource** | The resource type. |
 | **Action** | The action (create, read, update, etc.). |
 | **Conditions** | Any additional conditions on the rule. |
-| **Must Match** | The scoping constraints (company, team). |
+| **Must Match** | The scoping constraints (company, team). Permissions using **Own teams and their parent teams** show the parent-team scope here. |

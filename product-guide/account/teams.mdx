@@ -79,7 +79,7 @@ Teams support parent-child relationships that form a hierarchy. This hierarchy c
 
 ### How Inheritance Works
 
-When a user is assigned to a team, they automatically gain access to resources in all **descendant teams** (children, grandchildren, etc.) below it.
+When a user is assigned to a team, they automatically gain access to resources in all **descendant teams** (children, grandchildren, etc.) below it. They also gain access to resources in the **ancestor teams** above it, unless a team is [excluded from ancestor inheritance](#exclude-from-ancestor-inheritance).
 
 For example, consider this hierarchy:
 
@@ -91,8 +91,9 @@ Engineering
 ```
 
 - A user assigned to **Engineering** can access resources in Engineering, Backend Team, API Team, and Frontend Team.
-- A user assigned to **Backend Team** can access resources in Backend Team and API Team, but **not** Engineering or Frontend Team.
-- A user assigned to **API Team** can only access resources in API Team.
+- A user assigned to **Backend Team** can access resources in Backend Team, API Team and Engineering, but **not** Frontend Team.
+- A user assigned to **API Team** can access resources in API Team, Backend Team and Engineering.
+- With **Exclude from ancestor inheritance** enabled on Backend Team, a user assigned to Backend Team or API Team no longer reaches Engineering.
 
 <Tip>
   Assign users to the most specific team that matches their role. The system handles broader access automatically through the hierarchy.
@@ -104,16 +105,16 @@ Engineering
 
 ### Exclude from Ancestor Inheritance
 
-By default, team inheritance only flows **downward** (from parent to child). The **Exclude from ancestor inheritance** toggle changes this behavior:
+By default, team inheritance flows both ways: users reach their sub-teams **and** their parent teams. The **Exclude from ancestor inheritance** toggle stops the upward part:
 
-| Setting | Behavior |
-|---------|----------|
-| **Disabled** (default) | Standard behavior — users assigned to a parent team can access resources in this team and all its descendants. |
-| **Enabled** | In addition to the standard downward inheritance, users assigned to this team also gain access to resources in all **ancestor teams** (parents, grandparents, etc.) above it — up to (but not including) any ancestor that also has this flag enabled. |
+| Setting | Behaviour |
+|---------|-----------|
+| **Disabled** (default) | Users assigned to this team (or one of its sub-teams) can also access resources in its **ancestor teams** (parents, grandparents, etc.). |
+| **Enabled** | Users assigned to this team (or one of its sub-teams) stop climbing here: they cannot access resources in the teams above it. Downward inheritance to sub-teams is unchanged. |
 
-<Warning>
-  Enabling ancestor inheritance broadens access significantly. Use this only when users in a child team genuinely need access to resources managed at higher levels of the hierarchy.
-</Warning>
+<Tip>
+  Enable this on a brand or market team when its members must not see Workflows and Contents managed at the group level. If some of them still need the shared Datasources, give their [role](/product-guide/account/roles#team-scope-per-permission) the **Own teams and their parent teams** scope on Datasource only.
+</Tip>
 
 ### Circular Reference Protection
 
@@ -126,7 +127,7 @@ Click the actions menu and select **Edit** to update:
 | Field | Description |
 |-------|-------------|
 | **Team name** | Update the team name. |
-| **Exclude from ancestor inheritance** | Toggle to control whether this team inherits access from ancestor teams. |
+| **Exclude from ancestor inheritance** | Toggle to stop this team (and its sub-teams) from accessing resources in ancestor teams. |
 | **Parent teams** | Add or remove parent relationships. |
 | **Child teams** | Add or remove child relationships. |
 
