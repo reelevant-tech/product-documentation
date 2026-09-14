@@ -1,7 +1,7 @@
 ---
 title: "Sécurité et conformité"
 description: "Attestation SOC 2 Type 2, conformité RGPD, standards de chiffrement, politique de mot de passe, gestion des vulnérabilités, fournisseurs et posture de sécurité de Reelevant pour les évaluateurs techniques."
-keywords: ["SOC 2", "RGPD", "politique de mot de passe", "logs d'audit", "journal d'audit", "provisionnement SCIM", "sous-traitants", "fournisseurs", "contact sécurité", "divulgation de vulnérabilité"]
+keywords: ["SOC 2", "RGPD", "politique de mot de passe", "logs d'audit", "journal d'audit", "provisionnement SCIM", "sous-traitants", "fournisseurs", "contact sécurité", "divulgation de vulnérabilité", "DPA", "notification de violation", "suppression des données", "pseudonymisation", "questionnaire de sécurité"]
 ---
 
 ## Vue d'ensemble de la sécurité
@@ -20,7 +20,7 @@ Pour la documentation de sécurité, les certifications et les rapports d'audit 
 | **Audit automatisé continu** | En continu | Analyse automatisée du code, des dépendances et de la configuration cloud à chaque modification |
 | **Certification ISO 27001 / article 42** | Non détenue | La conformité est démontrée par l'attestation SOC 2 Type 2, le DPA et les mesures décrites sur cette page |
 
-Le rapport SOC 2 Type 2 en vigueur, ainsi que ceux de nos hébergeurs, sont disponibles via le **[Trust Centre](https://trust.reelevant.com)**.
+Le rapport SOC 2 Type 2 en vigueur, ceux de nos hébergeurs, ainsi que la synthèse du dernier test d'intrusion sont disponibles via le **[Trust Centre](https://trust.reelevant.com)** sous NDA.
 
 Aucune fonctionnalité d'intelligence artificielle n'entre dans le périmètre du service : Reelevant n'entraîne ni n'exploite de modèle d'IA sur les données clients. L'IA n'est utilisée qu'en interne, en complément — et jamais en remplacement — de la revue humaine obligatoire dans notre processus de développement.
 
@@ -47,12 +47,41 @@ Aucune fonctionnalité d'intelligence artificielle n'entre dans le périmètre d
 - Seuls les champs explicitement mappés dans les Datasources sont accessibles à la plateforme
 - Aucune donnée personnelle n'est stockée au-delà de la période de rétention configurée
 - Les données de production sont assainies avant utilisation dans les environnements hors-production
+- Aucun enrichissement tiers : la plateforme ne croise jamais vos données avec des sources externes
+
+### Données personnelles détenues par la plateforme
+
+Reelevant agit en qualité de sous-traitant, sur vos instructions. Les données personnelles détenues se limitent à :
+
+| Donnée | Origine | Remarques |
+|--------|---------|-----------|
+| Champs des Datasources | Synchronisés depuis vos systèmes | Uniquement les champs que vous mappez ; les données de contact sont remplacées à chaque synchronisation, un enregistrement retiré à la source n'est donc plus traité |
+| Identifiant client pseudonyme | Transmis dans les URL du Runner par votre outil d'emailing ou votre site | Un identifiant opaque issu de vos systèmes — jamais une adresse email ni une autre donnée directement identifiante |
+| Événements comportementaux | Générés par le Runner (expositions, clics, Branche exécutée) et par le tag web (pages vues) | Rattachés à l'identifiant pseudonyme ; conservés 90 jours par défaut |
+| Conversions attribuées et agrégats | Calculés par la plateforme | Les agrégats (Uplift, Incremental Value, rapports) ne sont pas des données personnelles |
+
+Les données exportées vers l'entrepôt analytique restent pseudonymes : elles ne portent que l'identifiant client et ne peuvent être ré-identifiées que par vous, via votre propre table de correspondance.
 
 ### Contrôles de rétention
 
 - Configurable par Datasource (90 jours par défaut pour les événements comportementaux)
 - La destruction sécurisée suit les standards industriels acceptés pour la suppression de données
 - La destruction est suivie et documentée
+- Effacement à l'enregistrement disponible sur demande via l'[opération d'anonymisation des Datasources](/fr/advanced-guide/datahub/anonymise-customer-records)
+
+### Engagements contractuels
+
+Les engagements suivants font partie du contrat de sous-traitance (DPA) standard :
+
+| Engagement | Condition standard |
+|------------|--------------------|
+| Lieu de traitement | UE uniquement, aucun transfert hors UE |
+| Notification de violation de données personnelles | Sous 48 heures après détection, via security@reelevant.com |
+| Fin de contrat | Suppression sécurisée de l'ensemble des données personnelles (bases de données, caches, sauvegardes) dans les 30 jours suivant la fin du contrat |
+| Restitution des données | Export dans un format structuré sur demande écrite avant suppression |
+| Sauvegardes | Les sauvegardes chiffrées expirent au plus tard 180 jours après la suppression |
+| Preuve de suppression | Suppression tracée et attestation écrite fournie sur demande |
+| Accès du personnel à vos données | Limité au support, au diagnostic à votre demande et à la maintenance opérationnelle — sous moindre privilège, MFA et journalisation |
 
 ## Contrôle d'accès
 
@@ -77,7 +106,7 @@ La politique de mot de passe est appliquée par la plateforme et configurable pa
 | Stockage | Haché avec bcrypt et un sel unique — jamais stocké en clair ni journalisé |
 | Réinitialisation | Jeton à usage unique envoyé à l'adresse e-mail vérifiée du compte |
 
-Longueur minimale, exigences de complexité, expiration et seuils de verrouillage peuvent être renforcés pour correspondre à votre propre politique, ou entièrement remplacés en déléguant l'authentification à votre fournisseur d'identité via le SSO.
+Longueur minimale, exigences de complexité, expiration, historique des mots de passe et seuils de verrouillage peuvent être renforcés pour correspondre à votre propre politique. L'approche recommandée pour les organisations disposant d'une politique de mot de passe d'entreprise est de déléguer entièrement l'authentification à votre fournisseur d'identité via le SSO SAML, afin que vos propres règles s'appliquent.
 
 ### Systèmes de production
 
@@ -124,6 +153,7 @@ Tous les correctifs système sont obtenus depuis des sources de confiance et dé
 - **Réseau privé chiffré** entre tous les serveurs, segmenté par environnement (production, staging, outillage) et non routable depuis Internet
 - **Anti-DDoS** assuré au niveau réseau par notre hébergeur sur tous les points d'entrée publics
 - **Gateway développée en interne** en frontal de l'API et du Runner : elle valide et filtre chaque requête entrante (validation de schéma, contrôles d'authentification et d'autorisation, exposition restreinte des routes)
+- **Pas d'appliance pare-feu nouvelle génération / UTM dédiée** : la protection périmétrique repose sur la combinaison des contrôles ci-dessus (pare-feu hôtes, anti-DDoS de l'hébergeur, validation par la gateway, détection d'intrusion sur les hôtes)
 - **DNSSEC** activé sur les domaines Reelevant
 - **Détection d'intrusion et monitoring d'intégrité des fichiers** sur tous les serveurs, avec remontée des alertes et des événements pare-feu vers un stockage de logs centralisé et à accès contrôlé
 - **Gestion des secrets** — les secrets d'infrastructure sont stockés chiffrés au repos dans un coffre dont la clé est elle-même protégée, et les secrets applicatifs sont injectés à l'exécution ; aucun secret n'est conservé dans le code source
@@ -137,7 +167,7 @@ La messagerie d'entreprise repose sur Google Workspace avec filtrage anti-spam e
 Reelevant maintient une équipe de réponse aux incidents (IRT) dédiée avec des rôles et procédures définis :
 
 - **Événements de sécurité** (activité suspecte, pas de compromission confirmée) — enquête et suivi internes
-- **Incidents de sécurité** (compromission confirmée) — activation complète de l'IRT, enquête documentée, notification client si nécessaire
+- **Incidents de sécurité** (compromission confirmée) — activation complète de l'IRT, enquête documentée, notification client sous 48 heures après détection lorsque des données personnelles sont concernées
 - **Exercice de simulation annuel** pour tester les procédures de continuité d'activité et de reprise après sinistre
 - **Rapports post-incident** avec analyse des causes racines et actions de remédiation
 
@@ -172,15 +202,28 @@ Reelevant s'appuie sur une liste courte et volontairement limitée de fournisseu
 |-------------|---------|--------|------|
 | **OVHcloud** | Serveurs bare metal | France | Héberge la plateforme : services applicatifs, bases de données et traitement des événements |
 | **Google Cloud** | BigQuery | Belgique | Entrepôt analytique utilisé pour le stockage des événements et les requêtes de reporting |
-| **AWS** | Route 53 (DNS) | Global (anycast, comme l'exige le DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client |
+| **AWS** | Route 53 (DNS) | Global (anycast, comme l'exige le DNS) | Résolution DNS publique des domaines Reelevant — aucune donnée client, donc pas un sous-traitant |
 | **Vercel** | Hébergement d'assets statiques | CDN mondial | Diffuse uniquement les assets statiques du front-end — aucune donnée client, donc pas un sous-traitant |
 
-OVHcloud, Google Cloud et AWS sont nos seuls sous-traitants. Aucun autre acteur ne traite de données clients dans le cadre de la fourniture du service.
+OVHcloud et Google Cloud sont nos seuls sous-traitants ultérieurs de données personnelles. Aucun autre acteur ne traite de données clients dans le cadre de la fourniture du service.
+
+### Détail des sous-traitants ultérieurs
+
+Entités juridiques telles que listées dans le DPA :
+
+| Sous-traitant | Entité juridique | Traitement | Localisation |
+|---------------|------------------|------------|--------------|
+| OVHcloud | OVH SAS, 2 rue Kellermann, 59100 Roubaix, France — RCS Lille Métropole 424 761 419 | Hébergement de la plateforme sur serveurs dédiés : services applicatifs, bases de données, traitement des événements, sauvegardes | France (UE) |
+| Google Cloud | Google Cloud EMEA Limited, Velasco, Clanwilliam Place, Dublin 2, Irlande | Hébergement de l'entrepôt analytique (BigQuery) contenant les événements pseudonymes et les agrégats | Belgique, région `europe-west1` (UE) |
+
+Aucun de ces sous-traitants n'accède aux données clients à distance depuis l'extérieur de l'UE.
 
 ## Journalisation des audits
 
 - **[Journal d'audit](/fr/product-guide/account/audit-log) dans la plateforme** — authentification, SSO, provisionnement SCIM et modifications des utilisateurs, des rôles et des Teams, consultable par vos propres administrateurs d'identités
-- **Logs de sécurité collectés de manière centralisée et conservés 1 an** dans un stockage à accès contrôlé
+- **Logs de sécurité collectés de manière centralisée et conservés 1 an** dans un stockage à accès contrôlé, conformément à la recommandation de la CNIL sur la conservation des journaux
+- **Modèle de supervision** — journalisation centralisée avec alertes automatisées et astreinte des ingénieurs ; Reelevant n'opère ni SIEM commercial ni SOC externe 24/7
+- **Transfert des logs vers votre SOC / SIEM** — disponible en bêta ; contactez votre équipe compte
 - Toutes les actions d'administration sont journalisées avec attribution utilisateur et horodatage
 - Les événements d'authentification (réussis et échoués) sont capturés et surveillés
 - Monitoring d'intégrité des fichiers et détection d'intrusion basée sur l'hôte déployés
@@ -196,6 +239,8 @@ OVHcloud, Google Cloud et AWS sont nos seuls sous-traitants. Aucun autre acteur 
 | Vincent Martinet | CEO — référent protection des données pour les sujets RGPD |
 
 Aucun Délégué à la Protection des Données n'a été désigné, la désignation n'étant pas obligatoire au titre de l'article 37 pour nos traitements. Les obligations de registre au titre de l'article 30 et le détail des traitements sont couverts par les contrats clients et le DPA.
+
+**Entité juridique :** Reelevant SAS, 10 rue de Penthièvre, 75008 Paris, France — RCS Paris 521 917 468.
 
 Indiquez si possible les étapes de reproduction et les endpoints concernés. Les signalements sont triés par l'Incident Response Team et corrigés selon les délais ci-dessus.
 
