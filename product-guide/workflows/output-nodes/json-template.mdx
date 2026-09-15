@@ -100,6 +100,18 @@ At runtime, the engine resolves each variable from the bound datasource and retu
 
 Your frontend simply consumes these fields using its own components — the shape is always the same.
 
+## Click Redirect
+
+A JSON Template can also power a **click link**. The template declares a **Click redirect variable** in [JSON Templates settings](/product-guide/workflows/settings#json-templates). When a visitor clicks, the Workflow sends them to the link held by that variable and records the click.
+
+The redirect uses the same binding as the variable. Bind `productUrl` to the product link field, and the click lands on the product that was displayed. This stays true when a fallback Data Node provided the product.
+
+The click link is the Workflow's click tracking link from the [Integration](/product-guide/workflows/integration) page. Your team places it on the displayed card. Tracking parameters (user identifier, UTM tags) are passed on to the destination.
+
+<Info>
+  Without a Click redirect variable, a click on a JSON Template Output Node returns an empty response instead of redirecting.
+</Info>
+
 ## Best Practices
 
 - **Let engineering define the template, marketing bind the variables.** This separation keeps the schema stable while allowing marketing to experiment with different datasource bindings.

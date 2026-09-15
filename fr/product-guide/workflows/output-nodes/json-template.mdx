@@ -100,6 +100,18 @@ Un troisième mode, **Élément de Datasource n° N**, renverrait plutôt une po
 
 Votre frontend consomme simplement ces champs avec ses propres composants — la forme est toujours la même.
 
+## Redirection au clic
+
+Un JSON Template peut aussi servir de **lien cliquable**. Le template déclare une **Variable de redirection au clic** dans les [paramètres des JSON Templates](/fr/product-guide/workflows/settings#json-templates). Lorsqu'un visiteur clique, le Workflow l'envoie vers le lien contenu dans cette variable et enregistre le clic.
+
+La redirection utilise la même liaison que la variable. Liez `productUrl` au champ lien du produit : le clic mène au produit affiché. Cela reste vrai lorsqu'un Data Node de repli a fourni le produit.
+
+Le lien de clic est le lien de suivi des clics du Workflow, disponible sur la page [Intégration](/fr/product-guide/workflows/integration). Votre équipe le place sur la carte affichée. Les paramètres de suivi (identifiant utilisateur, tags UTM) sont transmis à la destination.
+
+<Info>
+  Sans Variable de redirection au clic, un clic sur un Output Node JSON Template renvoie une réponse vide au lieu de rediriger.
+</Info>
+
 ## Bonnes pratiques
 
 - **Laissez l'équipe technique définir le template, l'équipe marketing lier les variables.** Cette séparation maintient le schéma stable tout en permettant au marketing d'expérimenter avec différentes liaisons de Datasources.

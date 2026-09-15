@@ -87,10 +87,12 @@ const payload: unknown = await response.json()
 | Situation | Response |
 |---|---|
 | A destination URL is resolved | `302` to the destination, with forwarded query parameters, `rlvt_id` and `utm_term`. Non-HTTP schemes (mobile deeplinks) are redirected untouched. |
-| No destination URL, JSON Output Node | `204`, empty body. |
+| No destination URL, JSON or JSON Template Output Node | `204`, empty body. |
 | No destination URL, any other Output Node | `404`. |
 
 Set `rlvt-redirect` to override the destination resolved by the Workflow.
+
+A JSON Template Output Node resolves its destination from the template's `redirectVariable`: the click redirects to the value bound to that variable (a scalar or fixed-position variable holding a URL). Templates without `redirectVariable` return `204` unless `rlvt-redirect` is set. See [JSON Templates settings](/product-guide/workflows/settings#json-templates).
 
 ## Debug mode
 
@@ -122,7 +124,7 @@ Degraded runs are reported on the Workflow event rather than on the HTTP respons
 | _empty_ | The run completed without error. |
 | `3501` | Fatal error: the run stopped before reaching an Output Node. The response is the transparent PNG or the default output. |
 | `3502` | Silenced error: at least one Node failed but the Branch completed. Content was still served. |
-| `3503` | Click run with no destination URL — the run answered `404`. |
+| `3503` | Click run with no destination URL on a non-JSON Output Node — the run answered `404`. JSON and JSON Template Output Nodes answer `204` without emitting a code. |
 
 These codes are independent of the HTTP `error_code` values above, even though `3501` exists in both sets: `3501` on an event means a fatal execution error, `3501` on an HTTP failure means an unauthorised debug request. HTTP failures (`3000`, `3500`, validation, `500`) emit no event at all, so they never appear in analytics.
 
