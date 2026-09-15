@@ -124,7 +124,7 @@ Degraded runs are reported on the Workflow event rather than on the HTTP respons
 | _empty_ | The run completed without error. |
 | `3501` | Fatal error: the run stopped before reaching an Output Node. The response is the transparent PNG or the default output. |
 | `3502` | Silenced error: at least one Node failed but the Branch completed. Content was still served. |
-| `3503` | Click run with no destination URL — the run answered `404`. |
+| `3503` | Click run with no destination URL on a non-JSON Output Node — the run answered `404`. JSON and JSON Template Output Nodes answer `204` without emitting a code. |
 
 These codes are independent of the HTTP `error_code` values above, even though `3501` exists in both sets: `3501` on an event means a fatal execution error, `3501` on an HTTP failure means an unauthorised debug request. HTTP failures (`3000`, `3500`, validation, `500`) emit no event at all, so they never appear in analytics.
 
