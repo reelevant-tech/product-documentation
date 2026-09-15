@@ -123,6 +123,11 @@ L'onglet **JSON Templates** affiche tous les templates configurés avec leur nom
       - **Scalar** — récupérer une seule valeur, choisie automatiquement (ex. un score de fidélité unique).
       - **Datasource item #1 … #20** — toujours récupérer une position fixe dans la Datasource (ex. toujours le 2e produit).
   </Step>
+  <Step title="Choisir une variable de redirection au clic (optionnel)">
+    Utilisez le menu **Variable de redirection au clic** pour choisir la variable qui contient une URL (ex. `productUrl`). Lorsque le Workflow est appelé en mode clic, il redirige le visiteur vers cette URL et enregistre le clic.
+
+    Seules les variables **Scalar** et **Datasource item** peuvent être sélectionnées. Laissez **Aucune redirection** si le template n'a pas vocation à être cliqué.
+  </Step>
   <Step title="Enregistrer">
     Cliquez sur **Save** pour créer le template. Il devient immédiatement disponible à la sélection dans les Output Nodes JSON Template de vos Workflows.
   </Step>
@@ -130,7 +135,7 @@ L'onglet **JSON Templates** affiche tous les templates configurés avec leur nom
 
 ### Modifier un template
 
-Cliquez sur un template dans la liste pour ouvrir son panneau d'édition. Vous pouvez mettre à jour le nom, la définition JSON et les variables. Les modifications prennent effet à la **prochaine publication** de tout Workflow utilisant ce template.
+Cliquez sur un template dans la liste pour ouvrir son panneau d'édition. Vous pouvez mettre à jour le nom, la définition JSON, les variables et la variable de redirection au clic. Les modifications prennent effet à la **prochaine publication** de tout Workflow utilisant ce template.
 
 <Warning>
   Modifier le schéma (ajouter/supprimer des champs ou renommer des variables) peut casser les intégrations existantes. Coordonnez-vous avec les frontends consommateurs avant d'effectuer des changements structurels.

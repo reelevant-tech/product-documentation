@@ -87,10 +87,12 @@ const payload: unknown = await response.json()
 | Situation | Response |
 |---|---|
 | A destination URL is resolved | `302` to the destination, with forwarded query parameters, `rlvt_id` and `utm_term`. Non-HTTP schemes (mobile deeplinks) are redirected untouched. |
-| No destination URL, JSON Output Node | `204`, empty body. |
+| No destination URL, JSON or JSON Template Output Node | `204`, empty body. |
 | No destination URL, any other Output Node | `404`. |
 
 Set `rlvt-redirect` to override the destination resolved by the Workflow.
+
+A JSON Template Output Node resolves its destination from the template's `redirectVariable`: the click redirects to the value bound to that variable (a scalar or fixed-position variable holding a URL). Templates without `redirectVariable` return `204` unless `rlvt-redirect` is set. See [JSON Templates settings](/product-guide/workflows/settings#json-templates).
 
 ## Debug mode
 

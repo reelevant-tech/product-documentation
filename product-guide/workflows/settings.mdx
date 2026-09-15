@@ -123,6 +123,11 @@ The **JSON Templates** tab displays all configured templates with their name and
       - **Scalar** — retrieve a single value, chosen automatically (e.g., a single loyalty score).
       - **Datasource item #1 … #20** — always retrieve one fixed position in the datasource (e.g., always the 2nd product).
   </Step>
+  <Step title="Choose a click redirect variable (optional)">
+    Use the **Click redirect variable** dropdown to pick the variable that holds a URL (e.g., `productUrl`). When the workflow is called in click mode, it redirects the visitor to that URL and records the click.
+
+    Only **Scalar** and **Datasource item** variables can be selected. Leave **No redirect** if the template is not meant to be clicked.
+  </Step>
   <Step title="Save">
     Click **Save** to create the template. It becomes immediately available for selection in JSON Template output nodes across your workflows.
   </Step>
@@ -130,7 +135,7 @@ The **JSON Templates** tab displays all configured templates with their name and
 
 ### Editing a Template
 
-Click on a template in the list to open its edit drawer. You can update the name, JSON definition, and variables. Changes take effect on the **next publish** of any workflow using this template.
+Click on a template in the list to open its edit drawer. You can update the name, JSON definition, variables, and click redirect variable. Changes take effect on the **next publish** of any workflow using this template.
 
 <Warning>
   Changing the schema (adding/removing fields or renaming variables) may break existing integrations. Coordinate with consuming frontends before making structural changes.
