@@ -1,0 +1,124 @@
+---
+title: 'Export SIEM'
+description: "Envoyez une copie de votre journal d'audit à votre équipe sécurité au fil des événements"
+---
+
+L'export SIEM envoie une copie de votre [journal d'audit](/fr/product-guide/account/audit-log) au collecteur de votre équipe sécurité. Un SIEM (l'outil d'une équipe sécurité pour rassembler et surveiller les journaux des applications) conserve ensuite ces événements de votre côté.
+
+![Page des paramètres de l'export SIEM avec les sections collecteur, envoi et état des envois](/images/account/siem-export-settings.png)
+
+## Ce que cela vous apporte
+
+- Votre équipe sécurité voit les connexions, le provisionnement et les changements de permissions Reelevant à côté de vos autres applications.
+- Les événements lui parviennent environ une minute après s'être produits, sans export manuel.
+- Votre équipe conserve les événements aussi longtemps que votre politique l'exige, au-delà de la durée de rétention Reelevant.
+- Rien ne change dans Reelevant : le journal d'audit reste consultable comme avant.
+
+<Info>
+  L'export ne couvre que votre propre entreprise. Chaque événement porte un identifiant stable et l'heure à laquelle il s'est produit, afin que votre équipe repère les doublons sans risque.
+</Info>
+
+## Avant de commencer
+
+- Vous devez avoir la permission de modifier les paramètres de l'entreprise dans Reelevant.
+- Demandez à votre équipe sécurité l'**URL du collecteur** et, si elle en utilise un, le **secret** qui autorise Reelevant à envoyer des événements.
+- Demandez-lui le format qu'elle préfère : **JSON Reelevant** (les événements tels qu'ils apparaissent dans le journal d'audit) ou **Splunk HEC** (voir [Choisir le format](#choisir-le-format)).
+
+## Activer l'export
+
+<Steps>
+  <Step title="Ouvrir les paramètres de l'export SIEM">
+    Rendez-vous dans la section d'administration du compte et ouvrez **Export SIEM**.
+
+    ![Section collecteur avec l'interrupteur d'activation, l'URL du collecteur, le format et l'en-tête d'autorisation](/images/account/siem-export-settings.png)
+  </Step>
+  <Step title="Renseigner le collecteur">
+    Saisissez l'**URL du collecteur** fournie par votre équipe sécurité. Elle doit être une adresse publique et sécurisée.
+
+    Collez le secret dans **En-tête Authorization** si votre équipe vous en a donné un. Il est stocké chiffré et n'est plus jamais affiché.
+  </Step>
+  <Step title="Choisir le format et les catégories">
+    Sélectionnez le **Format** demandé par votre équipe sécurité.
+
+    Cochez les **Catégories** à envoyer. Seuls les événements de ces catégories sont exportés, à partir de l'enregistrement.
+  </Step>
+  <Step title="Enregistrer et vérifier la connexion">
+    Activez **Activer l'export SIEM** puis cliquez sur **Enregistrer**.
+
+    Cliquez sur **Tester la connexion** pour vérifier que Reelevant atteint le collecteur avec vos paramètres. Ce test n'envoie rien du journal d'audit.
+  </Step>
+  <Step title="Envoyer un premier lot">
+    Cliquez sur **Envoyer les événements en attente**. L'**État des envois** affiche la dernière livraison réussie, et votre équipe sécurité doit voir les événements arriver.
+  </Step>
+</Steps>
+
+<Tip>
+  Demandez à votre équipe sécurité de confirmer la réception de ce premier lot. C'est la preuve la plus simple que l'intégration fonctionne.
+</Tip>
+
+## Choisir le format
+
+| Format | À choisir quand |
+|---|---|
+| **JSON Reelevant** | Votre équipe a son propre collecteur et lira les événements tels qu'ils apparaissent dans le journal d'audit. Les événements sont envoyés par groupes. |
+| **Splunk HEC** | Votre équipe utilise Splunk. Les événements sont envoyés comme Splunk les attend, et Reelevant vérifie que Splunk a bien accepté chaque groupe. Le secret est votre jeton Splunk, précédé du mot Splunk et d'une espace. |
+
+Les deux formats transmettent les mêmes informations : l'heure, la catégorie, l'action, l'auteur, l'élément concerné et le résultat. Les mots de passe et les secrets ne sont jamais inclus, comme dans le journal d'audit lui-même.
+
+## Paramètres
+
+| Paramètre | Rôle |
+|---|---|
+| **Activer l'export SIEM** | Active ou désactive l'export. Désactivé, rien ne quitte Reelevant et la position d'envoi est conservée pour la réactivation. |
+| **URL du collecteur** | Où les événements sont envoyés. |
+| **En-tête Authorization** | Le secret envoyé avec chaque livraison, si votre équipe l'exige. Cochez **Supprimer l'en-tête enregistré** pour envoyer sans secret. |
+| **Format** | JSON Reelevant ou Splunk HEC. |
+| **Catégories** | Les types d'événements envoyés : authentification, authentification unique, provisionnement, utilisateurs, permissions, applications connectées, accès refusés, modifications effectuées via la plateforme. |
+| **Taille des lots** | Le nombre maximal d'événements envoyés ensemble. Réduisez-le si votre équipe sécurité demande des livraisons plus petites. |
+| **Tentatives par lot** | Le nombre de fois où Reelevant réessaie quand le collecteur est temporairement indisponible. |
+
+## Suivre les envois
+
+La section **État des envois** vous indique comment se porte l'export :
+
+![Section État des envois affichant le badge Opérationnel avec les dates de livraison](/images/account/siem-export-delivery-status.png)
+
+| État | Signification |
+|---|---|
+| **Désactivé** | L'export est désactivé. |
+| **Opérationnel** | La dernière livraison a réussi. **Livré jusqu'à** indique jusqu'où le journal d'audit a été envoyé. |
+| **Échecs consécutifs** | Le collecteur n'a pas pu être atteint ou a refusé les dernières livraisons. **Dernière erreur** en donne la raison. Reelevant réessaie seul, et aucun événement n'est perdu entre-temps. |
+| **En pause** | Le collecteur a rejeté une livraison pour une raison qu'un nouvel essai ne corrigera pas : mauvais secret, mauvaise adresse ou format non accepté. Plus rien n'est envoyé tant que vous n'avez pas corrigé les paramètres et cliqué sur **Enregistrer**. |
+
+![Section État des envois affichant le badge En pause et l'erreur renvoyée par le collecteur](/images/account/siem-export-delivery-status-paused.png)
+
+Une fois un export en pause corrigé, les envois reprennent exactement là où ils s'étaient arrêtés.
+
+## Bon à savoir
+
+- Les événements sont envoyés environ une minute après s'être produits, une fois définitifs dans le journal d'audit.
+- Si le collecteur est indisponible un moment, les événements attendent dans Reelevant et sont envoyés plus tard, dans l'ordre. Votre équipe sécurité peut rarement voir un événement en double, jamais en perdre un.
+- Les événements attendent aussi longtemps que la [durée de rétention](/fr/product-guide/account/audit-log#bon-%C3%A0-savoir) de votre journal d'audit. Corrigez un export en pause avant la fin de cette période.
+- Ajouter une catégorie plus tard envoie ses événements à partir de ce moment. Les événements passés de cette catégorie ne sont pas envoyés.
+- Chaque modification de ces paramètres est elle-même enregistrée dans le journal d'audit.
+
+<Warning>
+  Ne laissez pas l'export en pause au-delà de votre durée de rétention. Les événements en attente les plus anciens sont alors supprimés avec le journal d'audit et ne peuvent plus être envoyés.
+</Warning>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Journal d'audit" icon="list" href="/fr/product-guide/account/audit-log">
+    Voyez exactement quels événements sont exportés.
+  </Card>
+  <Card title="Rôles" icon="shield" href="/fr/product-guide/account/roles">
+    Contrôlez qui peut modifier les paramètres de l'entreprise, et donc cet export.
+  </Card>
+  <Card title="Authentification unique" icon="key" href="/fr/product-guide/account/single-sign-on">
+    Comprenez les événements de connexion que verra votre équipe sécurité.
+  </Card>
+  <Card title="Provisionnement automatique" icon="rotate" href="/fr/product-guide/account/scim-provisioning">
+    Comprenez les événements de provisionnement que verra votre équipe sécurité.
+  </Card>
+</CardGroup>

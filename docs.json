@@ -183,7 +183,8 @@
                   "product-guide/account/scim-provisioning",
                   "product-guide/account/scim-okta",
                   "product-guide/account/scim-entra-id",
-                  "product-guide/account/audit-log"
+                  "product-guide/account/audit-log",
+                  "product-guide/account/siem-export"
                 ]
               },
               {
@@ -660,7 +661,8 @@
                   "fr/product-guide/account/scim-provisioning",
                   "fr/product-guide/account/scim-okta",
                   "fr/product-guide/account/scim-entra-id",
-                  "fr/product-guide/account/audit-log"
+                  "fr/product-guide/account/audit-log",
+                  "fr/product-guide/account/siem-export"
                 ]
               },
               {
