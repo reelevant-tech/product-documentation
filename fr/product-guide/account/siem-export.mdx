@@ -5,7 +5,7 @@ description: "Envoyez une copie de votre journal d'audit à votre équipe sécur
 
 L'export SIEM envoie une copie de votre [journal d'audit](/fr/product-guide/account/audit-log) au collecteur de votre équipe sécurité. Un SIEM (l'outil d'une équipe sécurité pour rassembler et surveiller les journaux des applications) conserve ensuite ces événements de votre côté.
 
-{/* TODO : capture d'écran des paramètres de l'export SIEM — en attente de l'interface d'administration */}
+![Page des paramètres de l'export SIEM avec les sections collecteur, envoi et état des envois](/images/account/siem-export-settings.png)
 
 ## Ce que cela vous apporte
 
@@ -22,7 +22,7 @@ L'export SIEM envoie une copie de votre [journal d'audit](/fr/product-guide/acco
 
 - Vous devez avoir la permission de modifier les paramètres de l'entreprise dans Reelevant.
 - Demandez à votre équipe sécurité l'**URL du collecteur** et, si elle en utilise un, le **secret** qui autorise Reelevant à envoyer des événements.
-- Demandez-lui le format qu'elle préfère : **Format Reelevant** ou **Splunk HEC** (voir [Choisir le format](#choisir-le-format)).
+- Demandez-lui le format qu'elle préfère : **JSON Reelevant** (les événements tels qu'ils apparaissent dans le journal d'audit) ou **Splunk HEC** (voir [Choisir le format](#choisir-le-format)).
 
 ## Activer l'export
 
@@ -30,7 +30,7 @@ L'export SIEM envoie une copie de votre [journal d'audit](/fr/product-guide/acco
   <Step title="Ouvrir les paramètres de l'export SIEM">
     Rendez-vous dans la section d'administration du compte et ouvrez **Export SIEM**.
 
-    {/* TODO : capture d'écran des paramètres de l'export SIEM — en attente de l'interface d'administration */}
+    ![Section collecteur avec l'interrupteur d'activation, l'URL du collecteur, le format et l'en-tête d'autorisation](/images/account/siem-export-settings.png)
   </Step>
   <Step title="Renseigner le collecteur">
     Saisissez l'**URL du collecteur** fournie par votre équipe sécurité. Elle doit être une adresse publique et sécurisée.
@@ -60,8 +60,8 @@ L'export SIEM envoie une copie de votre [journal d'audit](/fr/product-guide/acco
 
 | Format | À choisir quand |
 |---|---|
-| **Format Reelevant** | Votre équipe a son propre collecteur et lira les événements tels qu'ils apparaissent dans le journal d'audit. Les événements sont envoyés par groupes. |
-| **Splunk HEC** | Votre équipe utilise Splunk. Les événements sont envoyés comme Splunk les attend, et Reelevant vérifie que Splunk a bien accepté chaque groupe. Le secret est votre jeton Splunk, précédé du mot Splunk. |
+| **JSON Reelevant** | Votre équipe a son propre collecteur et lira les événements tels qu'ils apparaissent dans le journal d'audit. Les événements sont envoyés par groupes. |
+| **Splunk HEC** | Votre équipe utilise Splunk. Les événements sont envoyés comme Splunk les attend, et Reelevant vérifie que Splunk a bien accepté chaque groupe. Le secret est votre jeton Splunk, précédé du mot Splunk et d'une espace. |
 
 Les deux formats transmettent les mêmes informations : l'heure, la catégorie, l'action, l'auteur, l'élément concerné et le résultat. Les mots de passe et les secrets ne sont jamais inclus, comme dans le journal d'audit lui-même.
 
@@ -72,7 +72,7 @@ Les deux formats transmettent les mêmes informations : l'heure, la catégorie, 
 | **Activer l'export SIEM** | Active ou désactive l'export. Désactivé, rien ne quitte Reelevant et la position d'envoi est conservée pour la réactivation. |
 | **URL du collecteur** | Où les événements sont envoyés. |
 | **En-tête Authorization** | Le secret envoyé avec chaque livraison, si votre équipe l'exige. Cochez **Supprimer l'en-tête enregistré** pour envoyer sans secret. |
-| **Format** | Format Reelevant ou Splunk HEC. |
+| **Format** | JSON Reelevant ou Splunk HEC. |
 | **Catégories** | Les types d'événements envoyés : authentification, authentification unique, provisionnement, utilisateurs, permissions, applications connectées, accès refusés, modifications effectuées via la plateforme. |
 | **Taille des lots** | Le nombre maximal d'événements envoyés ensemble. Réduisez-le si votre équipe sécurité demande des livraisons plus petites. |
 | **Tentatives par lot** | Le nombre de fois où Reelevant réessaie quand le collecteur est temporairement indisponible. |
@@ -81,12 +81,16 @@ Les deux formats transmettent les mêmes informations : l'heure, la catégorie, 
 
 La section **État des envois** vous indique comment se porte l'export :
 
+![Section État des envois affichant le badge Opérationnel avec les dates de livraison](/images/account/siem-export-delivery-status.png)
+
 | État | Signification |
 |---|---|
 | **Désactivé** | L'export est désactivé. |
 | **Opérationnel** | La dernière livraison a réussi. **Livré jusqu'à** indique jusqu'où le journal d'audit a été envoyé. |
 | **Échecs consécutifs** | Le collecteur n'a pas pu être atteint ou a refusé les dernières livraisons. **Dernière erreur** en donne la raison. Reelevant réessaie seul, et aucun événement n'est perdu entre-temps. |
 | **En pause** | Le collecteur a rejeté une livraison pour une raison qu'un nouvel essai ne corrigera pas : mauvais secret, mauvaise adresse ou format non accepté. Plus rien n'est envoyé tant que vous n'avez pas corrigé les paramètres et cliqué sur **Enregistrer**. |
+
+![Section État des envois affichant le badge En pause et l'erreur renvoyée par le collecteur](/images/account/siem-export-delivery-status-paused.png)
 
 Une fois un export en pause corrigé, les envois reprennent exactement là où ils s'étaient arrêtés.
 
