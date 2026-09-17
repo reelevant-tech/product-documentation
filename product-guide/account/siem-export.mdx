@@ -10,7 +10,7 @@ SIEM export sends a copy of your [audit log](/product-guide/account/audit-log) t
 ## What It Does For You
 
 - Your security team sees Reelevant logins, provisioning, and permission changes next to your other applications.
-- Events reach them within a few seconds of happening, without anyone exporting anything by hand.
+- Events reach them about a minute after happening, without anyone exporting anything by hand.
 - Your team keeps the events as long as your own policy requires, beyond the Reelevant retention period.
 - Nothing changes in Reelevant: the audit log stays available as before.
 
@@ -22,7 +22,7 @@ SIEM export sends a copy of your [audit log](/product-guide/account/audit-log) t
 
 - You need permission to update company settings in Reelevant.
 - Ask your security team for the **collector URL** and, if they use one, the **secret** that authorises Reelevant to send events.
-- Ask them which format they prefer: **Reelevant JSON** or **Splunk HEC** (see [Choosing the format](#choosing-the-format)).
+- Ask them which format they prefer: **Reelevant format** or **Splunk HEC** (see [Choosing the format](#choosing-the-format)).
 
 ## Enabling The Export
 
@@ -33,7 +33,7 @@ SIEM export sends a copy of your [audit log](/product-guide/account/audit-log) t
     {/* TODO: screenshot of the SIEM export settings — pending the admin interface */}
   </Step>
   <Step title="Fill in the collector">
-    Enter the **Collector URL** given by your security team. It must be a public, secure address (`https://`).
+    Enter the **Collector URL** given by your security team. It must be a public, secure address.
 
     Paste the secret in **Authorization header** if your team gave you one. It is stored encrypted and never shown again.
   </Step>
@@ -60,8 +60,8 @@ SIEM export sends a copy of your [audit log](/product-guide/account/audit-log) t
 
 | Format | Choose it when |
 |---|---|
-| **Reelevant JSON** | Your team has its own collector and will read the events as they appear in the audit log. Events are sent in groups. |
-| **Splunk HEC** | Your team uses Splunk. Events are sent the way Splunk expects them, and Reelevant checks Splunk really accepted each group. The secret is your Splunk token, entered as `Splunk <token>`. |
+| **Reelevant format** | Your team has its own collector and will read the events as they appear in the audit log. Events are sent in groups. |
+| **Splunk HEC** | Your team uses Splunk. Events are sent the way Splunk expects them, and Reelevant checks Splunk really accepted each group. The secret is your Splunk token, prefixed with the word Splunk. |
 
 Both formats send the same information: the time, the category, the action, the author, what it affected, and whether it succeeded. Passwords and secrets are never included, as in the audit log itself.
 
@@ -72,7 +72,7 @@ Both formats send the same information: the time, the category, the action, the 
 | **Enable SIEM export** | Switch the export on or off. When off, nothing leaves Reelevant and the delivery position is kept for when you switch it back on. |
 | **Collector URL** | Where events are sent. |
 | **Authorization header** | The secret sent with every delivery, if your team requires one. Tick **Remove the stored header** to send without it. |
-| **Format** | Reelevant JSON or Splunk HEC. |
+| **Format** | Reelevant format or Splunk HEC. |
 | **Categories** | Which kinds of events are sent: authentication, single sign-on, provisioning, users, permissions, connected applications, access denied, changes made through the platform. |
 | **Batch size** | How many events are sent together, at most. Lower it if your security team asks for smaller deliveries. |
 | **Attempts per batch** | How many times Reelevant tries again when the collector is temporarily unavailable. |
@@ -99,7 +99,7 @@ Once you fix a paused export, deliveries resume exactly where they stopped.
 - Every change to these settings is itself recorded in the audit log.
 
 <Warning>
-  If the export stays paused past your retention period, the oldest waiting events are removed with the rest of the audit log and cannot be sent any more.
+  Do not leave the export paused past your retention period. The oldest waiting events are then removed with the audit log and can no longer be sent.
 </Warning>
 
 ## What's Next?
