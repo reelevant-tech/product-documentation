@@ -5,9 +5,11 @@ description: 'Définissez un contrat de sortie partagé par plusieurs Datagraph 
 
 ## Vue d'ensemble
 
-Un Datagraph Entity Group est un contrat nommé qui liste les champs de sortie qu'un ensemble de Datagraph Entities doit retourner. Il rend plusieurs Entities — une par pays, par marque ou par algorithme de recommandation — interchangeables pour le consommateur qui les lit. Ouvrez **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
+Un [Datagraph Entity Group](/fr/glossary) est un contrat de sortie partagé par plusieurs Datagraph Entities. Il rend plusieurs Entities — une par pays, par marque ou par algorithme de recommandation — interchangeables pour le consommateur qui les lit. Ouvrez **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
 
-La liste affiche chaque groupe avec son **Name**, le nombre de **Fields** du contrat, le nombre d'**Entities** membres, son **Status** (**Draft** ou **Live**) et sa dernière mise à jour, ainsi que deux actions : **Edit** et **Delete**. **Create group** ouvre l'éditeur sur un nouveau Draft.
+La liste affiche chaque groupe avec son **Name**, le nombre de **Fields** du contrat, le nombre d'**Entities** membres, son **Status** (**Draft** ou **Live**) et sa dernière mise à jour. Deux actions sont disponibles : **Edit** et **Delete**. **Create group** ouvre l'éditeur sur un nouveau Draft.
+
+![Liste des Entity groups affichant le groupe listings_recommendations avec cinq champs, deux Entities et le statut Draft](/images/datahub/datagraph-entity-groups-listing.png)
 
 ## Avant de commencer
 
@@ -24,6 +26,8 @@ La barre d'outils contient le **Name** du groupe, l'action **Save**, l'action **
 | **Description** | Optionnel. À quoi sert le groupe, en termes métier. |
 
 Sous la barre d'outils, deux sections définissent le contrat et ses membres.
+
+![Éditeur d'Entity group avec les contrôles Name, Save et Publish, cinq champs de sortie avec leurs types et interrupteurs Required ou Nullable, et deux Entities membres marquées Conform](/images/datahub/datagraph-entity-group-editor.png)
 
 ### Fields
 
@@ -62,17 +66,17 @@ La conformité est vérifiée sur la version Live de chaque Entity : une modific
 
 ## Exemple détaillé
 
-Un distributeur exploite une Entity de recommandation par algorithme : `reco_bestsellers`, `reco_similar_products` et `reco_last_seen`. Un Content qui affiche une fiche produit a besoin des mêmes colonnes quel que soit l'algorithme sélectionné dans le Workflow.
+Le modèle d'annonces immobilières de [Datagraph Entities](/fr/advanced-guide/datahub/datagraph/entities) compte deux Entities qui retournent des annonces : `recommended_listings` et `listings_matching_search`. Un Content qui affiche une fiche d'annonce a besoin des mêmes colonnes quelle que soit l'Entity sélectionnée dans le Workflow.
 
 | Champ | Type | Required | Nullable |
 |-------|------|----------|----------|
-| `product_id` | `string` | Oui | Non |
-| `name` | `string` | Oui | Non |
-| `image_url` | `string` | Oui | Non |
-| `price` | `number` | Oui | Non |
-| `discount_pct` | `number` | Non | Oui |
+| `id_listing` | `string` | Oui | Non |
+| `titre` | `string` | Oui | Non |
+| `url_image` | `string` | Oui | Non |
+| `prix` | `number` | Oui | Non |
+| `score_match` | `number` | Non | Oui |
 
-Liez les trois Entities à un groupe nommé `product_recommendations`. Chacune affiche **Conform** lorsque son SQL Live retourne les quatre colonnes requises, et le Workflow peut changer d'algorithme sans modifier le Content.
+Liez les deux Entities à un groupe nommé `listings_recommendations`. Chacune affiche **Conform** lorsque son SQL Live retourne les quatre colonnes requises, et le Workflow peut changer d'Entity sans modifier le Content. Le même schéma s'applique à une Entity de recommandation par algorithme dans un modèle retail.
 
 ## Sauvegarde et publication
 
@@ -85,6 +89,8 @@ La publication exige que chaque membre soit **Conform** ; un membre en **No live
 ## Versions
 
 Ouvrez le panneau **Versions** depuis le rail de la barre d'outils. Chaque carte affiche l'état de la version, son nombre de champs, l'auteur et le commit message lorsqu'il a été renseigné. Cliquez sur une carte pour charger cette définition dans l'éditeur — l'éditeur demande confirmation si vous avez des modifications non sauvegardées. Sauvegardez pour faire de la définition chargée le nouveau Draft.
+
+![Éditeur d'Entity group avec le panneau Versions ouvert à droite, affichant une carte Draft avec le nom du groupe, son nombre de champs et l'auteur](/images/datahub/datagraph-entity-group-versions.png)
 
 ## Supprimer un groupe
 

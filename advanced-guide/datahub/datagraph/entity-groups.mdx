@@ -5,9 +5,11 @@ description: 'Define an output contract shared by several Datagraph Entities, bi
 
 ## Overview
 
-A Datagraph Entity Group is a named contract listing the output fields that a set of Datagraph Entities must return. It lets several Entities — one per country, per brand, or per recommendation algorithm — be interchangeable for the consumer that reads them. Open **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
+A [Datagraph Entity Group](/glossary) is an output contract shared by several Datagraph Entities. It lets several Entities — one per country, per brand, or per recommendation algorithm — be interchangeable for the consumer that reads them. Open **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
 
 The listing shows each group with its **Name**, the number of **Fields** in the contract, the number of member **Entities**, its **Status** (**Draft** or **Live**), and **Last update**, plus two actions: **Edit** and **Delete**. **Create group** opens the editor on a new Draft.
+
+![Entity groups listing showing the listings_recommendations group with five fields, two entities and a Draft status](/images/datahub/datagraph-entity-groups-listing.png)
 
 ## Before You Begin
 
@@ -24,6 +26,8 @@ The toolbar holds the group **Name**, the **Save** action, the **Publish** actio
 | **Description** | Optional. What the group is for, in business terms. |
 
 Below the toolbar, two sections define the contract and its members.
+
+![Entity group editor with the Name, Save and Publish controls, five output fields with their types and Required or Nullable toggles, and two member Entities marked Conform](/images/datahub/datagraph-entity-group-editor.png)
 
 ### Fields
 
@@ -62,17 +66,17 @@ Conformance is checked against the Live version of each Entity, so an unpublishe
 
 ## Worked Example
 
-A retailer runs one recommendation Entity per algorithm: `reco_bestsellers`, `reco_similar_products`, and `reco_last_seen`. A Content that displays a product card needs the same columns whichever algorithm is selected in the Workflow.
+The property listings model from [Datagraph Entities](/advanced-guide/datahub/datagraph/entities) has two Entities that return listings: `recommended_listings` and `listings_matching_search`. A Content that displays a listing card needs the same columns whichever Entity the Workflow selects.
 
 | Field | Type | Required | Nullable |
 |-------|------|----------|----------|
-| `product_id` | `string` | Yes | No |
-| `name` | `string` | Yes | No |
-| `image_url` | `string` | Yes | No |
-| `price` | `number` | Yes | No |
-| `discount_pct` | `number` | No | Yes |
+| `id_listing` | `string` | Yes | No |
+| `titre` | `string` | Yes | No |
+| `url_image` | `string` | Yes | No |
+| `prix` | `number` | Yes | No |
+| `score_match` | `number` | No | Yes |
 
-Bind the three Entities to a group named `product_recommendations`. Each shows **Conform** when its Live SQL returns the four required columns, and the Workflow can switch algorithms without changing the Content.
+Bind both Entities to a group named `listings_recommendations`. Each shows **Conform** when its Live SQL returns the four required columns, and the Workflow can switch Entities without changing the Content. The same pattern applies to one recommendation Entity per algorithm in a retail model.
 
 ## Saving and Publishing
 
@@ -85,6 +89,8 @@ Publishing requires every member to be **Conform**; a member with **No live vers
 ## Versions
 
 Open the **Versions** panel from the toolbar rail. Each card shows the version state, its field count, the author, and the commit message when one was provided. Click a card to load that definition into the editor — the editor asks for confirmation when you have unsaved changes. Save to make the loaded definition the new Draft.
+
+![Entity group editor with the Versions panel open on the right, showing a Draft card with the group name, its field count and the author](/images/datahub/datagraph-entity-group-versions.png)
 
 ## Deleting a Group
 
