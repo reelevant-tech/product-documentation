@@ -1,0 +1,108 @@
+---
+title: 'Datagraph Entity Groups'
+description: 'Définissez un contrat de sortie partagé par plusieurs Datagraph Entities, liez-y les Entities et publiez-le'
+---
+
+## Vue d'ensemble
+
+Un Datagraph Entity Group est un contrat nommé qui liste les champs de sortie qu'un ensemble de Datagraph Entities doit retourner. Il rend plusieurs Entities — une par pays, par marque ou par algorithme de recommandation — interchangeables pour le consommateur qui les lit. Ouvrez **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
+
+La liste affiche chaque groupe avec son **Name**, le nombre de **Fields** du contrat, le nombre d'**Entities** membres, son **Status** (**Draft** ou **Live**) et sa dernière mise à jour, ainsi que deux actions : **Edit** et **Delete**. **Create group** ouvre l'éditeur sur un nouveau Draft.
+
+## Avant de commencer
+
+- Les Entities à lier doivent exister et, pour publier le groupe, disposer d'une version Live. Voir [Datagraph Entities](/fr/advanced-guide/datahub/datagraph/entities).
+- Créer et modifier des groupes requiert la permission Datagraph Entity. Voir [Permissions](/fr/product-guide/account/permissions).
+
+## Organisation de l'éditeur
+
+La barre d'outils contient le **Name** du groupe, l'action **Save**, l'action **Publish** et un panneau latéral **Versions**, exactement comme dans l'éditeur d'Entity.
+
+| Champ | Description |
+|-------|-------------|
+| **Name** | L'identifiant du groupe. Utilisez le snake_case, par exemple `product_recommendations`. |
+| **Description** | Optionnel. À quoi sert le groupe, en termes métier. |
+
+Sous la barre d'outils, deux sections définissent le contrat et ses membres.
+
+### Fields
+
+**Fields** liste les sorties que chaque Entity membre doit fournir. Cliquez sur **Add field** pour en déclarer une.
+
+| Colonne | Description |
+|---------|-------------|
+| **Name** | Le nom de la colonne de sortie que l'Entity doit retourner, par exemple `product_id`. |
+| **Type** | Le type attendu. La liste est la même que pour les paramètres d'Entity, par exemple `string`, `number`, `boolean`, `datetime`, `string[]`. |
+| **Description** | Optionnel. Ce que contient le champ. |
+| **Required** | Activé, une Entity qui ne retourne pas cette colonne viole le contrat. Désactivé, la colonne peut être absente. |
+| **Nullable** | Documente que la valeur peut être vide pour certaines lignes. |
+
+### Entities
+
+**Entities** liste les Entities liées à ce contrat. Choisissez-les dans **Select entities...** ; chaque membre affiche ensuite sa **Conformance** :
+
+| Statut | Signification |
+|--------|---------------|
+| **Conform** | La version Live de l'Entity retourne chaque champ requis avec un type compatible. |
+| **No live version** | L'Entity n'a jamais été publiée. Le groupe peut être sauvegardé mais pas publié tant qu'elle en est membre. |
+| **N violation(s)** | La version Live omet un champ requis, ou le retourne avec un type incompatible. Chaque violation est listée sous le nom de l'Entity, par exemple *Missing field "price"*. |
+
+La conformité est vérifiée sur la version Live de chaque Entity : une modification non publiée d'une Entity n'a aucun effet tant qu'elle n'est pas publiée.
+
+## Règles de conformité
+
+- Un champ requis doit être présent dans la sortie de l'Entity avec un type compatible.
+- Un champ optionnel peut être absent. S'il est présent, son type doit rester compatible.
+- Deux types sont compatibles lorsqu'ils sont identiques, ou lorsqu'ils partagent la même primitive — `datetime` et `datetime_iso` correspondent tous deux à une date, par exemple.
+- Les colonnes de sortie supplémentaires retournées par une Entity sont ignorées.
+
+<Info>
+  Le contrat est appliqué des deux côtés. Sauvegarder ou publier un groupe échoue avec *Entity group contract violated* lorsqu'un membre n'est pas conforme. Publier une Entity échoue avec la même erreur lorsque sa nouvelle sortie casserait un groupe Live dont elle fait partie, et une Entity présente dans un groupe Live ne peut pas être supprimée.
+</Info>
+
+## Exemple détaillé
+
+Un distributeur exploite une Entity de recommandation par algorithme : `reco_bestsellers`, `reco_similar_products` et `reco_last_seen`. Un Content qui affiche une fiche produit a besoin des mêmes colonnes quel que soit l'algorithme sélectionné dans le Workflow.
+
+| Champ | Type | Required | Nullable |
+|-------|------|----------|----------|
+| `product_id` | `string` | Oui | Non |
+| `name` | `string` | Oui | Non |
+| `image_url` | `string` | Oui | Non |
+| `price` | `number` | Oui | Non |
+| `discount_pct` | `number` | Non | Oui |
+
+Liez les trois Entities à un groupe nommé `product_recommendations`. Chacune affiche **Conform** lorsque son SQL Live retourne les quatre colonnes requises, et le Workflow peut changer d'algorithme sans modifier le Content.
+
+## Sauvegarde et publication
+
+**Save** valide la définition — un nom non vide, des noms et types de champs valides, des Entities membres existantes — puis enregistre le Draft. *Unsaved changes* apparaît dans la barre d'outils jusqu'à la sauvegarde.
+
+Cliquez sur **Publish** pour promouvoir le Draft en Live. La fenêtre **Publish entity group** accepte un **Commit message** optionnel décrivant le changement. La version Live précédente devient Inactive, et une nouvelle copie Draft est créée pour poursuivre l'édition.
+
+La publication exige que chaque membre soit **Conform** ; un membre en **No live version** bloque la publication.
+
+## Versions
+
+Ouvrez le panneau **Versions** depuis le rail de la barre d'outils. Chaque carte affiche l'état de la version, son nombre de champs, l'auteur et le commit message lorsqu'il a été renseigné. Cliquez sur une carte pour charger cette définition dans l'éditeur — l'éditeur demande confirmation si vous avez des modifications non sauvegardées. Sauvegardez pour faire de la définition chargée le nouveau Draft.
+
+## Supprimer un groupe
+
+**Delete** dans la liste supprime le groupe et toutes ses versions. La fenêtre avertit que *Contents bound to this group will stop resolving* ; l'opération est irréversible. Les Entities membres ne sont pas supprimées.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+    Écrivez le SQL et publiez les Entities qui rejoignent un groupe.
+  </Card>
+  <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
+    Ajoutez les colonnes et relations dont votre SQL a besoin.
+  </Card>
+  <Card title="Query an Entity" icon="diagram-project" href="/fr/advanced-guide/workflows/data-nodes/datagraph">
+    Consommez une Entity publiée dans un Workflow.
+  </Card>
+  <Card title="Permissions" icon="lock" href="/fr/product-guide/account/permissions">
+    Accordez la permission Datagraph Entity à votre équipe data.
+  </Card>
+</CardGroup>

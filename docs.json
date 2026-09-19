@@ -229,7 +229,8 @@
                       "advanced-guide/datahub/datagraph/overview",
                       "advanced-guide/datahub/datagraph/schema",
                       "advanced-guide/datahub/datagraph/explorer",
-                      "advanced-guide/datahub/datagraph/entities"
+                      "advanced-guide/datahub/datagraph/entities",
+                      "advanced-guide/datahub/datagraph/entity-groups"
                     ]
                   },
                   "advanced-guide/datahub/csv-options",
@@ -707,7 +708,8 @@
                       "fr/advanced-guide/datahub/datagraph/overview",
                       "fr/advanced-guide/datahub/datagraph/schema",
                       "fr/advanced-guide/datahub/datagraph/explorer",
-                      "fr/advanced-guide/datahub/datagraph/entities"
+                      "fr/advanced-guide/datahub/datagraph/entities",
+                      "fr/advanced-guide/datahub/datagraph/entity-groups"
                     ]
                   },
                   "fr/advanced-guide/datahub/csv-options",
