@@ -25,10 +25,37 @@ La source S3 récupère des fichiers de données depuis un bucket Amazon S3 ou t
 | `endpoint` | URL d'endpoint personnalisée pour les services compatibles S3. Par défaut `https://s3.amazonaws.com` pour AWS S3 standard. |
 | `region` | La région AWS où se trouve le bucket (par ex. `eu-west-1`, `us-east-1`). |
 | `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+| `assumeRole` | Lit un bucket appartenant à un autre compte AWS en endossant un rôle IAM (voir [Accès inter-comptes](#acces-inter-comptes-avec-assumerole) ci-dessous). |
 
 <Tip>
-  Pour AWS S3 standard, la `accessKey` doit appartenir à un utilisateur ou rôle IAM disposant au minimum des permissions `s3:GetObject` et `s3:ListBucket` sur le bucket cible.
+  Pour AWS S3 standard, la `accessKey` doit appartenir à un utilisateur ou rôle IAM disposant au minimum des permissions `s3:GetObject` et `s3:ListBucket` sur le bucket cible (ou, avec `assumeRole`, de la permission d'endosser un rôle qui les possède).
 </Tip>
+
+### Accès inter-comptes avec AssumeRole
+
+Lorsque le bucket appartient à votre propre compte AWS, vous pouvez préférer ne pas confier à Reelevant une clé qui le lit directement. Créez plutôt dans votre compte un rôle IAM que Reelevant est autorisé à **endosser** : les clés de Reelevant servent uniquement à obtenir des identifiants temporaires pour ce rôle, et ce sont ces identifiants qui listent et téléchargent les fichiers.
+
+Renseignez le champ `assumeRole` avec les options suivantes :
+
+| Champ | Obligatoire | Description |
+|-------|----------|-------------|
+| `roleArn` | Oui | L'ARN du rôle à endosser, par ex. `arn:aws:iam::123456789012:role/reelevant-feeds`. |
+| `externalId` | Non | L'external ID attendu par la trust policy du rôle. Recommandé : il empêche quiconque d'autre d'endosser le rôle via Reelevant. |
+| `sessionName` | Non | Nom de la session du rôle, visible dans vos logs CloudTrail. Par défaut `reelevant-datasource-<id de la Datasource>`. De 2 à 64 caractères parmi lettres, chiffres et `+=,.@-_`. |
+| `durationSeconds` | Non | Durée de vie des identifiants temporaires, de `900` à `43200` secondes. Par défaut `3600`. Ne doit pas dépasser la durée de session maximale du rôle. Les identifiants sont renouvelés automatiquement pendant les imports longs. |
+| `stsEndpoint` | Non | Endpoint STS personnalisé, uniquement pour les services compatibles S3 proposant leur propre STS. Laissez vide pour AWS : Reelevant utilise l'endpoint de la `region` configurée. |
+
+Avec `assumeRole` renseigné, `accessKey` et `secretKey` sont les identifiants de base de Reelevant (fournis par votre Technical Account Manager), et non une clé de votre compte. `bucket`, `path`, `region` et les autres options conservent la même signification.
+
+**Sur votre compte AWS**, configurez le rôle ainsi :
+
+1. **Trust policy** : autorisez l'action `sts:AssumeRole` pour le principal IAM de Reelevant (ARN d'utilisateur ou de rôle fourni par votre Technical Account Manager). Si vous utilisez un `externalId`, ajoutez une condition exigeant que `sts:ExternalId` soit égal à cette valeur.
+2. **Permissions policy** : accordez `s3:ListBucket` sur le bucket et `s3:GetObject` sur les objets sous le `path` configuré. Si le bucket utilise le chiffrement SSE-KMS, accordez aussi `kms:Decrypt` sur la clé.
+3. **Durée de session maximale** : conservez-la supérieure ou égale à `durationSeconds`.
+
+<Info>
+  La configuration de la Datasource est rejetée si `roleArn` n'est pas un ARN de rôle IAM valide, si `durationSeconds` est hors limites, ou si `externalId` est vide. `accessKey`, `secretKey` et `externalId` sont stockés comme champs sensibles et ne sont jamais affichés une fois enregistrés. Les identifiants temporaires sont conservés uniquement en mémoire.
+</Info>
 
 ### Services compatibles S3
 
@@ -98,7 +125,7 @@ Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière d
 
 ## Fonctionnement
 
-1. Reelevant s'authentifie auprès de S3 avec la clé d'accès et la clé secrète fournies.
+1. Reelevant s'authentifie auprès de S3 avec la clé d'accès et la clé secrète fournies. Avec `assumeRole`, il les échange d'abord contre des identifiants temporaires du rôle configuré.
 2. Le bucket et le chemin spécifiés sont accédés. Si un wildcard est utilisé, les objets correspondants sont listés.
 3. Les fichiers sont téléchargés, décompressés si nécessaire, et parsés selon le format détecté.
 4. Les champs sont extraits et rendus disponibles pour le [mapping](/fr/advanced-guide/datahub/field-mapping).
