@@ -122,6 +122,14 @@ La page **Entity queries** — accessible via l'action **Query** ou **Open query
 
 Cliquez sur **Publish** pour promouvoir le Draft en Live. La version Live précédente devient Inactive, et une nouvelle copie Draft est créée pour poursuivre les modifications. Seules les Entities Live sont sélectionnables dans les Workflows.
 
+<Info>
+  Lorsque l'Entity appartient à un [Datagraph Entity Group](/fr/advanced-guide/datahub/datagraph/entity-groups) Live, la publication échoue avec *Entity group contract violated* si les nouvelles colonnes de sortie ne respectent plus le contrat du groupe. Une Entity présente dans un groupe Live ne peut pas non plus être supprimée.
+</Info>
+
+## Partager un contrat entre plusieurs Entities
+
+Plusieurs Entities qui répondent à la même question pour des segments différents — un algorithme de recommandation par Entity, par exemple — peuvent être liées à un Datagraph Entity Group. Le groupe déclare les champs que chaque membre doit retourner, et vérifie la version Live de chaque membre. Voir [Datagraph Entity Groups](/fr/advanced-guide/datahub/datagraph/entity-groups).
+
 ## Utiliser une Entity dans un Workflow
 
 Ajoutez le Data Node **Query an entity** — *Run a datagraph entity query and expose its results to the workflow*.
@@ -141,6 +149,9 @@ Ajoutez le Data Node **Query an entity** — *Run a datagraph entity query and e
 ## Et ensuite ?
 
 <CardGroup cols={2}>
+  <Card title="Entity Groups" icon="layer-group" href="/fr/advanced-guide/datahub/datagraph/entity-groups">
+    Liez plusieurs Entities à un même contrat de sortie.
+  </Card>
   <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
     Ajoutez les colonnes et relations dont votre SQL a besoin.
   </Card>

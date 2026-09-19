@@ -122,6 +122,14 @@ The **Entity queries** page — reachable with the **Query** action or **Open qu
 
 Click **Publish** to promote the Draft to Live. The previous Live version becomes Inactive, and a new Draft copy is created so editing can continue. Only Live Entities are selectable in Workflows.
 
+<Info>
+  When the Entity belongs to a Live [Datagraph Entity Group](/advanced-guide/datahub/datagraph/entity-groups), publishing fails with *Entity group contract violated* if the new output columns no longer satisfy the group contract. An Entity listed in a Live group cannot be deleted either.
+</Info>
+
+## Sharing a Contract Across Entities
+
+Several Entities that answer the same question for different segments — one recommendation algorithm per Entity, for example — can be bound to a Datagraph Entity Group. The group declares the fields every member must return, and checks the Live version of each member against it. See [Datagraph Entity Groups](/advanced-guide/datahub/datagraph/entity-groups).
+
 ## Using an Entity in a Workflow
 
 Add the **Query an entity** Data Node — *Run a datagraph entity query and expose its results to the workflow*.
@@ -141,6 +149,9 @@ Add the **Query an entity** Data Node — *Run a datagraph entity query and expo
 ## What's Next?
 
 <CardGroup cols={2}>
+  <Card title="Entity Groups" icon="layer-group" href="/advanced-guide/datahub/datagraph/entity-groups">
+    Bind several Entities to one shared output contract.
+  </Card>
   <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
     Add the columns and relations your SQL needs.
   </Card>

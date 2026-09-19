@@ -108,6 +108,11 @@ terms:
     definition: "A named SQL query over the Datagraph Schema, with declared parameters and inferred output columns, consumable by a Workflow."
     synonyms_forbidden: ["entity query", "saved query", "dataset", "view"]
 
+  datagraph_entity_group:
+    canonical_name: "Datagraph Entity Group"
+    definition: "A named contract listing the output fields that a set of Datagraph Entities must return, so they can be used interchangeably."
+    synonyms_forbidden: ["entity contract", "entity set", "entity collection", "interface"]
+
   resource_group:
     canonical_name: "Team"
     definition: "An organisational unit (Resource Group) for controlling access to Workflows, Contents, and Datasources."
