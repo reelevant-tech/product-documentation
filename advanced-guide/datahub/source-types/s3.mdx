@@ -28,12 +28,12 @@ The S3 source retrieves data files from an Amazon S3 bucket or any S3-compatible
 | `assumeRole` | Read a bucket owned by another AWS account by assuming an IAM role (see [Cross-account access](#cross-account-access-with-assumerole) below). |
 
 <Tip>
-  For standard AWS S3, the `accessKey` must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket (or, with `assumeRole`, permission to assume a role that has them).
+  For standard AWS S3, the `accessKey` must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket. With `assumeRole`, it only needs permission to assume a role that has them.
 </Tip>
 
 ### Cross-account access with AssumeRole
 
-When the bucket belongs to your own AWS account, you may prefer not to hand Reelevant a key that reads it directly. Instead, create an IAM role in your account that Reelevant is allowed to **assume**: Reelevant's own keys are only used to obtain short-lived credentials for that role, and those credentials are used to list and download the files.
+When the bucket belongs to your own AWS account, you may prefer not to hand Reelevant a key that reads it directly. Instead, create an IAM role in your account that Reelevant is allowed to **assume**. Reelevant's own keys are only used to obtain short-lived credentials for that role. Those credentials are then used to list and download the files.
 
 Set the `assumeRole` field with the following options:
 
@@ -49,7 +49,7 @@ With `assumeRole` set, `accessKey` and `secretKey` are Reelevant's base credenti
 
 **On your AWS account**, configure the role as follows:
 
-1. **Trust policy**: allow the `sts:AssumeRole` action for the Reelevant IAM principal (user or role ARN provided by your Technical Account Manager). If you use an `externalId`, add a condition requiring `sts:ExternalId` to equal that value.
+1. **Trust policy**: allow the `sts:AssumeRole` action for the Reelevant IAM principal (ARN provided by your Technical Account Manager). If you use an `externalId`, add a condition requiring `sts:ExternalId` to equal that value.
 2. **Permissions policy**: grant `s3:ListBucket` on the bucket and `s3:GetObject` on the objects under the configured `path`. If the bucket uses SSE-KMS encryption, also grant `kms:Decrypt` on the key.
 3. **Maximum session duration**: keep it greater than or equal to `durationSeconds`.
 
