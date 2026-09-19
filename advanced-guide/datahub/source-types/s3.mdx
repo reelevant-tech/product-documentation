@@ -25,10 +25,37 @@ The S3 source retrieves data files from an Amazon S3 bucket or any S3-compatible
 | `endpoint` | Custom endpoint URL for S3-compatible services. Defaults to `https://s3.amazonaws.com` for standard AWS S3. |
 | `region` | The AWS region where the bucket is located (e.g. `eu-west-1`, `us-east-1`). |
 | `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
+| `assumeRole` | Read a bucket owned by another AWS account by assuming an IAM role (see [Cross-account access](#cross-account-access-with-assumerole) below). |
 
 <Tip>
-  For standard AWS S3, the `accessKey` must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket.
+  For standard AWS S3, the `accessKey` must belong to an IAM user or role with at least `s3:GetObject` and `s3:ListBucket` permissions on the target bucket (or, with `assumeRole`, permission to assume a role that has them).
 </Tip>
+
+### Cross-account access with AssumeRole
+
+When the bucket belongs to your own AWS account, you may prefer not to hand Reelevant a key that reads it directly. Instead, create an IAM role in your account that Reelevant is allowed to **assume**: Reelevant's own keys are only used to obtain short-lived credentials for that role, and those credentials are used to list and download the files.
+
+Set the `assumeRole` field with the following options:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `roleArn` | Yes | The ARN of the role to assume, e.g. `arn:aws:iam::123456789012:role/reelevant-feeds`. |
+| `externalId` | No | The external ID expected by the role's trust policy. Recommended: it prevents anyone else from assuming the role through Reelevant. |
+| `sessionName` | No | Name of the role session, visible in your CloudTrail logs. Defaults to `reelevant-datasource-<datasource id>`. 2 to 64 characters among letters, digits and `+=,.@-_`. |
+| `durationSeconds` | No | Lifetime of the temporary credentials, from `900` to `43200` seconds. Defaults to `3600`. Must not exceed the role's maximum session duration. Credentials are renewed automatically during long imports. |
+| `stsEndpoint` | No | Custom STS endpoint, only for S3-compatible services that offer their own STS. Leave empty for AWS: Reelevant uses the endpoint of the configured `region`. |
+
+With `assumeRole` set, `accessKey` and `secretKey` are Reelevant's base credentials (provided by your Technical Account Manager), not a key from your account. `bucket`, `path`, `region` and the other options keep the same meaning.
+
+**On your AWS account**, configure the role as follows:
+
+1. **Trust policy**: allow the `sts:AssumeRole` action for the Reelevant IAM principal (user or role ARN provided by your Technical Account Manager). If you use an `externalId`, add a condition requiring `sts:ExternalId` to equal that value.
+2. **Permissions policy**: grant `s3:ListBucket` on the bucket and `s3:GetObject` on the objects under the configured `path`. If the bucket uses SSE-KMS encryption, also grant `kms:Decrypt` on the key.
+3. **Maximum session duration**: keep it greater than or equal to `durationSeconds`.
+
+<Info>
+  The Datasource configuration is rejected if `roleArn` is not a valid IAM role ARN, if `durationSeconds` is out of range, or if `externalId` is empty. `accessKey`, `secretKey` and `externalId` are stored as sensitive fields and never displayed once saved. Temporary credentials are kept in memory only.
+</Info>
 
 ### S3-Compatible Services
 
@@ -98,7 +125,7 @@ When using wildcard paths, you can configure how files are selected via the `pro
 
 ## How It Works
 
-1. Reelevant authenticates with S3 using the provided access key and secret key.
+1. Reelevant authenticates with S3 using the provided access key and secret key. With `assumeRole`, it first exchanges them for temporary credentials of the configured role.
 2. The specified bucket and path are accessed. If a wildcard is used, matching objects are listed.
 3. Files are downloaded, decompressed if needed, and parsed based on the detected format.
 4. Fields are extracted and made available for [mapping](/advanced-guide/datahub/field-mapping).
