@@ -28,12 +28,12 @@ La source S3 récupère des fichiers de données depuis un bucket Amazon S3 ou t
 | `assumeRole` | Lit un bucket appartenant à un autre compte AWS en endossant un rôle IAM (voir [Accès inter-comptes](#acces-inter-comptes-avec-assumerole) ci-dessous). |
 
 <Tip>
-  Pour AWS S3 standard, la `accessKey` doit appartenir à un utilisateur ou rôle IAM disposant au minimum des permissions `s3:GetObject` et `s3:ListBucket` sur le bucket cible (ou, avec `assumeRole`, de la permission d'endosser un rôle qui les possède).
+  Pour AWS S3 standard, la `accessKey` doit appartenir à un utilisateur ou rôle IAM disposant au minimum des permissions `s3:GetObject` et `s3:ListBucket` sur le bucket cible. Avec `assumeRole`, seule la permission d'endosser un rôle qui les possède est nécessaire.
 </Tip>
 
 ### Accès inter-comptes avec AssumeRole
 
-Lorsque le bucket appartient à votre propre compte AWS, vous pouvez préférer ne pas confier à Reelevant une clé qui le lit directement. Créez plutôt dans votre compte un rôle IAM que Reelevant est autorisé à **endosser** : les clés de Reelevant servent uniquement à obtenir des identifiants temporaires pour ce rôle, et ce sont ces identifiants qui listent et téléchargent les fichiers.
+Lorsque le bucket appartient à votre propre compte AWS, vous pouvez préférer ne pas confier à Reelevant une clé qui le lit directement. Créez plutôt dans votre compte un rôle IAM que Reelevant est autorisé à **endosser**. Les clés de Reelevant servent uniquement à obtenir des identifiants temporaires pour ce rôle. Ce sont ensuite ces identifiants qui listent et téléchargent les fichiers.
 
 Renseignez le champ `assumeRole` avec les options suivantes :
 
@@ -49,7 +49,7 @@ Avec `assumeRole` renseigné, `accessKey` et `secretKey` sont les identifiants d
 
 **Sur votre compte AWS**, configurez le rôle ainsi :
 
-1. **Trust policy** : autorisez l'action `sts:AssumeRole` pour le principal IAM de Reelevant (ARN d'utilisateur ou de rôle fourni par votre Technical Account Manager). Si vous utilisez un `externalId`, ajoutez une condition exigeant que `sts:ExternalId` soit égal à cette valeur.
+1. **Trust policy** : autorisez l'action `sts:AssumeRole` pour le principal IAM de Reelevant (ARN fourni par votre Technical Account Manager). Si vous utilisez un `externalId`, ajoutez une condition exigeant que `sts:ExternalId` soit égal à cette valeur.
 2. **Permissions policy** : accordez `s3:ListBucket` sur le bucket et `s3:GetObject` sur les objets sous le `path` configuré. Si le bucket utilise le chiffrement SSE-KMS, accordez aussi `kms:Decrypt` sur la clé.
 3. **Durée de session maximale** : conservez-la supérieure ou égale à `durationSeconds`.
 
