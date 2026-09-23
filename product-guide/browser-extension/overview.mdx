@@ -41,6 +41,16 @@ The Reelevant Browser Extension is a Chrome and Edge extension that helps you in
   </Step>
 </Steps>
 
+## Debugging a Workflow from your website
+
+When the extension detects Reelevant content on a page, its toolbox offers **Open debugging view**. This opens the Workflow run behind that content with its execution details (time spent per Node, data used, errors).
+
+The debugging view is protected: the Runner (the system that executes Workflows) only shows it with a valid debug token. The extension creates this token for you and attaches it automatically while you are logged in, so you never need to copy it by hand.
+
+<Info>
+  The token is tied to your account and your company. If the debugging view answers with an error, check that you are still logged in to the extension, then reload the page.
+</Info>
+
 ## What's Next?
 
 <CardGroup cols={2}>

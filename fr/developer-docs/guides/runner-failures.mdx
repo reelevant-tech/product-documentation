@@ -112,6 +112,15 @@ curl "https://reelevant.run/<workflow_id>/0?rlvt-u=user@example.com&mode=debug" 
 
 Les tokens durent 15 minutes et sont limités à la société propriétaire du Workflow. Un token absent, expiré ou hors périmètre renvoie l'`error_code` `3501` avec le statut HTTP `401`.
 
+### Injection automatique par l'extension navigateur
+
+L'[extension navigateur](/fr/product-guide/browser-extension/overview) génère elle-même ce token et injecte `x-rlvt-debug-token` sur chaque navigation de premier niveau ou d'iframe vers `reelevant.run` tant que vous êtes connecté. Ouvrir `mode=debug` ou `mode=ui-debug` depuis la boîte à outils de l'extension, ou coller une telle URL dans la barre d'adresse, ne nécessite donc aucun token manuel.
+
+- Le token est généré avec la session de l'extension : il porte le même périmètre société que votre compte (les admins plateforme obtiennent un token wildcard).
+- Il est rafraîchi au plus toutes les 5 minutes, bien en dessous du TTL de 15 minutes, et l'en-tête est retiré à la déconnexion.
+- Le Runner ne lit l'en-tête que sur `mode=debug` / `mode=ui-debug` : il est inerte sur les requêtes classiques.
+- Les admins plateforme peuvent coller un **Jeton de débogage personnalisé** dans les paramètres de l'extension pour remplacer celui généré automatiquement.
+
 ## Codes de retour d'exécution
 
 Les exécutions dégradées sont remontées sur l'événement de Workflow, pas sur la réponse HTTP. Chaque exécution émet un événement portant un code de retour, exposé via :
