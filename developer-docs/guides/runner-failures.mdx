@@ -112,6 +112,15 @@ curl "https://reelevant.run/<workflow_id>/0?rlvt-u=user@example.com&mode=debug" 
 
 Tokens live 15 minutes and are scoped to the company that owns the Workflow. A missing, expired or out-of-scope token returns `error_code` `3501` with HTTP `401`.
 
+### Automatic injection by the browser extension
+
+The [browser extension](/product-guide/browser-extension/overview) mints this token itself and injects `x-rlvt-debug-token` on every top-level and iframe navigation to `reelevant.run` while you are logged in. Opening `mode=debug` or `mode=ui-debug` from the extension toolbox, or pasting such a URL in the address bar, therefore needs no manual token.
+
+- The token is minted with the extension session, so it carries the same company scope as your account (platform admins get a wildcard token).
+- It is refreshed at most every 5 minutes, well under the 15-minute TTL, and the header is removed on logout.
+- The Runner only reads the header on `mode=debug` / `mode=ui-debug`, so it is inert on regular requests.
+- Platform admins can paste a **Custom debug token** in the extension settings to override the minted one.
+
 ## Execution return codes
 
 Degraded runs are reported on the Workflow event rather than on the HTTP response. Each run emits one event carrying an execution return code, exposed as:

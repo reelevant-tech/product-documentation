@@ -41,6 +41,16 @@ L'extension navigateur Reelevant est une extension Chrome et Edge qui vous aide 
   </Step>
 </Steps>
 
+## Déboguer un Workflow depuis votre site web
+
+Lorsque l'extension détecte un Content Reelevant sur une page, sa boîte à outils propose **Ouvrir la vue de débogage**. Elle ouvre l'exécution du Workflow derrière ce Content avec ses détails (temps passé par Node, données utilisées, erreurs).
+
+La vue de débogage est protégée : le Runner (le système qui exécute les Workflows) ne l'affiche qu'avec un jeton de débogage valide. L'extension crée ce jeton pour vous et l'attache automatiquement tant que vous êtes connecté, vous n'avez donc jamais à le copier à la main.
+
+<Info>
+  Le jeton est lié à votre compte et à votre société. Si la vue de débogage renvoie une erreur, vérifiez que vous êtes toujours connecté à l'extension, puis rechargez la page.
+</Info>
+
 ## Et ensuite ?
 
 <CardGroup cols={2}>
