@@ -292,7 +292,7 @@ Après l'upload du fichier, la Datasource retraite automatiquement le nouveau fi
 
 ### Envoi de plusieurs fichiers dans une même session SFTP
 
-En SFTP, tous les fichiers envoyés au cours d'une même session sont traités en une seule mise à jour plutôt qu'une mise à jour par fichier. Le traitement démarre à la fermeture de la session, ou après environ une minute sans nouvel upload si la session reste ouverte.
+En SFTP, les fichiers envoyés à la suite au cours d'une même session sont regroupés en une seule mise à jour plutôt qu'une mise à jour par fichier. Un groupe est traité à la fermeture de la session, ou après environ une minute sans nouvel upload si la session reste ouverte ; les fichiers envoyés plus tard dans une session toujours ouverte forment le groupe suivant.
 
 ```bash
 sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF

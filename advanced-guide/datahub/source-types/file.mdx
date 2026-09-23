@@ -292,7 +292,7 @@ After the file is uploaded, the Datasource automatically re-processes the new fi
 
 ### Pushing Several Files in One SFTP Session
 
-Over SFTP, every file pushed within the same session is processed in a single update rather than one update per file. Processing starts when the session is closed, or after about one minute without a new upload if the session stays open.
+Over SFTP, files pushed back-to-back within the same session are grouped into a single update rather than one update per file. A group is processed when the session is closed, or after about one minute without a new upload if the session stays open; files pushed later in a still-open session form the next group.
 
 ```bash
 sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
