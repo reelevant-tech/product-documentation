@@ -1,0 +1,122 @@
+---
+title: "Composant Composition d'images"
+description: "Combinez plusieurs images produits en un seul visuel, avec détourage automatique"
+---
+
+<Note>
+  **Bêta** — La Composition d'images est en bêta et réservée aux administrateurs techniques. Ses options peuvent encore évoluer. Contactez votre Technical Account Manager si vous ne la voyez pas dans la barre d'outils.
+</Note>
+
+Le composant Composition d'images construit un visuel unique à partir de plusieurs images, disposées automatiquement et personnalisées par destinataire.
+
+![Éditeur de Content avec une Composition d'images de trois flacons détourés disposés en arc et son panneau de configuration](/images/contents/component-image-composition-v1.png)
+
+## Vue d'ensemble
+
+Un [composant Image](/fr/product-guide/contents/components/image) classique affiche une seule image. La Composition d'images prend une liste d'images et les assemble pour vous en un seul visuel.
+
+Chaque image peut venir d'un import, d'une URL ou d'une variable de [Datasource](/fr/product-guide/contents/data-binding). La composition change donc par destinataire, par exemple les trois produits qu'il a consultés.
+
+| Propriété | Valeur |
+|-----------|--------|
+| **Bouton de la barre d'outils** | Composition d'images |
+| **Data binding** | Oui — chaque image, une par une |
+| **Conditions** | Oui |
+| **Disponibilité** | Bêta, administrateurs techniques uniquement |
+
+<Tip>
+  Utilisez-la pour des visuels de cross-sell, des rappels de panier abandonné ou une bannière « votre sélection » dont le nombre de produits n'est pas connu à l'avance.
+</Tip>
+
+## Ajouter des images
+
+![Panneau de configuration avec l'image 1 dépliée : sa source, Détourer l'image, Poids visuel et Transformations](/images/contents/component-image-composition-sources.png)
+
+<Steps>
+  <Step title="Insérez le composant">
+    Dans l'[Éditeur de Content](/fr/product-guide/contents/editor), choisissez **Composition d'images** dans la barre d'outils, puis tracez-la sur le canvas.
+  </Step>
+  <Step title="Ajoutez vos images">
+    Dans la section **Images** du panneau de configuration, cliquez sur **Ajouter une image** pour chaque image du visuel.
+  </Step>
+  <Step title="Choisissez la source de chaque image">
+    Ouvrez une image et définissez sa source : importez un fichier, collez une URL ou choisissez une variable de Datasource contenant une adresse d'image.
+  </Step>
+  <Step title="Ordonnez-les">
+    Utilisez **Placer l'image derrière** et **Placer l'image devant** pour décider quelle image recouvre l'autre.
+  </Step>
+</Steps>
+
+<Warning>
+  Supprimer une image de la liste supprime aussi ses réglages, y compris ses transformations. Il n'y a pas de retour arrière dans le panneau.
+</Warning>
+
+## Détourer l'image
+
+**Détourer l'image** rend le fond transparent avant la composition. C'est l'option qui transforme de simples packshots catalogue en produits posés naturellement côte à côte.
+
+La plateforme le fait pour vous, conserve le résultat et le réutilise la prochaine fois que la même image est composée. Packaging, étiquettes, marques et couleurs sont préservés — seul le fond disparaît.
+
+<Tip>
+  Le détourage donne les meilleurs résultats sur des packshots catalogue sur fond uni. Les photos d'ambiance au fond chargé sont moins prévisibles.
+</Tip>
+
+## Transformer chaque image
+
+Chaque image a ses propres **Transformations** et **Ajustements**, pour faire ressortir un petit produit à côté d'un grand.
+
+| Option | Effet |
+|--------|-------|
+| **Rogner** | Rogne les marges transparentes autour de l'image. |
+| **Ajustement** | Contenir, Remplir ou Étirer l'image dans son espace. |
+| **Échelle** | Agrandit ou réduit l'image. |
+| **Rotation** | Fait tourner l'image. |
+| **Opacité** | Rend l'image plus ou moins transparente. |
+| **Miroir** | Inverse l'image horizontalement, verticalement ou les deux. |
+| **Ombre** | Projette une ombre suivant la forme de l'image. |
+| **Poids visuel** | Définit la taille relative de cette image dans la composition. |
+
+Les ajustements couvrent **Luminosité**, **Contraste**, **Saturation**, **Niveaux de gris**, **Flou** et **Teinte**, pour harmoniser des images venant de catalogues différents.
+
+## Choisir une disposition
+
+![Panneau de configuration avec la liste de trois images, les options de la disposition Arc, Fond et Équilibrer les tailles](/images/contents/component-image-composition-layout.png)
+
+La disposition décide de la place des images dans le composant.
+
+| Disposition | Idéale pour | Options |
+|-------------|-------------|---------|
+| **Arc** | Un groupe de produits naturel, légèrement superposé | Chevauchement, Courbure, Alignement |
+| **Ligne** | Une simple ligne de produits | Espacement, Alignement |
+| **Grille** | Plusieurs produits en rangées régulières | Colonnes, Espacement |
+| **Libre** | Un contrôle total de chaque position | Position et taille par image |
+
+Deux interrupteurs terminent la composition :
+
+- **Fond** ajoute une couleur derrière les images, utile une fois les fonds détourés.
+- **Équilibrer les tailles** met les images à l'échelle pour un poids visuel équivalent, afin qu'un petit flacon ne soit pas écrasé par une grande boîte.
+
+## Prévisualiser le résultat
+
+La composition est construite pour vous et affichée directement sur le canvas : vous voyez le visuel final pendant que vous travaillez. Changer une disposition, une couleur ou une transformation rafraîchit l'aperçu.
+
+<Tip>
+  Le premier aperçu d'une nouvelle image peut prendre quelques secondes, le temps de préparer sa version transparente. Les aperçus suivants sont immédiats.
+</Tip>
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Composant Image" icon="image" href="/fr/product-guide/contents/components/image">
+    Ajoutez une image unique, statique ou liée aux données.
+  </Card>
+  <Card title="Data Binding" icon="link" href="/fr/product-guide/contents/data-binding">
+    Alimentez chaque image depuis une variable de Datasource.
+  </Card>
+  <Card title="Conditions" icon="filter" href="/fr/product-guide/contents/conditions">
+    N'affichez la composition qu'à la bonne audience.
+  </Card>
+  <Card title="Tous les composants" icon="shapes" href="/fr/product-guide/contents/components">
+    Découvrez les autres types de composants.
+  </Card>
+</CardGroup>
