@@ -1,0 +1,122 @@
+---
+title: 'Image Composition Component'
+description: 'Combine several product images into one visual, with automatic background removal'
+---
+
+<Note>
+  **Beta** — Image Composition is in beta and only available to technical administrators. Its options can still change. Ask your Technical Account Manager if you cannot see it in the toolbar.
+</Note>
+
+The Image Composition component builds a single visual from several images, arranged automatically and personalised per recipient.
+
+![Content Editor with an Image Composition of three transparent perfume bottles arranged in an arc, and its configuration panel](/images/contents/component-image-composition-v1.png)
+
+## Overview
+
+A classic [Image component](/product-guide/contents/components/image) shows one picture. Image Composition takes a list of images and assembles them into one visual for you.
+
+Each image can come from an upload, a URL, or a [Datasource](/product-guide/contents/data-binding) variable. That means the composition changes per recipient, for example the three products someone browsed.
+
+| Property | Value |
+|----------|-------|
+| **Toolbar button** | Image composition |
+| **Supports data binding** | Yes — every image, one by one |
+| **Supports conditions** | Yes |
+| **Availability** | Beta, technical administrators only |
+
+<Tip>
+  Use it for cross-sell visuals, abandoned basket reminders, or a "your selection" banner where the number of products is not known in advance.
+</Tip>
+
+## Adding Images
+
+![Configuration panel with Image 1 expanded, showing its source, Remove background switch, Visual weight and Transformations](/images/contents/component-image-composition-sources.png)
+
+<Steps>
+  <Step title="Insert the component">
+    In the [Content Editor](/product-guide/contents/editor), choose **Image composition** in the toolbar, then draw it on the canvas.
+  </Step>
+  <Step title="Add your images">
+    In the **Images** section of the configuration panel, use **Add an image** for each image you want.
+  </Step>
+  <Step title="Choose where each image comes from">
+    Open an image and set its source: upload a file, paste a URL, or pick a Datasource variable holding an image address.
+  </Step>
+  <Step title="Order them">
+    Use **Move image backward** and **Move image forward** to control which image overlaps which.
+  </Step>
+</Steps>
+
+<Warning>
+  Deleting an image from the list removes its settings too, including its transformations. There is no undo inside the panel.
+</Warning>
+
+## Removing the Background
+
+**Remove background** makes an image transparent before it is composed. It is the option that turns ordinary catalogue packshots into products that sit naturally side by side.
+
+The platform does this for you, keeps the result, and reuses it the next time the same image is composed. Packaging, labels, brands and colours are preserved — only the background is removed.
+
+<Tip>
+  It works best on catalogue packshots shot on a plain background. Lifestyle photos with a busy background give less predictable results.
+</Tip>
+
+## Transforming Each Image
+
+Each image has its own **Transformations** and **Adjustments**, so you can make a small product stand out next to a large one.
+
+| Option | What it does |
+|--------|--------------|
+| **Trim** | Crops the transparent margins around the image. |
+| **Fit** | Contain, Cover or Stretch the image inside its space. |
+| **Scale** | Makes the image bigger or smaller. |
+| **Rotation** | Turns the image. |
+| **Opacity** | Makes the image more or less transparent. |
+| **Flip** | Mirrors the image horizontally, vertically or both. |
+| **Shadow** | Drops a shadow following the shape of the image. |
+| **Visual weight** | Sets the relative size of this image in the composition. |
+
+Adjustments cover **Brightness**, **Contrast**, **Saturation**, **Grayscale**, **Blur** and **Tint**, so images from different catalogues can be harmonised.
+
+## Choosing a Layout
+
+![Configuration panel showing the list of three images, the Arc layout options, Background and Balance sizes](/images/contents/component-image-composition-layout.png)
+
+The layout decides how the images are placed inside the component.
+
+| Layout | Best for | Options |
+|--------|----------|---------|
+| **Arc** | Product groups with a natural, slightly overlapping look | Overlap, Curve, Alignment |
+| **Row** | A simple line of products | Gap, Alignment |
+| **Grid** | Several products in even rows | Columns, Gap |
+| **Free** | Full control over each position | Position and size per image |
+
+Two switches finish the composition:
+
+- **Background** adds a colour behind the images, useful once backgrounds are removed.
+- **Balance sizes** scales the images to an equal visual weight, so a small bottle is not dwarfed by a large box.
+
+## Previewing the Result
+
+The composition is built for you and shown directly on the canvas, so you see the final visual while you edit. Changing a layout, a colour or a transformation repaints the preview.
+
+<Tip>
+  The first preview of a new image can take a few seconds while its transparent version is prepared. Later previews are immediate.
+</Tip>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Image Component" icon="image" href="/product-guide/contents/components/image">
+    Add a single static or data-bound image.
+  </Card>
+  <Card title="Data Binding" icon="link" href="/product-guide/contents/data-binding">
+    Feed each image from a Datasource variable.
+  </Card>
+  <Card title="Conditions" icon="filter" href="/product-guide/contents/conditions">
+    Show the composition only to the right audience.
+  </Card>
+  <Card title="All Components" icon="shapes" href="/product-guide/contents/components">
+    Explore the other component types.
+  </Card>
+</CardGroup>
