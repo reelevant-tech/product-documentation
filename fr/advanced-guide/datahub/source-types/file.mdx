@@ -290,25 +290,34 @@ Une fois que vous avez des identifiants (mot de passe ou clé SSH), uploadez un 
 
 Après l'upload du fichier, la Datasource retraite automatiquement le nouveau fichier et met à jour les données.
 
-### Envoi de plusieurs fichiers dans une même session SFTP
+### Envoi de plusieurs fichiers dans une même session
 
-En SFTP, les fichiers envoyés à la suite au cours d'une même session sont regroupés en une seule mise à jour plutôt qu'une mise à jour par fichier. Un groupe est traité à la fermeture de la session, ou après environ une minute sans nouvel upload si la session reste ouverte ; les fichiers envoyés plus tard dans une session toujours ouverte forment le groupe suivant.
+En SFTP comme en FTP, les fichiers envoyés à la suite au cours d'une même session (connexion) sont regroupés en une seule mise à jour plutôt qu'une mise à jour par fichier. Un groupe est traité à la fermeture de la session, ou après environ une minute sans nouvel upload si la session reste ouverte ; les fichiers envoyés plus tard dans une session toujours ouverte forment le groupe suivant.
 
-```bash
-sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
-put /path/to/your/products.csv products.csv
-put /path/to/your/stores.csv stores.csv
-quit
-EOF
-```
+<Tabs>
+  <Tab title="SFTP">
+    ```bash
+    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/products.csv products.csv
+    put /path/to/your/stores.csv stores.csv
+    quit
+    EOF
+    ```
+  </Tab>
+  <Tab title="FTP">
+    ```bash
+    curl -T "{/path/to/your/products.csv,/path/to/your/stores.csv}" \
+      ftp://ftp.reelevant.com/ \
+      --user "${datasource_id}:${password}"
+    ```
+
+    Avec un client FTP graphique, gardez une seule connexion ouverte et envoyez les fichiers l'un après l'autre. Les clients qui ouvrent plusieurs connexions en parallèle pour transférer les fichiers créent un groupe par connexion.
+  </Tab>
+</Tabs>
 
 <Info>
   Si la connexion est coupée pendant le transfert d'un fichier, ce fichier est ignoré et n'est jamais traité. Les fichiers entièrement transférés plus tôt dans la même session sont traités normalement.
 </Info>
-
-<Note>
-  En FTP, chaque fichier reste traité dès la fin de son upload.
-</Note>
 
 <Info>
   Le endpoint FTP/SFTP n'accepte que les uploads de fichiers (opérations `STOR` / écriture). Vous ne pouvez pas supprimer ni renommer des fichiers sur le serveur.
