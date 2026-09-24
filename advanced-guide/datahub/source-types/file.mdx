@@ -290,25 +290,34 @@ Once you have credentials (password or SSH key), upload a file using any standar
 
 After the file is uploaded, the Datasource automatically re-processes the new file and updates the data.
 
-### Pushing Several Files in One SFTP Session
+### Pushing Several Files in One Session
 
-Over SFTP, files pushed back-to-back within the same session are grouped into a single update rather than one update per file. A group is processed when the session is closed, or after about one minute without a new upload if the session stays open; files pushed later in a still-open session form the next group.
+Over both SFTP and FTP, files pushed back-to-back within the same session (connection) are grouped into a single update rather than one update per file. A group is processed when the session is closed, or after about one minute without a new upload if the session stays open; files pushed later in a still-open session form the next group.
 
-```bash
-sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
-put /path/to/your/products.csv products.csv
-put /path/to/your/stores.csv stores.csv
-quit
-EOF
-```
+<Tabs>
+  <Tab title="SFTP">
+    ```bash
+    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    put /path/to/your/products.csv products.csv
+    put /path/to/your/stores.csv stores.csv
+    quit
+    EOF
+    ```
+  </Tab>
+  <Tab title="FTP">
+    ```bash
+    curl -T "{/path/to/your/products.csv,/path/to/your/stores.csv}" \
+      ftp://ftp.reelevant.com/ \
+      --user "${datasource_id}:${password}"
+    ```
+
+    With a graphical FTP client, keep a single connection open and upload the files one after the other. Clients that open several parallel connections to transfer files create one group per connection.
+  </Tab>
+</Tabs>
 
 <Info>
   If the connection drops while a file is still being transferred, that file is discarded and never processed. Files fully transferred earlier in the same session are still processed as usual.
 </Info>
-
-<Note>
-  Over FTP, each file is still processed as soon as its upload completes.
-</Note>
 
 <Info>
   The FTP/SFTP endpoint only accepts file uploads (`STOR` / write operations). You cannot delete or rename files on the server.
