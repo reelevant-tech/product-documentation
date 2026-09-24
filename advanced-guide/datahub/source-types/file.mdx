@@ -292,7 +292,7 @@ After the file is uploaded, the Datasource automatically re-processes the new fi
 
 ### Pushing Several Files in One Session
 
-Over both SFTP and FTP, files pushed back-to-back within the same session (connection) are grouped into a single update rather than one update per file. A group is processed when the session is closed, or after about one minute without a new upload if the session stays open; files pushed later in a still-open session form the next group.
+Over both SFTP and FTP, files pushed back-to-back within the same session (connection) are grouped into a single update rather than one update per file. A group is processed when the session is closed, or after about one minute without a new upload if the session stays open. Files pushed later in a still-open session form the next group.
 
 <Tabs>
   <Tab title="SFTP">
