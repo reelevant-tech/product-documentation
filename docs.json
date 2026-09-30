@@ -511,6 +511,13 @@
                   "why-reelevant/technical-evaluators/releases",
                   "why-reelevant/technical-evaluators/documentation"
                 ]
+              },
+              {
+                "group": "For Data Protection Officers",
+                "pages": [
+                  "why-reelevant/data-protection/overview",
+                  "why-reelevant/data-protection/processing-details"
+                ]
               }
             ]
           }
@@ -989,6 +996,13 @@
                   "fr/why-reelevant/technical-evaluators/status-page",
                   "fr/why-reelevant/technical-evaluators/releases",
                   "fr/why-reelevant/technical-evaluators/documentation"
+                ]
+              },
+              {
+                "group": "Pour les DPO",
+                "pages": [
+                  "fr/why-reelevant/data-protection/overview",
+                  "fr/why-reelevant/data-protection/processing-details"
                 ]
               }
             ]
