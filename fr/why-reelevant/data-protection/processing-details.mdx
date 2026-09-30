@@ -54,7 +54,7 @@ Utilisez un identifiant opaque dans l'URL du Content. L'identifiant est visible 
 
 | Données | Durée de conservation |
 |---------|-----------------------|
-| Enregistrements des Datasources | Conservés jusqu'à leur mise à jour ou suppression. Avec une stratégie de remplacement complet (Override), un enregistrement supprimé à la source disparaît à la synchronisation suivante ; en Append ou Upsert, les lignes existantes sont conservées : utilisez l'[anonymisation](/fr/advanced-guide/datahub/anonymise-customer-records) unitaire (Upsert) ou une réinitialisation des données |
+| Enregistrements des Datasources | Conservés jusqu'à leur mise à jour ou suppression. Avec une stratégie de remplacement complet (Override), un enregistrement supprimé à la source disparaît à la synchronisation suivante ; en Append ou Upsert, les lignes existantes sont conservées jusqu'à leur effacement (voir [Droits des personnes](#droits-des-personnes)) |
 | Événements comportementaux (expositions, clics, événements du site) | 90 jours par défaut, configurable par Datasource |
 | Logs de sécurité | 1 an, conformément à la recommandation de la CNIL |
 | Sauvegardes | Chiffrées, expirées au plus tard 180 jours après la suppression |
@@ -91,7 +91,7 @@ Le responsable de traitement reste l'interlocuteur des personnes concernées. Re
 | Droit | Traitement |
 |-------|------------|
 | Accès et portabilité | Le responsable de traitement détient déjà les données sources ; Reelevant l'assiste sur demande pour les événements rattachés à un identifiant |
-| Effacement | Datasources Override : supprimer l'enregistrement à la source, il disparaît à la synchronisation suivante. Datasources Upsert : utiliser l'[anonymisation unitaire](/fr/advanced-guide/datahub/anonymise-customer-records). Datasources Append : une réinitialisation des données est nécessaire. Les événements expirent avec leur durée de conservation |
+| Effacement | Toujours supprimer d'abord l'enregistrement à la source, sinon la synchronisation suivante le réimporte. Datasources Override : il disparaît alors à la synchronisation suivante. Datasources Upsert en mode Worker ou Ingester : l'[anonymisation unitaire](/fr/advanced-guide/datahub/anonymise-customer-records) le retire sans attendre. Datasources Append, PubSub ou Proxy : demander l'assistance de Reelevant (par exemple une réinitialisation des données). Les événements expirent avec leur durée de conservation |
 | Opposition au marketing et au profilage | Gérée par la désinscription du responsable de traitement, qui arrête les nouveaux envois. Les emails déjà reçus sollicitent encore le Personalisation Engine s'ils sont rouverts : excluez aussi l'identifiant par une condition de Workflow ou effacez ses enregistrements |
 | Retrait du consentement (collecte web) | Géré par la CMP du responsable de traitement, qui cesse de charger le tag web Reelevant |
 

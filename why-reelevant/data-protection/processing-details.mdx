@@ -54,7 +54,7 @@ Use an opaque identifier in the Content URL. The identifier is visible in the em
 
 | Data | Retention |
 |------|-----------|
-| Datasource records | Kept until updated or removed. With a full-replacement (Override) strategy, a record deleted at source disappears at the next sync; with Append or Upsert, existing rows persist, so use record-level [anonymisation](/advanced-guide/datahub/anonymise-customer-records) (Upsert) or a data reset |
+| Datasource records | Kept until updated or removed. With a full-replacement (Override) strategy, a record deleted at source disappears at the next sync; with Append or Upsert, existing rows persist until erased (see [Data Subject Rights](#data-subject-rights)) |
 | Behavioural events (exposures, clicks, website events) | 90 days by default, configurable per Datasource |
 | Security logs | 1 year, in line with the CNIL recommendation |
 | Backups | Encrypted, expire no later than 180 days after deletion |
@@ -91,7 +91,7 @@ The controller remains the point of contact for data subjects. Reelevant assists
 | Right | How it is handled |
 |-------|-------------------|
 | Access and portability | The controller already holds the source data; Reelevant assists on request for the events tied to an identifier |
-| Erasure | Override Datasources: delete the record at source, it disappears at the next sync. Upsert Datasources: use [record-level anonymisation](/advanced-guide/datahub/anonymise-customer-records). Append Datasources: a data reset is required. Events expire with their retention period |
+| Erasure | Always delete the record at source first, otherwise the next sync imports it again. Override Datasources: it then disappears at the next sync. Upsert Datasources in Worker or Ingester mode: [record-level anonymisation](/advanced-guide/datahub/anonymise-customer-records) removes it without waiting. Append, PubSub or Proxy Datasources: ask Reelevant for assistance (for example, a data reset). Events expire with their retention period |
 | Objection to marketing and profiling | Handled by the controller's opt-out, which stops new emails. Emails already delivered still trigger the Personalisation Engine when reopened, so also exclude the identifier with a Workflow condition or erase their records |
 | Withdrawal of consent (web collection) | Handled by the controller's CMP, which stops loading the Reelevant web tag |
 
