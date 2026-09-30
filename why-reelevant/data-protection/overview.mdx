@@ -19,7 +19,7 @@ This page is written for Data Protection Officers, privacy counsel and procureme
 Personalisation with Reelevant always follows the same three phases.
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph P1["1. Data provision"]
         CRM["Your systems<br/>(CRM, catalogue, bookings)"] -->|"Scheduled sync"| DS["Datasources<br/>hosted by Reelevant"]
     end
@@ -28,10 +28,11 @@ flowchart LR
         WF -->|"Generates"| URL["Image URL with a<br/>customer ID placeholder"]
     end
     subgraph P3["3. Display at open"]
-        ESP["Your email platform<br/>fills in the customer ID<br/>and sends the email"] --> OPEN["Recipient opens<br/>the email"]
-        OPEN -->|"Image request"| RUN["Runner executes the Workflow<br/>for this customer ID"]
+        ESP["Your email platform fills in<br/>the customer ID and sends"] --> OPEN["Recipient opens<br/>the email"]
+        OPEN -->|"Image request"| RUN["Runner executes<br/>the Workflow"]
         RUN -->|"Personalised image"| OPEN
     end
+    P1 ~~~ P2
     DS -.-> RUN
     URL --> ESP
 ```
@@ -60,22 +61,22 @@ A click on the Content goes through a Reelevant redirect link, which records the
 
 ```mermaid
 sequenceDiagram
-    participant R as Recipient's email client
-    participant RUN as Reelevant Runner
-    participant DS as Your Datasources (hosted by Reelevant)
+    participant R as Email client
+    participant RUN as Runner
+    participant DS as Datasources
     participant SITE as Your website
 
-    Note over R: Email already sent by your email platform,<br/>image URL contains ?uid=CUSTOMER_ID
-    R->>RUN: Opens the email: image request (customer ID, IP, user agent)
-    RUN->>DS: Read the data of this customer ID only
-    DS-->>RUN: e.g. last bookings, loyalty status
-    RUN->>RUN: Walk the Workflow rules defined by your team
+    Note over R,RUN: Email sent by your platform<br/>with ?uid=CUSTOMER_ID
+    R->>RUN: Open: image request<br/>(ID, IP, user agent)
+    RUN->>DS: Read this ID only
+    DS-->>RUN: Bookings, loyalty status
+    RUN->>RUN: Apply your Workflow rules
     RUN-->>R: Personalised image
-    RUN->>RUN: Record an exposure event (customer ID, Content shown)
-    R->>RUN: Clicks the image (redirect link)
-    RUN->>RUN: Record a click event
+    RUN->>RUN: Log exposure
+    R->>RUN: Click (redirect link)
+    RUN->>RUN: Log click
     RUN-->>R: Redirect
-    R->>SITE: Lands on your offer page
+    R->>SITE: Offer page
 ```
 
 ## Who Does What
@@ -158,22 +159,17 @@ Some Use Cases rely on what a logged-in customer did on your website, such as ab
 ```mermaid
 sequenceDiagram
     participant V as Visitor
-    participant CMP as Your consent platform (CMP)
-    participant SITE as Your website
+    participant CMP as Your CMP
     participant TAG as Reelevant web tag
-    participant DS as Tracking Datasource (Reelevant)
+    participant DS as Tracking Datasource
 
-    V->>SITE: Visits the website
-    SITE->>CMP: Display consent banner (Reelevant listed as recipient)
+    V->>CMP: Visits your website, sees banner
     alt Consent refused
-        CMP-->>SITE: No consent
-        Note over TAG: Tag is never loaded, nothing is collected
+        Note over TAG: Tag never loaded,<br/>nothing collected
     else Consent granted
-        CMP-->>SITE: Consent
-        SITE->>TAG: Load the tag
-        V->>SITE: Logs in, browses offers
-        SITE->>TAG: Pass the customer identifier
-        TAG->>DS: Browsing events linked to the identifier
+        CMP->>TAG: Load the tag
+        V->>TAG: Logs in, browses offers
+        TAG->>DS: Events linked to<br/>the customer ID
     end
 ```
 

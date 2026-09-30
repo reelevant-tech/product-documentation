@@ -19,7 +19,7 @@ Cette page s'adresse aux délégués à la protection des données, juristes et 
 La personnalisation avec Reelevant suit toujours les mêmes trois phases.
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph P1["1. Mise à disposition des données"]
         CRM["Vos systèmes<br/>(CRM, catalogue, réservations)"] -->|"Synchronisation planifiée"| DS["Datasources<br/>hébergées par Reelevant"]
     end
@@ -28,10 +28,11 @@ flowchart LR
         WF -->|"Génère"| URL["URL d'image avec un<br/>emplacement pour l'ID client"]
     end
     subgraph P3["3. Affichage à l'ouverture"]
-        ESP["Votre plateforme d'emailing<br/>insère l'ID client<br/>et envoie l'email"] --> OPEN["Le destinataire<br/>ouvre l'email"]
-        OPEN -->|"Appel de l'image"| RUN["Le Runner exécute le Workflow<br/>pour cet ID client"]
+        ESP["Votre plateforme d'emailing<br/>insère l'ID client et envoie"] --> OPEN["Le destinataire<br/>ouvre l'email"]
+        OPEN -->|"Appel de l'image"| RUN["Le Runner exécute<br/>le Workflow"]
         RUN -->|"Image personnalisée"| OPEN
     end
+    P1 ~~~ P2
     DS -.-> RUN
     URL --> ESP
 ```
@@ -60,22 +61,22 @@ Un clic sur le Content passe par un lien de redirection Reelevant, qui enregistr
 
 ```mermaid
 sequenceDiagram
-    participant R as Client email du destinataire
-    participant RUN as Runner Reelevant
-    participant DS as Vos Datasources (hébergées par Reelevant)
+    participant R as Client email
+    participant RUN as Runner
+    participant DS as Datasources
     participant SITE as Votre site
 
-    Note over R: Email déjà envoyé par votre plateforme d'emailing,<br/>l'URL de l'image contient ?uid=ID_CLIENT
-    R->>RUN: Ouverture de l'email : appel de l'image (ID client, IP, user agent)
-    RUN->>DS: Lecture des données de cet ID client uniquement
-    DS-->>RUN: ex. dernières réservations, statut de fidélité
-    RUN->>RUN: Application des règles du Workflow définies par votre équipe
+    Note over R,RUN: Email envoyé par votre plateforme<br/>avec ?uid=ID_CLIENT
+    R->>RUN: Ouverture : appel de l'image<br/>(ID, IP, user agent)
+    RUN->>DS: Lecture de cet ID uniquement
+    DS-->>RUN: Réservations, fidélité
+    RUN->>RUN: Règles de votre Workflow
     RUN-->>R: Image personnalisée
-    RUN->>RUN: Enregistrement d'un événement d'exposition (ID client, Content affiché)
-    R->>RUN: Clic sur l'image (lien de redirection)
-    RUN->>RUN: Enregistrement d'un événement de clic
+    RUN->>RUN: Enregistre l'exposition
+    R->>RUN: Clic (lien de redirection)
+    RUN->>RUN: Enregistre le clic
     RUN-->>R: Redirection
-    R->>SITE: Arrivée sur la page de l'offre
+    R->>SITE: Page de l'offre
 ```
 
 ## Qui fait quoi
@@ -158,22 +159,17 @@ Certains Use Cases s'appuient sur ce qu'un client connecté a fait sur votre sit
 ```mermaid
 sequenceDiagram
     participant V as Visiteur
-    participant CMP as Votre plateforme de consentement (CMP)
-    participant SITE as Votre site
+    participant CMP as Votre CMP
     participant TAG as Tag web Reelevant
-    participant DS as Datasource de tracking (Reelevant)
+    participant DS as Datasource de tracking
 
-    V->>SITE: Visite le site
-    SITE->>CMP: Affichage du bandeau (Reelevant listé comme destinataire)
+    V->>CMP: Visite le site, voit le bandeau
     alt Consentement refusé
-        CMP-->>SITE: Pas de consentement
-        Note over TAG: Le tag n'est jamais chargé, rien n'est collecté
+        Note over TAG: Tag jamais chargé,<br/>rien n'est collecté
     else Consentement accordé
-        CMP-->>SITE: Consentement
-        SITE->>TAG: Chargement du tag
-        V->>SITE: Se connecte, consulte des offres
-        SITE->>TAG: Transmission de l'identifiant client
-        TAG->>DS: Événements de navigation rattachés à l'identifiant
+        CMP->>TAG: Chargement du tag
+        V->>TAG: Se connecte, consulte des offres
+        TAG->>DS: Événements rattachés<br/>à l'ID client
     end
 ```
 
