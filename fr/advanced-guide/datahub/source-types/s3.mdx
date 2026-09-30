@@ -74,7 +74,7 @@ L'external ID est votre ID de société Reelevant, que vous pouvez obtenir aupr�
 Renseignez dans `accessKey` et `secretKey` la clé d'un utilisateur IAM autorisé à endosser le rôle, puis configurez la trust policy du rôle pour cet utilisateur. Si vous utilisez un `externalId`, ajoutez une condition exigeant que `sts:ExternalId` soit égal à cette valeur.
 
 <Info>
-  La configuration de la Datasource est rejetée si une seule des clés `accessKey` et `secretKey` est renseignée, si `roleArn` n'est pas un ARN de rôle IAM valide, si `durationSeconds` est hors limites, ou si `externalId` est vide ou renseigné avec les identifiants de Reelevant. `accessKey`, `secretKey` et `externalId` sont stockés comme champs sensibles et ne sont jamais affichés une fois enregistrés. Les identifiants temporaires sont conservés uniquement en mémoire.
+  La configuration de la Datasource est rejetée si une seule des clés `accessKey` et `secretKey` est renseignée, ou si `roleArn` n'est pas un ARN de rôle IAM valide. Elle l'est aussi si `durationSeconds` est hors limites, ou si `externalId` est vide ou renseigné avec les identifiants de Reelevant. `accessKey`, `secretKey` et `externalId` sont stockés comme champs sensibles et ne sont jamais affichés une fois enregistrés. Les identifiants temporaires sont conservés uniquement en mémoire.
 </Info>
 
 ### Services compatibles S3

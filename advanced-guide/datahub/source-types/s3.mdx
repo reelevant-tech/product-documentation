@@ -74,7 +74,7 @@ The external ID is your Reelevant company ID, which you can retrieve from your T
 Set `accessKey` and `secretKey` to the key of an IAM user allowed to assume the role, then configure the role's trust policy for that user. If you set an `externalId`, add a condition requiring `sts:ExternalId` to equal that value.
 
 <Info>
-  The Datasource configuration is rejected if only one of `accessKey` and `secretKey` is set, if `roleArn` is not a valid IAM role ARN, if `durationSeconds` is out of range, or if `externalId` is empty or set with Reelevant's credentials. `accessKey`, `secretKey` and `externalId` are stored as sensitive fields and never displayed once saved. Temporary credentials are kept in memory only.
+  The Datasource configuration is rejected if only one of `accessKey` and `secretKey` is set, or if `roleArn` is not a valid IAM role ARN. It is also rejected if `durationSeconds` is out of range, or if `externalId` is empty or set with Reelevant's credentials. `accessKey`, `secretKey` and `externalId` are stored as sensitive fields and never displayed once saved. Temporary credentials are kept in memory only.
 </Info>
 
 ### S3-Compatible Services
