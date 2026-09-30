@@ -29,7 +29,7 @@ flowchart TB
     end
     subgraph P3["3. Affichage à l'ouverture"]
         ESP["Votre plateforme d'emailing<br/>insère l'ID client et envoie"] --> OPEN["Le destinataire<br/>ouvre l'email"]
-        OPEN -->|"Appel de l'image"| RUN["Le Runner exécute<br/>le Workflow"]
+        OPEN -->|"Appel de l'image"| RUN["Le Personalisation Engine exécute<br/>le Workflow"]
         RUN -->|"Image personnalisée"| OPEN
     end
     P1 ~~~ P2
@@ -55,14 +55,14 @@ Une fois le Workflow prêt, la plateforme génère une URL à coller dans le mod
 
 Votre plateforme d'emailing remplace l'emplacement par l'identifiant de chaque destinataire et envoie la campagne. Reelevant ne sait pas qui a reçu l'email.
 
-Quand un destinataire ouvre l'email, son client de messagerie appelle l'image. C'est seulement à ce moment que le Runner (le service Reelevant qui exécute les Workflows) lit les données de ce client, parcourt l'arbre de décision et renvoie le Content correspondant. Rien n'est pré-calculé par personne au moment de l'envoi : le Content reflète les données les plus récentes au moment de l'ouverture.
+Quand un destinataire ouvre l'email, son client de messagerie appelle l'image. C'est seulement à ce moment que le Personalisation Engine (le service Reelevant qui exécute les Workflows) lit les données de ce client, parcourt l'arbre de décision et renvoie le Content correspondant. Rien n'est pré-calculé par personne au moment de l'envoi : le Content reflète les données les plus récentes au moment de l'ouverture.
 
 Un clic sur le Content passe par un lien de redirection Reelevant, qui enregistre le clic avant d'envoyer le destinataire vers votre site.
 
 ```mermaid
 sequenceDiagram
     participant R as Client email
-    participant RUN as Runner
+    participant RUN as Personalisation Engine
     participant DS as Datasources
     participant SITE as Votre site
 
@@ -136,7 +136,7 @@ L'analyse de la base légale de ce profilage, et de ses éventuels effets signif
 
 ## Identification du client
 
-L'URL placée dans l'email contient un identifiant client pour que le Runner retrouve les bonnes données. Cet identifiant :
+L'URL placée dans l'email contient un identifiant client pour que le Personalisation Engine retrouve les bonnes données. Cet identifiant :
 
 - Est choisi par vous — utilisez un identifiant interne et opaque (numéro CRM ou valeur hachée), jamais une adresse email ou un nom
 - Est inséré par votre plateforme d'emailing, pas par Reelevant
@@ -152,7 +152,7 @@ Certains Use Cases s'appuient sur ce qu'un client connecté a fait sur votre sit
 |-------|----------------|
 | Qui déploie le tag | Vos équipes, généralement via votre gestionnaire de tags |
 | Consentement | Le tag ne lit pas lui-même le consentement. Vous le chargez uniquement après consentement, via votre plateforme de gestion du consentement (CMP), où Reelevant est listé comme destinataire avec sa finalité |
-| Identification | La navigation n'est rattachée à un client connu qu'une fois celui-ci connecté et son identifiant transmis par votre site |
+| Identification | La navigation n'est rattachée à un client connu que si un identifiant est disponible : votre site le transmet (généralement à la connexion), ou le visiteur arrive par un lien qui le porte, comme un clic Reelevant depuis un email |
 | Cookies | Cookies first-party sur votre domaine : identifiant anonyme de l'appareil (365 jours), identifiant du client connu (180 jours), et identifiant porté par un lien Reelevant (30 jours) |
 | Conservation | 90 jours par défaut dans la Datasource de tracking |
 
