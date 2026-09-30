@@ -29,7 +29,7 @@ flowchart TB
     end
     subgraph P3["3. Display at open"]
         ESP["Your email platform fills in<br/>the customer ID and sends"] --> OPEN["Recipient opens<br/>the email"]
-        OPEN -->|"Image request"| RUN["Runner executes<br/>the Workflow"]
+        OPEN -->|"Image request"| RUN["Personalisation Engine executes<br/>the Workflow"]
         RUN -->|"Personalised image"| OPEN
     end
     P1 ~~~ P2
@@ -55,14 +55,14 @@ Once the Workflow is ready, the platform generates a URL to paste into the email
 
 Your email platform replaces the placeholder with each recipient's identifier and sends the campaign. Reelevant does not know who received the email.
 
-When a recipient opens the email, their email client requests the image. Only then does the Runner (the Reelevant service that executes Workflows) read that customer's data, walk through the decision tree, and return the matching Content. Nothing is pre-computed per person at send time, so the Content reflects the latest data available at the moment of opening.
+When a recipient opens the email, their email client requests the image. Only then does the Personalisation Engine (the Reelevant service that executes Workflows) read that customer's data, walk through the decision tree, and return the matching Content. Nothing is pre-computed per person at send time, so the Content reflects the latest data available at the moment of opening.
 
 A click on the Content goes through a Reelevant redirect link, which records the click before sending the recipient to your website.
 
 ```mermaid
 sequenceDiagram
     participant R as Email client
-    participant RUN as Runner
+    participant RUN as Personalisation Engine
     participant DS as Datasources
     participant SITE as Your website
 
@@ -136,7 +136,7 @@ Assessing the legal basis for this profiling, and whether it has significant eff
 
 ## Customer Identification
 
-The URL placed in the email carries a customer identifier so that the Runner can find the right data. This identifier:
+The URL placed in the email carries a customer identifier so that the Personalisation Engine can find the right data. This identifier:
 
 - Is chosen by you — use an internal, opaque ID (a CRM number or a hashed value), never an email address or a name
 - Is inserted by your email platform, not by Reelevant
@@ -152,7 +152,7 @@ Some Use Cases rely on what a logged-in customer did on your website, such as ab
 |-------|--------------|
 | Who deploys the tag | Your teams, usually through your tag manager |
 | Consent | The tag does not read consent itself. You load it only after consent, through your consent management platform (CMP), where Reelevant is listed as a recipient with its purpose |
-| Identification | Browsing is linked to a known customer only once they log in and your site passes their identifier |
+| Identification | Browsing is linked to a known customer only when an identifier is available: your site passes it (typically at login), or the visitor arrives through a link carrying it, such as a Reelevant click from an email |
 | Cookies | First-party cookies on your domain: an anonymous device ID (365 days), the known customer ID (180 days), and the ID carried by a Reelevant link (30 days) |
 | Retention | 90 days by default in the tracking Datasource |
 

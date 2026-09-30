@@ -10,8 +10,8 @@ Cette page décrit les traitements réalisés par Reelevant en qualité de sous-
 
 ```mermaid
 flowchart TB
-    SRC["Vos systèmes"] -->|"Synchronisation via TLS,<br/>SFTP ou stockage cloud"| DS["Datasources<br/>remplacées à chaque synchronisation"]
-    DS -->|"Lecture à l'ouverture"| RUN["Runner<br/>exécution en mémoire"]
+    SRC["Vos systèmes"] -->|"Synchronisation via TLS,<br/>SFTP ou stockage cloud"| DS["Datasources<br/>mises à jour à chaque synchronisation"]
+    DS -->|"Lecture à l'ouverture"| RUN["Personalisation Engine<br/>exécution en mémoire"]
     RUN -->|"Expositions et clics"| EV["Événements comportementaux<br/>90 jours par défaut"]
     EV --> AGG["Rapports agrégés<br/>pas de données personnelles"]
     EV -.->|"Optionnel"| WH["Votre entrepôt analytics<br/>export pseudonymisé"]
@@ -40,7 +40,7 @@ flowchart TB
 | Identification | Identifiant client pseudonyme (numéro CRM, valeur hachée) | Systèmes du responsable de traitement et plateforme d'emailing |
 | Profil client | Statut de fidélité, préférences, langue, pays — uniquement les champs mappés par le responsable de traitement | Datasources du responsable de traitement |
 | Historique de transactions | Réservations ou achats passés, produits, dates, montants | Datasources du responsable de traitement |
-| Interaction avec le Content | Événements d'exposition (ouverture) et de clic, Content et Branch affichés, date | Générés par le Runner |
+| Interaction avec le Content | Événements d'exposition (ouverture) et de clic, Content et Branch affichés, date | Générés par le Personalisation Engine |
 | Données techniques de la requête | User agent, type d'appareil, client de messagerie, referrer, localisation approximative déduite de l'adresse IP | Transmises par le client de messagerie ou le navigateur |
 | Comportement sur le site (optionnel) | Pages et offres consultées, recherches, événements de panier et d'achat | Collecte web ou mobile Reelevant, après consentement |
 
@@ -54,7 +54,7 @@ Utilisez un identifiant opaque dans l'URL du Content. L'identifiant est visible 
 
 | Données | Durée de conservation |
 |---------|-----------------------|
-| Enregistrements des Datasources | Remplacés à chaque synchronisation ; un enregistrement supprimé à la source n'est plus traité à la synchronisation suivante. Un effacement unitaire est disponible à la demande via l'[anonymisation](/fr/advanced-guide/datahub/anonymise-customer-records) |
+| Enregistrements des Datasources | Conservés jusqu'à leur mise à jour ou suppression. Avec une stratégie de remplacement complet (Override), un enregistrement supprimé à la source disparaît à la synchronisation suivante ; en Append ou Upsert, les lignes existantes sont conservées : utilisez l'[anonymisation](/fr/advanced-guide/datahub/anonymise-customer-records) unitaire (Upsert) ou une réinitialisation des données |
 | Événements comportementaux (expositions, clics, événements du site) | 90 jours par défaut, configurable par Datasource |
 | Logs de sécurité | 1 an, conformément à la recommandation de la CNIL |
 | Sauvegardes | Chiffrées, expirées au plus tard 180 jours après la suppression |
@@ -91,8 +91,8 @@ Le responsable de traitement reste l'interlocuteur des personnes concernées. Re
 | Droit | Traitement |
 |-------|------------|
 | Accès et portabilité | Le responsable de traitement détient déjà les données sources ; Reelevant l'assiste sur demande pour les événements rattachés à un identifiant |
-| Effacement | Supprimer l'enregistrement à la source, ou utiliser l'[anonymisation unitaire](/fr/advanced-guide/datahub/anonymise-customer-records) pour un effet immédiat ; les événements expirent avec leur durée de conservation |
-| Opposition au marketing et au profilage | Gérée par la désinscription du responsable de traitement : une personne qui ne reçoit plus d'emails ne déclenche plus aucun traitement. Une condition de Workflow peut aussi exclure un identifiant |
+| Effacement | Datasources Override : supprimer l'enregistrement à la source, il disparaît à la synchronisation suivante. Datasources Upsert : utiliser l'[anonymisation unitaire](/fr/advanced-guide/datahub/anonymise-customer-records). Datasources Append : une réinitialisation des données est nécessaire. Les événements expirent avec leur durée de conservation |
+| Opposition au marketing et au profilage | Gérée par la désinscription du responsable de traitement, qui arrête les nouveaux envois. Les emails déjà reçus sollicitent encore le Personalisation Engine s'ils sont rouverts : excluez aussi l'identifiant par une condition de Workflow ou effacez ses enregistrements |
 | Retrait du consentement (collecte web) | Géré par la CMP du responsable de traitement, qui cesse de charger le tag web Reelevant |
 
 Les demandes adressées à Reelevant sont à envoyer à [security@reelevant.com](mailto:security@reelevant.com).
