@@ -35,7 +35,7 @@ Resources represent the different entities you can manage on the platform. Each 
 | **Billing** | Billing and subscription access. | Company |
 | **Invitation** | User invitation management. | Company |
 | **Datagraph Schema** | Datagraph schema definition and management. | Company + Team |
-| **Datagraph Entity** | Datagraph entity data access and management. | Company + Team |
+| **Datagraph** | Datagraph data access and management. | Company + Team |
 
 ### Resource Scoping
 
@@ -51,9 +51,9 @@ Resources fall into two categories based on how access is controlled:
   <Accordion title="Team-scoped resources">
     These resources belong to one or more teams. A user can only access a team-scoped resource if they are a member of (or inherit access to) one of the resource's teams.
 
-    **Team-scoped resources:** Workflow, Content, Datasource, Datagraph Schema, Datagraph Entity.
+    **Team-scoped resources:** Workflow, Content, Datasource, Datagraph Schema, Datagraph.
 
-    For example, if a workflow is assigned to the "Marketing" team, only users who are members of "Marketing" (or one of its ancestor teams) can interact with that workflow — provided their role grants the required action.
+    For example, a Workflow assigned to the "Marketing" team can only be accessed by its members. Members of an ancestor team can also interact with it, if their role grants the required action.
   </Accordion>
 </AccordionGroup>
 
@@ -89,7 +89,7 @@ The table below shows which actions are available for each resource. When config
 | **Billing** | ✓ | | | | | | |
 | **Invitation** | | ✓ | ✓ | | | ✓ | |
 | **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
-| **Datagraph Entity** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
+| **Datagraph** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
 
 <Tip>
   The **Access** action controls whether the section appears in the platform navigation. For example, granting **Statistics → Access** makes the Analytics section visible to the user.

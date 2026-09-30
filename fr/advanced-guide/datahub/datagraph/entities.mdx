@@ -1,34 +1,34 @@
 ---
-title: 'Datagraph Entities'
+title: 'Objets Datagraph'
 description: 'Écrivez du SQL paramétré sur le modèle du Datagraph, prévisualisez les résultats et publiez pour les Workflows'
 ---
 
 ## Vue d'ensemble
 
-Une Datagraph Entity est une requête SQL nommée sur le modèle du Datagraph, avec des paramètres déclarés et des colonnes de sortie inférées. Ouvrez **DataHub → Datagraph → Entities** — *Manage datagraph entities for your account*.
+Un Objet Datagraph est une requête SQL nommée sur le modèle du Datagraph, avec des paramètres déclarés et des colonnes de sortie inférées. Ouvrez **DataHub → Datagraph → Objets** — *Gérez les objets datagraph de votre compte*.
 
-La liste affiche chaque Entity avec son **Name**, son **Status** (**Draft** ou **Live**) et sa dernière mise à jour, ainsi que deux actions : **Edit** et **Query**. **Create entity** ouvre l'éditeur sur un nouveau Draft.
+La liste **Objets** affiche les colonnes **Nom**, **Statut** et **Dernière mise à jour**. La description indique *Gérez les objets datagraph de votre compte*. Cliquez sur **Créer un objet** pour ouvrir un nouveau brouillon. L'état vide indique *Aucun objet pour le moment*.
 
 ## Avant de commencer
 
 - Le Datagraph Schema doit être publié, car les colonnes de sortie sont inférées sur le modèle Live. Voir [Datagraph Schema](/fr/advanced-guide/datahub/datagraph/schema).
 - Chaque Datasource référencée par le SQL doit avoir une version Live.
-- Les Datasources protégées par des filtres au niveau des lignes ne peuvent pas être interrogées depuis une Entity.
+- Les Datasources protégées par des filtres au niveau des lignes ne peuvent pas être utilisées dans un Objet.
 
 ## Disposition de l'éditeur
 
 | Panneau | Contenu |
 |---------|---------|
-| **SQL query** | La requête exécutée pour cette Entity. **Format SQL** la réindente, **Run query** l'exécute. |
-| **Input / Output** | **Input** liste les paramètres passés à la requête SQL. **Output** liste la réponse calculée retournée par l'Entity, en lecture seule. |
-| **Preview & results** | Un échantillon des résultats, jusqu'à 10 lignes, avec le nombre de lignes et un **Trace ID**. |
+| **INPUT / OUTPUT** | Les paramètres de l'Objet et les champs de sortie, en lecture seule pour ces derniers. |
+| **VERSIONS** | Les versions disponibles de l'Objet. |
 
-Les deux panneaux latéraux peuvent être repliés, et la barre d'outils affiche le raccourci clavier pour enregistrer, formater et afficher chaque panneau.
+Le fil d'Ariane indique **Datagraph > Objets**. Le sous-titre est *Définissez et gérez la requête SQL et les options de votre objet datagraph*.
 
 | Champ | Description |
 |-------|-------------|
-| **Entity name** | L'identifiant de l'Entity. Utilisez le snake_case, par exemple `top_products_bought`. |
-| **Description** | Ce à quoi l'Entity répond, en termes métier. |
+| **Nom de l'objet** | L'identifiant de l'Objet. Utilisez le snake_case, par exemple `top_products_bought`. |
+| **Objet édité** | Le sélecteur de l'Objet à modifier. |
+| **Description** | Ce à quoi l'Objet répond, en termes métier. |
 
 ## Écrire le SQL
 
@@ -53,7 +53,7 @@ La requête doit référencer au moins une table Datasource, sinon elle est reje
 
 Les schémas ci-dessous proviennent d'un modèle d'annonces immobilières construit sur cinq Datasources : utilisateurs, annonces, prix au mètre carré par zone, recommandations pré-calculées et contenus éditoriaux.
 
-| Entity | Principe | Paramètres | Retourne |
+| Objet | Principe | Paramètres | Retourne |
 |--------|----------|------------|----------|
 | `listings_matching_search` | Joindre les utilisateurs aux annonces sur la zone recherchée, puis filtrer sur le budget. | `user_id` (`string`) | Les annonces triées par score de qualité, limitées à 6. |
 | `listings_price_drop` | Filtrer les annonces d'une zone sur une variation de prix minimale, calculée depuis le prix précédent. | `zone_id` (`string`), `min_drop_pct` (`number`) | Les annonces triées par pourcentage de baisse. |
@@ -64,21 +64,21 @@ Les schémas ci-dessous proviennent d'un modèle d'annonces immobilières constr
 Ces mêmes principes se transposent à d'autres modèles : derniers articles achetés par un client, stock restant dans le magasin préféré, meilleures ventes d'une catégorie, ou produits complémentaires d'une commande.
 
 <Info>
-  Les filtres qui combinent plusieurs préférences utilisateur — fourchette de budget et nombre de pièces minimum, par exemple — peuvent légitimement ne retourner aucune ligne. Prévisualisez chaque Entity avec un identifiant réel avant publication, et assouplissez la condition la moins critique si le résultat est vide.
+  Les filtres qui combinent plusieurs préférences utilisateur — fourchette de budget et nombre de pièces minimum, par exemple — peuvent légitimement ne retourner aucune ligne. Prévisualisez chaque Objet avec un identifiant réel avant publication, et assouplissez la condition la moins critique si le résultat est vide.
 </Info>
 
 ## Paramètres
 
-Les paramètres sont déclarés dans le panneau **Input** et associés aux emplacements SQL. Cliquez sur **Add** pour en créer un.
+Les paramètres sont déclarés dans **INPUT / OUTPUT** et associés aux emplacements SQL. Cliquez sur **Ajouter** pour en créer un.
 
 | Champ | Description |
 |-------|-------------|
-| **Name** | Le nom du paramètre, par exemple `user_id`. |
-| **Short description** | Affichée dans l'interface. Maximum 100 caractères. |
-| **Full description** | Description détaillée optionnelle. |
+| **Nom** | Le nom du paramètre, par exemple `user_id`. |
+| **Description courte** | Affichée au-dessus du champ dans le Data Node Objet Datagraph. 100 caractères maximum. |
+| **Description complète** | Description détaillée facultative. |
 | **Type** | Le type scalaire accepté à l'exécution. |
-| **Optional** | Une fois activé, le paramètre peut être omis ou laissé vide à l'exécution. |
-| **SQL placeholder index** | Associe le paramètre à `$1`, `$2`, … dans la requête SQL. |
+| **Optionnel** | Une fois activé, le paramètre peut être omis ou laissé vide à l'exécution. |
+| **Index du placeholder SQL** | Associe le paramètre à `$1`, `$2`, … dans la requête SQL. |
 
 Types de paramètres acceptés :
 
@@ -98,14 +98,14 @@ Types de paramètres acceptés :
 
 ## Colonnes de sortie
 
-Le panneau **Output** liste la **Column** et le **Type** de chaque valeur retournée par l'Entity, sous **Return types**. La liste est calculée depuis le SQL sur le modèle Live du Datagraph et recalculée à chaque enregistrement : elle n'est pas modifiable à la main. Une liste vide signifie que le SQL n'a pas encore été résolu, ou qu'il référence une colonne inconnue.
+Le panneau **INPUT / OUTPUT** liste les colonnes et leurs types, affichés comme **Texte**, **Nombre** ou **URL d'image**. Les colonnes sont calculées à partir du SQL sur le modèle publié du Datagraph et recalculées à chaque enregistrement.
 
 ## Prévisualiser les résultats
 
-1. Enregistrez l'Entity — une prévisualisation ne s'exécute pas sur des modifications non enregistrées. L'éditeur affiche *Save the entity before running a preview*.
-2. Cliquez sur **Run query**.
-3. Dans la fenêtre **Query parameters**, renseignez chaque paramètre. **Fill sample values** recherche pour vous des valeurs réalistes dans les données.
-4. Confirmez avec **Run query**.
+1. Enregistrez l'Objet avant de lancer un aperçu.
+2. Cliquez sur **Exécuter la requête** pour ouvrir **Paramètres de la requête**.
+3. La fenêtre indique *Renseignez les paramètres de l'objet avant d'exécuter l'aperçu SQL*. Chaque paramètre affiche son type attendu et sa description courte.
+4. Cliquez sur **Remplir avec des exemples** pour trouver des valeurs, puis sur **Exécuter la requête**.
 
 Le panneau **Preview** retourne jusqu'à 10 lignes, avec le nombre de lignes et un **Trace ID** utile au support.
 
@@ -116,31 +116,42 @@ Le panneau **Preview** retourne jusqu'à 10 lignes, avec le nombre de lignes et 
 | *Enter a valid ISO 8601 datetime* | La valeur d'un paramètre `datetime_iso` est mal formée. |
 | *Unable to find sample values from the data* | Aucun échantillon n'a pu être déduit ; saisissez les valeurs manuellement. |
 
-La page **Entity queries** — accessible via l'action **Query** ou **Open query page** — exécute une Entity enregistrée seule, en dehors de l'éditeur. Les résultats sont paginés à 10 lignes par page.
+La page **Requêtes** — **DataHub → Datagraph → Requêtes** — exécute les requêtes SQL des Objets Datagraph. Sélectionnez un Objet et lancez la requête pour afficher les résultats.
 
 ## Publication
 
-Cliquez sur **Publish** pour promouvoir le Draft en Live. La version Live précédente devient Inactive, et une nouvelle copie Draft est créée pour poursuivre les modifications. Seules les Entities Live sont sélectionnables dans les Workflows.
+Cliquez sur **Publier** pour ouvrir la fenêtre **Publier l'objet**. Le brouillon est publié, la version précédente devient inactive et une nouvelle copie brouillon est créée. Seuls les Objets publiés sont sélectionnables dans les Workflows.
 
 <Info>
-  Lorsque l'Entity appartient à un [Datagraph Entity Group](/fr/advanced-guide/datahub/datagraph/entity-groups) Live, la publication échoue avec *Entity group contract violated* si les nouvelles colonnes de sortie ne respectent plus le contrat du groupe. Une Entity présente dans un groupe Live ne peut pas non plus être supprimée.
+  Lorsqu'un Objet appartient à une [Famille d'objets Datagraph](/fr/advanced-guide/datahub/datagraph/entity-groups) publiée, sa publication échoue avec *Entity group contract violated* si ses colonnes ne respectent plus le contrat. Un Objet membre d'une famille publiée ne peut pas être supprimé.
 </Info>
 
-## Partager un contrat entre plusieurs Entities
+La fenêtre **Supprimer l'objet** avertit que *Les workflows qui interrogent cet objet ne pourront plus être résolus*. Supprimer un Objet est irréversible.
 
-Plusieurs Entities qui répondent à la même question pour des segments différents — un algorithme de recommandation par Entity, par exemple — peuvent être liées à un Datagraph Entity Group. Le groupe déclare les champs que chaque membre doit retourner, et vérifie la version Live de chaque membre. Voir [Datagraph Entity Groups](/fr/advanced-guide/datahub/datagraph/entity-groups).
+## Partager un contrat entre plusieurs Objets
 
-## Utiliser une Entity dans un Workflow
+Plusieurs Objets qui répondent à la même question pour différents segments — par exemple, un algorithme de recommandation par Objet — peuvent être liés à une Famille d'objets Datagraph. Elle déclare les champs que chaque membre doit retourner et vérifie leurs versions publiées. Voir [Familles d'objets Datagraph](/fr/advanced-guide/datahub/datagraph/entity-groups).
 
-Ajoutez le Data Node **Query an entity** — *Run a datagraph entity query and expose its results to the workflow*.
+## Utiliser un Objet dans un Workflow
+
+Ajoutez le Data Node **Objet Datagraph** — *Exécutez une requête d'objet Datagraph et exposez ses résultats dans le workflow*.
 
 | Réglage | Description |
 |---------|-------------|
-| **Entity** | L'Entity publiée à exécuter. La liste affiche *No published entity is available yet* tant qu'aucune n'est Live. |
-| **Entity parameters** | Un champ par paramètre déclaré. Les valeurs peuvent être statiques ou issues d'une variable du Workflow. |
-| **Result limit** | Le nombre maximum de lignes exposées au Workflow. |
+| **Objet** | Choisissez un Objet dans **Sélectionner un objet publié**. |
+| **Paramètres de l'objet** | Un champ par paramètre. Sa description courte apparaît au-dessus du champ. |
 
-**Open entity in Datahub** permet de passer du Node à l'éditeur d'Entity. Seuls les tech admins peuvent configurer le Node. Le Node est documenté dans [Interroger une Entity](/fr/advanced-guide/workflows/data-nodes/datagraph).
+Le sélecteur vide affiche *Aucun objet publié n'est disponible pour le moment.* **Ouvrir l'objet dans Datahub** ouvre l'éditeur de l'Objet.
+
+<Warning>
+  Seuls les administrateurs techniques peuvent configurer les nœuds d'interrogation d'objet Datagraph.
+</Warning>
+
+<Info>
+  Le champ **Limite de résultats** est masqué par défaut. Il apparaît uniquement si un administrateur technique active **Objet Datagraph : limite de résultats** dans les paramètres du Workflow → **Fonctionnalités des datasources**. Il accepte de 1 à 200 lignes.
+</Info>
+
+Le Data Node est décrit dans [Objet Datagraph](/fr/advanced-guide/workflows/data-nodes/datagraph).
 
 <Info>
   Les valeurs de paramètres issues de variables du Workflow sont converties vers le type déclaré. Une variable non convertible — du texte libre dans un paramètre `number`, par exemple — fait échouer le Node à l'exécution, et non à la configuration.
@@ -149,14 +160,14 @@ Ajoutez le Data Node **Query an entity** — *Run a datagraph entity query and e
 ## Et ensuite ?
 
 <CardGroup cols={2}>
-  <Card title="Entity Groups" icon="layer-group" href="/fr/advanced-guide/datahub/datagraph/entity-groups">
-    Liez plusieurs Entities à un même contrat de sortie.
+  <Card title="Familles d'objets" icon="layer-group" href="/fr/advanced-guide/datahub/datagraph/entity-groups">
+    Liez plusieurs Objets à un même contrat de sortie.
   </Card>
   <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
     Ajoutez les colonnes et relations dont votre SQL a besoin.
   </Card>
-  <Card title="Explorer" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/explorer">
-    Vérifiez qu'une jointure se recoupe réellement avant de vous y fier.
+  <Card title="Onglets Schema" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Examinez les onglets Diagram, Relations et Datasources de la page Schema.
   </Card>
   <Card title="Data Node Datasource" icon="database" href="/fr/advanced-guide/workflows/data-nodes/datasources">
     Comparez avec l'interrogation d'une seule Datasource dans un Workflow.

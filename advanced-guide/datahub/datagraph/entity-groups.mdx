@@ -1,72 +1,74 @@
 ---
-title: 'Datagraph Entity Groups'
-description: 'Define an output contract shared by several Datagraph Entities, bind the Entities to it, and publish it'
+title: 'Datagraph Object Families'
+description: 'Define an output contract shared by Datagraph Objects, bind members, and publish an Object Family'
 ---
 
 ## Overview
 
-A [Datagraph Entity Group](/glossary) is an output contract shared by several Datagraph Entities. It lets several Entities — one per country, per brand, or per recommendation algorithm — be interchangeable for the consumer that reads them. Open **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
+A [Datagraph Object Family](/glossary) is an output contract shared by several Datagraph Objects. It lets several Objects — one per country, per brand, or per recommendation algorithm — be interchangeable for the consumer that reads them. Open **DataHub → Datagraph → Object families** — *Define output contracts shared by a set of objects*.
 
-The listing shows each group with its **Name**, the number of **Fields** in the contract, the number of member **Entities**, its **Status** (**Draft** or **Live**), and **Last update**, plus two actions: **Edit** and **Delete**. **Create group** opens the editor on a new Draft.
+The listing shows each family with its **Name**, the number of **Fields** in the contract, the number of member **Objects**, its **Status** (**Draft** or **Live**), and **Last update**. **Create family** opens a new Draft.
 
-![Entity groups listing showing the listings_recommendations group with five fields, two entities and a Draft status](/images/datahub/datagraph-entity-groups-listing.png)
+![Object families listing showing the listings_recommendations family with five fields, two Objects and a Draft status](/images/datahub/datagraph-entity-groups-listing.png)
 
 ## Before You Begin
 
-- The Entities you want to bind must exist and, to publish the group, must have a Live version. See [Datagraph Entities](/advanced-guide/datahub/datagraph/entities).
-- Creating and editing groups requires the Datagraph Entity permission. See [Permissions](/product-guide/account/permissions).
+- The Objects you want to bind must exist and have a Live version before you publish the family. See [Datagraph Objects](/advanced-guide/datahub/datagraph/entities).
+- Creating and editing families requires the Datagraph permission. See [Permissions](/product-guide/account/permissions).
 
 ## Editor Layout
 
-The toolbar holds the group **Name**, the **Save** action, the **Publish** action, and a **Versions** side panel, exactly as in the Entity editor.
+The editor is titled **New object family** for a new Draft and **Object family** when you edit an existing family. Its toolbar includes **Save**, **Publish**, and a **Versions** panel.
 
 | Field | Description |
 |-------|-------------|
-| **Name** | The group identifier. Use snake_case, for example `product_recommendations`. |
-| **Description** | Optional. What the group is for, in business terms. |
+| **Name** | The family identifier. Use snake_case, for example `product_recommendations`. |
+| **Description** | Optional. What the family is for, in business terms. |
 
 Below the toolbar, two sections define the contract and its members.
 
-![Entity group editor with the Name, Save and Publish controls, five output fields with their types and Required or Nullable toggles, and two member Entities marked Conform](/images/datahub/datagraph-entity-group-editor.png)
+![Object family editor with Save and Publish controls, Suggest, Text, Number, and Image URL field types, and two member Objects marked Conform](/images/datahub/datagraph-entity-group-editor.png)
 
 ### Fields
 
-**Fields** lists the outputs every member Entity must provide. Click **Add field** to declare one.
+The **Fields** section is described as *Outputs every member object must provide*. Click **Add field** to declare one.
+
+Click **Suggest** to add output fields from the selected Objects. Descriptions come from the schema, and outputs shared by every Object are marked required.
 
 | Column | Description |
 |--------|-------------|
-| **Name** | The output column name the Entity must return, for example `product_id`. |
-| **Type** | The expected type. It uses the same type list as Entity parameters, for example `string`, `number`, `boolean`, `datetime`, `string[]`. |
+| **Name** | The output column name the Object must return, for example `product_id`. |
+| **Type** | The expected output type. The editor displays types such as **Text**, **Number**, and **Image URL**. |
 | **Description** | Optional. What the field contains. |
-| **Required** | When enabled, an Entity that does not return this column violates the contract. When disabled, the column may be absent. |
+| **Required** | When enabled, an Object that does not return this column violates the contract. When disabled, the column may be absent. |
 | **Nullable** | Documents that the value can be empty for some rows. |
 
-### Entities
+### Objects
 
-**Entities** lists the Entities bound to this contract. Pick them in **Select entities...**; each member then shows its **Conformance**:
+The **Objects** section is described as *Objects bound to this contract. Conformance is checked against their live version.* Select members in **Select objects...**. Each member then shows its **Conformance**:
 
 | Status | Meaning |
 |--------|---------|
-| **Conform** | The Live version of the Entity returns every required field with a compatible type. |
-| **No live version** | The Entity has never been published. The group can be saved but not published while it is a member. |
-| **N violation(s)** | The Live version misses a required field, or returns it with an incompatible type. Each violation is listed under the Entity name, for example *Missing field "price"*. |
+| **Conform** | The Live version of the Object returns every required field with a compatible type. |
+| **No live version** | The Object has never been published. The family can be saved but not published while it is a member. |
+| **N violation(s)** | The Live version misses a required field, or returns it with an incompatible type. Each violation is listed under the Object name, for example *Missing field "price"*. |
 
-Conformance is checked against the Live version of each Entity, so an unpublished change to an Entity has no effect until it is published.
+Conformance is checked against the Live version of each Object, so an unpublished change to an Object has no effect until it is published.
 
 ## Conformance Rules
 
-- A required field must be present in the Entity output with a compatible type.
+- A required field must be present in the Object output with a compatible type.
 - An optional field may be absent. When present, its type must still be compatible.
 - Two types are compatible when identical, or when they share the same primitive — `datetime` and `datetime_iso` both resolve to a date, for example.
-- Extra output columns returned by an Entity are ignored.
+- Extra output columns returned by an Object are ignored.
 
 <Info>
-  The contract is enforced on both sides. Saving or publishing a group fails with *Entity group contract violated* when a member does not conform. Publishing an Entity fails with the same error when its new output would break a Live group it belongs to, and an Entity listed in a Live group cannot be deleted.
+  The contract is enforced on both sides. Saving or publishing a family fails with *Entity group contract violated* when a member does not conform. Publishing an Object fails with the same error when its new output would break a Live family it belongs to, and an Object listed in a Live family cannot be deleted.
 </Info>
 
 ## Worked Example
 
-The property listings model from [Datagraph Entities](/advanced-guide/datahub/datagraph/entities) has two Entities that return listings: `recommended_listings` and `listings_matching_search`. A Content that displays a listing card needs the same columns whichever Entity the Workflow selects.
+The property listings model from [Datagraph Objects](/advanced-guide/datahub/datagraph/entities) has two Objects that return listings: `recommended_listings` and `listings_matching_search`. A Content that displays a listing card needs the same columns whichever Object the Workflow selects.
 
 | Field | Type | Required | Nullable |
 |-------|------|----------|----------|
@@ -76,13 +78,13 @@ The property listings model from [Datagraph Entities](/advanced-guide/datahub/da
 | `prix` | `number` | Yes | No |
 | `score_match` | `number` | No | Yes |
 
-Bind both Entities to a group named `listings_recommendations`. Each shows **Conform** when its Live SQL returns the four required columns, and the Workflow can switch Entities without changing the Content. The same pattern applies to one recommendation Entity per algorithm in a retail model.
+Bind both Objects to an Object Family named `listings_recommendations`. Each shows **Conform** when its Live SQL returns the four required columns, and the Workflow can switch Objects without changing the Content. The same pattern applies to one recommendation Object per algorithm in a retail model.
 
 ## Saving and Publishing
 
-**Save** validates the definition — a non-empty name, at least valid field names and types, and existing member Entities — then stores the Draft. *Unsaved changes* appears in the toolbar until you save.
+**Save** validates the definition — a non-empty name, at least valid field names and types, and existing member Objects — then stores the Draft. *Unsaved changes* appears in the toolbar until you save.
 
-Click **Publish** to promote the Draft to Live. The **Publish entity group** dialog accepts an optional **Commit message** describing the change. The previous Live version becomes Inactive, and a new Draft copy is created so editing can continue.
+Click **Publish** to promote the Draft to Live. The **Publish object family** dialog accepts an optional **Commit message** describing the change. The previous Live version becomes Inactive, and a new Draft copy is created so editing can continue.
 
 Publishing requires every member to be **Conform**; a member with **No live version** blocks the publication.
 
@@ -90,25 +92,29 @@ Publishing requires every member to be **Conform**; a member with **No live vers
 
 Open the **Versions** panel from the toolbar rail. Each card shows the version state, its field count, the author, and the commit message when one was provided. Click a card to load that definition into the editor — the editor asks for confirmation when you have unsaved changes. Save to make the loaded definition the new Draft.
 
-![Entity group editor with the Versions panel open on the right, showing a Draft card with the group name, its field count and the author](/images/datahub/datagraph-entity-group-versions.png)
+![Object family editor with the Versions panel open on the right, showing a Draft card with the family name, its field count and the author](/images/datahub/datagraph-entity-group-versions.png)
 
-## Deleting a Group
+## Deleting an Object Family
 
-**Delete** on the listing removes the group and all its versions. The dialog warns that *Contents bound to this group will stop resolving*; this cannot be undone. Member Entities are not deleted.
+The **Delete object family** dialog warns that *Contents bound to this family will stop resolving*. Deleting a family and its versions cannot be undone. Member Objects are not deleted.
+
+## Using an Object Family in Contents
+
+An Object Family can provide interchangeable data to Contents. Add it as a Content source, then bind fields from its shared contract.
 
 ## What's Next?
 
 <CardGroup cols={2}>
-  <Card title="Entities" icon="code" href="/advanced-guide/datahub/datagraph/entities">
-    Write the SQL and publish the Entities that join a group.
+  <Card title="Objects" icon="code" href="/advanced-guide/datahub/datagraph/entities">
+    Write the SQL and publish the Objects that belong to a family.
   </Card>
   <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
     Add the columns and relations your SQL needs.
   </Card>
-  <Card title="Query an Entity" icon="diagram-project" href="/advanced-guide/workflows/data-nodes/datagraph">
-    Consume a published Entity in a Workflow.
+  <Card title="Datagraph Object" icon="diagram-project" href="/advanced-guide/workflows/data-nodes/datagraph">
+    Consume a published Object in a Workflow.
   </Card>
   <Card title="Permissions" icon="lock" href="/product-guide/account/permissions">
-    Grant the Datagraph Entity permission to your data team.
+    Grant the Datagraph permission to your data team.
   </Card>
 </CardGroup>

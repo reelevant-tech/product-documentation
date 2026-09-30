@@ -7,19 +7,19 @@ description: "Organisez les utilisateurs en Teams hiérarchiques pour le contrô
 
 ## Vue d'ensemble
 
-Les Teams contrôlent quels utilisateurs peuvent accéder à quels [Workflows](/fr/product-guide/workflows/overview), [Contents](/fr/product-guide/contents/overview) et [Datasources](/fr/product-guide/datahub/overview). Ils constituent la **couche de délimitation par Team** du [système de permissions](/fr/product-guide/account/permissions) — le [rôle](/fr/product-guide/account/roles) d'un utilisateur définit _ce qu'il peut faire_, tandis que ses Teams définissent _sur quelles ressources_ il peut le faire.
+Les Teams contrôlent l'accès aux [Workflows](/fr/product-guide/workflows/overview), [Contents](/fr/product-guide/contents/overview) et [Datasources](/fr/product-guide/datahub/overview). Elles ajoutent une portée au [système de permissions](/fr/product-guide/account/permissions). Votre [rôle](/fr/product-guide/account/roles) définit ce que vous pouvez faire ; vos Teams définissent les ressources concernées.
 
 Chaque utilisateur doit appartenir à au moins un Team. Les Teams peuvent être organisés en une hiérarchie avec des relations parent-enfant, permettant l'héritage automatique des accès.
 
 ## Comment fonctionne la délimitation par Team
 
-Les [ressources délimitées par Team](/fr/product-guide/account/permissions#resource-scoping) (Workflows, Contents, Datasources, Datagraph schemas, Datagraph entities) sont assignées à un ou plusieurs Teams lors de leur création. Un utilisateur ne peut interagir avec une ressource délimitée par Team que si :
+Les [ressources délimitées par Team](/fr/product-guide/account/permissions#resource-scoping) (Workflows, Contents, Datasources, Datagraph Schema, Objets Datagraph) sont assignées à un ou plusieurs Teams lors de leur création. Un utilisateur ne peut interagir avec une ressource délimitée par Team que si :
 
 1. Son [rôle](/fr/product-guide/account/roles) lui accorde l'action requise sur ce type de ressource.
 2. Il est membre d'au moins un Team auquel appartient la ressource (directement ou par [héritage](#team-hierarchy)).
 
 <Info>
-  Les [ressources délimitées par entreprise](/fr/product-guide/account/permissions#resource-scoping) (utilisateurs, rôles, paramètres de l'entreprise, facturation, etc.) ne sont pas affectées par l'appartenance aux Teams — elles sont accessibles à tout utilisateur dont le rôle autorise l'action.
+  Les [ressources à l'échelle de l'entreprise](/fr/product-guide/account/permissions#resource-scoping) ne dépendent pas de l'appartenance aux Teams. Elles incluent les utilisateurs, les rôles, les paramètres de l'entreprise et la facturation. Tout utilisateur dont le rôle l'autorise peut y accéder.
 </Info>
 
 <Info>
@@ -113,7 +113,7 @@ Par défaut, l'héritage entre Teams se propage dans les deux sens : les utilisa
 | **Activé** | Les utilisateurs assignés à ce Team (ou à l'un de ses sous-Teams) s'arrêtent ici : ils n'accèdent pas aux ressources des Teams situés au-dessus. L'héritage descendant vers les sous-Teams est inchangé. |
 
 <Tip>
-  Activez ce paramètre sur un Team de marque ou de marché lorsque ses membres ne doivent pas voir les Workflows et Contents gérés au niveau du groupe. Si certains ont tout de même besoin des Datasources partagées, donnez à leur [rôle](/fr/product-guide/account/roles#team-scope-per-permission) la portée **Own teams and their parent teams** sur Datasource uniquement.
+  Activez ce paramètre sur un Team de marque ou de marché pour masquer aux membres les Workflows et Contents gérés au niveau du groupe. Si certains ont tout de même besoin des Datasources partagées, donnez à leur [rôle](/fr/product-guide/account/roles#team-scope-per-permission) la portée **Own teams and their parent teams** sur Datasource uniquement.
 </Tip>
 
 ### Protection contre les références circulaires

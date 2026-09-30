@@ -23,11 +23,14 @@ Before binding variables, you need to attach a data source to your content:
     | Source Type | Description |
     |-------------|-------------|
     | **Datasource** | Connect to a [DataHub datasource](/product-guide/datahub/overview) to access its fields. |
+    | **Object family** | Use shared fields from a family of Datagraph Objects in your Content. |
     | **Workflow** | Use data from the parent workflow — URL parameters, live polling, geolocation, or weather. |
     | **Custom** | Define a custom variable using transformation formulas. |
   </Step>
-  <Step title="Select the specific datasource">
+  <Step title="Select the specific source">
     For **Datasource** type, search and select from your available datasources.
+
+    For **Object family** type, select a family in **Select an object family**.
 
     For **Workflow** type, choose the sub-type:
     - **Url parameter** — A named URL parameter passed at render time.
@@ -39,6 +42,16 @@ Before binding variables, you need to attach a data source to your content:
     Complete any additional configuration (e.g., parameter name, preview value) and click **Validate**.
   </Step>
 </Steps>
+
+## Object Families
+
+Choose an Object family to bind its contract fields like Datasource fields. You can also choose the item index to display.
+
+![Source type picker with Object family selected](/images/contents/data-binding-object-family.png)
+
+The Content preview shows a sample value computed from the first live member Object's underlying Datasource.
+
+In a Workflow, bind the family to a Datagraph Object Node whose selected Object belongs to that family. If no matching Node exists, the Content Output Node shows “No Datagraph query node returns an object from the family &lt;name&gt;”.
 
 ## Variable Picker
 
@@ -65,6 +78,27 @@ When a datasource returns multiple results, you can choose which item to display
 
 Custom variables let you define derived values using transformation formulas. After creating a custom variable with a **Variable name**, you configure the formula in the transformation editor.
 
+## Required and Optional Sources
+
+Open **View dependencies** to review the **Datasources**, **Object families**, and **Custom variables** sections.
+
+Each Datasource and Object family has a badge:
+
+| Badge | Tooltip |
+|-------|---------|
+| **Required** | “Used on every render path: a workflow must provide this source.” |
+| **Optional** | “Only used under conditions checking it is defined: a workflow can leave it unbound.” |
+
+![Dependencies drawer showing Required and Optional badges](/images/contents/dependencies-drawer-optionality.png)
+
+A source is Optional only when every use sits inside a [Condition](/product-guide/contents/conditions) checking that the value is defined. Examples include **is not empty**, **is**, **is greater than**, and **contains**.
+
+A source is Required in the default state, in a page URL or title, in an Else branch, or outside a Condition.
+
+A Condition rule's reference alone does not count as a rendered use.
+
+Optional sources can remain unbound in a Workflow without causing an error.
+
 ## Grouping Results
 
 For product datasources, you can optionally group results by a field:
@@ -79,3 +113,14 @@ For product datasources, you can optionally group results by a field:
 ## Transformations
 
 When a variable is bound, you can apply [transformations](/advanced-guide/transformations/introduction) to format the value — for example, formatting a date, rounding a number, or converting a currency. See the [Text component](/product-guide/contents/components/text) for transformation details.
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Datagraph" icon="diagram-project" href="/product-guide/datahub/datagraph">
+    Explore Datagraph Objects and Object families in DataHub.
+  </Card>
+  <Card title="Transformations" icon="arrows-left-right" href="/advanced-guide/transformations/introduction">
+    Format values after binding them to your Content.
+  </Card>
+</CardGroup>

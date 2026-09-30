@@ -3,7 +3,7 @@ title: 'Datagraph'
 description: 'Connect your Datasources into a single data model so Workflows can reuse the same trusted data'
 ---
 
-The Datagraph is the part of the [DataHub](/product-guide/datahub/overview) where you describe how your Datasources relate to each other. It lets your Workflows reuse the same trusted data.
+The Datagraph is part of the [DataHub](/product-guide/datahub/overview). You can describe how your Datasources relate and reuse that trusted data in your Workflows.
 
 <Warning>
   The Datagraph is in beta. Its pages and options can still change. Talk to your Technical Account Manager before you rely on it in a live Workflow.
@@ -13,7 +13,7 @@ The Datagraph is the part of the [DataHub](/product-guide/datahub/overview) wher
 
 Each Datasource holds one set of data — products, stores, purchases, or customers. On its own, a Datasource cannot answer a question that needs two sets of data at once.
 
-The Datagraph links Datasources together. Once linked, your data team can prepare reusable Entities (saved questions such as "top five products bought by this person") that any Workflow can reuse.
+The Datagraph links Datasources. Your data team can prepare reusable Objects, such as “top five products bought by this person”. Any Workflow can reuse them.
 
 <Tip>
   You do not have to build the Datagraph yourself. It is usually set up once by your data team or your Reelevant Technical Account Manager, then reused by everyone.
@@ -21,42 +21,45 @@ The Datagraph links Datasources together. Once linked, your data team can prepar
 
 ## Where to Find It
 
-Open **DataHub** in the sidebar, then choose **Datagraph**. You will see four pages:
+Open **DataHub** in the sidebar, then choose **Datagraph**. Use these pages to explore the model and its reusable Objects:
 
 | Page | What it is for |
 |------|----------------|
-| **Schema** | The data model: which Datasources are part of the Datagraph, and how they are linked. |
-| **Explorer** | A visual map of that model, with a health check on every link. |
-| **Entities** | The reusable questions built on top of the model, ready to be used in Workflows. |
-| **Entity groups** | Sets of Entities that promise the same answer fields, so a Workflow can swap one for another. |
+| **Schema** | Edit the model in **Visual** or explore it in **Diagram**, **Relations**, and **Datasources**. |
+| **Objects** | Reusable data results built on the model, ready to use in Workflows. |
+| **Object families** | Sets of Objects with the same output fields, so a Workflow can use different members. |
 
-On the **Schema** page, the **Tables** panel on the left lists the Datasources in the model. Selecting a table shows its **Columns** and its **Relations** (the links to other tables).
+On **Objects**, choose **CREATE OBJECT** to add an Object. The list shows **No objects yet** until you create one.
 
-![Datagraph Schema page for a property listings model, with five SeLoger tables on the left and the columns of the selected users table on the right](/images/datahub/datagraph-seloger-schema.png)
+In **Object families**, select **Create family** to define shared output fields.
 
-The **Relations** tab shows which other tables the selected table is linked to, and on which fields.
+On **Schema**, use **Visual** to edit tables. Select **Diagram**, **Relations**, or **Datasources** to explore the model.
 
-![Relations tab of a Datagraph table, showing two links from the recommendations table to the users table and the listings table](/images/datahub/datagraph-seloger-schema-relations.png)
+![Schema page Visual view for a property listings model, showing five SeLoger tables and the selected users table's columns](/images/datahub/datagraph-seloger-schema.png)
 
-## Understanding the Explorer
+The **Relations** tab shows the links between tables and the fields they use.
 
-The **Explorer** is the most useful page if you simply want to understand your data.
+![Relations tab of the Datagraph Schema page, showing links from recommendations to users and listings](/images/datahub/datagraph-seloger-schema-relations.png)
 
-1. Open **DataHub → Datagraph → Explorer**.
-2. Stay on the **Diagram** tab to see every Datasource as a box, with lines showing how they are linked.
+## Exploring the Schema
+
+The Schema page includes views for exploring the model and checking its links.
+
+1. Open **DataHub → Datagraph → Schema**.
+2. Select the **Diagram** tab to see each Datasource as a box, with lines showing how they are linked.
 3. Drag the diagram to move around, and use the zoom buttons to get closer.
 4. Open the **Relations** tab to review each link one by one.
 5. Open the **Datasources** tab to list the Datasources used in the model, with their fields.
 
-![Datagraph Explorer Diagram tab, showing five linked property Datasources as boxes connected by lines](/images/datahub/datagraph-seloger-explorer.png)
+![Diagram tab of the Datagraph Schema page, showing five linked property Datasources as boxes connected by lines](/images/datahub/datagraph-seloger-explorer.png)
 
 <Info>
-  If the Explorer asks you to create a Schema first, the Datagraph has not been set up yet. Ask your data team or your Technical Account Manager to build it.
+  The **Diagram**, **Relations**, and **Datasources** tabs show the Draft version when one exists. Otherwise, they show the Published version.
 </Info>
 
-On the **Relations** tab, each link shows a **Join match** percentage. It tells you how well the values on both sides of the link actually overlap in your data.
+On the **Relations** tab, each link shows a **Join match** percentage. It tells you how well the values on both sides overlap in your data.
 
-![Relations tab of the Datagraph Explorer, listing five links with their join match percentages](/images/datahub/datagraph-seloger-relations.png)
+![Relations tab of the Datagraph Schema page, listing five links with their join match percentages](/images/datahub/datagraph-seloger-relations.png)
 
 | Filter | What it shows |
 |--------|---------------|
@@ -71,7 +74,7 @@ On the **Relations** tab, each link shows a **Join match** percentage. It tells 
 
 ## Draft and Published Versions
 
-The **Schema** and each Entity have their own version, shown as a status.
+The **Schema** page shows a **Draft** or **Published** status badge. Each Object also has its own version.
 
 | Status | Meaning |
 |--------|---------|
@@ -81,15 +84,15 @@ The **Schema** and each Entity have their own version, shown as a status.
 
 Nothing you see in a Draft affects your live personalisation until someone publishes it.
 
-![Datagraph Entities page listing five Entities with their Draft or Live status](/images/datahub/datagraph-seloger-entities.png)
+![Datagraph Objects listing with Name, Status, and Last update columns](/images/datahub/datagraph-seloger-entities.png)
 
-## What Entities Can Answer
+## What Objects Can Answer
 
-An Entity answers one question about one person, one product, or one area. Your data team writes it once, and every Workflow can reuse it.
+An Object answers one question about one person, one product, or one area. Your data team writes it once, and every Workflow can reuse it.
 
 Here are typical examples for a property listings account:
 
-| Entity | The question it answers |
+| Object | The question it answers |
 |--------|-------------------------|
 | **Listings matching a user search** | Which listings sit in the area this person is searching, within their budget? |
 | **Listings with a recent price drop** | Which listings in an area just became cheaper, biggest drop first? |
@@ -97,34 +100,34 @@ Here are typical examples for a property listings account:
 | **Recommended listings for a user** | Which listings does our recommendation data suggest for this person? |
 | **Editorial content for an area** | Which guides and market articles are published for this area? |
 
-The same patterns work for other businesses. A retail account might ask for the last items a person bought, the stock left in their favourite store, or the best sellers of their preferred category.
+The same patterns work for other businesses. For example, a retail account might need to show the last items a person bought. It might also show stock in their favourite store or best sellers in their preferred category.
 
 <Tip>
-  Describe the question you need in plain words, with the data it should return. Your data team turns it into an Entity, then you pick it in your Workflow.
+  Describe the question you need in plain words, with the data it should return. Your data team turns it into an Object, then you pick it in your Workflow.
 </Tip>
 
-On an Entity page, the **Preview & results** panel shows a sample of the answer, so you can check the data before it goes live.
+The Object editor includes **Object name** and **Edited object** fields, plus **INPUT / OUTPUT** and **VERSIONS** panels. Open **PREVIEW & RESULTS** to check the returned values.
 
-![Datagraph Entity page showing the entity name, the editor, and two matching listings in the Preview and results panel](/images/datahub/datagraph-seloger-entity-editor.png)
+![Datagraph Object editor with Object name and Edited object fields, INPUT / OUTPUT and VERSIONS side panels, and the collapsed PREVIEW & RESULTS panel](/images/datahub/datagraph-seloger-entity-editor.png)
 
-The **Input / Output** panel lists the **Parameters** the Entity expects, and the fields it returns.
+The **INPUT / OUTPUT** panel lists each parameter and the returned fields, with output types shown as **Text**, **Number**, or **Image URL**.
 
-![Input and Output panel of a Datagraph Entity, showing the user_id parameter and the returned fields with their types](/images/datahub/datagraph-seloger-entity-input-output.png)
+![INPUT / OUTPUT panel showing the user_id parameter and returned fields with Text, Number, and Image URL types](/images/datahub/datagraph-seloger-entity-input-output.png)
 
-## Using an Entity in a Workflow
+## Using an Object in a Workflow
 
-Once an Entity is published, it can be used in a Workflow with the **Query an entity** Data Node (a Node that fetches external data for the Workflow).
+Once an Object is published, you can use it in a Workflow with the **Datagraph Object** Data Node. The Node fetches external data for your Workflow.
 
 1. Open your Workflow in the [Workflow editor](/product-guide/workflows/editor).
-2. Add the **Query an entity** Data Node.
-3. Select the published Entity you need.
-4. Fill in the Entity parameters, either with a fixed value or with a Workflow variable.
+2. Add the **Datagraph Object** Data Node.
+3. Select a published Object in the **Object** field.
+4. Fill in each field under **Object parameters**. The Object's short description appears above its input.
 5. Use the returned data in your [Content](/product-guide/contents/overview) or in a [Condition](/product-guide/workflows/logic-nodes/conditions).
 
-See [Query an Entity](/product-guide/workflows/data-nodes/datagraph) for the full Node walkthrough.
+See [Datagraph Object](/product-guide/workflows/data-nodes/datagraph) for the full Node walkthrough.
 
 <Info>
-  Only users with the tech admin role can configure this Node. Ask your administrator if the Node appears read-only. See [Permissions](/product-guide/account/permissions) for the Datagraph Schema and Datagraph Entity permissions.
+  Only tech admins can configure this Node. Ask your administrator if it appears read-only. See [Permissions](/product-guide/account/permissions) for the Datagraph Schema and Datagraph permissions.
 </Info>
 
 ## What's Next?
@@ -134,10 +137,10 @@ See [Query an Entity](/product-guide/workflows/data-nodes/datagraph) for the ful
     Learn how Datasources are imported and configured.
   </Card>
   <Card title="Datagraph Deep Dive" icon="diagram-project" href="/advanced-guide/datahub/datagraph/overview">
-    Understand the data model, versions, and Entities in detail.
+    Understand the data model, versions, and Objects in detail.
   </Card>
-  <Card title="Explorer" icon="magnifying-glass-chart" href="/advanced-guide/datahub/datagraph/explorer">
-    Read a join match analysis and fix weak links.
+  <Card title="Schema tabs" icon="magnifying-glass-chart" href="/advanced-guide/datahub/datagraph/explorer">
+    Inspect the Diagram, Relations, and Datasources tabs on the Schema page.
   </Card>
   <Card title="Permissions" icon="lock" href="/product-guide/account/permissions">
     See who can view, edit, and publish Datagraph objects.

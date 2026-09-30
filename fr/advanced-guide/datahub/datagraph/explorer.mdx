@@ -1,27 +1,30 @@
 ---
-title: 'Datagraph Explorer'
-description: 'Visualisez le modèle du Datagraph et mesurez la qualité réelle de ses jointures'
+title: 'Vues Schema du Datagraph'
+description: 'Inspectez les onglets Diagram, Relations et Datasources de la page Schema et mesurez le recoupement des relations'
 ---
 
 ## Vue d'ensemble
 
-La page **Explorer** — *Explore your data model and the relations between datasources* — valide le modèle du Datagraph et mesure le recoupement réel de chaque relation. Ouvrez **DataHub → Datagraph → Explorer**.
+Cette page décrit les onglets **Diagram**, **Relations** et **Datasources** de la page **Schema**. Ouvrez **DataHub → Datagraph → Schema**.
 
 ## Avant de commencer
 
-Un Datagraph Schema doit exister. Sans lui, l'Explorer affiche *No schema found* et propose **Go to schema**. Voir [Datagraph Schema](/fr/advanced-guide/datahub/datagraph/schema).
+L'onglet **Visual** permet de modifier les tables. Son sélecteur **JSON** change la vue de l'éditeur. Utilisez **Save** pour enregistrer le Draft et **PUBLISH** pour le publier.
 
 ## Onglets
 
 | Onglet | Contenu |
 |--------|---------|
-| **Diagram** | Un diagramme entité-relation du modèle. Faites glisser pour vous déplacer, utilisez la molette avec la touche de modification pour zoomer, ou les boutons **Zoom in**, **Zoom out** et **Reset**. |
+| **Visual** | L'éditeur de tables, avec un sélecteur **JSON** pour changer de vue. |
+| **Diagram** | Un diagramme du modèle. Faites glisser pour vous déplacer, utilisez la molette avec la touche de modification pour zoomer, ou les boutons **Zoom in**, **Zoom out** et **Reset**. |
 | **Relations** | Une ligne par paire de colonnes en relation, avec ses côtés **From** et **To** et son pourcentage **Join match**. |
 | **Datasources** | Les Datasources utilisées dans le modèle, avec leur nombre de champs, leur nombre de relations et le marqueur de clé primaire (**PK**). |
 
+La page affiche un badge de statut **Draft** ou **Published**. Les onglets **Diagram**, **Relations** et **Datasources** montrent le Draft s'il existe, sinon la version Published.
+
 ## Résumé de validation
 
-L'Explorer valide le modèle à chaque chargement et signale trois types de constat.
+La page Schema valide le modèle à son chargement et signale trois types de constat.
 
 | Constat | Signification |
 |---------|---------------|
@@ -52,7 +55,7 @@ Les relations sont ensuite regroupées, et l'onglet **Relations** peut être fil
 | **Invalid** | Relations dont l'analyse a retourné une erreur. |
 
 <Info>
-  Un match percentage à `—` signifie que l'analyse n'a pas pu s'exécuter. Vérifiez que les deux Datasources ont une version Live, puis rechargez l'Explorer.
+  Un match percentage à `—` signifie que l'analyse n'a pas pu s'exécuter. Vérifiez que les deux Datasources ont une version Live, puis rechargez la page Schema.
 </Info>
 
 ## Inspecter une jointure
@@ -75,9 +78,9 @@ C'est attendu : seule une petite part du catalogue a déjà été achetée. Un r
 
 <CardGroup cols={2}>
   <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
-    Corrigez les relations signalées par le résumé de validation.
+    Modifiez le modèle et passez de l'éditeur de tables aux onglets d'exploration.
   </Card>
-  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+  <Card title="Objets" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
     Interrogez le modèle validé.
   </Card>
   <Card title="Logs" icon="list-check" href="/fr/advanced-guide/datahub/logs">

@@ -5,7 +5,7 @@ description: 'Define the Datagraph tables, columns, and relations, then publish 
 
 ## Overview
 
-The **Schema** page — *Design and manage your data model schema* — is where the Datagraph data model is built. Open **DataHub → Datagraph → Schema**. One Datagraph Schema exists per account, with a Draft and a Live version.
+The **Schema** page — *Design and manage your data model schema* — is where the Datagraph model is built. Open **DataHub → Datagraph → Schema**. One Datagraph Schema exists per account, with a Draft and a Published version.
 
 ## Before You Begin
 
@@ -15,14 +15,9 @@ The **Schema** page — *Design and manage your data model schema* — is where 
 
 ## Editor Layout
 
-Tables, columns, and relations are edited through forms. Two side panels support the work:
+The **Visual** tab edits tables, columns, and relations. Its **JSON** toggle switches the editor view. Use **Save** to store the Draft and **PUBLISH** to publish it.
 
-| Panel | Content |
-|-------|---------|
-| **Tables** | The tables already defined. Select one to edit it. |
-| **Datasources** | A searchable list of the account Datasources. Click one to add it as a table. |
-
-**Preview** opens the model as a **Diagram**, with a zoom **Reset** control. **Open in Explorer** hands the model over to the [Explorer](/advanced-guide/datahub/datagraph/explorer) for validation.
+The **Diagram**, **Relations**, and **Datasources** tabs explore the model. The Diagram view includes zoom controls, while Relations shows join analysis.
 
 ## Adding a Table
 
@@ -40,7 +35,7 @@ Click **Add column** on the **Columns** tab. A column always mirrors a Datasourc
 
 | Field | Description |
 |-------|-------------|
-| **Name** | The column name used in Entity SQL. Must be unique within the table. |
+| **Name** | The column name used in Object SQL. Must be unique within the table. |
 | **Datasource field** | The Datasource field feeding the column. Required. |
 | **Type** | The data type, inherited from the Datasource field mapping (for example `string`, `number`, `price`, `datetime_iso`, `array_string`). |
 | **Description** | Optional documentation for the column. |
@@ -74,7 +69,7 @@ A product catalogue Datasource and a purchases Datasource share a product refere
 | `purchases` | `product_reference` | References `products.reference_id` |
 | `products` | `reference_id` | Declared as a unique key |
 
-With that relation in place, an Entity can join purchases to the catalogue and return product names, prices, and images for a person's past orders.
+With that relation in place, an Object can join purchases to the catalogue and return product names, prices, and images for a person's past orders.
 
 ## Validation Errors
 
@@ -91,23 +86,23 @@ Saving validates the whole model. The following definitions are rejected:
 
 ## Publishing
 
-Click **Publish** to promote the Draft. The confirmation dialog states that the Draft version will be promoted to Live. After publishing:
+Click **PUBLISH** to promote the Draft. The confirmation dialog states that the Draft version will be published. After publishing:
 
-- The previous Live version becomes **Inactive**.
+- The previous Published version becomes **Inactive**.
 - A new Draft copy of the Live definition is created, so editing can continue.
-- Entity output columns are recomputed against the new Live model.
+- Object output columns are recomputed against the new Published model.
 
 <Info>
-  Structural validity is not the same as data quality. A model can be perfectly valid and still contain relations whose values barely overlap. Check the join match in the Explorer before publishing.
+  Structural validity is not the same as data quality. A model can be perfectly valid and still contain relations whose values barely overlap. Check join match in the **Relations** tab before publishing.
 </Info>
 
 ## What's Next?
 
 <CardGroup cols={2}>
-  <Card title="Explorer" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
-    Inspect the diagram and the join match of every relation.
+  <Card title="Schema views" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
+    Inspect the Diagram, Relations, and Datasources tabs.
   </Card>
-  <Card title="Entities" icon="code" href="/advanced-guide/datahub/datagraph/entities">
+  <Card title="Objects" icon="code" href="/advanced-guide/datahub/datagraph/entities">
     Query the model and expose the results to Workflows.
   </Card>
   <Card title="Field Mapping" icon="arrows-left-right" href="/advanced-guide/datahub/field-mapping">

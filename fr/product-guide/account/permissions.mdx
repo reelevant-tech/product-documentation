@@ -35,7 +35,7 @@ Les ressources représentent les différentes entités que vous pouvez gérer su
 | **Billing** | Accès à la facturation et à l'abonnement. | Entreprise |
 | **Invitation** | Gestion des invitations d'utilisateurs. | Entreprise |
 | **Datagraph Schema** | Définition et gestion du schéma Datagraph. | Entreprise + Team |
-| **Datagraph Entity** | Accès et gestion des données d'entité Datagraph. | Entreprise + Team |
+| **Datagraph** | Accès et gestion des données Datagraph. | Entreprise + Team |
 
 ### Délimitation des ressources
 
@@ -51,9 +51,9 @@ Les ressources se répartissent en deux catégories selon la façon dont l'accè
   <Accordion title="Ressources délimitées par Team">
     Ces ressources appartiennent à un ou plusieurs Teams. Un utilisateur ne peut accéder à une ressource délimitée par Team que s'il est membre (ou hérite l'accès) de l'un des Teams de la ressource.
 
-    **Ressources délimitées par Team :** Workflow, Content, Datasource, Datagraph Schema, Datagraph Entity.
+    **Ressources délimitées par Team :** Workflow, Content, Datasource, Datagraph Schema, Datagraph.
 
-    Par exemple, si un Workflow est assigné au Team « Marketing », seuls les utilisateurs membres de « Marketing » (ou de l'un de ses Teams ancêtres) peuvent interagir avec ce Workflow — à condition que leur rôle leur accorde l'action requise.
+    Par exemple, un Workflow affecté au Team « Marketing » est accessible à ses membres. Les membres d'un Team parent peuvent aussi y accéder, si leur rôle leur accorde cette action.
   </Accordion>
 </AccordionGroup>
 
@@ -89,7 +89,7 @@ Le tableau ci-dessous indique quelles actions sont disponibles pour chaque resso
 | **Billing** | ✓ | | | | | | |
 | **Invitation** | | ✓ | ✓ | | | ✓ | |
 | **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
-| **Datagraph Entity** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
+| **Datagraph** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
 
 <Tip>
   L'action **Access** détermine si la section apparaît dans la navigation de la plateforme. Par exemple, accorder **Statistics → Access** rend la section Analytics visible pour l'utilisateur.
@@ -154,7 +154,7 @@ Ces règles sont limitées à l'utilisateur concerné et n'accordent pas l'accè
   </Accordion>
 
   <Accordion title="Rôle éditeur">
-    Un rôle éditeur accorde généralement les actions créer, lire, mettre à jour et supprimer sur **Workflow**, **Content** et **Datasource** — ainsi qu'un accès en lecture aux **Statistics**. Cela permet à l'utilisateur de construire et de gérer des campagnes sans accéder à l'administration du compte.
+    Un rôle éditeur accorde généralement les actions créer, lire, mettre à jour et supprimer sur **Workflow**, **Content** et **Datasource**. Il donne aussi un accès en lecture à **Statistics**. Cela permet à l'utilisateur de construire et de gérer des campagnes sans accéder à l'administration du compte.
   </Accordion>
 
   <Accordion title="Rôle lecteur">
