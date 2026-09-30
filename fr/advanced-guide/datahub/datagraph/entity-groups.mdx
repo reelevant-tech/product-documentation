@@ -1,74 +1,76 @@
 ---
-title: 'Datagraph Entity Groups'
-description: 'Définissez un contrat de sortie partagé par plusieurs Datagraph Entities, liez-y les Entities et publiez-le'
+title: "Familles d'objets Datagraph"
+description: "Définissez un contrat de sortie partagé par plusieurs Objets Datagraph, liez les membres et publiez une Famille d'objets"
 ---
 
 ## Vue d'ensemble
 
-Un [Datagraph Entity Group](/fr/glossary) est un contrat de sortie partagé par plusieurs Datagraph Entities. Il rend plusieurs Entities — une par pays, par marque ou par algorithme de recommandation — interchangeables pour le consommateur qui les lit. Ouvrez **DataHub → Datagraph → Entity groups** — *Define output contracts shared by a set of entities*.
+Une [Famille d'objets Datagraph](/fr/glossary) est un contrat de sortie partagé par plusieurs Objets Datagraph. Plusieurs Objets — un par pays, marque ou algorithme de recommandation — deviennent ainsi interchangeables pour leur consommateur. Ouvrez **DataHub → Datagraph → Familles d'objets** — *Définissez des contrats de sortie partagés par un ensemble d'objets*.
 
-La liste affiche chaque groupe avec son **Name**, le nombre de **Fields** du contrat, le nombre d'**Entities** membres, son **Status** (**Draft** ou **Live**) et sa dernière mise à jour. Deux actions sont disponibles : **Edit** et **Delete**. **Create group** ouvre l'éditeur sur un nouveau Draft.
+La liste affiche le **Nom** de chaque famille, le nombre de **Champs**, le nombre d'**Objets** membres, son **Statut** et la date de mise à jour. Les actions disponibles sont **Modifier** et **Supprimer**. **Créer une famille** ouvre un nouveau brouillon.
 
-![Liste des Entity groups affichant le groupe listings_recommendations avec cinq champs, deux Entities et le statut Draft](/images/datahub/datagraph-entity-groups-listing.png)
+![Liste des familles d'objets affichant listings_recommendations avec cinq champs, deux Objets et le statut brouillon](/images/datahub/datagraph-entity-groups-listing.png)
 
 ## Avant de commencer
 
-- Les Entities à lier doivent exister et, pour publier le groupe, disposer d'une version Live. Voir [Datagraph Entities](/fr/advanced-guide/datahub/datagraph/entities).
-- Créer et modifier des groupes requiert la permission Datagraph Entity. Voir [Permissions](/fr/product-guide/account/permissions).
+- Les Objets à lier doivent exister et disposer d'une version publiée avant la publication de la famille. Voir [Objets Datagraph](/fr/advanced-guide/datahub/datagraph/entities).
+- Créer et modifier des familles requiert la permission Datagraph. Voir [Permissions](/fr/product-guide/account/permissions).
 
 ## Organisation de l'éditeur
 
-La barre d'outils contient le **Name** du groupe, l'action **Save**, l'action **Publish** et un panneau latéral **Versions**, exactement comme dans l'éditeur d'Entity.
+L'éditeur affiche **Nouvelle famille d'objets** pour un brouillon et **Famille d'objets** en modification. La barre d'outils contient **Enregistrer**, **Publier** et le panneau **Versions**.
 
 | Champ | Description |
 |-------|-------------|
-| **Name** | L'identifiant du groupe. Utilisez le snake_case, par exemple `product_recommendations`. |
-| **Description** | Optionnel. À quoi sert le groupe, en termes métier. |
+| **Nom** | L'identifiant de la famille. Utilisez le snake_case, par exemple `product_recommendations`. |
+| **Description** | Facultative. L'objectif de la famille, en termes métier. |
 
 Sous la barre d'outils, deux sections définissent le contrat et ses membres.
 
-![Éditeur d'Entity group avec les contrôles Name, Save et Publish, cinq champs de sortie avec leurs types et interrupteurs Required ou Nullable, et deux Entities membres marquées Conform](/images/datahub/datagraph-entity-group-editor.png)
+![Éditeur d'une famille d'objets avec l'action Suggérer, les types Texte, Nombre et URL d'image, et deux Objets membres conformes](/images/datahub/datagraph-entity-group-editor.png)
 
-### Fields
+### Champs
 
-**Fields** liste les sorties que chaque Entity membre doit fournir. Cliquez sur **Add field** pour en déclarer une.
+La description de la section **Champs** est *Sorties que chaque objet membre doit fournir*. Cliquez sur **Ajouter un champ** pour déclarer une sortie.
+
+Cliquez sur **Suggérer** pour ajouter les sorties des Objets sélectionnés comme champs, avec leurs descriptions issues du schéma. Les sorties communes à tous les Objets sont marquées comme requises.
 
 | Colonne | Description |
 |---------|-------------|
-| **Name** | Le nom de la colonne de sortie que l'Entity doit retourner, par exemple `product_id`. |
-| **Type** | Le type attendu. La liste est la même que pour les paramètres d'Entity, par exemple `string`, `number`, `boolean`, `datetime`, `string[]`. |
-| **Description** | Optionnel. Ce que contient le champ. |
-| **Required** | Activé, une Entity qui ne retourne pas cette colonne viole le contrat. Désactivé, la colonne peut être absente. |
+| **Nom** | Le nom de la colonne que l'Objet doit retourner, par exemple `product_id`. |
+| **Type** | Le type de sortie attendu. L'éditeur affiche des types comme **Texte**, **Nombre** et **URL d'image**. |
+| **Description** | Facultative. Le contenu du champ. |
+| **Requis** | Si le champ est requis, l'Objet doit le retourner. Sinon, la colonne peut être absente. |
 | **Nullable** | Documente que la valeur peut être vide pour certaines lignes. |
 
-### Entities
+### Objets
 
-**Entities** liste les Entities liées à ce contrat. Choisissez-les dans **Select entities...** ; chaque membre affiche ensuite sa **Conformance** :
+La section **Objets** est décrite ainsi : *Objets liés à ce contrat. La conformité est vérifiée sur leur version publiée.* Choisissez les membres dans **Sélectionnez des objets...** ; chacun affiche sa conformité :
 
 | Statut | Signification |
 |--------|---------------|
-| **Conform** | La version Live de l'Entity retourne chaque champ requis avec un type compatible. |
-| **No live version** | L'Entity n'a jamais été publiée. Le groupe peut être sauvegardé mais pas publié tant qu'elle en est membre. |
-| **N violation(s)** | La version Live omet un champ requis, ou le retourne avec un type incompatible. Chaque violation est listée sous le nom de l'Entity, par exemple *Missing field "price"*. |
+| **Conforme** | La version publiée de l'Objet retourne chaque champ requis avec un type compatible. |
+| **Aucune version publiée** | L'Objet n'a jamais été publié. La famille peut être enregistrée, mais pas publiée tant qu'il en est membre. |
+| **N violation(s)** | La version publiée omet un champ requis ou le retourne avec un type incompatible. Chaque violation apparaît sous le nom de l'Objet, par exemple *Champ « price » manquant*. |
 
-La conformité est vérifiée sur la version Live de chaque Entity : une modification non publiée d'une Entity n'a aucun effet tant qu'elle n'est pas publiée.
+La conformité est vérifiée sur la version publiée de chaque Objet : une modification non publiée n'a aucun effet avant sa publication.
 
 ## Règles de conformité
 
-- Un champ requis doit être présent dans la sortie de l'Entity avec un type compatible.
+- Un champ requis doit être présent dans la sortie de l'Objet avec un type compatible.
 - Un champ optionnel peut être absent. S'il est présent, son type doit rester compatible.
 - Deux types sont compatibles lorsqu'ils sont identiques, ou lorsqu'ils partagent la même primitive — `datetime` et `datetime_iso` correspondent tous deux à une date, par exemple.
-- Les colonnes de sortie supplémentaires retournées par une Entity sont ignorées.
+- Les colonnes de sortie supplémentaires retournées par un Objet sont ignorées.
 
 <Info>
-  Le contrat est appliqué des deux côtés. Sauvegarder ou publier un groupe échoue avec *Entity group contract violated* lorsqu'un membre n'est pas conforme. Publier une Entity échoue avec la même erreur lorsque sa nouvelle sortie casserait un groupe Live dont elle fait partie, et une Entity présente dans un groupe Live ne peut pas être supprimée.
+  Le contrat s'applique aux deux opérations. L'enregistrement ou la publication d'une famille échoue avec *Entity group contract violated* si un membre n'est pas conforme. La publication d'un Objet échoue avec la même erreur si ses sorties ne respectent plus une famille publiée.
 </Info>
 
 ## Exemple détaillé
 
-Le modèle d'annonces immobilières de [Datagraph Entities](/fr/advanced-guide/datahub/datagraph/entities) compte deux Entities qui retournent des annonces : `recommended_listings` et `listings_matching_search`. Un Content qui affiche une fiche d'annonce a besoin des mêmes colonnes quelle que soit l'Entity sélectionnée dans le Workflow.
+La page [Objets Datagraph](/fr/advanced-guide/datahub/datagraph/entities) présente un modèle immobilier avec deux Objets qui retournent des annonces : `recommended_listings` et `listings_matching_search`. Un Content qui affiche une annonce a besoin des mêmes colonnes, quel que soit l'Objet sélectionné dans le Workflow.
 
-| Champ | Type | Required | Nullable |
+| Champ | Type | Requis | Nullable |
 |-------|------|----------|----------|
 | `id_listing` | `string` | Oui | Non |
 | `titre` | `string` | Oui | Non |
@@ -76,39 +78,43 @@ Le modèle d'annonces immobilières de [Datagraph Entities](/fr/advanced-guide/d
 | `prix` | `number` | Oui | Non |
 | `score_match` | `number` | Non | Oui |
 
-Liez les deux Entities à un groupe nommé `listings_recommendations`. Chacune affiche **Conform** lorsque son SQL Live retourne les quatre colonnes requises, et le Workflow peut changer d'Entity sans modifier le Content. Le même schéma s'applique à une Entity de recommandation par algorithme dans un modèle retail.
+Liez les deux Objets à une famille nommée `listings_recommendations`. Chacun affiche **Conforme** lorsque ses données publiées retournent les quatre colonnes requises. Le Workflow peut alors changer d'Objet sans modifier le Content.
 
 ## Sauvegarde et publication
 
-**Save** valide la définition — un nom non vide, des noms et types de champs valides, des Entities membres existantes — puis enregistre le Draft. *Unsaved changes* apparaît dans la barre d'outils jusqu'à la sauvegarde.
+**Enregistrer** valide la définition — nom non vide, noms et types de champs valides, et Objets membres existants — puis enregistre le brouillon. **Modifications non enregistrées** apparaît jusqu'à l'enregistrement.
 
-Cliquez sur **Publish** pour promouvoir le Draft en Live. La fenêtre **Publish entity group** accepte un **Commit message** optionnel décrivant le changement. La version Live précédente devient Inactive, et une nouvelle copie Draft est créée pour poursuivre l'édition.
+Cliquez sur **Publier** pour publier le brouillon. La fenêtre **Publier la famille d'objets** accepte un **Message de version (optionnel)**. La version publiée précédente devient inactive, et une nouvelle copie brouillon est créée pour poursuivre l'édition.
 
-La publication exige que chaque membre soit **Conform** ; un membre en **No live version** bloque la publication.
+Chaque membre doit être **Conforme**. Un membre sans version publiée bloque la publication.
 
 ## Versions
 
 Ouvrez le panneau **Versions** depuis le rail de la barre d'outils. Chaque carte affiche l'état de la version, son nombre de champs, l'auteur et le commit message lorsqu'il a été renseigné. Cliquez sur une carte pour charger cette définition dans l'éditeur — l'éditeur demande confirmation si vous avez des modifications non sauvegardées. Sauvegardez pour faire de la définition chargée le nouveau Draft.
 
-![Éditeur d'Entity group avec le panneau Versions ouvert à droite, affichant une carte Draft avec le nom du groupe, son nombre de champs et l'auteur](/images/datahub/datagraph-entity-group-versions.png)
+![Éditeur d'une famille d'objets avec le panneau Versions ouvert, affichant un brouillon, le nom de la famille et son nombre de champs](/images/datahub/datagraph-entity-group-versions.png)
 
-## Supprimer un groupe
+## Supprimer une famille d'objets
 
-**Delete** dans la liste supprime le groupe et toutes ses versions. La fenêtre avertit que *Contents bound to this group will stop resolving* ; l'opération est irréversible. Les Entities membres ne sont pas supprimées.
+La fenêtre **Supprimer la famille d'objets** avertit : *Les contenus liés à cette famille ne pourront plus être résolus.* La suppression de la famille et de ses versions est irréversible. Les Objets membres ne sont pas supprimés.
+
+## Utiliser une famille d'objets dans les Contents
+
+Une famille d'objets fournit des données interchangeables aux Contents. Ajoutez-la comme source du Content, puis liez les champs de son contrat commun.
 
 ## Et ensuite ?
 
 <CardGroup cols={2}>
-  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
-    Écrivez le SQL et publiez les Entities qui rejoignent un groupe.
+  <Card title="Objets" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+    Écrivez le SQL et publiez les Objets membres d'une famille.
   </Card>
   <Card title="Schema" icon="table-columns" href="/fr/advanced-guide/datahub/datagraph/schema">
     Ajoutez les colonnes et relations dont votre SQL a besoin.
   </Card>
-  <Card title="Query an Entity" icon="diagram-project" href="/fr/advanced-guide/workflows/data-nodes/datagraph">
-    Consommez une Entity publiée dans un Workflow.
+  <Card title="Objet Datagraph" icon="diagram-project" href="/fr/advanced-guide/workflows/data-nodes/datagraph">
+    Utilisez un Objet publié dans un Workflow.
   </Card>
   <Card title="Permissions" icon="lock" href="/fr/product-guide/account/permissions">
-    Accordez la permission Datagraph Entity à votre équipe data.
+    Accordez la permission Datagraph à votre équipe data.
   </Card>
 </CardGroup>

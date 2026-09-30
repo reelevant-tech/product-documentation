@@ -5,7 +5,7 @@ description: 'Définissez les tables, colonnes et relations du Datagraph, puis p
 
 ## Vue d'ensemble
 
-La page **Schema** — *Design and manage your data model schema* — est l'endroit où le modèle de données du Datagraph est construit. Ouvrez **DataHub → Datagraph → Schema**. Il existe un Datagraph Schema par compte, avec une version Draft et une version Live.
+La page **Schema** — *Design and manage your data model schema* — est l'endroit où le modèle de données du Datagraph est construit. Ouvrez **DataHub → Datagraph → Schema**. Il existe un Datagraph Schema par compte, avec une version Draft et une version Published.
 
 ## Avant de commencer
 
@@ -15,14 +15,9 @@ La page **Schema** — *Design and manage your data model schema* — est l'endr
 
 ## Disposition de l'éditeur
 
-Les tables, colonnes et relations se modifient via des formulaires. Deux panneaux latéraux accompagnent le travail :
+L'onglet **Visual** permet de modifier les tables, les colonnes et les relations. Son sélecteur **JSON** change la vue de l'éditeur. Utilisez **Save** pour enregistrer le Draft et **PUBLISH** pour le publier.
 
-| Panneau | Contenu |
-|---------|---------|
-| **Tables** | Les tables déjà définies. Sélectionnez-en une pour la modifier. |
-| **Datasources** | La liste recherchable des Datasources du compte. Cliquez sur l'une d'elles pour l'ajouter en tant que table. |
-
-**Preview** ouvre le modèle sous forme de **Diagram**, avec un contrôle de zoom **Reset**. **Open in Explorer** transmet le modèle à l'[Explorer](/fr/advanced-guide/datahub/datagraph/explorer) pour validation.
+Les onglets **Diagram**, **Relations** et **Datasources** permettent d'explorer le modèle. Diagram inclut des commandes de zoom, tandis que Relations affiche l'analyse des jointures.
 
 ## Ajouter une table
 
@@ -40,7 +35,7 @@ Cliquez sur **Add column** dans l'onglet **Columns**. Une colonne reflète toujo
 
 | Champ | Description |
 |-------|-------------|
-| **Name** | Le nom de colonne utilisé dans le SQL des Entities. Doit être unique dans la table. |
+| **Name** | Le nom de colonne utilisé dans le SQL des Objets. Doit être unique dans la table. |
 | **Datasource field** | Le champ de la Datasource qui alimente la colonne. Obligatoire. |
 | **Type** | Le type de données, héritée du field mapping de la Datasource (par exemple `string`, `number`, `price`, `datetime_iso`, `array_string`). |
 | **Description** | Documentation optionnelle de la colonne. |
@@ -74,7 +69,7 @@ Une Datasource de catalogue produits et une Datasource d'achats partagent une r�
 | `purchases` | `product_reference` | Référence `products.reference_id` |
 | `products` | `reference_id` | Déclarée comme clé unique |
 
-Avec cette relation, une Entity peut joindre les achats au catalogue et retourner les noms, prix et images des produits déjà commandés par une personne.
+Avec cette relation, un Objet peut joindre les achats au catalogue et retourner les noms, prix et images des produits déjà commandés par une personne.
 
 ## Erreurs de validation
 
@@ -91,23 +86,23 @@ L'enregistrement valide l'ensemble du modèle. Les définitions suivantes sont r
 
 ## Publication
 
-Cliquez sur **Publish** pour promouvoir le Draft. La fenêtre de confirmation indique que la version Draft sera promue en Live. Après publication :
+Cliquez sur **PUBLISH** pour publier le Draft. La fenêtre de confirmation indique que la version Draft sera publiée. Après publication :
 
-- La version Live précédente devient **Inactive**.
+- La version Published précédente devient **Inactive**.
 - Une nouvelle copie Draft de la définition Live est créée, pour poursuivre les modifications.
-- Les colonnes de sortie des Entities sont recalculées sur le nouveau modèle Live.
+- Les colonnes de sortie des Objets sont recalculées sur le nouveau modèle Published.
 
 <Info>
-  La validité structurelle n'est pas la qualité des données. Un modèle peut être parfaitement valide et contenir des relations dont les valeurs se recoupent à peine. Vérifiez le join match dans l'Explorer avant de publier.
+  La validité structurelle n'est pas la qualité des données. Un modèle peut être parfaitement valide et contenir des relations dont les valeurs se recoupent à peine. Vérifiez le join match dans l'onglet **Relations** avant de publier.
 </Info>
 
 ## Et ensuite ?
 
 <CardGroup cols={2}>
-  <Card title="Explorer" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/explorer">
-    Inspectez le diagramme et le join match de chaque relation.
+  <Card title="Vues de Schema" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Inspectez les onglets Diagram, Relations et Datasources.
   </Card>
-  <Card title="Entities" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
+  <Card title="Objets" icon="code" href="/fr/advanced-guide/datahub/datagraph/entities">
     Interrogez le modèle et exposez les résultats aux Workflows.
   </Card>
   <Card title="Field Mapping" icon="arrows-left-right" href="/fr/advanced-guide/datahub/field-mapping">

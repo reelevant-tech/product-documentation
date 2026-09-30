@@ -3,7 +3,7 @@ title: 'Datagraph'
 description: 'Reliez vos Datasources dans un modèle de données unique pour que vos Workflows réutilisent les mêmes données fiables'
 ---
 
-Le Datagraph est la partie du [DataHub](/fr/product-guide/datahub/overview) où vous décrivez comment vos Datasources sont liées entre elles. Vos Workflows réutilisent ainsi les mêmes données fiables.
+Le Datagraph fait partie du [DataHub](/fr/product-guide/datahub/overview). Vous pouvez décrire les liens entre vos Datasources et réutiliser ces données fiables dans vos Workflows.
 
 <Warning>
   Le Datagraph est en bêta. Ses pages et ses options peuvent encore évoluer. Échangez avec votre Technical Account Manager avant de vous appuyer dessus dans un Workflow en production.
@@ -13,7 +13,7 @@ Le Datagraph est la partie du [DataHub](/fr/product-guide/datahub/overview) où 
 
 Chaque Datasource contient un seul ensemble de données : produits, magasins, achats ou clients. Seule, une Datasource ne peut pas répondre à une question qui croise deux ensembles de données.
 
-Le Datagraph relie les Datasources entre elles. Votre équipe data peut ensuite préparer des Entities réutilisables (des questions enregistrées, par exemple « les cinq produits les plus achetés par cette personne ») que n'importe quel Workflow peut réutiliser.
+Le Datagraph relie vos Datasources. Votre équipe data peut créer des Objets réutilisables, par exemple « les cinq produits les plus achetés par cette personne ». N'importe quel Workflow peut les utiliser.
 
 <Tip>
   Vous n'avez pas à construire le Datagraph vous-même. Il est généralement mis en place une fois par votre équipe data ou votre Technical Account Manager Reelevant, puis réutilisé par tout le monde.
@@ -21,42 +21,45 @@ Le Datagraph relie les Datasources entre elles. Votre équipe data peut ensuite 
 
 ## Où le trouver
 
-Ouvrez **DataHub** dans la barre latérale, puis choisissez **Datagraph**. Vous y trouverez quatre pages :
+Ouvrez **DataHub** dans la barre latérale, puis choisissez **Datagraph**. Utilisez ces pages pour explorer le modèle et ses Objets réutilisables :
 
 | Page | À quoi elle sert |
 |------|------------------|
-| **Schema** | Le modèle de données : quelles Datasources font partie du Datagraph, et comment elles sont liées. |
-| **Explorer** | Une carte visuelle de ce modèle, avec un contrôle de santé sur chaque lien. |
-| **Entities** | Les questions réutilisables construites sur ce modèle, prêtes à être utilisées dans les Workflows. |
-| **Entity groups** | Des ensembles d'Entities qui promettent les mêmes champs de réponse, pour qu'un Workflow puisse passer de l'une à l'autre. |
+| **Schema** | Modifiez le modèle dans **Visual** ou explorez-le dans **Diagram**, **Relations** et **Datasources**. |
+| **Objets** | Des résultats réutilisables construits sur le modèle, prêts à être utilisés dans les Workflows. |
+| **Familles d'objets** | Des Objets avec les mêmes champs de sortie, pour qu'un Workflow puisse utiliser différents membres. |
 
-Sur la page **Schema**, le panneau **Tables** à gauche liste les Datasources du modèle. Sélectionner une table affiche ses **Columns** et ses **Relations** (les liens vers les autres tables).
+Dans **Objets**, choisissez **Créer un objet** pour ajouter un Objet. La liste affiche **Aucun objet pour le moment** avant sa création.
 
-![Page Schema du Datagraph pour un modèle d'annonces immobilières, avec cinq tables SeLoger à gauche et les colonnes de la table utilisateurs sélectionnée à droite](/images/datahub/datagraph-seloger-schema.png)
+Dans **Familles d'objets**, choisissez **Créer une famille** pour définir les champs de sortie communs.
 
-L'onglet **Relations** montre à quelles autres tables la table sélectionnée est liée, et sur quels champs.
+Dans **Schema**, utilisez **Visual** pour modifier les tables. Choisissez **Diagram**, **Relations** ou **Datasources** pour explorer le modèle.
 
-![Onglet Relations d'une table du Datagraph, avec deux liens de la table de recommandations vers la table utilisateurs et la table annonces](/images/datahub/datagraph-seloger-schema-relations.png)
+![Vue Visual de la page Schema avec un modèle immobilier, cinq tables SeLoger et les colonnes de la table utilisateurs sélectionnée](/images/datahub/datagraph-seloger-schema.png)
 
-## Comprendre l'Explorer
+L'onglet **Relations** présente les liens entre tables et les champs utilisés.
 
-L'**Explorer** est la page la plus utile si vous souhaitez simplement comprendre vos données.
+![Onglet Relations de la page Schema du Datagraph, montrant les liens des recommandations vers les utilisateurs et les annonces](/images/datahub/datagraph-seloger-schema-relations.png)
 
-1. Ouvrez **DataHub → Datagraph → Explorer**.
-2. Restez sur l'onglet **Diagram** pour voir chaque Datasource sous forme de bloc, avec les lignes qui montrent les liens.
+## Explorer le modèle
+
+La page Schema propose plusieurs vues pour explorer le modèle et vérifier ses liens.
+
+1. Ouvrez **DataHub → Datagraph → Schema**.
+2. Choisissez l'onglet **Diagram** pour voir les Datasources sous forme de blocs reliés.
 3. Faites glisser le diagramme pour vous déplacer, et utilisez les boutons de zoom pour vous rapprocher.
 4. Ouvrez l'onglet **Relations** pour examiner chaque lien un par un.
 5. Ouvrez l'onglet **Datasources** pour lister les Datasources utilisées dans le modèle, avec leurs champs.
 
-![Onglet Diagram de l'Explorer du Datagraph, avec cinq Datasources immobilières liées sous forme de blocs reliés par des lignes](/images/datahub/datagraph-seloger-explorer.png)
+![Onglet Diagram de la page Schema du Datagraph, avec cinq Datasources immobilières liées sous forme de blocs reliés](/images/datahub/datagraph-seloger-explorer.png)
 
 <Info>
-  Si l'Explorer vous demande de créer d'abord un Schema, le Datagraph n'a pas encore été mis en place. Demandez à votre équipe data ou à votre Technical Account Manager de le construire.
+  Les onglets **Diagram**, **Relations** et **Datasources** affichent le Draft s'il existe. Sinon, ils affichent la version Published.
 </Info>
 
-Sur l'onglet **Relations**, chaque lien affiche un pourcentage **Join match**. Il indique à quel point les valeurs des deux côtés du lien se recoupent réellement dans vos données.
+Sur l'onglet **Relations**, chaque lien affiche un pourcentage **Join match**. Il indique le recoupement des valeurs des deux côtés dans vos données.
 
-![Onglet Relations de l'Explorer du Datagraph, listant cinq liens avec leur pourcentage de join match](/images/datahub/datagraph-seloger-relations.png)
+![Onglet Relations de la page Schema du Datagraph, listant cinq liens avec leur pourcentage de join match](/images/datahub/datagraph-seloger-relations.png)
 
 | Filtre | Ce qu'il affiche |
 |--------|------------------|
@@ -71,7 +74,7 @@ Sur l'onglet **Relations**, chaque lien affiche un pourcentage **Join match**. I
 
 ## Versions Draft et Published
 
-La page **Schema** et chaque Entity possèdent leur propre version, affichée sous forme de statut.
+La page **Schema** affiche un badge de statut **Draft** ou **Published**. Chaque Objet possède également sa propre version.
 
 | Statut | Signification |
 |--------|---------------|
@@ -81,15 +84,15 @@ La page **Schema** et chaque Entity possèdent leur propre version, affichée so
 
 Rien de ce que vous voyez dans un Draft n'affecte votre personnalisation en production avant publication.
 
-![Page Entities du Datagraph listant cinq Entities avec leur statut Draft ou Live](/images/datahub/datagraph-seloger-entities.png)
+![Liste des Objets Datagraph avec les colonnes Nom, Statut et Dernière mise à jour](/images/datahub/datagraph-seloger-entities.png)
 
-## Ce qu'une Entity peut répondre
+## Questions auxquelles un Objet peut répondre
 
-Une Entity répond à une question sur une personne, un produit ou une zone. Votre équipe data l'écrit une fois, et tous les Workflows peuvent la réutiliser.
+Un Objet répond à une question sur une personne, un produit ou une zone. Votre équipe data le prépare une fois, et tous les Workflows peuvent le réutiliser.
 
 Voici des exemples typiques pour un compte d'annonces immobilières :
 
-| Entity | La question à laquelle elle répond |
+| Objet | La question à laquelle il répond |
 |--------|------------------------------------|
 | **Listings matching a user search** | Quelles annonces se trouvent dans la zone recherchée par cette personne, dans son budget ? |
 | **Listings with a recent price drop** | Quelles annonces d'une zone viennent de baisser, la plus forte baisse d'abord ? |
@@ -100,31 +103,31 @@ Voici des exemples typiques pour un compte d'annonces immobilières :
 Les mêmes principes fonctionnent pour d'autres secteurs. Un compte retail peut demander les derniers articles achetés, le stock restant dans le magasin préféré, ou les meilleures ventes de la catégorie préférée.
 
 <Tip>
-  Décrivez la question dont vous avez besoin en langage courant, avec les données attendues. Votre équipe data la transforme en Entity, puis vous la choisissez dans votre Workflow.
+  Décrivez la question dont vous avez besoin en langage courant, avec les données attendues. Votre équipe data la transforme en Objet, puis vous le choisissez dans votre Workflow.
 </Tip>
 
-Sur la page d'une Entity, le panneau **Preview & results** affiche un échantillon de la réponse, pour vérifier les données avant la mise en production.
+L'éditeur d'Objet propose les champs **Nom de l'objet** et **Objet édité**, ainsi que les panneaux **INPUT / OUTPUT** et **VERSIONS**. L'aperçu aide à vérifier les valeurs retournées.
 
-![Page Entity du Datagraph avec le nom de l'Entity, l'éditeur et deux annonces correspondantes dans le panneau Preview and results](/images/datahub/datagraph-seloger-entity-editor.png)
+![Éditeur d'Objet Datagraph avec les champs Nom de l'objet et Objet édité, les panneaux latéraux INPUT / OUTPUT et VERSIONS, et le panneau PREVIEW & RESULTS replié](/images/datahub/datagraph-seloger-entity-editor.png)
 
-Le panneau **Input / Output** liste les **Parameters** attendus par l'Entity, et les champs qu'elle retourne.
+Le panneau **INPUT / OUTPUT** liste les paramètres et les champs retournés. Les types affichés sont **Texte**, **Nombre** ou **URL d'image**.
 
-![Panneau Input et Output d'une Entity du Datagraph, avec le paramètre user_id et les champs retournés avec leur type](/images/datahub/datagraph-seloger-entity-input-output.png)
+![Panneau INPUT / OUTPUT avec le paramètre user_id et les champs retournés de types Texte, Nombre et URL d'image](/images/datahub/datagraph-seloger-entity-input-output.png)
 
-## Utiliser une Entity dans un Workflow
+## Utiliser un Objet dans un Workflow
 
-Une fois une Entity publiée, elle peut être utilisée dans un Workflow avec le Data Node **Query an entity** (un Node qui récupère des données externes pour le Workflow).
+Une fois publié, vous pouvez utiliser un Objet dans votre Workflow avec le Data Node **Objet Datagraph**, une étape qui récupère des données externes.
 
 1. Ouvrez votre Workflow dans l'[éditeur de Workflow](/fr/product-guide/workflows/editor).
-2. Ajoutez le Data Node **Query an entity**.
-3. Sélectionnez l'Entity publiée dont vous avez besoin.
-4. Renseignez les paramètres de l'Entity, avec une valeur fixe ou avec une variable du Workflow.
+2. Ajoutez le Data Node **Objet Datagraph**.
+3. Sélectionnez un Objet publié dans le champ **Objet**.
+4. Renseignez chaque champ sous **Paramètres de l'objet**. La courte description de chaque paramètre apparaît au-dessus de son champ.
 5. Utilisez les données retournées dans votre [Content](/fr/product-guide/contents/overview) ou dans une [Condition](/fr/product-guide/workflows/logic-nodes/conditions).
 
-Voir [Interroger une Entity](/fr/product-guide/workflows/data-nodes/datagraph) pour la description complète du Node.
+Voir [Objet Datagraph](/fr/product-guide/workflows/data-nodes/datagraph) pour la description complète du Node.
 
 <Info>
-  Seuls les utilisateurs avec le rôle tech admin peuvent configurer ce Node. Demandez à votre administrateur si le Node apparaît en lecture seule. Voir [Permissions](/fr/product-guide/account/permissions) pour les permissions Datagraph Schema et Datagraph Entity.
+  Seuls les administrateurs techniques peuvent configurer les nœuds d'interrogation d'objet Datagraph. Demandez à votre administrateur si le Node apparaît en lecture seule. Voir [Permissions](/fr/product-guide/account/permissions) pour les permissions Datagraph Schema et Datagraph.
 </Info>
 
 ## Et ensuite ?
@@ -134,10 +137,10 @@ Voir [Interroger une Entity](/fr/product-guide/workflows/data-nodes/datagraph) p
     Découvrez comment les Datasources sont importées et configurées.
   </Card>
   <Card title="Datagraph en détail" icon="diagram-project" href="/fr/advanced-guide/datahub/datagraph/overview">
-    Comprenez le modèle de données, les versions et les Entities en détail.
+    Comprenez le modèle de données, les versions et les Objets en détail.
   </Card>
-  <Card title="Explorer" icon="magnifying-glass-chart" href="/fr/advanced-guide/datahub/datagraph/explorer">
-    Lisez une analyse de join match et corrigez les liens faibles.
+  <Card title="Vues de Schema" icon="magnifying-glass-chart" href="/fr/advanced-guide/datahub/datagraph/explorer">
+    Inspectez les onglets Diagram, Relations et Datasources de la page Schema.
   </Card>
   <Card title="Permissions" icon="lock" href="/fr/product-guide/account/permissions">
     Voyez qui peut consulter, modifier et publier les objets du Datagraph.

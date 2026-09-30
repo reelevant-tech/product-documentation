@@ -1,27 +1,30 @@
 ---
-title: 'Datagraph Explorer'
-description: 'Visualise the Datagraph model and measure how well its relations actually join'
+title: 'Datagraph Schema views'
+description: 'Inspect the Diagram, Relations, and Datasources tabs on the Schema page and measure relation overlap'
 ---
 
 ## Overview
 
-The **Explorer** page — *Explore your data model and the relations between datasources* — validates the Datagraph model and measures the real overlap of every relation. Open **DataHub → Datagraph → Explorer**.
+This guide covers the **Diagram**, **Relations**, and **Datasources** tabs on the **Schema** page. Open **DataHub → Datagraph → Schema**.
 
 ## Before You Begin
 
-A Datagraph Schema must exist. Without one, the Explorer shows *No schema found* and offers **Go to schema**. See [Datagraph Schema](/advanced-guide/datahub/datagraph/schema).
+The **Visual** tab edits tables. Its **JSON** toggle switches the editor view. Use **Save** to store the Draft and **PUBLISH** to publish it.
 
 ## Tabs
 
 | Tab | Content |
 |-----|---------|
-| **Diagram** | An entity-relationship diagram of the model. Drag to pan, scroll with the modifier key to zoom, or use **Zoom in**, **Zoom out**, and **Reset**. |
+| **Visual** | The table editor. Use its **JSON** toggle to switch the editor view. |
+| **Diagram** | A diagram of the model. Drag to pan, scroll with the modifier key to zoom, or use **Zoom in**, **Zoom out**, and **Reset**. |
 | **Relations** | One row per relation column pair, with its **From** and **To** side and its **Join match** percentage. |
 | **Datasources** | The Datasources used in the model, with their field count, relation count, and primary key marker (**PK**). |
 
+The page displays a **Draft** or **Published** status badge. The **Diagram**, **Relations**, and **Datasources** tabs show Draft when it exists, otherwise Published.
+
 ## Validation Summary
 
-The Explorer validates the model whenever it loads and reports three kinds of finding.
+The Schema page validates the model when it loads and reports three kinds of finding.
 
 | Finding | Meaning |
 |---------|---------|
@@ -52,7 +55,7 @@ Relations are then grouped, and the **Relations** tab can be filtered accordingl
 | **Invalid** | Relations whose analysis returned an error. |
 
 <Info>
-  A match percentage of `—` means the analysis could not run. Check that both Datasources have a Live version, then reload the Explorer.
+  A match percentage of `—` means the analysis could not run. Check that both Datasources have a Live version, then reload the Schema page.
 </Info>
 
 ## Inspecting a Join
@@ -75,9 +78,9 @@ That is expected: only a small share of the catalogue has ever been bought. A we
 
 <CardGroup cols={2}>
   <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
-    Correct the relations flagged by the validation summary.
+    Edit the model and switch between its table editor and exploration tabs.
   </Card>
-  <Card title="Entities" icon="code" href="/advanced-guide/datahub/datagraph/entities">
+  <Card title="Objects" icon="code" href="/advanced-guide/datahub/datagraph/entities">
     Query the validated model.
   </Card>
   <Card title="Logs" icon="list-check" href="/advanced-guide/datahub/logs">

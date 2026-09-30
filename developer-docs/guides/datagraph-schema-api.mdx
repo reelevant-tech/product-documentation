@@ -287,13 +287,13 @@ if (createResponse.status === 409) {
 }
 ```
 
-## Datagraph Entities
+## Datagraph Objects (Entity in the API)
 
-Datagraph Entities — the parameterised SQL queries executed against the Live Datagraph Schema — are not exposed in the public API. Create, publish, and run them from the DataHub, then consume them in a Workflow with the **Query an entity** Data Node. Two constraints apply to Entity SQL: every referenced Datasource must have a Live version, and Datasources protected by row-level filters cannot be queried.
+Datagraph Objects (Entity in the API) — parameterised SQL queries executed against the Live Datagraph Schema — are not exposed in the public API. Create, publish, and run them from the DataHub, then consume them in a Workflow with the **Datagraph Object** Data Node. Two constraints apply to Object SQL: every referenced Datasource must have a Live version, and Datasources protected by row-level filters cannot be queried.
 
 ## Related
 
 - [Datasource query filters](/developer-docs/guides/datasource-query-filters)
 - [Real-time API Datasource](/developer-docs/guides/real-time-api-datasource)
 - [Authentication](/developer-docs/api-reference/authentication)
-- [Datagraph Entities](/advanced-guide/datahub/datagraph/entities)
+- [Datagraph Objects](/advanced-guide/datahub/datagraph/entities)

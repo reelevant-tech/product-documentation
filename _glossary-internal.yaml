@@ -104,14 +104,18 @@ terms:
     synonyms_forbidden: ["data model", "graph schema", "datagraph model"]
 
   datagraph_entity:
-    canonical_name: "Datagraph Entity"
+    canonical_name: "Datagraph Object"
     definition: "A named SQL query over the Datagraph Schema, with declared parameters and inferred output columns, consumable by a Workflow."
-    synonyms_forbidden: ["entity query", "saved query", "dataset", "view"]
+    technical_name: "Entity"
+    note: "Use 'Object' in all user-facing docs. The API still names it Entity; developer-docs may add '(Entity)' in parentheses."
+    synonyms_forbidden: ["Datagraph Entity", "entity query", "saved query", "dataset", "view"]
 
   datagraph_entity_group:
-    canonical_name: "Datagraph Entity Group"
-    definition: "A named contract listing the output fields that a set of Datagraph Entities must return, so they can be used interchangeably."
-    synonyms_forbidden: ["entity contract", "entity set", "entity collection", "interface"]
+    canonical_name: "Datagraph Object Family"
+    definition: "A named contract listing the output fields that a set of Datagraph Objects must return, so they can be used interchangeably."
+    technical_name: "Entity Group"
+    note: "Use 'Object Family' in all user-facing docs. The API still names it Entity Group; developer-docs may add '(Entity Group)' in parentheses."
+    synonyms_forbidden: ["Datagraph Entity Group", "entity contract", "entity set", "entity collection", "interface"]
 
   resource_group:
     canonical_name: "Team"

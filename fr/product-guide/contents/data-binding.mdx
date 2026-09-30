@@ -7,7 +7,7 @@ description: "Connectez les composants de Content à des données dynamiques iss
 
 ## Présentation
 
-Le Data binding connecte les propriétés des composants à des valeurs dynamiques qui se résolvent au moment du rendu. Au lieu de coder en dur du texte, des images ou des URLs, vous les liez à des **variables** provenant de [Datasources](/fr/product-guide/datahub/overview), de paramètres d'URL ou d'autres sources de données configurées dans votre [Workflow](/fr/product-guide/workflows/overview).
+Le Data binding connecte les propriétés des composants à des valeurs dynamiques qui se résolvent au moment du rendu. Vous pouvez lier le texte, les images et les URLs à des variables. Elles peuvent venir de [Datasources](/fr/product-guide/datahub/overview), de paramètres d'URL ou d'autres sources de votre [Workflow](/fr/product-guide/workflows/overview).
 
 ## Ajouter une Datasource
 
@@ -23,11 +23,14 @@ Avant de lier des variables, vous devez rattacher une source de données à votr
     | Type de source | Description |
     |----------------|-------------|
     | **Datasource** | Se connecter à une [Datasource du DataHub](/fr/product-guide/datahub/overview) pour accéder à ses champs. |
+    | **Famille d'objets** | Utiliser les champs communs d'une famille d'Objets Datagraph dans votre Content. |
     | **Workflow** | Utiliser les données du Workflow parent — paramètres d'URL, live polling, géolocalisation ou météo. |
     | **Custom** | Définir une variable personnalisée à l'aide de formules de transformation. |
   </Step>
-  <Step title="Sélectionner la Datasource spécifique">
+  <Step title="Sélectionner la source spécifique">
     Pour le type **Datasource**, recherchez et sélectionnez parmi vos Datasources disponibles.
+
+    Pour le type **Famille d'objets**, sélectionnez une famille dans **Sélectionnez une famille d'objets**.
 
     Pour le type **Workflow**, choisissez le sous-type :
     - **Url parameter** — Un paramètre d'URL nommé transmis au moment du rendu.
@@ -39,6 +42,16 @@ Avant de lier des variables, vous devez rattacher une source de données à votr
     Complétez la configuration supplémentaire (par exemple, nom du paramètre, valeur de prévisualisation) et cliquez sur **Validate**.
   </Step>
 </Steps>
+
+## Familles d'objets
+
+Choisissez une famille d'objets pour lier ses champs de contrat comme ceux d'une Datasource. Vous pouvez aussi choisir l'index de l'élément à afficher.
+
+![Sélecteur de type de source avec la famille d'objets sélectionnée](/images/contents/data-binding-object-family.png)
+
+L'aperçu du Content affiche une valeur d'exemple calculée à partir de la Datasource du premier Objet membre disposant d'une version Live.
+
+Dans un Workflow, liez la famille à un Data Node Objet Datagraph dont l'Objet sélectionné appartient à cette famille. Sans Node correspondant, le Content Output Node affiche « No Datagraph query node returns an object from the family &lt;name&gt; ».
 
 ## Sélecteur de variables
 
@@ -65,6 +78,27 @@ Lorsqu'une Datasource renvoie plusieurs résultats, vous pouvez choisir quel él
 
 Les variables personnalisées vous permettent de définir des valeurs dérivées à l'aide de formules de transformation. Après avoir créé une variable personnalisée avec un **nom de variable**, vous configurez la formule dans l'éditeur de transformation.
 
+## Sources obligatoires et optionnelles
+
+Ouvrez **View dependencies** pour consulter les sections **Datasources**, **Familles d'objets** et **Variables personnalisées**.
+
+Chaque Datasource et famille d'objets porte un badge :
+
+| Badge | Infobulle |
+|-------|-----------|
+| **Obligatoire** | « Utilisée sur tous les chemins de rendu : un workflow doit fournir cette source. » |
+| **Optionnelle** | « Utilisée uniquement sous des conditions vérifiant qu'elle est définie : un workflow peut ne pas la fournir. » |
+
+![Panneau des dépendances affichant les badges Obligatoire et Optionnelle](/images/contents/dependencies-drawer-optionality.png)
+
+Une source est optionnelle uniquement si chaque utilisation est protégée par une [Condition](/fr/product-guide/contents/conditions) qui vérifie que sa valeur est définie. Exemples : **n'est pas vide**, **est**, **est supérieur à** ou **contient**.
+
+Une source est obligatoire si elle est utilisée par défaut, dans l'URL ou le titre, dans une branche Else, ou hors d'une Condition.
+
+La seule référence à une source dans une règle de Condition ne compte pas comme une utilisation dans le rendu.
+
+Les sources optionnelles peuvent rester sans liaison dans un Workflow sans provoquer d'erreur.
+
 ## Regroupement des résultats
 
 Pour les Datasources de produits, vous pouvez optionnellement regrouper les résultats par champ :
@@ -79,3 +113,14 @@ Pour les Datasources de produits, vous pouvez optionnellement regrouper les rés
 ## Transformations
 
 Lorsqu'une variable est liée, vous pouvez appliquer des [Transformations](/fr/advanced-guide/transformations/introduction) pour formater la valeur — par exemple, formater une date, arrondir un nombre ou convertir une devise. Voir le composant [Text](/fr/product-guide/contents/components/text) pour les détails sur les transformations.
+
+## Et ensuite ?
+
+<CardGroup cols={2}>
+  <Card title="Datagraph" icon="diagram-project" href="/fr/product-guide/datahub/datagraph">
+    Découvrez les Objets Datagraph et les familles d'objets dans DataHub.
+  </Card>
+  <Card title="Transformations" icon="arrows-left-right" href="/fr/advanced-guide/transformations/introduction">
+    Formatez les valeurs après les avoir liées à votre Content.
+  </Card>
+</CardGroup>

@@ -1,34 +1,32 @@
 ---
-title: 'Datagraph Entities'
-description: 'Write parameterised SQL against the Datagraph model, preview results, and publish for Workflows'
+title: 'Datagraph Objects'
+description: 'Write parameterised SQL for Datagraph Objects, preview results, and publish them for Workflows'
 ---
 
 ## Overview
 
-A Datagraph Entity is a named SQL query over the Datagraph model, with declared parameters and inferred output columns. Open **DataHub → Datagraph → Entities** — *Manage datagraph entities for your account*.
+A Datagraph Object is a named SQL query over the Datagraph model, with declared parameters and inferred output columns. Open **DataHub → Datagraph → Objects** — *Manage datagraph objects for your account*.
 
-The listing shows each Entity with its **Name**, **Status** (**Draft** or **Live**), and **Last update**, plus two actions: **Edit** and **Query**. **Create entity** opens the editor on a new Draft.
+The **OBJECTS** listing shows **Name**, **Status**, and **Last update**. Its description is *Manage datagraph objects for your account*. Select **CREATE OBJECT** to open a new Draft. The empty state says *No objects yet*.
 
 ## Before You Begin
 
 - The Datagraph Schema must be published, because output columns are inferred against the Live model. See [Datagraph Schema](/advanced-guide/datahub/datagraph/schema).
 - Every Datasource referenced by the SQL needs a Live version.
-- Datasources protected by row-level filters cannot be queried from an Entity.
+- Datasources protected by row-level filters cannot be queried from an Object.
 
 ## Editor Layout
 
-| Panel | Content |
-|-------|---------|
-| **SQL query** | The statement executed for this Entity. **Format SQL** re-indents it, and **Run query** executes it. |
-| **Input / Output** | **Input** lists the parameters passed to the SQL query. **Output** lists the computed answer returned by the Entity, and is read-only. |
-| **Preview & results** | A sample of query results, up to 10 rows, with the row count and a **Trace ID**. |
+The editor breadcrumb is **Datagraph > Objects**. Its subtitle is *Define and manage your datagraph object SQL query and options*.
 
-Both side panels can be collapsed, and the toolbar shows the keyboard shortcut for saving, formatting, and toggling each panel.
+The **Object name** field uses snake_case. The **Edited object** selector switches the version being edited. The side panels are **INPUT / OUTPUT** and **VERSIONS**.
+
+The SQL editor runs a preview against the selected Object. Results include up to 10 rows, a row count, and a **Trace ID**.
 
 | Field | Description |
 |-------|-------------|
-| **Entity name** | The Entity identifier. Use snake_case, for example `top_products_bought`. |
-| **Description** | What the Entity answers, in business terms. |
+| **Object name** | The Object identifier. Use snake_case, for example `top_products_bought`. |
+| **Description** | What the Object answers, in business terms. |
 
 ## Writing the SQL
 
@@ -53,7 +51,7 @@ The statement must reference at least one Datasource table, otherwise the query 
 
 The patterns below come from a property listings model built on five Datasources: users, listings, price-per-square-metre by area, pre-computed recommendations, and editorial content.
 
-| Entity | Pattern | Parameters | Returns |
+| Object | Pattern | Parameters | Returns |
 |--------|---------|------------|---------|
 | `listings_matching_search` | Join users to listings on the searched area, then filter on the user budget. | `user_id` (`string`) | Listings ordered by quality score, limited to 6. |
 | `listings_price_drop` | Filter listings of one area on a minimum price variation, computed from the previous price. | `zone_id` (`string`), `min_drop_pct` (`number`) | Listings ordered by drop percentage. |
@@ -64,12 +62,12 @@ The patterns below come from a property listings model built on five Datasources
 The same patterns transfer to other models: last items purchased by a customer, remaining stock in a preferred store, best sellers of a category, or complementary products of an order.
 
 <Info>
-  Filters that combine several user preferences — budget range plus minimum number of rooms, for example — can legitimately return zero rows. Preview each Entity with a real identifier before publishing, and relax the least critical condition when the result set is empty.
+  Filters that combine several user preferences — budget range plus minimum number of rooms, for example — can legitimately return zero rows. Preview each Object with a real identifier before publishing, and relax the least critical condition when the result set is empty.
 </Info>
 
 ## Parameters
 
-Parameters are declared in the **Input** panel and bound to SQL placeholders. Click **Add** to create one.
+Parameters are declared in **INPUT / OUTPUT** and bound to SQL placeholders. Click **Add** to create one.
 
 | Field | Description |
 |-------|-------------|
@@ -98,14 +96,14 @@ Accepted parameter types:
 
 ## Output Columns
 
-The **Output** panel lists the **Column** and **Type** of every value the Entity returns, under **Return types**. The list is computed from the SQL against the Live Datagraph model and recalculated on every save — it cannot be edited by hand. An empty list means the SQL has not been resolved yet, or that it references an unknown column.
+The **INPUT / OUTPUT** panel lists each output **Column** and **Type**. Displayed types include **Text**, **Number**, and **Image URL**. The list is computed from SQL against the Published Datagraph model and recalculated on every save.
 
 ## Previewing Results
 
-1. Save the Entity — a preview cannot run on unsaved changes only. The editor shows *Save the entity before running a preview*.
-2. Click **Run query**.
-3. In the **Query parameters** dialog, fill each parameter. **Fill sample values** looks up realistic values in the data for you.
-4. Confirm with **Run query**.
+1. Save the Object before running a preview.
+2. Click **RUN QUERY** to open **QUERY PARAMETERS**.
+3. The modal says *Fill in the object parameters before running the SQL preview*. Each parameter shows its type and short description.
+4. Select **Fill sample values** to find realistic values, then click **RUN QUERY**.
 
 The **Preview** panel returns up to 10 rows with the row count and a **Trace ID** for support requests.
 
@@ -116,31 +114,42 @@ The **Preview** panel returns up to 10 rows with the row count and a **Trace ID*
 | *Enter a valid ISO 8601 datetime* | A `datetime_iso` parameter value is malformed. |
 | *Unable to find sample values from the data* | No sample could be derived; enter the values manually. |
 
-The **Entity queries** page — reachable with the **Query** action or **Open query page** — runs a saved Entity on its own, outside the editor. Results are paginated at 10 rows per page.
+The **Queries** page is available at **DataHub → Datagraph → Queries**. It runs Datagraph Object SQL queries and displays results. Select an Object and run it to see results; pages show 10 rows.
 
 ## Publishing
 
-Click **Publish** to promote the Draft to Live. The previous Live version becomes Inactive, and a new Draft copy is created so editing can continue. Only Live Entities are selectable in Workflows.
+Click **Publish** to open the **Publish object** dialog and publish the Draft. The previous Published version becomes Inactive, and a new Draft copy is created. Only published Objects are selectable in Workflows.
+
+The **Delete object** dialog warns that *Workflows that query this object will stop resolving*. Deleting an Object cannot be undone.
 
 <Info>
-  When the Entity belongs to a Live [Datagraph Entity Group](/advanced-guide/datahub/datagraph/entity-groups), publishing fails with *Entity group contract violated* if the new output columns no longer satisfy the group contract. An Entity listed in a Live group cannot be deleted either.
+  When the Object belongs to a published [Datagraph Object Family](/advanced-guide/datahub/datagraph/entity-groups), publishing fails with *Entity group contract violated* if the new output columns no longer satisfy the family contract. An Object listed in a published family cannot be deleted either.
 </Info>
 
-## Sharing a Contract Across Entities
+## Sharing a Contract Across Objects
 
-Several Entities that answer the same question for different segments — one recommendation algorithm per Entity, for example — can be bound to a Datagraph Entity Group. The group declares the fields every member must return, and checks the Live version of each member against it. See [Datagraph Entity Groups](/advanced-guide/datahub/datagraph/entity-groups).
+Several Objects that answer the same question for different segments — one recommendation algorithm per Object, for example — can be bound to a Datagraph Object Family. The family declares the fields every member must return, and checks the Live version of each member against it. See [Datagraph Object Families](/advanced-guide/datahub/datagraph/entity-groups).
 
-## Using an Entity in a Workflow
+## Using an Object in a Workflow
 
-Add the **Query an entity** Data Node — *Run a datagraph entity query and expose its results to the workflow*.
+Add the **Datagraph Object** Data Node — *Run a datagraph object query and expose its results to the workflow*.
 
 | Setting | Description |
 |---------|-------------|
-| **Entity** | The published Entity to run. The dropdown shows *No published entity is available yet* until one is Live. |
-| **Entity parameters** | One input per declared parameter. Values can be static or taken from a Workflow variable. |
-| **Result limit** | The maximum number of rows exposed to the Workflow. |
+| **Object** | The published Object to run. Choose it from **Select a published object**. |
+| **Object parameters** | One input per declared parameter. Each parameter's short description appears above its input. |
 
-**Open entity in Datahub** jumps from the Node to the Entity editor. Only tech admins can configure the Node. The Node itself is documented in [Query an Entity](/advanced-guide/workflows/data-nodes/datagraph).
+The empty selector message is *No published object is available yet.* **Open object in Datahub** opens the Object editor.
+
+<Warning>
+  Only tech admins can configure Datagraph object query nodes.
+</Warning>
+
+<Info>
+  The **Result limit** field is hidden by default. It appears only when a tech admin enables **Datagraph Object: result limit** under Workflow settings → **Features**. It accepts 1 to 200 rows.
+</Info>
+
+The Node itself is documented in [Datagraph Object](/advanced-guide/workflows/data-nodes/datagraph).
 
 <Info>
   Parameter values coming from Workflow variables are converted to the declared parameter type. A variable that cannot be converted — free text into a `number` parameter, for example — makes the Node fail at execution time rather than at configuration time.
@@ -149,14 +158,14 @@ Add the **Query an entity** Data Node — *Run a datagraph entity query and expo
 ## What's Next?
 
 <CardGroup cols={2}>
-  <Card title="Entity Groups" icon="layer-group" href="/advanced-guide/datahub/datagraph/entity-groups">
-    Bind several Entities to one shared output contract.
+  <Card title="Object families" icon="layer-group" href="/advanced-guide/datahub/datagraph/entity-groups">
+    Bind several Objects to one shared output contract.
   </Card>
   <Card title="Schema" icon="table-columns" href="/advanced-guide/datahub/datagraph/schema">
     Add the columns and relations your SQL needs.
   </Card>
-  <Card title="Explorer" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
-    Check that a join actually overlaps before you rely on it.
+  <Card title="Schema views" icon="diagram-project" href="/advanced-guide/datahub/datagraph/explorer">
+    Inspect the Diagram, Relations, and Datasources tabs on the Schema page.
   </Card>
   <Card title="Datasource Data Node" icon="database" href="/advanced-guide/workflows/data-nodes/datasources">
     Compare with querying a single Datasource in a Workflow.
