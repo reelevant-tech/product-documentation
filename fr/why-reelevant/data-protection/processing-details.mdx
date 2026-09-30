@@ -9,14 +9,13 @@ Cette page décrit les traitements réalisés par Reelevant en qualité de sous-
 ## Cycle de vie des données
 
 ```mermaid
-flowchart LR
+flowchart TB
     SRC["Vos systèmes"] -->|"Synchronisation via TLS,<br/>SFTP ou stockage cloud"| DS["Datasources<br/>remplacées à chaque synchronisation"]
     DS -->|"Lecture à l'ouverture"| RUN["Runner<br/>exécution en mémoire"]
-    RUN -->|"Événements d'exposition et de clic"| EV["Événements comportementaux<br/>90 jours par défaut"]
+    RUN -->|"Expositions et clics"| EV["Événements comportementaux<br/>90 jours par défaut"]
     EV --> AGG["Rapports agrégés<br/>pas de données personnelles"]
     EV -.->|"Optionnel"| WH["Votre entrepôt analytics<br/>export pseudonymisé"]
-    DS -->|"Fin de contrat"| DEL["Suppression sous 30 jours,<br/>sauvegardes expirées sous 180 jours"]
-    EV --> DEL
+    DS & EV -->|"Fin de contrat"| DEL["Suppression sous 30 jours,<br/>sauvegardes expirées sous 180 jours"]
 ```
 
 ## Nature et finalité
