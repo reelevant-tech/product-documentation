@@ -196,61 +196,77 @@ if (!clientId || !clientSecret) {
 }
 
 let cachedToken: { accessToken: string; expiresAt: number } | undefined
+let pendingToken: Promise<string> | undefined
 
 export const getAccessToken = async (): Promise<string> => {
   if (cachedToken && Date.now() < cachedToken.expiresAt) {
     return cachedToken.accessToken
   }
 
-  const response = await fetch(`${gatewayUrl}/v2/auth/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      grant_type: 'client_credentials',
-      client_id: clientId,
-      client_secret: clientSecret,
-    }),
-  })
+  const request =
+    pendingToken ??
+    (pendingToken = (async () => {
+      const requestedAt = Date.now()
+      const response = await fetch(`${gatewayUrl}/v2/auth/token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          grant_type: 'client_credentials',
+          client_id: clientId,
+          client_secret: clientSecret,
+        }),
+      })
 
-  if (!response.ok) {
-    throw new Error(`Token request failed: ${response.status} ${await response.text()}`)
+      if (!response.ok) {
+        throw new Error(`Token request failed: ${response.status} ${await response.text()}`)
+      }
+
+      const body: unknown = await response.json()
+      if (!isClientCredentialsResponse(body)) {
+        throw new Error('The token endpoint returned an invalid response')
+      }
+
+      cachedToken = {
+        accessToken: body.access_token,
+        expiresAt: requestedAt + Math.max(0, (body.expires_in - 60) * 1000),
+      }
+
+      return cachedToken.accessToken
+    })())
+
+  try {
+    return await request
+  } finally {
+    if (pendingToken === request) {
+      pendingToken = undefined
+    }
   }
-
-  const body: unknown = await response.json()
-  if (!isClientCredentialsResponse(body)) {
-    throw new Error('The token endpoint returned an invalid response')
-  }
-
-  cachedToken = {
-    accessToken: body.access_token,
-    expiresAt: Date.now() + Math.max(0, (body.expires_in - 60) * 1000),
-  }
-
-  return cachedToken.accessToken
 }
 
 ```
 
 Définissez `REELEVANT_CLIENT_ID` et `REELEVANT_CLIENT_SECRET` dans l'environnement de l'intégration. Conservez le secret hors du code source. Cet exemple garde le token d'accès en mémoire et en demande un nouveau 60 secondes avant son expiration.
 
-Créez un compte de service dans Account > Users, attribuez-lui un rôle et au moins un Team (Resource Group), puis créez un secret client. Le secret n'est affiché qu'une seule fois ; conservez-le en lieu sûr. Consultez le [guide des comptes de service](/fr/product-guide/account/service-accounts) pour le parcours dans l'interface.
+Un administrateur crée le compte de service et son secret client ; consultez le [guide des comptes de service](/fr/product-guide/account/service-accounts).
 
 Envoyez `grant_type=client_credentials`, `client_id` et `client_secret` au format JSON ou `application/x-www-form-urlencoded`. Vous pouvez aussi transmettre les identifiants dans un en-tête HTTP Basic :
 
 ```bash
-curl --user '<client_id>:<client_secret>' \
+curl --user "$REELEVANT_CLIENT_ID:$REELEVANT_CLIENT_SECRET" \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'grant_type=client_credentials' \
   https://api.reelevant.com/v2/auth/token
 ```
 
+Chargez ces valeurs depuis un gestionnaire de secrets ou un environnement protégé ; ne saisissez pas le secret dans les commandes ni dans l'historique du shell.
+
 Lorsqu'un en-tête HTTP Basic est présent, ses identifiants sont prioritaires sur ceux du corps. Un en-tête Basic mal formé est rejeté ; les identifiants du corps ne sont pas utilisés en remplacement.
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `grant_type` | string | Oui | Doit valoir `client_credentials`. |
-| `client_id` | string | Oui, sauf s'il est fourni par HTTP Basic | Identifiant du compte de service. |
-| `client_secret` | string | Oui, sauf s'il est fourni par HTTP Basic | Secret client, affiché une seule fois lors de sa création. |
+| Paramètre | Type | Requis | Défaut | Description |
+|-----------|------|--------|--------|-------------|
+| `grant_type` | string | Oui | — | Doit valoir `client_credentials`. |
+| `client_id` | string | Oui, sauf s'il est fourni par HTTP Basic | — | Identifiant du compte de service. |
+| `client_secret` | string | Oui, sauf s'il est fourni par HTTP Basic | — | Secret client, affiché une seule fois lors de sa création. |
 
 **Réponse :**
 
