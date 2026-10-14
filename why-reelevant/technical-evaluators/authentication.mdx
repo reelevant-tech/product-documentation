@@ -117,6 +117,14 @@ Reelevant treats its APIs as first-class citizens alongside the UI. All platform
 - Tokens are managed in the platform under Account settings
 - All API requests require the `Authorization: Bearer {token}` header
 
+### Machine-to-Machine Authentication
+
+The OAuth 2.0 `client_credentials` grant authenticates integrations without an interactive user session. A service account provides a dedicated identity; it does not require a mailbox or a dedicated Active Directory user.
+
+Administrators assign a role and Team to scope access. They can keep two client secrets active during rotation; revoking a secret also invalidates access tokens issued with it.
+
+See the [developer reference](/developer-docs/api-reference/authentication) for grant details and the [service account guide](/product-guide/account/service-accounts) for account management.
+
 See [API Authentication](/developer-docs/api-reference/authentication) for OAuth 2.0 flows and token management, and the [API Reference](/developer-docs/api-reference/introduction) for full endpoint documentation.
 
 ## Next Steps

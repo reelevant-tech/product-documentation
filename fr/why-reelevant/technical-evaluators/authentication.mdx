@@ -117,6 +117,14 @@ Reelevant traite ses API comme des citoyens de première classe au même titre q
 - Les tokens sont gérés dans la plateforme sous les paramètres du compte
 - Toutes les requêtes API nécessitent l'en-tête `Authorization: Bearer {token}`
 
+### Authentification machine à machine
+
+Le grant OAuth 2.0 `client_credentials` authentifie les intégrations sans connexion interactive d'un utilisateur. Un compte de service fournit une identité dédiée, sans boîte mail ni compte utilisateur dédié dans Active Directory.
+
+Les administrateurs attribuent un rôle et un Team pour limiter les accès. Ils peuvent garder deux secrets client actifs pendant une rotation ; révoquer un secret invalide aussi les tokens d'accès émis avec celui-ci.
+
+Consultez la [référence développeur](/fr/developer-docs/api-reference/authentication) pour les détails du grant et le [guide des comptes de service](/fr/product-guide/account/service-accounts) pour leur gestion.
+
 Voir [Authentification API](/fr/developer-docs/api-reference/authentication) pour les flux OAuth 2.0 et la gestion des tokens, et la [référence API](/fr/developer-docs/api-reference/introduction) pour la documentation complète des endpoints.
 
 ## Prochaines étapes
