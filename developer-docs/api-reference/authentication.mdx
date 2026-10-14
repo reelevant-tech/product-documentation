@@ -1,21 +1,22 @@
 ---
 title: 'Authentication'
-description: 'OAuth 2.0 authentication with Authorization Code + PKCE flow, password grant, and refresh tokens'
+description: 'OAuth 2.0 authentication with Authorization Code + PKCE, password, refresh-token, and client-credentials grants'
 ---
 
 ## Overview
 
-The Reelevant API uses OAuth 2.0 for authentication. Three grant types are supported:
+The Reelevant API uses OAuth 2.0 for authentication. Four grant types are supported:
 
 | Grant Type | Use Case |
 |------------|----------|
 | `authorization_code` | Browser-based login with PKCE (recommended for web apps) |
-| `password` | Direct username/password exchange (service accounts, scripts) |
+| `password` | Direct username/password exchange for legacy service accounts and scripts |
 | `refresh_token` | Renew an expired access token without re-authenticating |
+| `client_credentials` | Machine-to-machine integration using a service account |
 
 All token operations use the endpoint `POST https://api.reelevant.com/v2/auth/token`.
 
-A `client_id` is required for every grant. Contact `[email protected]` to obtain one.
+A `client_id` is required for every grant. For `client_credentials`, HTTP Basic can supply it instead of the request body. Contact `[email protected]` to obtain one.
 
 ## Authorization Code Flow (PKCE)
 
@@ -167,6 +168,104 @@ curl -XPOST https://api.reelevant.com/v2/auth/token \
 }
 ```
 
+## Client Credentials Grant (Service Accounts)
+
+```typescript
+type ClientCredentialsResponse = {
+  access_token: string
+  expires_in: number
+  token_type: 'Bearer'
+}
+
+const isClientCredentialsResponse = (value: unknown): value is ClientCredentialsResponse =>
+  typeof value === 'object' &&
+  value !== null &&
+  'access_token' in value &&
+  typeof value.access_token === 'string' &&
+  'expires_in' in value &&
+  typeof value.expires_in === 'number' &&
+  'token_type' in value &&
+  value.token_type === 'Bearer'
+
+const gatewayUrl = process.env.REELEVANT_GATEWAY_URL ?? 'https://api.reelevant.com'
+const clientId = process.env.REELEVANT_CLIENT_ID
+const clientSecret = process.env.REELEVANT_CLIENT_SECRET
+
+if (!clientId || !clientSecret) {
+  throw new Error('Set REELEVANT_CLIENT_ID and REELEVANT_CLIENT_SECRET')
+}
+
+let cachedToken: { accessToken: string; expiresAt: number } | undefined
+
+export const getAccessToken = async (): Promise<string> => {
+  if (cachedToken && Date.now() < cachedToken.expiresAt) {
+    return cachedToken.accessToken
+  }
+
+  const response = await fetch(`${gatewayUrl}/v2/auth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Token request failed: ${response.status} ${await response.text()}`)
+  }
+
+  const body: unknown = await response.json()
+  if (!isClientCredentialsResponse(body)) {
+    throw new Error('The token endpoint returned an invalid response')
+  }
+
+  cachedToken = {
+    accessToken: body.access_token,
+    expiresAt: Date.now() + Math.max(0, (body.expires_in - 60) * 1000),
+  }
+
+  return cachedToken.accessToken
+}
+
+```
+
+Set `REELEVANT_CLIENT_ID` and `REELEVANT_CLIENT_SECRET` in the integration environment. Keep the secret outside source control. This example caches the access token in memory and requests another one 60 seconds before expiry.
+
+Create a service account in Account > Users, assign a role and at least one Team (Resource Group), then create a client secret. The secret is displayed once; store it securely. See the [service account guide](/product-guide/account/service-accounts) for the UI flow.
+
+Send `grant_type=client_credentials`, `client_id`, and `client_secret` as JSON or `application/x-www-form-urlencoded`. You can instead send the credentials in an HTTP Basic header:
+
+```bash
+curl --user '<client_id>:<client_secret>' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=client_credentials' \
+  https://api.reelevant.com/v2/auth/token
+```
+
+When an HTTP Basic header is present, its credentials take precedence over body credentials. A malformed Basic header is rejected and does not fall back to the body.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `grant_type` | string | Yes | Must be `client_credentials`. |
+| `client_id` | string | Yes, unless supplied by HTTP Basic | The service account identifier. |
+| `client_secret` | string | Yes, unless supplied by HTTP Basic | The client secret, shown only once when created. |
+
+**Response:**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+The response does not include a `refresh_token`. Access tokens expire after one hour; request another token with the client credentials when needed. Successful responses include `Cache-Control: no-store` and `Pragma: no-cache`.
+
+Up to two client secrets can be active at once, allowing rotation. Revoking a secret also revokes access tokens issued with that secret. Disabling the service account immediately blocks new grants and invalidates its existing access tokens.
+
 ## Using Access Tokens
 
 Include the access token in every API request via the `Authorization` header:
@@ -180,6 +279,7 @@ Authorization: Bearer <access_token>
 | Token Type | Lifetime | Renewal |
 |------------|----------|---------|
 | Access token | 1 hour | Use `refresh_token` grant to obtain a new one |
+| Client-credentials access token | 1 hour | Request a new token; no `refresh_token` is issued |
 | Refresh token | 30 days (rolling) | Refreshed automatically each time it is used to generate a new access token |
 | Authorization code | 60 seconds | Single-use — exchange immediately after receiving |
 
@@ -196,6 +296,8 @@ curl -XDELETE https://api.reelevant.com/v2/auth/token/<token_id>
 ```
 
 Revoking a refresh token also revokes all access tokens derived from it.
+
+Revoking a client secret also revokes access tokens issued with that secret. Disabling its service account invalidates all of its access tokens.
 
 ## SCIM Provisioning
 
@@ -218,3 +320,18 @@ Companies with SSO configured are automatically redirected to their identity pro
 | `otp_required` | 401 | OTP code required but not provided |
 | `invalid_code` | 400 | Authorization code is invalid, expired, or already used |
 | `pkce_mismatch` | 400 | `code_verifier` does not match the original `code_challenge` |
+| `InvalidClientCredentials` | 401 (5512) | Client ID or secret is invalid, revoked, or does not belong to a service account |
+| `ClientSecretLimitReached` | 409 (5310) | Creating a third active client secret |
+
+A disabled service account returns `UserDisabled`.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Service accounts" icon="users" href="/product-guide/account/service-accounts">
+    Create service accounts and manage their client secrets.
+  </Card>
+  <Card title="Authentication & SSO" icon="lock" href="/why-reelevant/technical-evaluators/authentication">
+    Review platform authentication options and integration patterns.
+  </Card>
+</CardGroup>

@@ -1,21 +1,22 @@
 ---
 title: 'Authentification'
-description: 'Authentification OAuth 2.0 avec le flux Authorization Code + PKCE, le grant password et les refresh tokens'
+description: 'Authentification OAuth 2.0 avec Authorization Code + PKCE, les grants password, refresh_token et client_credentials'
 ---
 
 ## Vue d'ensemble
 
-L'API Reelevant utilise OAuth 2.0 pour l'authentification. Trois types de grant sont pris en charge :
+L'API Reelevant utilise OAuth 2.0 pour l'authentification. Quatre types de grant sont pris en charge :
 
 | Type de grant | Cas d'usage |
 |------------|----------|
 | `authorization_code` | Connexion via le navigateur avec PKCE (recommandé pour les applications web) |
-| `password` | Échange direct identifiant/mot de passe (comptes de service, scripts) |
+| `password` | Échange direct identifiant/mot de passe pour les anciens comptes de service et les scripts |
 | `refresh_token` | Renouveler un token d'accès expiré sans se réauthentifier |
+| `client_credentials` | Intégration machine à machine avec un compte de service |
 
 Toutes les opérations sur les tokens utilisent l'endpoint `POST https://api.reelevant.com/v2/auth/token`.
 
-Un `client_id` est requis pour chaque grant. Contactez `[email protected]` pour en obtenir un.
+Un `client_id` est requis pour chaque grant. Pour `client_credentials`, l'en-tête HTTP Basic peut le fournir à la place du corps. Contactez `[email protected]` pour en obtenir un.
 
 ## Flux Authorization Code (PKCE)
 
@@ -167,6 +168,104 @@ curl -XPOST https://api.reelevant.com/v2/auth/token \
 }
 ```
 
+## Grant Client Credentials (comptes de service)
+
+```typescript
+type ClientCredentialsResponse = {
+  access_token: string
+  expires_in: number
+  token_type: 'Bearer'
+}
+
+const isClientCredentialsResponse = (value: unknown): value is ClientCredentialsResponse =>
+  typeof value === 'object' &&
+  value !== null &&
+  'access_token' in value &&
+  typeof value.access_token === 'string' &&
+  'expires_in' in value &&
+  typeof value.expires_in === 'number' &&
+  'token_type' in value &&
+  value.token_type === 'Bearer'
+
+const gatewayUrl = process.env.REELEVANT_GATEWAY_URL ?? 'https://api.reelevant.com'
+const clientId = process.env.REELEVANT_CLIENT_ID
+const clientSecret = process.env.REELEVANT_CLIENT_SECRET
+
+if (!clientId || !clientSecret) {
+  throw new Error('Set REELEVANT_CLIENT_ID and REELEVANT_CLIENT_SECRET')
+}
+
+let cachedToken: { accessToken: string; expiresAt: number } | undefined
+
+export const getAccessToken = async (): Promise<string> => {
+  if (cachedToken && Date.now() < cachedToken.expiresAt) {
+    return cachedToken.accessToken
+  }
+
+  const response = await fetch(`${gatewayUrl}/v2/auth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Token request failed: ${response.status} ${await response.text()}`)
+  }
+
+  const body: unknown = await response.json()
+  if (!isClientCredentialsResponse(body)) {
+    throw new Error('The token endpoint returned an invalid response')
+  }
+
+  cachedToken = {
+    accessToken: body.access_token,
+    expiresAt: Date.now() + Math.max(0, (body.expires_in - 60) * 1000),
+  }
+
+  return cachedToken.accessToken
+}
+
+```
+
+Définissez `REELEVANT_CLIENT_ID` et `REELEVANT_CLIENT_SECRET` dans l'environnement de l'intégration. Conservez le secret hors du code source. Cet exemple garde le token d'accès en mémoire et en demande un nouveau 60 secondes avant son expiration.
+
+Créez un compte de service dans Account > Users, attribuez-lui un rôle et au moins un Team (Resource Group), puis créez un secret client. Le secret n'est affiché qu'une seule fois ; conservez-le en lieu sûr. Consultez le [guide des comptes de service](/fr/product-guide/account/service-accounts) pour le parcours dans l'interface.
+
+Envoyez `grant_type=client_credentials`, `client_id` et `client_secret` au format JSON ou `application/x-www-form-urlencoded`. Vous pouvez aussi transmettre les identifiants dans un en-tête HTTP Basic :
+
+```bash
+curl --user '<client_id>:<client_secret>' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=client_credentials' \
+  https://api.reelevant.com/v2/auth/token
+```
+
+Lorsqu'un en-tête HTTP Basic est présent, ses identifiants sont prioritaires sur ceux du corps. Un en-tête Basic mal formé est rejeté ; les identifiants du corps ne sont pas utilisés en remplacement.
+
+| Paramètre | Type | Requis | Description |
+|-----------|------|--------|-------------|
+| `grant_type` | string | Oui | Doit valoir `client_credentials`. |
+| `client_id` | string | Oui, sauf s'il est fourni par HTTP Basic | Identifiant du compte de service. |
+| `client_secret` | string | Oui, sauf s'il est fourni par HTTP Basic | Secret client, affiché une seule fois lors de sa création. |
+
+**Réponse :**
+
+```json
+{
+  "access_token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+La réponse ne contient pas de `refresh_token`. Les tokens d'accès expirent après une heure ; demandez-en un nouveau avec les identifiants client lorsque nécessaire. Les réponses réussies incluent `Cache-Control: no-store` et `Pragma: no-cache`.
+
+Deux secrets client au maximum peuvent être actifs simultanément, ce qui permet leur rotation. La révocation d'un secret révoque aussi les tokens d'accès émis avec celui-ci. La désactivation du compte de service bloque immédiatement les nouveaux grants et invalide ses tokens d'accès existants.
+
 ## Utiliser les tokens d'accès
 
 Incluez le token d'accès dans chaque requête à l'API via l'en-tête `Authorization` :
@@ -180,6 +279,7 @@ Authorization: Bearer <access_token>
 | Type de token | Durée de vie | Renouvellement |
 |------------|----------|---------|
 | Token d'accès | 1 heure | Utilisez le grant `refresh_token` pour en obtenir un nouveau |
+| Token d'accès client_credentials | 1 heure | Demandez-en un nouveau ; aucun `refresh_token` n'est émis |
 | Refresh token | 30 jours (glissant) | Renouvelé automatiquement à chaque utilisation pour générer un nouveau token d'accès |
 | Code d'autorisation | 60 secondes | Usage unique — échangez-le immédiatement après réception |
 
@@ -196,6 +296,8 @@ curl -XDELETE https://api.reelevant.com/v2/auth/token/<token_id>
 ```
 
 Révoquer un refresh token révoque également tous les tokens d'accès qui en sont dérivés.
+
+La révocation d'un secret client révoque aussi les tokens d'accès émis avec celui-ci. La désactivation de son compte de service invalide tous ses tokens d'accès.
 
 ## Provisionnement SCIM
 
@@ -218,3 +320,18 @@ Les entreprises ayant configuré le SSO sont automatiquement redirigées vers le
 | `otp_required` | 401 | Code OTP requis mais non fourni |
 | `invalid_code` | 400 | Code d'autorisation invalide, expiré ou déjà utilisé |
 | `pkce_mismatch` | 400 | Le `code_verifier` ne correspond pas au `code_challenge` d'origine |
+| `InvalidClientCredentials` | 401 (5512) | Identifiant ou secret invalide, révoqué ou associé à un autre type de compte |
+| `ClientSecretLimitReached` | 409 (5310) | Création d'un troisième secret client actif |
+
+Un compte de service désactivé renvoie `UserDisabled`.
+
+## Pages associées
+
+<CardGroup cols={2}>
+  <Card title="Comptes de service" icon="users" href="/fr/product-guide/account/service-accounts">
+    Créez des comptes de service et gérez leurs secrets client.
+  </Card>
+  <Card title="Authentification et SSO" icon="lock" href="/fr/why-reelevant/technical-evaluators/authentication">
+    Découvrez les options d'authentification et les modes d'intégration.
+  </Card>
+</CardGroup>
