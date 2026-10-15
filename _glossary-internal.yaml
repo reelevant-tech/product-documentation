@@ -71,7 +71,7 @@ terms:
   branch:
     canonical_name: "Branch"
     definition: "A unique execution path through a Workflow, from a Channel to an Output Node."
-    synonyms_forbidden: ["path", "route", "variant", "scenario"]
+    synonyms_forbidden: ["path", "route", "scenario"]
 
   output_node:
     canonical_name: "Output Node"
