@@ -187,9 +187,15 @@ Sur une règle `query Datasource`, le [filtre de requête](/fr/developer-docs/gu
 
 Un utilisateur sans l'attribut obtient `$in: []` : aucune ligne ne correspond.
 
+`$in` n'est accepté ici qu'avec une référence `$resourceGroupAttribute`, et uniquement dans les conditions de rôle. Pour une liste de valeurs statiques, utilisez `$eq` avec un `string[]` (voir [Opérateurs](/fr/developer-docs/guides/datasource-query-filters#operators)).
+
 ### Contrainte d'option d'Object (`datagraph_option`)
 
 Sur une règle `read DatagraphEntity`, une condition `datagraph_option` limite les valeurs que l'utilisateur peut passer à une option d'Object lorsqu'il l'interroge.
+
+<Warning>
+  Les requêtes d'Object n'appliquent pas encore `datagraph_option` : l'application arrive dans une prochaine version de Datasources. Les rôles peuvent déjà stocker la condition, et `AuthenticatedUser.getDatagraphOptionConstraints(entityId)` de `@reelevant-tech/permissions` 6.7.0 renvoie les contraintes résolues.
+</Warning>
 
 | Champ | Type | Requis | Description |
 |-------|------|--------|-------------|
