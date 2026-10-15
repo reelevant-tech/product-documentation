@@ -193,9 +193,9 @@ Un utilisateur sans l'attribut obtient `$in: []` : aucune ligne ne correspond.
 
 Sur une règle `read DatagraphEntity`, une condition `datagraph_option` limite les valeurs que l'utilisateur peut passer à une option d'Object lorsqu'il l'interroge.
 
-<Warning>
-  Les requêtes d'Object n'appliquent pas encore `datagraph_option` : l'application arrive dans une prochaine version de Datasources. Les rôles peuvent déjà stocker la condition, et `AuthenticatedUser.getDatagraphOptionConstraints(entityId)` de `@reelevant-tech/permissions` 6.7.0 renvoie les contraintes résolues.
-</Warning>
+<Note>
+  Datasources applique la condition aux requêtes d'Object faites par les utilisateurs. Une requête qui ne renseigne pas l'option, ou qui lui donne une valeur hors des valeurs de l'utilisateur, renvoie `403`. L'échantillonnage des options (`sampleOptions`) sur un Object contraint renvoie aussi `403`.
+</Note>
 
 | Champ | Type | Requis | Description |
 |-------|------|--------|-------------|
