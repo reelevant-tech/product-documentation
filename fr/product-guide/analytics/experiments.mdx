@@ -7,13 +7,11 @@ description: 'Créez des expérimentations dans Analytics et utilisez-les dans v
 
 Les expérimentations vous aident à comparer des variantes dans plusieurs Workflows et à mesurer leur impact dans Analytics.
 
-Une expérimentation ([Experiment](/fr/glossary)) se crée et se gère dans Analytics, puis se réutilise dans les Workflows avec le Node Expérimentation. Elle comprend un type, des variantes et leur répartition, un témoin ou une référence, une hypothèse métier et une métrique de succès.
+Une expérimentation ([Experiment](/fr/glossary)) se crée et se gère dans Analytics, puis se réutilise dans les Workflows avec le Node Expérimentation. Elle comprend un type, des variantes et leur répartition, un témoin ou une **Référence**, une hypothèse métier et une métrique de succès.
 
 ## Disponibilité
 
 Les expérimentations sont activées sur demande : contactez votre interlocuteur Reelevant.
-
-Une fois activées, les expérimentations peuvent remplacer le Node **Split**. Il se peut que **Split** ne soit plus proposé dans le sélecteur de Nodes.
 
 ## Types d'expérimentation
 
@@ -21,7 +19,7 @@ Une fois activées, les expérimentations peuvent remplacer le Node **Split**. I
 
 | Type | Objectif | Variantes | **Unité de randomisation** | Fin |
 |------|----------|-----------|------------------------|-----|
-| **Groupe témoin global** | **Mesurer l'impact incrémental** | Exactement deux : **Témoin** et **Traitement** | Toujours **Par client** | Pas de fin automatique ; vous pouvez la conclure manuellement. |
+| **Groupe témoin global** | **Mesurer l'impact incrémental** | Exactement deux : **Témoin** et [**Traitement**](/fr/glossary) | Toujours **Par client** | Pas de fin automatique ; vous pouvez la conclure manuellement. |
 | **Test A/B continu** | **Comparer des variantes** | Deux à quatre, dont une **Référence** | **Par client** ou **Par affichage** | Vous la concluez quand vous le souhaitez. |
 
 Un **Groupe témoin global** conserve une partie de votre audience sur l'expérience non personnalisée. Vous pouvez ainsi mesurer la valeur ajoutée par la personnalisation.
@@ -86,6 +84,8 @@ Sélectionnez **Repasser en brouillon** pour revenir à l'état Brouillon.
 
 Détachez l'expérimentation de ses Workflows avant de la repasser en brouillon.
 
+Lorsqu'un Workflow utilise une expérimentation **Brouillon** ou **Prête**, vous ne pouvez pas ajouter ni supprimer de variantes. Tout le reste reste modifiable jusqu'à son lancement.
+
 ### Lancer
 
 Sélectionnez **Lancer** pour démarrer manuellement l'expérimentation. Cela verrouille ses variantes, leur répartition, l'unité de randomisation et la métrique de succès.
@@ -110,8 +110,6 @@ Un **Groupe témoin global** n'a pas de date de fin automatique, mais vous pouve
 
 ### Archiver
 
-L'option **Archiver** n'est pas disponible lorsqu'une expérimentation est **En cours**.
-
 Sélectionnez **Plus d'actions** > **Archiver**, puis saisissez le mot de confirmation.
 
 <Warning>
@@ -121,8 +119,6 @@ Sélectionnez **Plus d'actions** > **Archiver**, puis saisissez le mot de confir
 ### Dupliquer
 
 Sélectionnez **Dupliquer** pour créer un brouillon dont le nom se termine par « (copie) ».
-
-Lorsqu'un brouillon ou une expérimentation prête est utilisé dans un Workflow, vous pouvez renommer ses variantes et modifier leur répartition. Vous ne pouvez pas ajouter ni supprimer de variantes.
 
 ## Lire les données d'une expérimentation
 
