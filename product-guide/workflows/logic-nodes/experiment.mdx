@@ -5,7 +5,7 @@ description: 'Use an Analytics Experiment to split traffic across Workflow Branc
 
 ![Experiment Node with its experiment and variant Branches in a Workflow](/images/workflows/node-experiment.png)
 
-Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch), showing its Allocation.
+Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now. Until the Experiment starts, the Control or Reference shows 100%.
 
 ## Add an Experiment Node
 
@@ -17,19 +17,17 @@ Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics
 
 Only **Ready** and **Live** Experiments are listed. If none is available, use **Create an experiment** to open Analytics.
 
-## Map Branches to Variants
-
-Before publishing, make sure every Branch maps to exactly one different Variant. An unmapped Branch or a repeated Variant prevents publishing.
-
-To fix the mapping, reopen the Experiment Node and select its Experiment again. This rebuilds its Branches from the Experiment's Variants.
-
-Publishing also fails if the Experiment can no longer be attached. Choose a **Ready** or **Live** Experiment instead.
+<Tip>
+  If publishing reports a Variant problem on this Node, reopen it and select the Experiment again. Its Branches are rebuilt from the Experiment's Variants.
+</Tip>
 
 ## After an Experiment is concluded
 
 The kept Variant shows **Winner**, and the Node routes all traffic to it.
 
-If the Experiment is archived or missing, the Node shows **Experiment unavailable**.
+An Experiment that has ended stays on the Node and keeps routing to its outcome. You cannot pick it for a new Node.
+
+If the Experiment is archived or missing, the Node shows **Experiment unavailable** and sends all traffic to the Control or Reference.
 
 ## What's Next?
 

@@ -103,9 +103,14 @@ terms:
     definition: "The Variant in a Global holdout that keeps the non-personalised experience."
     synonyms_forbidden: []
 
-  reference_variant:
-    canonical_name: "Reference variant"
-    definition: "The baseline Variant in a Continuous A/B test; other Variants are compared with it."
+  treatment:
+    canonical_name: "Treatment"
+    definition: "Any Variant that is not the Control or Reference."
+    synonyms_forbidden: []
+
+  reference:
+    canonical_name: "Reference"
+    definition: "The baseline Variant in a Continuous A/B test; other Variants are compared with it. Named **Reference variant** in the form."
     synonyms_forbidden: []
 
   allocation:

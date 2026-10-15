@@ -41,7 +41,8 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 | Experiment | — |
 | Variant | — |
 | Control | — |
-| Reference variant | — |
+| Treatment | — |
+| Reference | — |
 | Allocation | — |
 | DataHub | data hub, data center, data layer |
 | Runner | engine, executor, processor, server |

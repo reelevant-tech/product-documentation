@@ -19,7 +19,8 @@ description: "Terminologie canonique utilisée dans l'ensemble de la documentati
 | **Experiment** | Une expérimentation créée et gérée dans Analytics, avec des Variants, une Allocation, une hypothèse métier et une métrique de succès. |
 | **Variant** | Une version d'un Experiment à laquelle une part du trafic est attribuée. |
 | **Control** | Le Variant d'un Global holdout qui conserve l'expérience non personnalisée. |
-| **Reference variant** | La variante de référence d'un Continuous A/B test ; les autres variantes sont comparées à celle-ci. |
+| **Treatment** | Toute Variant qui n'est ni le Control ni la Reference. |
+| **Reference** | Le Variant de base d'un Continuous A/B test, auquel les autres Variants sont comparés. Le formulaire le nomme **variante de référence**. |
 | **Allocation** | La part du trafic attribuée à chaque Variant. |
 | **DataHub** | Le centre de gestion des données de la plateforme pour importer et configurer les données externes. |
 | **Datagraph** | Le modèle de données du DataHub qui relie les Datasources entre elles afin de les interroger comme des tables liées. |

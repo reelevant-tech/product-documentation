@@ -7,13 +7,11 @@ description: 'Create reusable experiments in Analytics and use them in Workflows
 
 Experiments help you compare Variants across Workflows and measure their impact in Analytics.
 
-An [Experiment](/glossary) is created and managed in Analytics, then reused by Workflows through the Experiment Node. It has a type, [Variants](/glossary), an [Allocation](/glossary) for each Variant, a [Control](/glossary) or [Reference variant](/glossary), a business hypothesis, and a success metric.
+An [Experiment](/glossary) is created and managed in Analytics, then reused by Workflows through the Experiment Node. It has a type, [Variants](/glossary), an [Allocation](/glossary) for each Variant, a [Control](/glossary) or [Reference](/glossary), a business hypothesis, and a success metric.
 
 ## Availability
 
 Experiments are activated on request: contact your Reelevant contact.
-
-Once activated, Experiments can replace the **Split** Node. You may no longer see **Split** in the Node picker.
 
 ## Experiment types
 
@@ -21,7 +19,7 @@ Once activated, Experiments can replace the **Split** Node. You may no longer se
 
 | Type | Objective | Variants | **Randomization unit** | End |
 |------|-----------|----------|--------------------|-----|
-| **Global holdout** | **Measure incremental impact** | Exactly two: **Control** and **Treatment** | Always **Per customer** | No automatic end; you can conclude it manually. |
+| **Global holdout** | **Measure incremental impact** | Exactly two: **Control** and [**Treatment**](/glossary) | Always **Per customer** | No automatic end; you can conclude it manually. |
 | **Continuous A/B test** | **Compare variants** | Two to four, including a **Reference** | **Per customer** or **Per display** | Conclude it when you choose. |
 
 A **Global holdout** keeps part of your audience on the non-personalised experience. This helps you measure the value personalisation adds.
@@ -86,6 +84,8 @@ Select **Back to draft** to return a Ready Experiment to Draft.
 
 Detach the Experiment from its Workflows before moving it back to Draft.
 
+While a Draft or Ready Experiment is used by a Workflow, you cannot add or remove Variants. Everything else stays editable until you start it.
+
 ### Start
 
 Select **Start** to begin the Experiment manually. Starting locks its Variants, Allocation, Randomization unit, and Success metric.
@@ -110,8 +110,6 @@ A **Global holdout** has no automatic end date, but you can conclude it manually
 
 ### Archive
 
-**Archive** is not available while an Experiment is **Live**.
-
 Select **More actions** > **Archive**, then type the confirmation word.
 
 <Warning>
@@ -121,8 +119,6 @@ Select **More actions** > **Archive**, then type the confirmation word.
 ### Clone
 
 Select **Clone** to create a new draft named with “(copy)”.
-
-When a Draft or Ready Experiment is used in a Workflow, you can rename its Variants and change their Allocation. You cannot add or remove Variants.
 
 ## Read experiment data
 

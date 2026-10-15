@@ -5,7 +5,7 @@ description: 'Répartissez le trafic entre les branches d’un Workflow avec une
 
 ![Node Expérimentation avec ses branches de variantes dans un Workflow](/images/workflows/node-experiment.png)
 
-Utilisez le Node Expérimentation (un Logic Node qui répartit le trafic) pour transformer les variantes d'une expérimentation Analytics en Branches de Workflow. Chaque variante devient un Node **Variante** (une Branch) qui affiche son **Allocation**.
+Utilisez le Node Expérimentation (un Logic Node qui répartit le trafic) pour transformer les variantes d'une expérimentation Analytics en Branches de Workflow. Chaque variante devient un Node **Variante** (une Branch) qui indique la part de trafic qu'elle reçoit actuellement. Tant que l'expérimentation n'a pas démarré, le **Témoin** ou la **Référence** affiche 100 %.
 
 ## Ajouter un Node Expérimentation
 
@@ -17,19 +17,17 @@ Utilisez le Node Expérimentation (un Logic Node qui répartit le trafic) pour t
 
 Seules les expérimentations **Prêtes** et **En cours** sont répertoriées. Si aucune n'est disponible, utilisez **Créer une expérimentation** pour ouvrir Analytics.
 
-## Associer les branches aux variantes
-
-Avant de publier, associez chaque branche à une variante différente. Une branche sans variante ou une variante répétée bloque la publication.
-
-Pour corriger l'association, rouvrez le Node Expérimentation et sélectionnez à nouveau l'expérimentation. Cela recrée ses branches à partir de ses variantes.
-
-La publication échoue aussi si l'expérimentation ne peut plus être rattachée. Choisissez plutôt une expérimentation **Prête** ou **En cours**.
+<Tip>
+  Si la publication signale un problème de variante sur ce Node, rouvrez-le et sélectionnez à nouveau l'expérimentation. Ses Branches sont recréées à partir des variantes de l'expérimentation.
+</Tip>
 
 ## Après la conclusion
 
 La variante conservée porte la mention **Gagnante**, et le Node lui envoie tout le trafic.
 
-Si l'expérimentation est **Archivée** ou introuvable, le Node affiche **Expérimentation indisponible**.
+Une expérimentation terminée reste sur le Node et continue d'orienter le trafic vers son résultat. Vous ne pouvez pas la sélectionner pour un nouveau Node.
+
+Si l'expérimentation est archivée ou introuvable, le Node affiche **Expérimentation indisponible** et envoie tout le trafic au **Témoin** ou à la **Référence**.
 
 ## Et ensuite ?
 
