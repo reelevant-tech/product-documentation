@@ -85,8 +85,33 @@ terms:
 
   logic_node:
     canonical_name: "Logic Node"
-    definition: "A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing)."
+    definition: "A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing, Experiment)."
     synonyms_forbidden: ["decision step", "logic block", "routing node"]
+
+  experiment:
+    canonical_name: "Experiment"
+    definition: "A test created and managed in Analytics, with Variants, Allocation, a business hypothesis, and a success metric."
+    synonyms_forbidden: []
+
+  variant:
+    canonical_name: "Variant"
+    definition: "One version in an Experiment that receives a share of traffic."
+    synonyms_forbidden: []
+
+  control:
+    canonical_name: "Control"
+    definition: "The Variant in a Global holdout that keeps the non-personalised experience."
+    synonyms_forbidden: []
+
+  reference_variant:
+    canonical_name: "Reference variant"
+    definition: "The baseline Variant in a Continuous A/B test; other Variants are compared with it."
+    synonyms_forbidden: []
+
+  allocation:
+    canonical_name: "Allocation"
+    definition: "The share of traffic assigned to each Variant."
+    synonyms_forbidden: []
 
   datahub:
     canonical_name: "DataHub"
@@ -155,9 +180,9 @@ terms:
 
   non_exposed_population:
     canonical_name: "Non-Exposed Population"
-    definition: "The control group (typically 10%) who see default content without Reelevant personalisation, used as baseline for measuring Incremental Value."
-    synonyms_forbidden: ["control group", "B group", "holdout"]
-    note: "Always call it 'Non-Exposed Population' — never 'control group' (too generic)."
+    definition: "The population (typically 10%) who see default content without Reelevant personalisation, used as baseline for measuring Incremental Value."
+    synonyms_forbidden: ["B group"]
+    note: "Always call it 'Non-Exposed Population' when describing the audience that sees default content."
 
   key_challenge:
     canonical_name: "Key Challenge"
@@ -177,7 +202,7 @@ terms:
   real_time_testing:
     canonical_name: "Real-Time Testing"
     definition: "A Logic Node that splits traffic between multiple Branches for A/B or multivariate testing."
-    synonyms_forbidden: ["A/B test node", "split test", "experiment"]
+    synonyms_forbidden: ["A/B test node", "split test"]
 
   transform:
     canonical_name: "Transform"
