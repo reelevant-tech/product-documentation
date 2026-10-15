@@ -73,40 +73,11 @@ Le déchiffrement PGP est appliqué **avant** la décompression. Cela signifie q
 
 ## Rotation de la clé privée
 
-Utilisez cette requête pour remplacer la clé privée d'une Datasource déjà configurée. Elle remplace directement la clé, sans reconfigurer la source.
+Pour remplacer la clé privée d'une Datasource déjà configurée, envoyez la nouvelle `pgpPrivateKey` (et `pgpPassphrase`, ou `null` si la nouvelle clé n'en a pas) avec la [requête de rotation des secrets de source](/fr/advanced-guide/datahub/rotate-source-secrets). Elle remplace directement la clé, sans reconfigurer la source.
 
-Avant de commencer, définissez ces valeurs :
-
-| Valeur | Description |
-|-------|-------------|
-| `DATASOURCE_ID` | L'identifiant de la Datasource. |
-| `SOURCE_INDEX` | La position de la source dans la Datasource, à partir de `0`. Une Datasource avec une seule source utilise `0`. |
-| `ACCESS_TOKEN` | Un access token OAuth 2.0 autorisé à modifier la Datasource. Consultez [Authentification](/fr/developer-docs/api-reference/authentication). |
-
-```bash
-DATASOURCE_ID="replace-with-datasource-id"
-SOURCE_INDEX=0
-ACCESS_TOKEN="replace-with-access-token"
-
-curl --request PUT "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/sources/${SOURCE_INDEX}/secrets" \
-  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{ "secrets": { "pgpPrivateKey": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n…\n-----END PGP PRIVATE KEY BLOCK-----", "pgpPassphrase": null } }'
-```
-
-- Définissez `pgpPassphrase` avec la phrase de passe de la nouvelle clé, ou `null` si la nouvelle clé n'en a pas. Si vous l'omettez, la phrase de passe actuelle est conservée.
-- Remplacez la valeur d'exemple de `pgpPrivateKey` par la clé privée armored complète, de `-----BEGIN PGP PRIVATE KEY BLOCK-----` à `-----END PGP PRIVATE KEY BLOCK-----` (voir [Génération d'une paire de clés PGP](#génération-dune-paire-de-clés-pgp)). Remplacez ses retours à la ligne par `\n` pour que la valeur tienne dans une seule chaîne.
-- La nouvelle clé s'applique à la version live de la Datasource, à son brouillon et à toute version en attente de vérification. L'ancienne clé ne peut pas revenir lors d'une publication ultérieure.
-
-Un statut `204` confirme la modification. Reelevant vérifie que la clé peut être lue et déverrouillée avec la phrase de passe avant de l'enregistrer. Une clé invalide, une mauvaise phrase de passe ou un champ qui n'est pas un secret de la source renvoie `400`, et rien n'est enregistré.
-
-<Info>
-  La requête ne lance pas d'import. La nouvelle clé est utilisée par le prochain import planifié. Pour importer immédiatement, déclenchez une nouvelle exécution de la Datasource.
-</Info>
-
-<Info>
-  La même requête remplace les autres champs sensibles d'une source, comme le `password` FTP ou SFTP ou un en-tête HTTP `options.headers.authorization`. Les champs imbriqués utilisent un chemin séparé par des points. Seuls les champs sensibles sont acceptés.
-</Info>
+- Envoyez la clé privée armored complète, de `-----BEGIN PGP PRIVATE KEY BLOCK-----` à `-----END PGP PRIVATE KEY BLOCK-----` (voir [Génération d'une paire de clés PGP](#génération-dune-paire-de-clés-pgp)), avec ses retours à la ligne écrits `\n`.
+- Reelevant vérifie que la clé peut être lue et déverrouillée avec la phrase de passe avant de l'enregistrer. Une clé invalide ou une mauvaise phrase de passe renvoie `400`, et rien n'est enregistré.
+- La nouvelle clé s'applique à la version live, au brouillon et à toute version en attente de vérification. Elle est utilisée par le prochain import.
 
 ## Gestion des erreurs
 

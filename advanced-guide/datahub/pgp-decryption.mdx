@@ -73,40 +73,11 @@ PGP decryption is applied **before** decompression. This means you can have file
 
 ## Rotate the private key
 
-Use this request to replace the private key of a Datasource that is already configured. It replaces the key directly, without reconfiguring the source.
+To replace the private key of a Datasource that is already configured, send the new `pgpPrivateKey` (and `pgpPassphrase`, or `null` if the new key has none) with the [source secret rotation request](/advanced-guide/datahub/rotate-source-secrets). It replaces the key directly, without reconfiguring the source.
 
-Before you begin, set these values:
-
-| Value | Description |
-|-------|-------------|
-| `DATASOURCE_ID` | The Datasource identifier. |
-| `SOURCE_INDEX` | The position of the source in the Datasource, starting at `0`. A Datasource with a single source uses `0`. |
-| `ACCESS_TOKEN` | An OAuth 2.0 access token with permission to update the Datasource. See [Authentication](/developer-docs/api-reference/authentication). |
-
-```bash
-DATASOURCE_ID="replace-with-datasource-id"
-SOURCE_INDEX=0
-ACCESS_TOKEN="replace-with-access-token"
-
-curl --request PUT "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/sources/${SOURCE_INDEX}/secrets" \
-  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data '{ "secrets": { "pgpPrivateKey": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n…\n-----END PGP PRIVATE KEY BLOCK-----", "pgpPassphrase": null } }'
-```
-
-- Set `pgpPassphrase` to the passphrase of the new key, or to `null` if the new key has no passphrase. If you omit it, the current passphrase is kept.
-- Replace the `pgpPrivateKey` placeholder with the complete armored private key, from `-----BEGIN PGP PRIVATE KEY BLOCK-----` to `-----END PGP PRIVATE KEY BLOCK-----` (see [Generating a PGP Key Pair](#generating-a-pgp-key-pair)). Replace its line breaks with `\n` so that the value fits in a single string.
-- The new key applies to the live version of the Datasource, its draft and any version awaiting verification. The previous key cannot come back with a later publication.
-
-A `204` status confirms the change. Reelevant checks that the key can be read and unlocked with the passphrase before saving it. An invalid key, a wrong passphrase or a field that is not a secret of the source returns `400`, and nothing is saved.
-
-<Info>
-  The request does not start an import. The new key is used by the next scheduled import. To import immediately, trigger a new run of the Datasource.
-</Info>
-
-<Info>
-  The same request replaces the other sensitive fields of a source, such as an FTP or SFTP `password` or an HTTP `options.headers.authorization` header. Nested fields use a dotted path. Only sensitive fields are accepted.
-</Info>
+- Send the complete armored private key, from `-----BEGIN PGP PRIVATE KEY BLOCK-----` to `-----END PGP PRIVATE KEY BLOCK-----` (see [Generating a PGP Key Pair](#generating-a-pgp-key-pair)), with its line breaks written as `\n`.
+- Reelevant checks that the key can be read and unlocked with the passphrase before saving it. An invalid key or a wrong passphrase returns `400`, and nothing is saved.
+- The new key applies to the live version, the draft and any version awaiting verification. It is used by the next import.
 
 ## Error Handling
 
