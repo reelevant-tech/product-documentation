@@ -193,9 +193,9 @@ A user without the attribute gets `$in: []`, so no row matches.
 
 On a `read DatagraphEntity` rule, a `datagraph_option` condition limits which values the user may pass to an Object option when querying it.
 
-<Warning>
-  Object queries do not enforce `datagraph_option` yet: enforcement ships in an upcoming Datasources release. Roles can already store the condition, and `AuthenticatedUser.getDatagraphOptionConstraints(entityId)` from `@reelevant-tech/permissions` 6.7.0 returns the resolved constraints.
-</Warning>
+<Note>
+  Datasources enforces the condition on Object queries made by users. A query that leaves the option unset, or sets it to a value outside the user's values, returns `403`. Option sampling (`sampleOptions`) on a constrained Object also returns `403`.
+</Note>
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
