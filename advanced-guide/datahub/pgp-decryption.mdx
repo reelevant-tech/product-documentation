@@ -71,13 +71,50 @@ PGP decryption is applied **before** decompression. This means you can have file
 | `data.json.asc` | Decrypt → Parse JSON |
 | `data.xml.gz.asc` | Decrypt → Decompress gzip → Parse XML |
 
+## Rotate the private key
+
+Use this request to replace the private key of a Datasource that is already configured. It replaces the key directly, without reconfiguring the source.
+
+Before you begin, set these values:
+
+| Value | Description |
+|-------|-------------|
+| `DATASOURCE_ID` | The Datasource identifier. |
+| `SOURCE_INDEX` | The position of the source in the Datasource, starting at `0`. A Datasource with a single source uses `0`. |
+| `ACCESS_TOKEN` | An OAuth 2.0 access token with permission to update the Datasource. See [Authentication](/developer-docs/api-reference/authentication). |
+
+```bash
+DATASOURCE_ID="replace-with-datasource-id"
+SOURCE_INDEX=0
+ACCESS_TOKEN="replace-with-access-token"
+
+curl --request PUT "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/sources/${SOURCE_INDEX}/secrets" \
+  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{ "secrets": { "pgpPrivateKey": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n…\n-----END PGP PRIVATE KEY BLOCK-----", "pgpPassphrase": null } }'
+```
+
+- Set `pgpPassphrase` to the passphrase of the new key, or to `null` if the new key has no passphrase. If you omit it, the current passphrase is kept.
+- Replace the line breaks of the armored key with `\n` so that the value fits in a single string.
+- The new key applies to the live version of the Datasource, its draft and any version awaiting verification. The previous key cannot come back with a later publication.
+
+A `204` status confirms the change. Reelevant checks that the key can be read and unlocked with the passphrase before saving it. An invalid key, a wrong passphrase or a field that is not a secret of the source returns `400`, and nothing is saved.
+
+<Info>
+  The request does not start an import. The new key is used by the next scheduled import. To import immediately, trigger a new run of the Datasource.
+</Info>
+
+<Info>
+  The same request replaces the other sensitive fields of a source, such as an FTP or SFTP `password` or an HTTP `options.headers.authorization` header. Nested fields use a dotted path. Only sensitive fields are accepted.
+</Info>
+
 ## Error Handling
 
 If decryption fails, the datasource job reports a clear error. Common failure scenarios:
 
 | Error | Cause | Resolution |
 |-------|-------|------------|
-| **Wrong key** | The private key does not match the public key used to encrypt the file. | Verify you are using the correct private key. Contact your data provider to confirm which public key was used for encryption. |
+| **Wrong key** | The private key does not match the public key used to encrypt the file. | Verify you are using the correct private key. Contact your data provider to confirm which public key was used for encryption, then [rotate the private key](#rotate-the-private-key). |
 | **Invalid passphrase** | The passphrase provided does not unlock the private key. | Double-check the passphrase. |
 | **Corrupted file** | The encrypted file is damaged or incomplete. | Ask your data provider to re-send the file. |
 | **Invalid key format** | The private key is not in a valid PGP format. | Ensure the key is in armored (ASCII) format, starting with `-----BEGIN PGP PRIVATE KEY BLOCK-----`. |
