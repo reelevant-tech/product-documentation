@@ -459,6 +459,7 @@
                   "developer-docs/guides/browser-extension-content-script",
                   "developer-docs/guides/real-time-api-datasource",
                   "developer-docs/guides/datasource-query-filters",
+                  "developer-docs/guides/team-attributes",
                   "developer-docs/guides/runner-failures",
                   "developer-docs/guides/datagraph-schema-api"
                 ]
@@ -947,6 +948,7 @@
                   "fr/developer-docs/guides/browser-extension-content-script",
                   "fr/developer-docs/guides/real-time-api-datasource",
                   "fr/developer-docs/guides/datasource-query-filters",
+                  "fr/developer-docs/guides/team-attributes",
                   "fr/developer-docs/guides/runner-failures",
                   "fr/developer-docs/guides/datagraph-schema-api"
                 ]
