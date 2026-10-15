@@ -19,10 +19,6 @@ Une fois activées, les expérimentations peuvent remplacer le Node **Split**. I
 
 ![Sélecteur de type présentant les objectifs Groupe témoin global et Test A/B continu](/images/analytics/experiment-type-picker.png)
 
-Le sélecteur de type s'intitule **Nouvelle expérimentation**. Chaque carte indique son type dans un badge.
-
-Le formulaire s'intitule **Nouveau groupe témoin global** ou **Nouveau test A/B continu**.
-
 | Type | Objectif | Variantes | **Unité de randomisation** | Fin |
 |------|----------|-----------|------------------------|-----|
 | **Groupe témoin global** | **Mesurer l'impact incrémental** | Exactement deux : **Témoin** et **Traitement** | Toujours **Par client** | Pas de fin automatique ; vous pouvez la conclure manuellement. |
@@ -54,7 +50,7 @@ Sélectionnez **Afficher les archivées** pour voir les expérimentations archiv
 3. Dans **Général**, renseignez le **Nom** et l'**Hypothèse métier**.
 4. Dans **Variantes et répartition**, nommez vos variantes et définissez leur répartition.
 5. Dans **Mesure**, choisissez l'**Unité de randomisation** et la **Métrique de succès**.
-6. Le pied du formulaire propose **Fermer**, **Enregistrer le brouillon** et **Créer l'expérimentation**. Sélectionnez **Créer l'expérimentation** pour valider et créer l'expérimentation comme **Prête**, ou **Enregistrer le brouillon** pour la conserver. Sélectionnez **Fermer** pour quitter le formulaire.
+6. Sélectionnez **Créer l'expérimentation** pour la valider comme **Prête**, ou **Enregistrer le brouillon** pour terminer plus tard.
 
 Le **Nom** ne doit pas correspondre à un tag existant, car l'expérimentation devient un tag.
 
@@ -74,10 +70,6 @@ Choisissez une **Métrique de succès** : **Taux de conversion unique**, **Taux 
 
 ![Page d'expérimentation présentant son statut, sa configuration et la répartition du trafic](/images/analytics/experiment-page.png)
 
-La page affiche l'**Hypothèse métier**, le **Type**, le **Statut**, la **Période**, l'**Unité de randomisation** et la **Métrique de succès**. Elle présente aussi la **Répartition du trafic**.
-
-L'en-tête propose **Conclure** et **Plus d'actions**. Lorsque le statut est **En cours**, **Plus d'actions** propose **Configuration** et **Dupliquer**, mais pas **Archiver**.
-
 | Statut | Signification |
 |--------|---------------|
 | **Brouillon** | Vous pouvez continuer à modifier l'expérimentation. |
@@ -88,7 +80,7 @@ L'en-tête propose **Conclure** et **Plus d'actions**. Lorsque le statut est **E
 
 ### Valider ou revenir au brouillon
 
-Sélectionnez **Valider la configuration** pour passer un brouillon à l'état Prête. Ce bouton apparaît aussi dans le formulaire de modification d'un brouillon.
+Sélectionnez **Valider la configuration** pour passer un brouillon au statut **Prête**.
 
 Sélectionnez **Repasser en brouillon** pour revenir à l'état Brouillon.
 
@@ -104,9 +96,9 @@ Si aucun Workflow n'utilise l'expérimentation, un avertissement apparaît. Elle
 
 ![Fenêtre de conclusion avec l'option Variante à conserver](/images/analytics/experiment-conclude.png)
 
-La fenêtre **Conclure l'expérimentation** propose des options radio sous **Variante à conserver**. La variante de référence porte la mention **(Référence)**.
+La fenêtre **Conclure l'expérimentation** propose des options radio sous **Variante à conserver**.
 
-Choisissez une variante, puis sélectionnez **Conclure**. Le bouton reste désactivé tant que vous n'avez pas choisi de variante.
+Choisissez une variante, puis sélectionnez **Conclure**.
 
 Tout le trafic est alors dirigé vers cette variante et l'expérimentation devient **Décidée**.
 
@@ -118,10 +110,12 @@ Un **Groupe témoin global** n'a pas de date de fin automatique, mais vous pouve
 
 ### Archiver
 
-Lorsque l'option **Archiver** est disponible dans **Plus d'actions**, sélectionnez-la et saisissez le mot de confirmation affiché. Vous ne pouvez pas archiver une expérimentation encore utilisée par un Workflow.
+L'option **Archiver** n'est pas disponible lorsqu'une expérimentation est **En cours**.
+
+Sélectionnez **Plus d'actions** > **Archiver**, puis saisissez le mot de confirmation.
 
 <Warning>
-  Une expérimentation au statut **En cours** ne peut pas être archivée. Détachez-la de ses Workflows avant de l'archiver.
+  Détachez d'abord l'expérimentation de tous ses Workflows. **Archiver** n'est pas disponible lorsqu'elle est **En cours**.
 </Warning>
 
 ### Dupliquer
@@ -138,7 +132,7 @@ En attendant, ouvrez [Data Exploration](/fr/product-guide/analytics/data-explora
 
 Ajoutez **Tag: {name}** comme dimension pour comparer les variantes. Consultez [Référence des mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions) pour choisir les champs.
 
-La page indique **Non validé statistiquement**.
+Ces chiffres ne sont pas validés statistiquement.
 
 ## Bientôt disponible
 

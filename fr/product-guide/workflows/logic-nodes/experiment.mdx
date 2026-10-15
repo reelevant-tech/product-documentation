@@ -5,35 +5,19 @@ description: 'Répartissez le trafic entre les branches d’un Workflow avec une
 
 ![Node Expérimentation avec ses branches de variantes dans un Workflow](/images/workflows/node-experiment.png)
 
-Utilisez le Node Expérimentation (un Logic Node qui répartit le trafic) pour transformer les variantes d'une expérimentation Analytics en branches de Workflow.
-
-Sur le canvas, la carte affiche **Expérimentation**, son nom et un badge de statut, par exemple **En cours**. Elle est suivie d'un Node **Variante** par variante.
-
-Chaque arête indique le pourcentage de répartition. La branche de base porte le badge **Témoin** ou **Variante de référence**.
+Utilisez le Node Expérimentation (un Logic Node qui répartit le trafic) pour transformer les variantes d'une expérimentation Analytics en Branches de Workflow. Chaque variante devient un Node **Variante** (une Branch) qui affiche son **Allocation**.
 
 ## Ajouter un Node Expérimentation
 
 ![Panneau Expérimentation avec la recherche, les expérimentations disponibles, les barres de répartition et les commandes de sélection](/images/workflows/node-experiment-configuration.png)
 
-Recherchez avec **Rechercher une expérimentation**. Le panneau indique le nombre d'expérimentations disponibles et affiche une carte par expérimentation.
-
-Chaque carte indique le nom, le statut, le type et une barre de répartition. Sélectionnez une carte, puis choisissez **Confirmer**.
-
-Seules les expérimentations au statut **Prête** ou **En cours** apparaissent dans le panneau.
-
-Les cartes proposent **Voir les résultats** pour une expérimentation au statut **En cours**, ou **Configurer** pour une expérimentation au statut **Prête**. Ces deux options ouvrent sa page dans Analytics.
-
-Utilisez **Créer une expérimentation** pour ouvrir Analytics > Expérimentations. Sélectionnez **Fermer** pour quitter le panneau.
-
 1. Dans le sélecteur de Nodes du Workflow, choisissez **Expérimentation**.
 2. Recherchez une expérimentation **Prête** ou **En cours**, puis sélectionnez sa carte.
 3. Sélectionnez **Confirmer** pour ajouter le Node Expérimentation.
 
-Si aucune expérimentation n'est disponible, l'état vide propose **Créer une expérimentation**.
+Seules les expérimentations **Prêtes** et **En cours** sont répertoriées. Si aucune n'est disponible, utilisez **Créer une expérimentation** pour ouvrir Analytics.
 
 ## Associer les branches aux variantes
-
-Le Node Expérimentation crée une branche par variante. Chaque branche affiche la **Variante** qui lui est associée.
 
 Avant de publier, associez chaque branche à une variante différente. Une branche sans variante ou une variante répétée bloque la publication.
 

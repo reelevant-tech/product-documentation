@@ -19,10 +19,6 @@ Once activated, Experiments can replace the **Split** Node. You may no longer se
 
 ![Experiment type picker showing Global holdout and Continuous A/B test objectives](/images/analytics/experiment-type-picker.png)
 
-The type picker is titled **Create experiment**. Each card shows its type as a badge.
-
-The form is titled **New global holdout** or **New continuous A/B test**.
-
 | Type | Objective | Variants | **Randomization unit** | End |
 |------|-----------|----------|--------------------|-----|
 | **Global holdout** | **Measure incremental impact** | Exactly two: **Control** and **Treatment** | Always **Per customer** | No automatic end; you can conclude it manually. |
@@ -54,7 +50,7 @@ Select **Show archived** to include archived experiments. Select **Create experi
 3. In **General**, enter a **Name** and **Business hypothesis**.
 4. In **Variants and allocation**, name your Variants and set their Allocation.
 5. In **Measurement**, choose a **Randomization unit** and one **Success metric**.
-6. The footer offers **Close**, **Save draft**, and **Create experiment**. Select **Create experiment** to validate and create it as **Ready**, or **Save draft** to continue later. Select **Close** to exit.
+6. Select **Create experiment** to validate it as Ready, or **Save draft** to finish later.
 
 Your **Name** must not match an existing tag name because the Experiment becomes a tag.
 
@@ -74,10 +70,6 @@ Choose one **Success metric**: **Unique conversion rate**, **Unique click rate**
 
 ![Experiment page showing its status, configuration, and traffic allocation](/images/analytics/experiment-page.png)
 
-The page shows **Business hypothesis**, **Type**, **Status**, **Period**, **Randomization unit**, **Success metric**, and a **Traffic allocation** bar.
-
-Its header includes **Conclude** and **More actions**. While **Live**, **More actions** offers **Configuration** and **Clone**, but not **Archive**.
-
 | Status | What it means |
 |--------|---------------|
 | **Draft** | You can continue editing the Experiment. |
@@ -88,7 +80,7 @@ Its header includes **Conclude** and **More actions**. While **Live**, **More ac
 
 ### Validate or return to draft
 
-Select **Validate configuration** to move a draft to Ready. This is also the form's submit button when editing a Draft.
+Select **Validate configuration** to move a draft to Ready.
 
 Select **Back to draft** to return a Ready Experiment to Draft.
 
@@ -104,9 +96,9 @@ If no Workflow uses the Experiment, a warning appears. The Experiment receives n
 
 ![Conclude experiment modal with the Variant to keep option](/images/analytics/experiment-conclude.png)
 
-The **Conclude experiment** modal offers **Variant to keep** radio options. The baseline Variant is marked **(Reference)**.
+The **Conclude experiment** modal offers **Variant to keep** radio options.
 
-Choose a Variant, then select **Conclude**. The button stays disabled until you choose a Variant.
+Choose a Variant, then select **Conclude**.
 
 All traffic then goes to that Variant, and the Experiment becomes Decided.
 
@@ -118,10 +110,12 @@ A **Global holdout** has no automatic end date, but you can conclude it manually
 
 ### Archive
 
-When **Archive** is available under **More actions**, select it and type the confirmation word shown. An Experiment cannot be archived while a Workflow still uses it.
+**Archive** is not available while an Experiment is **Live**.
+
+Select **More actions** > **Archive**, then type the confirmation word.
 
 <Warning>
-  A **Live** Experiment cannot be archived. Detach the Experiment from its Workflows before archiving it.
+  Detach the Experiment from all Workflows first. **Archive** is not available while it is **Live**.
 </Warning>
 
 ### Clone
@@ -138,7 +132,7 @@ Meanwhile, open [Data Exploration](/product-guide/analytics/data-exploration). Y
 
 Add **Tag: {name}** as a dimension to compare Variants. See [Measures and Dimensions](/product-guide/analytics/measures-and-dimensions) for help choosing fields.
 
-The page marks the data **Not statistically validated**.
+These figures are not statistically validated.
 
 ## Coming soon
 
