@@ -36,7 +36,7 @@ Then open a PR to reelevant-tech/product-documentation.
 Follow the notes in CONTRIBUTING.md for the right prompts and rules.
 ```
 
-For more examples and team-specific guidance, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+For more examples and team-specific guidance, see [CONTRIBUTING.md](https://github.com/reelevant-tech/product-documentation/blob/main/CONTRIBUTING.md).
 
 ## Optional — turn on the live preview
 

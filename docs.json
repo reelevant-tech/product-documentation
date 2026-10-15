@@ -91,7 +91,8 @@
                       "product-guide/workflows/logic-nodes",
                       "product-guide/workflows/logic-nodes/conditions",
                       "product-guide/workflows/logic-nodes/split",
-                      "product-guide/workflows/logic-nodes/real-time-testing"
+                      "product-guide/workflows/logic-nodes/real-time-testing",
+                      "product-guide/workflows/logic-nodes/experiment"
                     ]
                   },
                   {
@@ -166,6 +167,7 @@
                     ]
                   },
                   "product-guide/analytics/data-exploration",
+                  "product-guide/analytics/experiments",
                   "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/saved-queries",
                   "product-guide/analytics/reports",
@@ -581,7 +583,8 @@
                       "fr/product-guide/workflows/logic-nodes",
                       "fr/product-guide/workflows/logic-nodes/conditions",
                       "fr/product-guide/workflows/logic-nodes/split",
-                      "fr/product-guide/workflows/logic-nodes/real-time-testing"
+                      "fr/product-guide/workflows/logic-nodes/real-time-testing",
+                      "fr/product-guide/workflows/logic-nodes/experiment"
                     ]
                   },
                   {
@@ -656,6 +659,7 @@
                     ]
                   },
                   "fr/product-guide/analytics/data-exploration",
+                  "fr/product-guide/analytics/experiments",
                   "fr/product-guide/analytics/measures-and-dimensions",
                   "fr/product-guide/analytics/saved-queries",
                   "fr/product-guide/analytics/settings"

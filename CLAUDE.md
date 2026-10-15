@@ -38,16 +38,21 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 | Output Node | end node, terminal, result node |
 | Data Node | data step, data block |
 | Logic Node | decision step, logic block, routing node |
+| Experiment | — |
+| Variant | — |
+| Control | — |
+| Reference variant | — |
+| Allocation | — |
 | DataHub | data hub, data center, data layer |
 | Runner | engine, executor, processor, server |
 | Uplift | lift, improvement, gain, boost |
 | Incremental Value | added value, extra value |
 | Exposed Population | test group, treatment group |
-| Non-Exposed Population | control group, B group, holdout |
+| Non-Exposed Population | B group |
 | Key Challenge | problematic, issue, pain point |
 | Use Case | scenario, recipe, playbook |
 | Content Editor | designer, builder, canvas |
-| Real-Time Testing | A/B test node, split test, experiment |
+| Real-Time Testing | A/B test node, split test |
 | Transform | transformer, mutation, processor |
 | Team | Resource Group (except in developer-docs where you add "(Resource Group)" in parentheses) |
 

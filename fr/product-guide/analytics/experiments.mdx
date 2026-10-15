@@ -1,0 +1,159 @@
+---
+title: 'Expérimentations'
+description: 'Créez des expérimentations dans Analytics et utilisez-les dans vos Workflows'
+---
+
+![Liste des expérimentations avec leurs noms, statuts, types, périodes, répartitions du trafic et dernières modifications](/images/analytics/experiments-listing.png)
+
+Les expérimentations vous aident à comparer des variantes dans plusieurs Workflows et à mesurer leur impact dans Analytics.
+
+Une expérimentation ([Experiment](/fr/glossary)) se crée et se gère dans Analytics, puis se réutilise dans les Workflows avec le Node Expérimentation. Elle comprend un type, des variantes et leur répartition, un témoin ou une référence, une hypothèse métier et une métrique de succès.
+
+## Disponibilité
+
+Les expérimentations sont activées sur demande : contactez votre interlocuteur Reelevant.
+
+Une fois activées, les expérimentations peuvent remplacer le Node **Split**. Il se peut que **Split** ne soit plus proposé dans le sélecteur de Nodes.
+
+## Types d'expérimentation
+
+![Sélecteur de type présentant les objectifs Groupe témoin global et Test A/B continu](/images/analytics/experiment-type-picker.png)
+
+Le sélecteur de type s'intitule **Nouvelle expérimentation**. Chaque carte indique son type dans un badge.
+
+Le formulaire s'intitule **Nouveau groupe témoin global** ou **Nouveau test A/B continu**.
+
+| Type | Objectif | Variantes | **Unité de randomisation** | Fin |
+|------|----------|-----------|------------------------|-----|
+| **Groupe témoin global** | **Mesurer l'impact incrémental** | Exactement deux : **Témoin** et **Traitement** | Toujours **Par client** | Pas de fin automatique ; vous pouvez la conclure manuellement. |
+| **Test A/B continu** | **Comparer des variantes** | Deux à quatre, dont une **Référence** | **Par client** ou **Par affichage** | Vous la concluez quand vous le souhaitez. |
+
+Un **Groupe témoin global** conserve une partie de votre audience sur l'expérience non personnalisée. Vous pouvez ainsi mesurer la valeur ajoutée par la personnalisation.
+
+## Liste des expérimentations
+
+Ouvrez **Analytics**, puis sélectionnez **Expérimentations** pour consulter vos expérimentations.
+
+| Colonne | Contenu |
+|---------|---------|
+| **Nom** | Le nom de l'expérimentation. |
+| **Statut** | L'étape actuelle de l'expérimentation. |
+| **Type** | **Groupe témoin global** ou **Test A/B continu**. |
+| **Période** | Les informations de début et de fin. |
+| **Répartition du trafic** | La part configurée pour chaque variante. |
+| **Dernière modification** | La date de la dernière modification. |
+
+Sélectionnez **Afficher les archivées** pour voir les expérimentations archivées. Sélectionnez **Créer une expérimentation** pour commencer.
+
+## Créer une expérimentation
+
+![Configuration présentant les sections Général, Variantes et répartition, et Mesure](/images/analytics/experiment-configuration.png)
+
+1. Dans la liste des expérimentations, sélectionnez **Créer une expérimentation**.
+2. Sous **Quel est votre objectif ?**, choisissez **Mesurer l'impact incrémental** ou **Comparer des variantes**.
+3. Dans **Général**, renseignez le **Nom** et l'**Hypothèse métier**.
+4. Dans **Variantes et répartition**, nommez vos variantes et définissez leur répartition.
+5. Dans **Mesure**, choisissez l'**Unité de randomisation** et la **Métrique de succès**.
+6. Le pied du formulaire propose **Fermer**, **Enregistrer le brouillon** et **Créer l'expérimentation**. Sélectionnez **Créer l'expérimentation** pour valider et créer l'expérimentation comme **Prête**, ou **Enregistrer le brouillon** pour la conserver. Sélectionnez **Fermer** pour quitter le formulaire.
+
+Le **Nom** ne doit pas correspondre à un tag existant, car l'expérimentation devient un tag.
+
+Sélectionnez **Répartir équitablement** pour répartir le trafic entre les autres variantes. La répartition du **Témoin** ou de la **Référence** est calculée automatiquement, pour atteindre 100 % au total.
+
+Avant son démarrage, l'expérimentation dirige tout le trafic vers son **Témoin** ou sa **Référence**.
+
+Choisissez **Par client** pour garder chaque client dans la même variante. Choisissez **Par affichage** pour attribuer une variante à chaque affichage du Content.
+
+Choisissez une **Métrique de succès** : **Taux de conversion unique**, **Taux de clic unique**, **Revenu par client** ou **Achats par client**. Avec **Par affichage**, seul le **Taux de clic unique** est disponible.
+
+<Tip>
+  Vous pouvez rattacher une expérimentation **Prête** à un Workflow avant de la lancer. Si aucun Workflow n'utilise l'expérimentation, elle ne reçoit aucun trafic.
+</Tip>
+
+## Cycle de vie
+
+![Page d'expérimentation présentant son statut, sa configuration et la répartition du trafic](/images/analytics/experiment-page.png)
+
+La page affiche l'**Hypothèse métier**, le **Type**, le **Statut**, la **Période**, l'**Unité de randomisation** et la **Métrique de succès**. Elle présente aussi la **Répartition du trafic**.
+
+L'en-tête propose **Conclure** et **Plus d'actions**. Lorsque le statut est **En cours**, **Plus d'actions** propose **Configuration** et **Dupliquer**, mais pas **Archiver**.
+
+| Statut | Signification |
+|--------|---------------|
+| **Brouillon** | Vous pouvez continuer à modifier l'expérimentation. |
+| **Prête** | La configuration est validée et l'expérimentation peut être rattachée à un Workflow. |
+| **En cours** | L'expérimentation répartit le trafic. |
+| **Décidée** | Une variante a été choisie pour recevoir tout le trafic. |
+| **Archivée** | L'expérimentation est archivée et masquée dans la liste active. |
+
+### Valider ou revenir au brouillon
+
+Sélectionnez **Valider la configuration** pour passer un brouillon à l'état Prête. Ce bouton apparaît aussi dans le formulaire de modification d'un brouillon.
+
+Sélectionnez **Repasser en brouillon** pour revenir à l'état Brouillon.
+
+Détachez l'expérimentation de ses Workflows avant de la repasser en brouillon.
+
+### Lancer
+
+Sélectionnez **Lancer** pour démarrer manuellement l'expérimentation. Cela verrouille ses variantes, leur répartition, l'unité de randomisation et la métrique de succès.
+
+Si aucun Workflow n'utilise l'expérimentation, un avertissement apparaît. Elle ne reçoit aucun trafic tant qu'un Workflow ne l'utilise pas.
+
+### Conclure
+
+![Fenêtre de conclusion avec l'option Variante à conserver](/images/analytics/experiment-conclude.png)
+
+La fenêtre **Conclure l'expérimentation** propose des options radio sous **Variante à conserver**. La variante de référence porte la mention **(Référence)**.
+
+Choisissez une variante, puis sélectionnez **Conclure**. Le bouton reste désactivé tant que vous n'avez pas choisi de variante.
+
+Tout le trafic est alors dirigé vers cette variante et l'expérimentation devient **Décidée**.
+
+Un **Groupe témoin global** n'a pas de date de fin automatique, mais vous pouvez le conclure manuellement. Vous ne pouvez pas arrêter une expérimentation au statut **En cours** sans choisir une variante à conserver.
+
+<Warning>
+  La conclusion est irréversible. L'expérimentation cesse de collecter des données et ne peut pas être relancée.
+</Warning>
+
+### Archiver
+
+Lorsque l'option **Archiver** est disponible dans **Plus d'actions**, sélectionnez-la et saisissez le mot de confirmation affiché. Vous ne pouvez pas archiver une expérimentation encore utilisée par un Workflow.
+
+<Warning>
+  Une expérimentation au statut **En cours** ne peut pas être archivée. Détachez-la de ses Workflows avant de l'archiver.
+</Warning>
+
+### Dupliquer
+
+Sélectionnez **Dupliquer** pour créer un brouillon dont le nom se termine par « (copie) ».
+
+Lorsqu'un brouillon ou une expérimentation prête est utilisé dans un Workflow, vous pouvez renommer ses variantes et modifier leur répartition. Vous ne pouvez pas ajouter ni supprimer de variantes.
+
+## Lire les données d'une expérimentation
+
+La page de l'expérimentation indique **Tableau de bord des résultats bientôt disponible**.
+
+En attendant, ouvrez [Data Exploration](/fr/product-guide/analytics/data-exploration). Votre expérimentation apparaît comme un tag portant son nom, avec une valeur par variante.
+
+Ajoutez **Tag: {name}** comme dimension pour comparer les variantes. Consultez [Référence des mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions) pour choisir les champs.
+
+La page indique **Non validé statistiquement**.
+
+## Bientôt disponible
+
+Le tableau de bord des résultats et la significativité statistique seront bientôt disponibles. Le démarrage programmé et les dates de fin automatiques seront également disponibles prochainement.
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Expérimentation" icon="flask" href="/fr/product-guide/workflows/logic-nodes/experiment">
+    Utilisez une expérimentation dans un Workflow.
+  </Card>
+  <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
+    Explorez vos données analytiques.
+  </Card>
+  <Card title="Logic Nodes" icon="code-branch" href="/fr/product-guide/workflows/logic-nodes">
+    Découvrez les Logic Nodes des Workflows.
+  </Card>
+</CardGroup>

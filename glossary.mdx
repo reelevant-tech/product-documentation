@@ -15,7 +15,12 @@ description: 'Canonical terminology used across all Reelevant documentation'
 | **Branch** | A unique execution path through a Workflow, from a Channel to an Output Node. |
 | **Output Node** | A terminal Workflow Node that produces the final response (Visual Content, JSON Template, Empty). |
 | **Data Node** | A Workflow Node that fetches or provides data (Datasource query, URL Parameter, Geolocation, Weather, Transform). |
-| **Logic Node** | A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing). |
+| **Logic Node** | A Workflow Node that controls flow with multiple outgoing paths (Condition, Split, Real-Time Testing, Experiment). |
+| **Experiment** | A test created and managed in Analytics, with Variants, Allocation, a business hypothesis, and a success metric. |
+| **Variant** | One version in an Experiment that receives a share of traffic. |
+| **Control** | The Variant in a Global holdout that keeps the non-personalised experience. |
+| **Reference variant** | The baseline Variant in a Continuous A/B test; other Variants are compared with it. |
+| **Allocation** | The share of traffic assigned to each Variant. |
 | **DataHub** | The platform's data management center for importing and configuring external data. |
 | **Datagraph** | The DataHub data model that links Datasources together so they can be queried as related tables. |
 | **Datagraph Schema** | The Datagraph definition: one table per Datasource, with typed columns and relations between tables. |
