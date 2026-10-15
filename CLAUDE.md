@@ -34,7 +34,7 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 | Content | creative, asset, visual, template |
 | Node | step, block, element, box, action |
 | Channel | touchpoint, medium, entry point |
-| Branch | path, route, variant, scenario |
+| Branch | path, route, scenario |
 | Output Node | end node, terminal, result node |
 | Data Node | data step, data block |
 | Logic Node | decision step, logic block, routing node |
