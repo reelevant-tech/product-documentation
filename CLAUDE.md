@@ -38,12 +38,6 @@ Before writing or editing any page, check `_glossary-internal.yaml` at the repo 
 | Output Node | end node, terminal, result node |
 | Data Node | data step, data block |
 | Logic Node | decision step, logic block, routing node |
-| Experiment | — |
-| Variant | — |
-| Control | — |
-| Treatment | — |
-| Reference | — |
-| Allocation | — |
 | DataHub | data hub, data center, data layer |
 | Runner | engine, executor, processor, server |
 | Uplift | lift, improvement, gain, boost |
