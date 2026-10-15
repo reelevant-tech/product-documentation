@@ -95,7 +95,7 @@ curl --request PUT "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/so
 ```
 
 - Définissez `pgpPassphrase` avec la phrase de passe de la nouvelle clé, ou `null` si la nouvelle clé n'en a pas. Si vous l'omettez, la phrase de passe actuelle est conservée.
-- Remplacez les retours à la ligne de la clé armored par `\n` pour que la valeur tienne dans une seule chaîne.
+- Remplacez la valeur d'exemple de `pgpPrivateKey` par la clé privée armored complète, de `-----BEGIN PGP PRIVATE KEY BLOCK-----` à `-----END PGP PRIVATE KEY BLOCK-----` (voir [Génération d'une paire de clés PGP](#génération-dune-paire-de-clés-pgp)). Remplacez ses retours à la ligne par `\n` pour que la valeur tienne dans une seule chaîne.
 - La nouvelle clé s'applique à la version live de la Datasource, à son brouillon et à toute version en attente de vérification. L'ancienne clé ne peut pas revenir lors d'une publication ultérieure.
 
 Un statut `204` confirme la modification. Reelevant vérifie que la clé peut être lue et déverrouillée avec la phrase de passe avant de l'enregistrer. Une clé invalide, une mauvaise phrase de passe ou un champ qui n'est pas un secret de la source renvoie `400`, et rien n'est enregistré.

@@ -95,7 +95,7 @@ curl --request PUT "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/so
 ```
 
 - Set `pgpPassphrase` to the passphrase of the new key, or to `null` if the new key has no passphrase. If you omit it, the current passphrase is kept.
-- Replace the line breaks of the armored key with `\n` so that the value fits in a single string.
+- Replace the `pgpPrivateKey` placeholder with the complete armored private key, from `-----BEGIN PGP PRIVATE KEY BLOCK-----` to `-----END PGP PRIVATE KEY BLOCK-----` (see [Generating a PGP Key Pair](#generating-a-pgp-key-pair)). Replace its line breaks with `\n` so that the value fits in a single string.
 - The new key applies to the live version of the Datasource, its draft and any version awaiting verification. The previous key cannot come back with a later publication.
 
 A `204` status confirms the change. Reelevant checks that the key can be read and unlocked with the passphrase before saving it. An invalid key, a wrong passphrase or a field that is not a secret of the source returns `400`, and nothing is saved.
