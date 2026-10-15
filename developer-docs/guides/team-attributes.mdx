@@ -187,9 +187,15 @@ On a `query Datasource` rule, the [query filter](/developer-docs/guides/datasour
 
 A user without the attribute gets `$in: []`, so no row matches.
 
+`$in` is only accepted here with a `$resourceGroupAttribute` reference, and only in role conditions. For a static list of values, use `$eq` with a `string[]` (see [Operators](/developer-docs/guides/datasource-query-filters#operators)).
+
 ### Object option constraint (`datagraph_option`)
 
 On a `read DatagraphEntity` rule, a `datagraph_option` condition limits which values the user may pass to an Object option when querying it.
+
+<Warning>
+  Object queries do not enforce `datagraph_option` yet: enforcement ships in an upcoming Datasources release. Roles can already store the condition, and `AuthenticatedUser.getDatagraphOptionConstraints(entityId)` from `@reelevant-tech/permissions` 6.7.0 returns the resolved constraints.
+</Warning>
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
