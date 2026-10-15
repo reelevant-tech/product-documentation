@@ -5,35 +5,19 @@ description: 'Use an Analytics Experiment to split traffic across Workflow Branc
 
 ![Experiment Node with its experiment and variant Branches in a Workflow](/images/workflows/node-experiment.png)
 
-Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches.
-
-On the canvas, the card shows **Experiment**, its name, and a status badge, such as **Live**. It is followed by one **Variant** Node per Variant.
-
-Each edge shows its Allocation percentage. The **Control** or **Reference** Branch has a matching badge.
+Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch), showing its Allocation.
 
 ## Add an Experiment Node
 
 ![Experiment drawer with search, available experiments, allocation bars, and selection controls](/images/workflows/node-experiment-configuration.png)
 
-Search with **Search an experiment**. The drawer shows **N experiments available** and one card per Experiment.
-
-Each card shows the name, status, type, and an Allocation bar. Select a card, then choose **Confirm**.
-
-Only **Ready** and **Live** Experiments appear in the drawer.
-
-Cards offer **See results** for **Live** Experiments or **Configure** for **Ready** Experiments. Both open the Experiment page in Analytics.
-
-Use **Create an experiment** to open Analytics > Experiments. Select **Close** to exit the drawer.
-
 1. In the Workflow Node picker, select **Experiment**.
 2. Search for a **Ready** or **Live** Experiment and select its card.
 3. Select **Confirm** to add the Experiment Node.
 
-If no experiments are available, the empty state links to **Create an experiment**.
+Only **Ready** and **Live** Experiments are listed. If none is available, use **Create an experiment** to open Analytics.
 
 ## Map Branches to Variants
-
-The Experiment Node creates one Branch for each Variant. Each Branch shows its assigned **Variant**.
 
 Before publishing, make sure every Branch maps to exactly one different Variant. An unmapped Branch or a repeated Variant prevents publishing.
 
