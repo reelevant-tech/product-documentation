@@ -171,6 +171,10 @@ curl -XPOST https://api.reelevant.com/v2/datasources/worker/${datasource_id}/pro
 
 Lorsqu'une Datasource par upload de fichier est créée, Reelevant génère automatiquement des identifiants FTP et SFTP. Vos systèmes peuvent envoyer des fichiers mis à jour vers le endpoint hébergé, et la Datasource retraitera automatiquement le dernier fichier.
 
+<Info>
+  Pour réinitialiser une Datasource à partir d'un dossier FTP/SFTP sans supprimer les anciens fichiers, consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files).
+</Info>
+
 ### Récupération des identifiants
 
 <Steps>

@@ -1,0 +1,82 @@
+---
+title: 'Ignorer les fichiers antérieurs à une date'
+description: 'Définissez une date limite pour les fichiers correspondant aux chemins avec wildcard'
+---
+
+## Présentation
+
+L'option de source `ignoreFilesBefore` ignore les fichiers modifiés avant une date donnée. Elle est utile pour réinitialiser une Datasource à partir d'un dossier qui contient aussi des fichiers plus anciens.
+
+Par exemple, un nouvel export complet peut être déposé à côté d'anciens exports ou deltas, sans déplacer ni supprimer de fichiers. Une nouvelle version de Datasource n'a pas d'historique d'import ; après validation, son premier import lit tous les fichiers correspondant au chemin.
+
+## Fonctionnement
+
+L'option s'applique uniquement aux chemins avec wildcard, où `*` apparaît dans le nom du fichier. Chaque fichier correspondant, daté avant la limite, est ignoré lors de chaque lecture : l'échantillon à la configuration, l'import de validation, le premier import de la nouvelle version et chaque import planifié.
+
+Les fichiers datés à la limite ou après celle-ci suivent les règles habituelles de `processType`.
+
+Utilisez une date-heure au format ISO 8601. Le fuseau UTC avec `Z` est recommandé, par exemple `2026-10-08T06:00:00Z`.
+
+Une date invalide rejette l'étape `configure_sources` avec le statut `400` et le message `Invalid ignoreFilesBefore date: <value>`. Cette validation s'applique aussi aux chemins sans wildcard, pour lesquels une date valide n'a aucun effet.
+
+## Date utilisée selon le type de source
+
+La date comparée à la limite dépend du type de source :
+
+| Type de source | Date utilisée |
+|----------------|---------------|
+| [File Upload](/fr/advanced-guide/datahub/source-types/file) | Date de téléversement dans le stockage Reelevant. |
+| [FTP](/fr/advanced-guide/datahub/source-types/ftp-sftp) | Date de modification du fichier sur le système distant. |
+| [SFTP](/fr/advanced-guide/datahub/source-types/ftp-sftp) | Date de modification du fichier sur le système distant, à la seconde près. |
+| [Amazon S3](/fr/advanced-guide/datahub/source-types/s3) | Date `LastModified` de l'objet. |
+| [Google Cloud Storage](/fr/advanced-guide/datahub/source-types/gcs) | Date de création de la version actuelle de l'objet. Un objet écrasé est considéré comme nouveau. |
+
+File Upload est utile lorsque les fichiers arrivent dans la Datasource via le FTP/SFTP hébergé par Reelevant. Dans ce cas, la date comparée est l'heure de téléversement ; consultez [Mise à jour via FTP / SFTP](/fr/advanced-guide/datahub/source-types/file#mise-a-jour-via-ftp--sftp).
+
+## Définir la date
+
+Aucun champ de l'interface ne permet de définir cette option. Ajoutez `ignoreFilesBefore` aux options existantes de la source dans la requête `configure_sources` du brouillon, sans modifier les autres options.
+
+Utilisez `GET /v2/datasources/{DATASOURCE_ID}/steps` pour récupérer les options actuelles de la source. Avant la requête, définissez :
+
+| Valeur | Description |
+|--------|-------------|
+| `DATASOURCE_ID` | L'identifiant du brouillon de Datasource. |
+| `ACCESS_TOKEN` | Un access token OAuth 2.0 autorisé à modifier la Datasource. |
+
+Cet exemple configure une source File Upload alimentée par FTP. Remplacez les valeurs fictives par le bucket, l'ID de société, le dossier, l'objet format et l'encodage du texte des options actuelles :
+
+```bash
+curl --request POST "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/steps" \
+  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "name": "configure_sources",
+    "payload": {
+      "pipeline": [
+        {
+          "input": {
+            "source": {
+              "type": "file",
+              "options": {
+                "bucket": "<bucket des options actuelles de la source>",
+                "path": "v2/<id-de-societe>/<dossier>/*",
+                "format": <objet format des options actuelles de la source>,
+                "textEncoding": "<textEncoding des options actuelles de la source>",
+                "ignoreFilesBefore": "2026-10-08T06:00:00Z"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }'
+```
+
+Après la configuration de la source, soumettez l'étape `validate` du brouillon. Consultez l'import dans les [logs de la Datasource](/fr/advanced-guide/datahub/logs).
+
+## Choisir la date
+
+Définissez la limite juste avant le téléversement du nouvel export complet, par exemple quelques minutes plus tôt. L'export complet et les deltas suivants seront ainsi lus, tandis que les fichiers plus anciens seront ignorés.
+
+Conservez `ignoreFilesBefore` après la réinitialisation. L'option continue d'exclure les anciens fichiers des imports suivants.

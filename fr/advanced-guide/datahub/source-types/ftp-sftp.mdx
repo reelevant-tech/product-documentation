@@ -27,6 +27,7 @@ Les sources FTP et SFTP vous permettent de récupérer des fichiers de données 
 |-------|-------------|
 | `secure` | Activer FTPS (FTP over TLS) pour les connexions chiffrées. |
 | `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+| `ignoreFilesBefore` *(optionnel)* | Ignorer les fichiers modifiés avant cette date-heure ISO 8601 avec les chemins wildcards. Consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files). |
 | `disableProxy` | Désactiver le proxy SOCKS5 pour la connexion FTP (optionnel). |
 
 ## Configuration SFTP
@@ -39,6 +40,13 @@ Les sources FTP et SFTP vous permettent de récupérer des fichiers de données 
 | `port` | Le port SFTP (par défaut : `22`). |
 | `username` | Nom d'utilisateur de connexion SFTP. |
 | `path` | Le chemin du fichier sur le serveur (voir [Chemins wildcards](#chemins-wildcards) ci-dessous). |
+
+### Champs optionnels
+
+| Champ | Description |
+|-------|-------------|
+| `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+| `ignoreFilesBefore` *(optionnel)* | Ignorer les fichiers modifiés avant cette date-heure ISO 8601 avec les chemins wildcards. Consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files). |
 
 ### Authentification
 
@@ -115,6 +123,8 @@ Vous pouvez utiliser un wildcard (`*`) dans le nom de fichier pour correspondre 
 ## Modes de traitement des fichiers
 
 Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière dont les fichiers sont sélectionnés via le champ `processType` :
+
+Pour exclure les fichiers correspondants modifiés avant une date donnée, définissez `ignoreFilesBefore` ; consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files).
 
 | Valeur `processType` | Description |
 |------|-------------|

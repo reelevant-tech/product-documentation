@@ -171,6 +171,10 @@ curl -XPOST https://api.reelevant.com/v2/datasources/worker/${datasource_id}/pro
 
 When a file-upload datasource is created, Reelevant automatically generates FTP and SFTP credentials. Your systems can push updated files to the hosted endpoint, and the datasource will automatically re-process the latest file.
 
+<Info>
+  To re-initialise a Datasource from an FTP/SFTP folder without removing older files, see [Ignore Files Before a Date](/advanced-guide/datahub/ignore-older-files).
+</Info>
+
 ### Retrieving Credentials
 
 <Steps>

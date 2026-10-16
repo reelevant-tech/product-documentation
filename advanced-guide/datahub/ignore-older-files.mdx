@@ -1,0 +1,82 @@
+---
+title: 'Ignore Files Before a Date'
+description: 'Configure a date cutoff for files matched by wildcard source paths'
+---
+
+## Overview
+
+The `ignoreFilesBefore` source option skips files modified before a specified date. It is useful when re-initialising a Datasource from a folder that also contains older files.
+
+For example, a new full export can arrive beside earlier exports or deltas without moving or deleting any files. A new Datasource version has no import history, so its first import after validation reads every file matching the path.
+
+## How it works
+
+The option applies only to wildcard paths, where `*` appears in the file name. Every matching file dated before the cutoff is skipped during each read: the sample at configuration, the validation import, the first import of the new version, and every scheduled import.
+
+Files dated on or after the cutoff follow the usual `processType` rules.
+
+Use an ISO 8601 date-time. UTC with `Z` is recommended, for example `2026-10-08T06:00:00Z`.
+
+An invalid date rejects the `configure_sources` step with status `400` and the message `Invalid ignoreFilesBefore date: <value>`. This validation also applies to non-wildcard paths, where a valid date has no effect.
+
+## Date used per source type
+
+The date compared with the cutoff depends on the source type:
+
+| Source type | Date used |
+|-------------|-----------|
+| [File Upload](/advanced-guide/datahub/source-types/file) | Upload time to Reelevant storage. |
+| [FTP](/advanced-guide/datahub/source-types/ftp-sftp) | File modification time on the remote system. |
+| [SFTP](/advanced-guide/datahub/source-types/ftp-sftp) | File modification time on the remote system, to the second. |
+| [Amazon S3](/advanced-guide/datahub/source-types/s3) | Object `LastModified` time. |
+| [Google Cloud Storage](/advanced-guide/datahub/source-types/gcs) | Creation time of the current object version. An overwritten object counts as new. |
+
+File Upload is useful when files reach the Datasource through Reelevant-hosted FTP/SFTP. In this case, the compared date is the upload time; see [Update via FTP / SFTP](/advanced-guide/datahub/source-types/file#update-via-ftp--sftp).
+
+## Set the date
+
+There is no UI field for this option. Add `ignoreFilesBefore` to the existing source options in the draft's `configure_sources` submission, keeping all other options unchanged.
+
+Use `GET /v2/datasources/{DATASOURCE_ID}/steps` to retrieve the current source options. Before making the request, set:
+
+| Value | Description |
+|-------|-------------|
+| `DATASOURCE_ID` | The identifier of the Datasource draft. |
+| `ACCESS_TOKEN` | An OAuth 2.0 access token with permission to update the Datasource. |
+
+This example configures an FTP-fed File Upload source. Replace the placeholders with the bucket, company ID, folder, format object, and text encoding from the current source options:
+
+```bash
+curl --request POST "https://api.reelevant.com/v2/datasources/${DATASOURCE_ID}/steps" \
+  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "name": "configure_sources",
+    "payload": {
+      "pipeline": [
+        {
+          "input": {
+            "source": {
+              "type": "file",
+              "options": {
+                "bucket": "<bucket from current source options>",
+                "path": "v2/<company-id>/<folder>/*",
+                "format": <format object from current source options>,
+                "textEncoding": "<textEncoding from current source options>",
+                "ignoreFilesBefore": "2026-10-08T06:00:00Z"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }'
+```
+
+After configuring the source, submit the draft's `validate` step. Review the import in the [Datasource logs](/advanced-guide/datahub/logs).
+
+## Choose the date
+
+Set the cutoff just before the new full file is uploaded, for example a few minutes earlier. This includes the full file and every later delta while skipping older files.
+
+Keep `ignoreFilesBefore` in place after re-initialisation. It continues to exclude older files from later imports.

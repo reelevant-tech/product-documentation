@@ -26,6 +26,7 @@ La source GCS (Google Cloud Storage) récupère des fichiers de données depuis 
 | Champ | Description |
 |-------|-------------|
 | `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+| `ignoreFilesBefore` *(optionnel)* | Ignorer les fichiers modifiés avant cette date-heure ISO 8601 avec les chemins wildcards. Consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files). |
 
 <Tip>
   Le rôle minimum requis est **Storage Object Viewer** (`roles/storage.objectViewer`) sur le bucket cible.
@@ -78,6 +79,8 @@ Vous pouvez utiliser un wildcard (`*`) dans le chemin du fichier pour correspond
 ## Modes de traitement des fichiers
 
 Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière dont les fichiers sont sélectionnés via le champ `processType` :
+
+Pour exclure les fichiers correspondants modifiés avant une date donnée, définissez `ignoreFilesBefore` ; consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files).
 
 | Valeur `processType` | Description |
 |------|-------------|
