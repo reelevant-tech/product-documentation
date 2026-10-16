@@ -77,9 +77,11 @@ After configuring the source, submit the draft's `validate` step. Review the imp
 
 ## Choose the date
 
-Set the cutoff just before the new full file is uploaded, for example a few minutes earlier. To read that full file and every later delta, use `"processType": "all_unprocess"`.
+Set the cutoff just before the new full file is uploaded, for example a few minutes earlier.
 
-With the default `last_unprocess`, each import reads only the most recent unprocessed file; a delta arriving before the next import can cause the full file to be passed over.
+For File Upload, `processType` is not used. To read the full file and every later delta, the Datasource must use the **Keep Previous Data** update mode. With any other update mode, each import reads only the most recent file.
+
+For FTP, SFTP, Amazon S3, and Google Cloud Storage, use `"processType": "all_unprocess"` to read the full file and every later delta. With the default `last_unprocess`, each import reads only the most recent unprocessed file.
 
 See the [FTP/SFTP](/advanced-guide/datahub/source-types/ftp-sftp#file-processing-modes), [Amazon S3](/advanced-guide/datahub/source-types/s3#file-processing-modes), and [Google Cloud Storage](/advanced-guide/datahub/source-types/gcs#file-processing-modes) pages for their processing modes.
 
