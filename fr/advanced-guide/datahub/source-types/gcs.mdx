@@ -26,7 +26,7 @@ La source GCS (Google Cloud Storage) récupère des fichiers de données depuis 
 | Champ | Description |
 |-------|-------------|
 | `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
-| `ignoreFilesBefore` *(optionnel)* | Ignorer les fichiers modifiés avant cette date-heure ISO 8601 avec les chemins wildcards. Consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files). |
+| `ignoreFilesBefore` *(optionnel)* | Ignorer les objets dont la version actuelle a été créée avant cette date-heure ISO 8601 lorsque le chemin contient un wildcard. Consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files). |
 
 <Tip>
   Le rôle minimum requis est **Storage Object Viewer** (`roles/storage.objectViewer`) sur le bucket cible.
@@ -86,7 +86,7 @@ Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière d
 | `all_unprocess` | Traite tous les fichiers qui n'ont pas encore été traités. Utile pour les exports incrémentaux/delta. |
 | `all` | Traite tous les fichiers correspondants à chaque synchronisation, qu'ils aient été traités auparavant ou non. Utile pour les datasets complets répartis sur plusieurs fichiers avec les mêmes noms. |
 
-Pour exclure les fichiers correspondants modifiés avant une date donnée, définissez `ignoreFilesBefore` ; consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files).
+Pour exclure les objets correspondants dont la version actuelle a été créée avant une date donnée, définissez `ignoreFilesBefore` ; consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files).
 
 ## Fonctionnement
 

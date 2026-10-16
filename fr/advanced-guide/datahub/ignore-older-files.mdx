@@ -77,6 +77,10 @@ Après la configuration de la source, soumettez l'étape `validate` du brouillon
 
 ## Choisir la date
 
-Définissez la limite juste avant le téléversement du nouvel export complet, par exemple quelques minutes plus tôt. L'export complet et les deltas suivants seront ainsi lus, tandis que les fichiers plus anciens seront ignorés.
+Définissez la limite juste avant le téléversement du nouvel export complet, par exemple quelques minutes plus tôt. Pour lire cet export et chaque delta suivant, utilisez `"processType": "all_unprocess"`.
+
+Avec `last_unprocess` (valeur par défaut), chaque import lit uniquement le fichier non traité le plus récent ; un delta déposé avant l'import suivant peut conduire à ignorer l'export complet.
+
+Consultez les sections sur les modes de traitement des pages [FTP/SFTP](/fr/advanced-guide/datahub/source-types/ftp-sftp#modes-de-traitement-des-fichiers), [Amazon S3](/fr/advanced-guide/datahub/source-types/s3#modes-de-traitement-des-fichiers) et [Google Cloud Storage](/fr/advanced-guide/datahub/source-types/gcs#modes-de-traitement-des-fichiers).
 
 Conservez `ignoreFilesBefore` après la réinitialisation. L'option continue d'exclure les anciens fichiers des imports suivants.
