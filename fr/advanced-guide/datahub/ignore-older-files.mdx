@@ -77,9 +77,11 @@ Après la configuration de la source, soumettez l'étape `validate` du brouillon
 
 ## Choisir la date
 
-Définissez la limite juste avant le téléversement du nouvel export complet, par exemple quelques minutes plus tôt. Pour lire cet export et chaque delta suivant, utilisez `"processType": "all_unprocess"`.
+Définissez la limite juste avant le téléversement du nouvel export complet, par exemple quelques minutes plus tôt.
 
-Avec `last_unprocess` (valeur par défaut), chaque import lit uniquement le fichier non traité le plus récent ; un delta déposé avant l'import suivant peut conduire à ignorer l'export complet.
+Pour File Upload, `processType` n'est pas utilisé. Pour lire l'export complet et chaque delta suivant, la Datasource doit utiliser le mode de mise à jour **Keep Previous Data**. Avec tout autre mode de mise à jour, chaque import ne lit que le fichier le plus récent.
+
+Pour FTP, SFTP, Amazon S3 et Google Cloud Storage, utilisez `"processType": "all_unprocess"` pour lire l'export complet et chaque delta suivant. Avec la valeur par défaut `last_unprocess`, chaque import lit uniquement le fichier non traité le plus récent.
 
 Consultez les sections sur les modes de traitement des pages [FTP/SFTP](/fr/advanced-guide/datahub/source-types/ftp-sftp#modes-de-traitement-des-fichiers), [Amazon S3](/fr/advanced-guide/datahub/source-types/s3#modes-de-traitement-des-fichiers) et [Google Cloud Storage](/fr/advanced-guide/datahub/source-types/gcs#modes-de-traitement-des-fichiers).
 
