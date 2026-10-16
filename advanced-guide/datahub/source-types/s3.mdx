@@ -138,13 +138,13 @@ You can use a wildcard (`*`) in the file path to match multiple files. This is u
 
 When using wildcard paths, you can configure how files are selected via the `processType` field:
 
-To exclude matching files modified before a date, set `ignoreFilesBefore`; see [Ignore Files Before a Date](/advanced-guide/datahub/ignore-older-files).
-
 | `processType` value | Description |
 |------|-------------|
 | `last_unprocess` *(default)* | Process only the most recent file that hasn't been processed yet. Ideal for full-dataset exports where only the latest file matters. |
 | `all_unprocess` | Process all files that haven't been processed yet. Useful for incremental/delta exports. |
 | `all` | Process all matching files on every sync, regardless of whether they were processed before. Useful for full datasets split across multiple files with the same names. |
+
+To exclude matching files modified before a date, set `ignoreFilesBefore`; see [Ignore Files Before a Date](/advanced-guide/datahub/ignore-older-files).
 
 ## How It Works
 
