@@ -25,6 +25,7 @@ La source S3 récupère des fichiers de données depuis un bucket Amazon S3 ou t
 | `endpoint` | URL d'endpoint personnalisée pour les services compatibles S3. Par défaut `https://s3.amazonaws.com` pour AWS S3 standard. |
 | `region` | La région AWS où se trouve le bucket (par ex. `eu-west-1`, `us-east-1`). |
 | `processType` | Mode de traitement des fichiers lors de l'utilisation de chemins wildcards : `last_unprocess` *(par défaut)*, `all_unprocess` ou `all`. |
+| `ignoreFilesBefore` *(optionnel)* | Ignorer les fichiers modifiés avant cette date-heure ISO 8601 avec les chemins wildcards. Consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files). |
 | `assumeRole` | Lit un bucket appartenant à un autre compte AWS en endossant un rôle IAM (voir [Accès inter-comptes](#acces-inter-comptes-avec-assumerole) ci-dessous). |
 
 <Tip>
@@ -136,6 +137,8 @@ Vous pouvez utiliser un wildcard (`*`) dans le chemin du fichier pour correspond
 ## Modes de traitement des fichiers
 
 Lors de l'utilisation de chemins wildcards, vous pouvez configurer la manière dont les fichiers sont sélectionnés via le champ `processType` :
+
+Pour exclure les fichiers correspondants modifiés avant une date donnée, définissez `ignoreFilesBefore` ; consultez [Ignorer les fichiers antérieurs à une date](/fr/advanced-guide/datahub/ignore-older-files).
 
 | Valeur `processType` | Description |
 |------|-------------|

@@ -27,6 +27,7 @@ The FTP and SFTP sources let you retrieve data files from remote file servers. T
 |-------|-------------|
 | `secure` | Enable FTPS (FTP over TLS) for encrypted connections. |
 | `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
+| `ignoreFilesBefore` *(optional)* | Skip files modified before this ISO 8601 date-time when using wildcard paths. See [Ignore Files Before a Date](/advanced-guide/datahub/ignore-older-files). |
 | `disableProxy` | Disable the SOCKS5 proxy for the FTP connection (optional). |
 
 ## SFTP Configuration
@@ -39,6 +40,13 @@ The FTP and SFTP sources let you retrieve data files from remote file servers. T
 | `port` | The SFTP port (default: `22`). |
 | `username` | SFTP login username. |
 | `path` | The file path on the server (see [Wildcard Paths](#wildcard-paths) below). |
+
+### Optional Fields
+
+| Field | Description |
+|-------|-------------|
+| `processType` | File processing mode when using wildcard paths: `last_unprocess` *(default)*, `all_unprocess`, or `all`. |
+| `ignoreFilesBefore` *(optional)* | Skip files modified before this ISO 8601 date-time when using wildcard paths. See [Ignore Files Before a Date](/advanced-guide/datahub/ignore-older-files). |
 
 ### Authentication
 
@@ -115,6 +123,8 @@ You can use a wildcard (`*`) in the file name to match multiple files. This is u
 ## File Processing Modes
 
 When using wildcard paths, you can configure how files are selected via the `processType` field:
+
+To exclude matching files modified before a date, set `ignoreFilesBefore`; see [Ignore Files Before a Date](/advanced-guide/datahub/ignore-older-files).
 
 | `processType` value | Description |
 |------|-------------|
