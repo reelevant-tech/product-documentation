@@ -67,7 +67,7 @@ Les paramètres obligatoires doivent être liés. Si un paramètre obligatoire n
 
 ## Valeurs de paramètres suggérées
 
-Un Objet peut déclarer une valeur suggérée et une liste de valeurs autorisées par paramètre — voir [Valeurs suggérées](/fr/advanced-guide/datahub/datagraph/entities#valeurs-suggerees). Dans ce cas, le Node pré-remplit les champs correspondants.
+Un Objet peut déclarer une valeur suggérée et une liste de valeurs autorisées par paramètre — voir [Valeurs suggérées](/fr/advanced-guide/datahub/datagraph/entities#valeurs-suggerees). Seule une valeur suggérée pré-remplit le champ correspondant : les valeurs autorisées ne remplissent rien, elles transforment seulement le champ en select ou multi-select.
 
 Le pré-remplissage ne s'applique que lorsque vous sélectionnez l'Objet dans le drawer, et uniquement aux paramètres encore vides. Les valeurs déjà saisies ne sont jamais écrasées, et les paramètres d'un Node existant ne sont pas re-remplis à son ouverture.
 
@@ -77,7 +77,12 @@ Le pré-remplissage ne s'applique que lorsque vous sélectionnez l'Objet dans le
 | **Depuis un attribut de Team** | Les valeurs résolues sur les Teams du Workflow : `string` prend la première valeur, `string[]` la liste entière. Une Team sans l'attribut laisse le paramètre vide. |
 | **Valeur fixe** | La valeur statique déclarée. |
 
-Les attributs de Team sont hérités comme les périmètres de Team : la Team la plus proche l'emporte pour chaque attribut, sa liste remplace celle héritée, la remontée s'arrête à une Team qui exclut l'héritage ascendant, et deux parents au même niveau sont pris dans l'ordre des Teams.
+Les attributs de Team sont hérités comme les périmètres de Team :
+
+- La Team la plus proche l'emporte pour chaque attribut.
+- Sa liste remplace celle héritée — les listes ne fusionnent jamais.
+- La remontée s'arrête à une Team qui exclut l'héritage ascendant.
+- Deux parents au même niveau sont pris dans l'ordre des Teams.
 
 <Info>
   Un attribut défini sur une Team parente n'est pas hérité par une Team enfant qui exclut l'héritage ascendant — définissez-le directement sur cette Team pour que ses Workflows l'utilisent.

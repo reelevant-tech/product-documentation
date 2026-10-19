@@ -105,7 +105,7 @@ Set under **SUGGESTED VALUE → Source** in the parameter editor:
 | Source | What it suggests | Available for |
 |--------|------------------|---------------|
 | **None** | No suggestion (default). | All types |
-| **From context** | A Context variable, picked with the Variable Picker. The list matches the workflow drawer for that type: `string` → user identifier, IP, ISP, device type, OS, referer, mail client, locale, day of the week; `number` → entrypoint index; `boolean` → user identified; `datetime` → current date. | `string`, `number`, `boolean`, `datetime`, `datetime_iso`, `string[]`, `number[]` |
+| **From context** | A Context variable, picked with the Variable Picker. The list matches the workflow drawer for that type: `string` and `string[]` → user identifier, IP, ISP, device type, OS, referer, mail client, locale, day of the week; `number` and `number[]` → entrypoint index; `boolean` → user identified; `datetime` and `datetime_iso` → current date. | `string`, `number`, `boolean`, `datetime`, `datetime_iso`, `string[]`, `number[]` |
 | **From Team attribute** | The values of a [Team attribute](/product-guide/account/teams#team-attributes). The key must start with a lowercase letter, followed by up to 63 lowercase letters, digits or underscores. | `string`, `string[]` |
 | **Fixed value** | A static value, typed by the parameter type. | Scalar and list types |
 
