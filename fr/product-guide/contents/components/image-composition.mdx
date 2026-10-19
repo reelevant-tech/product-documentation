@@ -1,6 +1,6 @@
 ---
 title: "Composant Composition d'images"
-description: "Combinez plusieurs images produits en un seul visuel, avec détourage automatique"
+description: "Combinez plusieurs images produits en un seul visuel, avec détourage automatique et fonds générés"
 ---
 
 Le composant Composition d'images construit un visuel unique à partir de plusieurs images, disposées automatiquement et personnalisées par destinataire.
@@ -93,12 +93,48 @@ La disposition décide de la place des images dans le composant.
 
 Deux interrupteurs terminent la composition :
 
-- **Fond** ajoute une couleur derrière les images, utile une fois les fonds détourés.
+- **Fond** ajoute une couleur ou une [scène générée](#générer-un-fond) derrière les images, utile une fois les fonds détourés.
 - **Équilibrer les tailles** met les images à l'échelle pour un poids visuel équivalent, afin qu'un petit flacon ne soit pas écrasé par une grande boîte.
+
+## Générer un fond
+
+![Section Disposition avec Fond activé, Type réglé sur Généré et une Description de la scène](/images/contents/component-image-composition-background.png)
+
+Au lieu d'une couleur unie, le fond peut être une scène créée pour vous à partir d'une courte description. Vos images sont conservées telles quelles et posées par-dessus.
+
+<Steps>
+  <Step title="Activez le fond">
+    Dans la section **Disposition**, activez **Fond**.
+  </Step>
+  <Step title="Choisissez un fond généré">
+    Réglez **Type** sur **Généré**.
+  </Step>
+  <Step title="Décrivez la scène">
+    Dans **Description**, écrivez ce qui doit apparaître derrière les images, par exemple « Une table en bois vide, des lumières de Noël en arrière-plan ».
+  </Step>
+</Steps>
+
+La scène remplit toujours tout le composant, sous chaque image, quelle que soit la disposition. Activez **Détourer l'image** et **Ombre** sur vos images pour que les produits se posent naturellement dans la scène.
+
+<Tip>
+  Décrivez un lieu vide : une table, un plan de travail, une plage. Ne mentionnez pas les produits — ils viennent de vos images.
+</Tip>
+
+### Faire varier la scène par destinataire
+
+Insérez des variables dans la description pour changer la scène selon le destinataire. Par exemple, « Une terrasse ensoleillée à » suivi d'une variable Ville de votre [Datasource](/fr/product-guide/contents/data-binding) donne à chaque ville sa propre scène.
+
+Chaque description différente crée sa scène une seule fois. La même scène est ensuite réutilisée pour tous les destinataires et tous les produits qui partagent cette description.
+
+<Warning>
+  Une nouvelle description prend un moment à être créée la première fois. Tant que sa scène n'est pas prête, les destinataires voient les images sur un fond transparent.
+</Warning>
+
+Passer le **Type** de **Couleur** à **Généré** (ou l'inverse) remplace le réglage précédent. Revenir à **Généré** repart d'une description vide.
 
 ## Prévisualiser le résultat
 
-La composition est construite pour vous et affichée directement sur le canvas : vous voyez le visuel final pendant que vous travaillez. Changer une disposition, une couleur ou une transformation rafraîchit l'aperçu.
+La composition est construite pour vous et affichée directement sur le canvas : vous voyez le visuel final pendant que vous travaillez. Changer une disposition, une couleur ou une transformation rafraîchit l'aperçu. Un nouveau fond généré peut mettre quelques secondes à apparaître sur le canvas.
 
 <Tip>
   Le canvas affiche la composition réelle, détourages compris : ce que vous voyez est ce que recevront vos destinataires.
