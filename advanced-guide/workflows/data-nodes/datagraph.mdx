@@ -67,7 +67,7 @@ Mandatory parameters must be bound. If a mandatory parameter has no value at exe
 
 ## Suggested Parameter Values
 
-An Object can declare a suggested value and a list of allowed values per parameter — see [Suggested values](/advanced-guide/datahub/datagraph/entities#suggested-values). When it does, the Node pre-fills the matching inputs.
+An Object can declare a suggested value and a list of allowed values per parameter — see [Suggested values](/advanced-guide/datahub/datagraph/entities#suggested-values). Only a suggested value pre-fills the matching input: allowed values never fill anything, they only turn the input into a select or multi-select.
 
 Pre-fill only applies when you select the Object in the drawer, and only to parameters that are still empty. Values you already set are never overwritten, and an existing Node's parameters are not re-filled when you open it.
 
@@ -77,7 +77,12 @@ Pre-fill only applies when you select the Object in the drawer, and only to para
 | **From Team attribute** | The values resolved on the Workflow's Teams: `string` takes the first value, `string[]` the whole list. A Team without the attribute leaves the parameter empty. |
 | **Fixed value** | The declared static value. |
 
-Team attributes are inherited like Team scopes: the closest Team wins per attribute, a Team's list replaces the inherited one, the climb stops at a Team that excludes ancestor inheritance, and two parents at the same level are taken in Team order.
+Team attributes are inherited like Team scopes:
+
+- The closest Team wins per attribute.
+- A Team's list replaces the inherited one — lists never merge.
+- The climb stops at a Team that excludes ancestor inheritance.
+- Two parents at the same level are taken in Team order.
 
 <Info>
   An attribute set on a parent Team is not inherited by a child Team that excludes ancestor inheritance — set it directly on that Team for its Workflows to use it.
