@@ -1,6 +1,6 @@
 ---
 title: 'Image Composition Component'
-description: 'Combine several product images into one visual, with automatic background removal'
+description: 'Combine several product images into one visual, with automatic background removal and generated backgrounds'
 ---
 
 The Image Composition component builds a single visual from several images, arranged automatically and personalised per recipient.
@@ -93,12 +93,48 @@ The layout decides how the images are placed inside the component.
 
 Two switches finish the composition:
 
-- **Background** adds a colour behind the images, useful once backgrounds are removed.
+- **Background** adds a colour or a [generated scene](#generating-a-background) behind the images, useful once backgrounds are removed.
 - **Balance sizes** scales the images to an equal visual weight, so a small bottle is not dwarfed by a large box.
+
+## Generating a Background
+
+![Layout section with Background switched on, Type set to Generated and a Description of the scene](/images/contents/component-image-composition-background.png)
+
+Instead of a plain colour, the background can be a scene created for you from a short description. Your images are kept exactly as they are and placed on top of it.
+
+<Steps>
+  <Step title="Switch the background on">
+    In the **Layout** section, turn on **Background**.
+  </Step>
+  <Step title="Choose a generated background">
+    Set **Type** to **Generated**.
+  </Step>
+  <Step title="Describe the scene">
+    In **Description**, write what should appear behind the images, for example "An empty wooden table, Christmas lights in the background".
+  </Step>
+</Steps>
+
+The scene always fills the whole component, under every image, whatever the layout. Turn on **Remove background** and **Shadow** on your images so the products sit naturally on the scene.
+
+<Tip>
+  Describe an empty place: a table, a kitchen counter, a beach. Don't mention the products — they come from your images.
+</Tip>
+
+### Varying the Scene per Recipient
+
+Insert variables in the description to change the scene per recipient. For example, "A sunny terrace in" followed by a City variable from your [Datasource](/product-guide/contents/data-binding) gives each city its own scene.
+
+Each different description creates its scene once. The same scene is then reused for every recipient and every product sharing that description.
+
+<Warning>
+  A new description takes a moment to create the first time. Until its scene is ready, recipients see the images on a transparent background.
+</Warning>
+
+Switching **Type** between **Color** and **Generated** replaces the previous setting. Coming back to **Generated** starts from an empty description.
 
 ## Previewing the Result
 
-The composition is built for you and shown directly on the canvas, so you see the final visual while you edit. Changing a layout, a colour or a transformation repaints the preview.
+The composition is built for you and shown directly on the canvas, so you see the final visual while you edit. Changing a layout, a colour or a transformation repaints the preview. A new generated background can take a few seconds to appear on the canvas.
 
 <Tip>
   The canvas shows the real composition, backgrounds removed included, so what you see is what your recipients get.
