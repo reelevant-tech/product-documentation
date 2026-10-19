@@ -96,6 +96,31 @@ Types de paramètres acceptés :
   Un paramètre NULL comparé avec `=` ou `<>` ne correspond jamais. L'éditeur le signale et demande d'utiliser `IS NULL` ou `IS NOT NULL` dans la requête SQL.
 </Info>
 
+## Valeurs suggérées
+
+Chaque paramètre peut porter une **valeur suggérée** et une liste de **valeurs autorisées**. Les deux sont des indications de configuration pour le Data Node Objet Datagraph — voir [Objet Datagraph](/fr/advanced-guide/workflows/data-nodes/datagraph#valeurs-de-parametres-suggerees). Elles ne changent rien à l'exécution du SQL.
+
+### Valeur suggérée
+
+Définie sous **SUGGESTED VALUE → Source** dans l'éditeur de paramètre :
+
+| Source | Ce qu'elle suggère | Disponible pour |
+|--------|--------------------|-----------------|
+| **Aucune** | Pas de suggestion (défaut). | Tous les types |
+| **Depuis le contexte** | Une variable Context, choisie avec le Variable Picker. La liste correspond au drawer de Workflow pour ce type : `string` → identifiant utilisateur, IP, ISP, type d'appareil, OS, referer, client mail, locale, jour de la semaine ; `number` → index d'entrypoint ; `boolean` → utilisateur identifié ; `datetime` → date courante. | `string`, `number`, `boolean`, `datetime`, `datetime_iso`, `string[]`, `number[]` |
+| **Depuis un attribut de Team** | Les valeurs d'un [attribut de Team](/fr/product-guide/account/teams#attributs-de-team). La clé commence par une lettre minuscule, suivie d'au plus 63 lettres minuscules, chiffres ou underscores. | `string`, `string[]` |
+| **Valeur fixe** | Une valeur statique, selon le type du paramètre. | Types scalaires et listes |
+
+Les types dictionnaire (`string{}`, `number{}`) ne peuvent pas utiliser **Depuis le contexte**.
+
+### Valeurs autorisées
+
+Pour les paramètres `string`, `number`, `string[]` et `number[]`, **Allowed values** liste les valeurs que le paramètre peut prendre, sans doublon. Le Data Node Objet Datagraph les affiche sous forme de select ou multi-select plutôt qu'un champ libre.
+
+<Info>
+  Une suggestion ou une valeur autorisée invalide est signalée sur le champ correspondant à l'enregistrement. Quand vous changez le type d'un paramètre, une suggestion ou une valeur autorisée qui ne correspond plus est supprimée.
+</Info>
+
 ## Colonnes de sortie
 
 Le panneau **INPUT / OUTPUT** liste les colonnes et leurs types, affichés comme **Texte**, **Nombre** ou **URL d'image**. Les colonnes sont calculées à partir du SQL sur le modèle publié du Datagraph et recalculées à chaque enregistrement.

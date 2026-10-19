@@ -65,6 +65,62 @@ Les paramètres obligatoires doivent être liés. Si un paramètre obligatoire n
   Quand l'Objet déclare un paramètre `client_id` et que le Workflow résout exactement une personne suivie, cet identifiant est utilisé pour `client_id` si vous avez laissé le champ vide. Une valeur liée explicitement est toujours prioritaire.
 </Info>
 
+## Valeurs de paramètres suggérées
+
+Un Objet peut déclarer une valeur suggérée et une liste de valeurs autorisées par paramètre — voir [Valeurs suggérées](/fr/advanced-guide/datahub/datagraph/entities#valeurs-suggerees). Dans ce cas, le Node pré-remplit les champs correspondants.
+
+Le pré-remplissage ne s'applique que lorsque vous sélectionnez l'Objet dans le drawer, et uniquement aux paramètres encore vides. Les valeurs déjà saisies ne sont jamais écrasées, et les paramètres d'un Node existant ne sont pas re-remplis à son ouverture.
+
+| Source de suggestion | Valeur pré-remplie |
+|----------------------|--------------------|
+| **Depuis le contexte** | Un lien vers la variable Context du Context Node. |
+| **Depuis un attribut de Team** | Les valeurs résolues sur les Teams du Workflow : `string` prend la première valeur, `string[]` la liste entière. Une Team sans l'attribut laisse le paramètre vide. |
+| **Valeur fixe** | La valeur statique déclarée. |
+
+Les attributs de Team sont hérités comme les périmètres de Team : la Team la plus proche l'emporte pour chaque attribut, sa liste remplace celle héritée, la remontée s'arrête à une Team qui exclut l'héritage ascendant, et deux parents au même niveau sont pris dans l'ordre des Teams.
+
+<Info>
+  Un attribut défini sur une Team parente n'est pas hérité par une Team enfant qui exclut l'héritage ascendant — définissez-le directement sur cette Team pour que ses Workflows l'utilisent.
+</Info>
+
+Un paramètre pré-rempli affiche un libellé **Suggested**. Un clic dessus efface la valeur ; le libellé disparaît aussi dès que vous modifiez la valeur.
+
+Un paramètre dont l'Objet déclare des valeurs autorisées affiche un select (valeur unique) ou un multi-select (liste) à la place du Variable Picker. Effacer ce select — ou cliquer sur **Suggested** — fait revenir le paramètre au Variable Picker pour le reste de la session du drawer. Un paramètre déjà lié à une variable, ou portant une valeur hors de la liste, conserve le Variable Picker.
+
+<Info>
+  Une suggestion n'écrit qu'une valeur de paramètre ordinaire : elle ne change rien à l'exécution.
+</Info>
+
+### Exemple : attributs de Team
+
+Les attributs se définissent par Team dans la fenêtre de création/modification de Team — voir [Attributs de Team](/fr/product-guide/account/teams#attributs-de-team). Prenons cet arbre de Teams :
+
+- `Europe` (parente) définit `brand = [Acme, Acme Pro]` et `excluded_categories = [outlet, clearance]`.
+- `France`, enfant de `Europe`, ne définit aucun attribut et les hérite.
+- `Germany`, enfant de `Europe`, exclut l'héritage ascendant et n'a aucun attribut.
+- `Spain`, enfant de `Europe`, définit son propre `excluded_categories = [outlet]` et hérite du reste.
+
+L'Objet déclare `brand` (`string`, suggestion **Depuis un attribut de Team** `brand`) et `excluded_categories` (`string[]`, suggestion **Depuis un attribut de Team** `excluded_categories`). Pré-remplissage dans un Workflow périmétré à chaque Team :
+
+| Team du Workflow | `brand` | `excluded_categories` |
+|------------------|---------|-----------------------|
+| `France` | `Acme` (première valeur de la liste héritée) | `outlet`, `clearance` (liste héritée entière) |
+| `Spain` | `Acme` (héritée) | `outlet` — sa propre liste remplace celle héritée, sans fusion |
+| `Germany` | reste vide | reste vide — l'héritage s'arrête à `Germany` ; définissez les attributs sur `Germany` elle-même |
+
+```mermaid
+flowchart TD
+  A["Sélectionner un Objet publié"] --> B{"Chaque paramètre avec une suggestion"}
+  B -->|"Depuis le contexte"| C["Lier à la variable Context"]
+  B -->|"Depuis un attribut de Team"| D["Résoudre l'attribut<br/>sur les Teams du Workflow"]
+  B -->|"Valeur fixe"| E["Écrire la valeur statique"]
+  C --> F{"Paramètre encore vide ?"}
+  D --> F
+  E --> F
+  F -->|"Oui"| G["Pré-remplir et afficher 'Suggested'"]
+  F -->|"Non"| H["Conserver la valeur existante"]
+```
+
 ## Sortie
 
 Le Node renvoie une liste de lignes. Chaque ligne contient les colonnes de sortie inférées par l'Objet, avec des valeurs texte, numériques ou vides.
