@@ -65,6 +65,62 @@ Mandatory parameters must be bound. If a mandatory parameter has no value at exe
   When the Object declares a `client_id` parameter and the Workflow resolves exactly one tracked person, that identifier is used for `client_id` if you left the field empty. Any value you bind explicitly always wins.
 </Info>
 
+## Suggested Parameter Values
+
+An Object can declare a suggested value and a list of allowed values per parameter — see [Suggested values](/advanced-guide/datahub/datagraph/entities#suggested-values). When it does, the Node pre-fills the matching inputs.
+
+Pre-fill only applies when you select the Object in the drawer, and only to parameters that are still empty. Values you already set are never overwritten, and an existing Node's parameters are not re-filled when you open it.
+
+| Suggestion source | Pre-filled value |
+|-------------------|------------------|
+| **From context** | A link to the Context variable in the Context Node. |
+| **From Team attribute** | The values resolved on the Workflow's Teams: `string` takes the first value, `string[]` the whole list. A Team without the attribute leaves the parameter empty. |
+| **Fixed value** | The declared static value. |
+
+Team attributes are inherited like Team scopes: the closest Team wins per attribute, a Team's list replaces the inherited one, the climb stops at a Team that excludes ancestor inheritance, and two parents at the same level are taken in Team order.
+
+<Info>
+  An attribute set on a parent Team is not inherited by a child Team that excludes ancestor inheritance — set it directly on that Team for its Workflows to use it.
+</Info>
+
+A pre-filled parameter shows a **Suggested** label. Clicking it clears the value; the label also disappears as soon as you edit the value.
+
+A parameter whose Object declares allowed values gets a select (single value) or a multi-select (list) instead of the Variable Picker. Clearing that select — or clicking **Suggested** — switches the parameter back to the Variable Picker for the rest of the drawer session. A parameter already linked to a variable, or holding a value outside the list, keeps the Variable Picker.
+
+<Info>
+  A suggestion only writes a normal parameter value: it changes nothing at execution time.
+</Info>
+
+### Example: Team Attributes
+
+Attributes are set per Team in the Team create/edit modal — see [Team attributes](/product-guide/account/teams#team-attributes). Take this Team tree:
+
+- `Europe` (parent) sets `brand = [Acme, Acme Pro]` and `excluded_categories = [outlet, clearance]`.
+- `France`, a child of `Europe`, sets no attributes and inherits them.
+- `Germany`, a child of `Europe`, excludes ancestor inheritance and has no attributes.
+- `Spain`, a child of `Europe`, sets its own `excluded_categories = [outlet]` and inherits the rest.
+
+The Object declares `brand` (`string`, suggestion **From Team attribute** `brand`) and `excluded_categories` (`string[]`, suggestion **From Team attribute** `excluded_categories`). Pre-fill in a Workflow scoped to each Team:
+
+| Workflow's Team | `brand` | `excluded_categories` |
+|-----------------|---------|-----------------------|
+| `France` | `Acme` (first value of the inherited list) | `outlet`, `clearance` (whole inherited list) |
+| `Spain` | `Acme` (inherited) | `outlet` — its own list replaces the inherited one, with no merge |
+| `Germany` | stays empty | stays empty — inheritance stops at `Germany`; set the attributes on `Germany` itself |
+
+```mermaid
+flowchart TD
+  A["Select a published Object"] --> B{"Each parameter with a suggestion"}
+  B -->|"From context"| C["Link to the Context variable"]
+  B -->|"From Team attribute"| D["Resolve the attribute<br/>on the Workflow's Teams"]
+  B -->|"Fixed value"| E["Write the static value"]
+  C --> F{"Parameter still empty?"}
+  D --> F
+  E --> F
+  F -->|"Yes"| G["Pre-fill and show 'Suggested'"]
+  F -->|"No"| H["Keep the existing value"]
+```
+
 ## Output
 
 The Node returns a list of rows. Each row holds the output columns inferred by the Object, with text, numeric, or empty values.

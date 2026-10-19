@@ -94,6 +94,31 @@ Accepted parameter types:
   A NULL parameter compared with `=` or `<>` never matches. The editor flags it and asks you to use `IS NULL` or `IS NOT NULL` in the SQL query instead.
 </Info>
 
+## Suggested Values
+
+Each parameter can carry a **suggested value** and a list of **allowed values**. Both are configuration hints for the Datagraph Object Node — see [Datagraph Object](/advanced-guide/workflows/data-nodes/datagraph#suggested-parameter-values). They change nothing when the SQL runs.
+
+### Suggested Value
+
+Set under **SUGGESTED VALUE → Source** in the parameter editor:
+
+| Source | What it suggests | Available for |
+|--------|------------------|---------------|
+| **None** | No suggestion (default). | All types |
+| **From context** | A Context variable, picked with the Variable Picker. The list matches the workflow drawer for that type: `string` → user identifier, IP, ISP, device type, OS, referer, mail client, locale, day of the week; `number` → entrypoint index; `boolean` → user identified; `datetime` → current date. | `string`, `number`, `boolean`, `datetime`, `datetime_iso`, `string[]`, `number[]` |
+| **From Team attribute** | The values of a [Team attribute](/product-guide/account/teams#team-attributes). The key must start with a lowercase letter, followed by up to 63 lowercase letters, digits or underscores. | `string`, `string[]` |
+| **Fixed value** | A static value, typed by the parameter type. | Scalar and list types |
+
+Dictionary types (`string{}`, `number{}`) cannot use **From context**.
+
+### Allowed Values
+
+For `string`, `number`, `string[]` and `number[]` parameters, **Allowed values** lists the values the parameter may take, with no duplicates. The Datagraph Object Node renders them as a select or multi-select instead of a free input.
+
+<Info>
+  An invalid suggestion or allowed value is reported on the matching field when you save. When you change a parameter's type, a suggestion or allowed value that no longer fits is dropped.
+</Info>
+
 ## Output Columns
 
 The **INPUT / OUTPUT** panel lists each output **Column** and **Type**. Displayed types include **Text**, **Number**, and **Image URL**. The list is computed from SQL against the Published Datagraph model and recalculated on every save.
