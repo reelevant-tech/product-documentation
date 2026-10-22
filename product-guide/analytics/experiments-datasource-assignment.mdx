@@ -13,6 +13,8 @@ Choose **From a datasource** when your CRM already assigns customer groups, such
 
 If other channels also use this field, results measure the combined effect of everything that differs between the groups.
 
+This holds only when the other channels do not change who reaches this Workflow.
+
 Otherwise, choose **Random assignment (recommended)**. It assigns Variants at random and provides the standard way to measure their impact.
 
 <Warning>
@@ -33,7 +35,7 @@ Otherwise, choose **Random assignment (recommended)**. It assigns Variants at ra
 
 ![Experiment form with Variant assignment set to From a datasource, the causal warning, the Datasource picker and one condition per Variant](/images/analytics/experiment-datasource-assignment.png)
 
-## Who gets which Variant
+## Who gets each Variant
 
 Conditions are checked in the order you set. Each customer gets the Variant for the first condition they meet.
 
@@ -41,29 +43,29 @@ Customers who meet no condition or have no row in the Datasource are unclassifie
 
 Unclassified customers receive the [Treatment](/glossary) in a Global holdout or the [Reference](/glossary) in a Continuous A/B test. They are not counted in the results.
 
-The Experiment Node reads the customer's CRM row itself, so you do not need a [Data Node](/glossary) in the Workflow.
-
-A CRM row is the customer's line in the Datasource.
+The Experiment Node reads the customer's CRM row (their line in the Datasource) itself, so you do not need a [Data Node](/glossary) in the Workflow.
 
 ## Edit while live
 
-The Datasource, conditions, and their order stay editable until the Experiment is **Decided** or **Inconclusive**.
+The Datasource, conditions, and their order stay editable until the Experiment is concluded.
 
 Changes reach new traffic within about a minute. A customer's Variant changes when you edit the conditions or when their CRM values change.
 
-In Data Exploration, a customer who moved appears under each Variant they received.
+In [Data Exploration](/product-guide/analytics/data-exploration), a customer who moved appears under each Variant they received.
+
+Moving classified customers after start can bias the results. Use a field that does not change during the Experiment.
 
 You cannot switch between random and Datasource assignment after the Experiment starts.
 
 ## What changes vs random assignment
 
-Assignment is always per customer. The Experiment Node shows the same Branches.
+Assignment is always per customer. The Experiment Node shows the same Branches as with random assignment.
 
-Once live, its percentages are the expected allocation, not the actual split.
+Once live, the Node's percentages show the expected allocation, not the actual split.
 
 ## What's Next?
 
-<CardGroup cols={4}>
+<CardGroup cols={2}>
   <Card title="Experiments" icon="flask" href="/product-guide/analytics/experiments">
     Create and manage Experiments in Analytics.
   </Card>
@@ -73,7 +75,7 @@ Once live, its percentages are the expected allocation, not the actual split.
   <Card title="Condition Node" icon="code-branch" href="/product-guide/workflows/logic-nodes/conditions">
     Build rules to classify customers.
   </Card>
-  <Card title="Advanced datasource assignment" icon="book-open" href="/advanced-guide/analytics/experiments-datasource-assignment">
+  <Card title="Advanced Datasource assignment" icon="book-open" href="/advanced-guide/analytics/experiments-datasource-assignment">
     Explore a worked example and causal validity.
   </Card>
 </CardGroup>

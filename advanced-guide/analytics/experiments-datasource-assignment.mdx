@@ -8,7 +8,7 @@ Datasource assignment evaluates CRM conditions to assign customers to Experiment
 ## Prerequisites
 
 - A published CRM Datasource must contain the customer identifier used by the Workflow.
-- Use a field that does not change during the Experiment.
+- For a causal reading, use a field whose values do not change during the Experiment.
 - For a causal reading, the field your conditions use must contain values assigned at random (see [Causal validity](#causal-validity)).
 - Datasource assignment is available for Global holdouts and Continuous A/B tests, with **Per customer** randomisation.
 
@@ -39,13 +39,13 @@ Suppose a CRM field named `holdout_group` contains `control` or `treatment`, ass
   A row with an empty `holdout_group` matches neither condition. The customer receives the Treatment fallback and is excluded from results.
 </Info>
 
-Customers with no CRM row or anonymous customers receive the Treatment fallback and are excluded from results.
+Customers with no CRM row, anonymous customers, or customers whose CRM row cannot be read receive the Treatment fallback and are excluded from results.
 
 The expected Control allocation of 10% is an estimate, not an assignment rule. The CRM field determines which Variant each classified customer receives.
 
 ## Unclassified customers
 
-Customers are unclassified when they meet no condition, have no CRM row, or are anonymous. They receive the fallback and are not counted in the results.
+Customers are unclassified when they meet no condition, have no CRM row, are anonymous, or their CRM row cannot be read. They receive the fallback and are not counted in the results.
 
 Results describe classified customers only.
 
@@ -60,16 +60,18 @@ Random assignment in the Experiment is the only method that guarantees a causal 
 
 If a field reflects an existing segment, selection bias means observed differences cannot be attributed to the Experiment's Variants. Examples include opt-outs, a hand-picked population, a behavioural cohort, or a region.
 
-Results depend on the observed number of customers in each Variant, not on the expected allocation. A small Control takes longer to reach significance.
+Results depend on the observed number of customers in each Variant, not on the expected allocation. When statistical significance is available, a small Control takes longer to reach it.
 
-No sample ratio mismatch check runs, because the split is not random. Compare the observed split with your expected allocation yourself.
+No sample ratio mismatch check runs, because Reelevant does not draw the split: the expected allocation is only your estimate. Compare the unique customers per Variant with your expected allocation. A large gap can mean a condition is wrong or rows are missing for one group.
 
-Whatever the number of Variants, every group must come from the same random draw, and any other rule must be identical in every condition, for the results to be causal. For example, adding `country = FR` to only `holdout_group = control` breaks comparability.
+Whatever the number of Variants, every group must come from the same random draw, and any other rule must be identical in every condition and combined with **and**, for the results to be causal. For example, adding `country = FR` to only `holdout_group = control` breaks comparability.
 
 ## Editing a live Experiment
 
-The Datasource, conditions, and their order stay editable until the Experiment is **Decided** or **Inconclusive**. Changes reach new traffic within about a minute.
+The Datasource, conditions, and their order stay editable until the Experiment is concluded. Changes reach new traffic within about a minute.
 
-A customer's Variant changes when you edit the conditions or when their CRM values change. In Data Exploration, a customer who moved appears under each Variant they received. The comparison is biased when moving depends on the Variant a customer received, so avoid moving classified customers after start.
+A customer's Variant changes when you edit the conditions or when their CRM values change. In [Data Exploration](/product-guide/analytics/data-exploration), a customer who moved appears under each Variant they received, which blurs the difference between Variants. Moves also bias the comparison when they depend on the Variant a customer received. Avoid moving classified customers after start.
+
+If a field used by a condition is removed from the Datasource, no customer can meet that condition. The form asks you to pick another field.
 
 The assignment method itself cannot be changed after start.
