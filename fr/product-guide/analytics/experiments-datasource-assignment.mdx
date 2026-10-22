@@ -1,0 +1,70 @@
+---
+title: 'Attribuer les variantes depuis une source de données'
+description: 'Utilisez une source de données CRM pour choisir la variante reçue par chaque client'
+---
+
+L'affectation depuis une source de données utilise une source de données CRM pour choisir la variante reçue par chaque client d'une expérimentation.
+
+## Quand l'utiliser
+
+Choisissez **Depuis une source de données** si votre CRM répartit déjà les clients, par exemple avec un groupe témoin aléatoire partagé entre plusieurs canaux.
+
+Sinon, choisissez **Répartition aléatoire (recommandée)**. Elle attribue les variantes au hasard et constitue la méthode standard pour mesurer leur impact.
+
+L'affectation depuis une source de données peut aussi conserver une population sélectionnée par un champ CRM.
+
+<Warning>
+  Seule la répartition aléatoire garantit que les résultats mesurent l'impact des variantes. Utilisez une source de données uniquement si les valeurs des conditions ont été attribuées au hasard.
+
+  Les segments existants incluent les désabonnements, les populations choisies manuellement, les cohortes comportementales et les régions. Les résultats montrent alors les différences entre segments, pas l'effet des variantes.
+</Warning>
+
+## Configuration
+
+1. Créez une expérimentation ou modifiez un brouillon, puis ouvrez **Mesure**.
+2. Dans **Affectation des variantes**, choisissez **Depuis une source de données**.
+3. Définissez l'**Unité de randomisation** sur **Par client**. L'affectation depuis une source de données n'est pas disponible avec **Par affichage**.
+4. Choisissez une source de données CRM publiée et active.
+5. Créez une condition par variante avec les mêmes règles de champ, d'opérateur et de valeur que dans un [Node de condition](/fr/product-guide/workflows/logic-nodes/conditions).
+6. Faites glisser les conditions pour définir leur ordre. Chaque condition est vérifiée avant la suivante.
+7. Renseignez chaque **Répartition attendue de {name} (%)** et vérifiez le résumé **Répartition attendue**.
+
+![Experiment form with Variant assignment set to From a datasource, the causal warning, the Datasource picker and one condition per Variant](/images/analytics/experiment-datasource-assignment.png)
+
+## Qui reçoit chaque variante
+
+Les conditions sont vérifiées dans l'ordre choisi. Chaque client reçoit la variante de la première condition qu'il remplit.
+
+Les clients qui ne remplissent aucune condition ou n'ont aucune ligne dans la source de données sont non classés. Les clients anonymes sont également non classés.
+
+Ils reçoivent le Traitement dans un Groupe témoin global. Dans un Test A/B continu, ils reçoivent la Référence. Ces clients ne sont pas comptés dans les résultats.
+
+Le Node Expérimentation lit directement la ligne CRM du client. Aucun Data Node n'est nécessaire dans le Workflow.
+
+## Modifier une expérimentation en cours
+
+Vous pouvez modifier la source de données, ses conditions et leur ordre après le lancement.
+
+Les modifications s'appliquent au nouveau trafic sous environ une minute. Les clients qui changent de variante à cause d'une modification sont exclus des résultats.
+
+Le mode d'affectation ne peut pas être changé après le lancement.
+
+## Différences avec la répartition aléatoire
+
+Seule l'attribution des clients change. Le Workflow utilise l'expérimentation comme auparavant.
+
+Les pourcentages des Branches restent identiques. **Répartition attendue** reste une estimation et ne détermine pas les clients qui reçoivent chaque variante.
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Expérimentations" icon="flask" href="/fr/product-guide/analytics/experiments">
+    Créez et gérez des expérimentations dans Analytics.
+  </Card>
+  <Card title="Node Expérimentation" icon="flask" href="/fr/product-guide/workflows/logic-nodes/experiment">
+    Utilisez une expérimentation dans un Workflow.
+  </Card>
+  <Card title="Node de condition" icon="code-branch" href="/fr/product-guide/workflows/logic-nodes/conditions">
+    Créez des règles pour classer les clients.
+  </Card>
+</CardGroup>
