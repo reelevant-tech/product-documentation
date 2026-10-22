@@ -5,7 +5,9 @@ description: 'Use an Analytics Experiment to split traffic across Workflow Branc
 
 ![Experiment Node with its experiment and variant Branches in a Workflow](/images/workflows/node-experiment.png)
 
-Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now. Until the Experiment starts, the Control or Reference shows 100%.
+Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now. With Datasource assignment, live percentages show the expected allocation, not the actual split.
+
+Before the Experiment starts, the Treatment of a Global holdout or the Reference of a Continuous A/B test shows 100%. To assign Variants from a CRM Datasource, see [Assign Variants from a Datasource](/product-guide/analytics/experiments-datasource-assignment).
 
 ## Add an Experiment Node
 
@@ -27,7 +29,7 @@ The kept Variant shows **Winner**, and the Node routes all traffic to it.
 
 An Experiment that has ended stays on the Node and keeps routing to its outcome. You cannot pick it for a new Node.
 
-If the Experiment is archived or missing, the Node shows **Experiment unavailable** and sends all traffic to the Control or Reference.
+If the Experiment is archived or missing, the Node shows **Experiment unavailable**. It sends all traffic to the **Treatment** of a Global holdout or the **Reference** of a Continuous A/B test. If the Experiment had already ended when the Workflow was last published, it sends traffic to the kept Variant instead.
 
 ## What's Next?
 
