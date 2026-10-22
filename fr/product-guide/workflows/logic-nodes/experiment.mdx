@@ -7,7 +7,7 @@ description: 'Répartissez le trafic entre les branches d’un Workflow avec une
 
 Utilisez le Node Expérimentation (un Logic Node qui répartit le trafic) pour transformer les variantes d'une expérimentation Analytics en Branches de Workflow. Chaque variante devient un Node **Variante** (une Branch) qui indique la part de trafic qu'elle reçoit actuellement.
 
-Avant le démarrage, le Traitement d'un Groupe témoin global ou la Référence d'un Test A/B continu affiche 100 %. Pour attribuer les variantes depuis une source de données CRM, consultez [Attribuer les variantes depuis une source de données](/fr/product-guide/analytics/experiments-datasource-assignment).
+Avant le démarrage, le Traitement d'un Groupe témoin global ou la Référence d'un Test A/B continu affiche 100 %. Pour affecter les variantes depuis une Datasource CRM, consultez [Affecter les variantes depuis une Datasource](/fr/product-guide/analytics/experiments-datasource-assignment).
 
 ## Ajouter un Node Expérimentation
 
@@ -29,7 +29,7 @@ La variante conservée porte la mention **Gagnante**, et le Node lui envoie tout
 
 Une expérimentation terminée reste sur le Node et continue d'orienter le trafic vers son résultat. Vous ne pouvez pas la sélectionner pour un nouveau Node.
 
-Si l'expérimentation est archivée ou introuvable, le Node affiche **Expérimentation indisponible**. Il envoie tout le trafic vers le **Traitement** d'un Groupe témoin global ou la **Référence** d'un Test A/B continu.
+Si l'expérimentation est archivée ou introuvable, le Node affiche **Expérimentation indisponible**. Il envoie tout le trafic vers le **Traitement** d'un Groupe témoin global ou la **Référence** d'un Test A/B continu. Si elle était déjà terminée lors de la dernière publication du Workflow, il envoie plutôt le trafic vers la variante conservée.
 
 ## Et ensuite ?
 

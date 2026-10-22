@@ -50,7 +50,7 @@ Sélectionnez **Afficher les archivées** pour voir les expérimentations archiv
 5. Dans **Mesure**, choisissez une **Métrique de succès**.
 6. Sélectionnez **Créer l'expérimentation** pour la valider comme **Prête**, ou **Enregistrer le brouillon** pour terminer plus tard.
 
-Dans **Variantes et répartition**, vous pouvez aussi choisir **Depuis une source de données** pour l'**Affectation des variantes**. Consultez [Attribuer les variantes depuis une source de données](/fr/product-guide/analytics/experiments-datasource-assignment).
+Dans **Variantes et répartition**, vous pouvez aussi choisir **Depuis une source de données** pour l'**Affectation des variantes**. Consultez [Affecter les variantes depuis une Datasource](/fr/product-guide/analytics/experiments-datasource-assignment).
 
 Le **Nom** ne doit pas correspondre à un tag existant, car l'expérimentation devient un tag.
 
@@ -90,7 +90,9 @@ Lorsqu'un Workflow utilise une expérimentation **Brouillon** ou **Prête**, vou
 
 ### Lancer
 
-Sélectionnez **Lancer** pour démarrer manuellement l'expérimentation. Cela verrouille ses variantes, leur répartition, l'unité de randomisation et la métrique de succès.
+Sélectionnez **Lancer** pour démarrer manuellement l'expérimentation. Le lancement verrouille ses variantes, leur répartition, l'unité de randomisation, la métrique de succès et le mode d'affectation des variantes.
+
+La Datasource et ses conditions restent modifiables après le lancement : voir [Modifier une expérimentation en cours](/fr/product-guide/analytics/experiments-datasource-assignment#modifier-une-experimentation-en-cours).
 
 Si aucun Workflow n'utilise l'expérimentation, un avertissement apparaît. Elle ne reçoit aucun trafic tant qu'un Workflow ne l'utilise pas.
 
