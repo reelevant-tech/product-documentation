@@ -25,7 +25,7 @@ Date and datetime fields do not offer date-range operators in the condition edit
 
 ## Worked example
 
-Suppose a CRM field named `holdout_group` contains `control` or `treatment`, assigned at random. The Experiment is a Global holdout with an expected 90/10 allocation.
+Suppose a CRM field named `holdout_group` contains `control` or `treatment`, assigned at random. The Experiment is a Global holdout with an expected Control allocation of 10%.
 
 | Condition | Variant |
 |-----------|---------|
@@ -34,9 +34,9 @@ Suppose a CRM field named `holdout_group` contains `control` or `treatment`, ass
 
 A row with an empty `holdout_group` matches neither condition. The customer receives the Treatment fallback and is excluded from results.
 
-An unknown customer has no CRM row, so they also receive the Treatment fallback and are excluded from results.
+Customers with no CRM row or anonymous customers receive the Treatment fallback and are excluded from results.
 
-The configured 90/10 allocation is an expectation, not an assignment rule. The CRM field determines which Variant each classified customer receives.
+The expected Control allocation of 10% is an estimate, not an assignment rule. The CRM field determines which Variant each classified customer receives.
 
 ## Unclassified customers
 
@@ -55,16 +55,12 @@ If a field reflects an existing segment, selection bias means observed differenc
 
 Observed counts per Variant drive the statistical intervals, not the expected allocations. A small Control produces wider confidence intervals and lower statistical power.
 
-For Experiments with more than two Variants, every group must be randomised.
+For Experiments with more than two Variants, the values for every group must be assigned at random.
 
 ## Editing a live Experiment
 
 The Datasource, conditions, and their order remain editable after start, including while the Experiment is **Maturing**. Changes reach new traffic within about a minute.
 
-Customers who move between Variants because of an edit are excluded from results. You are responsible for accounting for this attrition when interpreting results.
+Customers who move between Variants because of an edit are excluded from results. Frequent edits shrink the measured population and can bias it if the moved customers differ from the others.
 
 While an Experiment is **Maturing**, every new customer receives the fallback, regardless of the conditions. The assignment method itself cannot be changed after start.
-
-<Info>
-  Negated operators such as **is not equal** and **does not contain** also match empty or missing values, as they do in the Condition Node.
-</Info>
