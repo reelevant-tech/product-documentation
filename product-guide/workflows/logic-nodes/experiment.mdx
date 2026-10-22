@@ -5,11 +5,9 @@ description: 'Use an Analytics Experiment to split traffic across Workflow Branc
 
 ![Experiment Node with its experiment and variant Branches in a Workflow](/images/workflows/node-experiment.png)
 
-Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now. Until a Global holdout starts, Treatment shows 100%.
+Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now.
 
-Until a Continuous A/B test starts, Reference shows 100%.
-
-For datasource-driven assignment, see [Assign Variants from a Datasource](/product-guide/analytics/experiments-datasource-assignment).
+Before the Experiment starts, the Treatment of a Global holdout or the Reference of a Continuous A/B test shows 100%. To assign Variants from a CRM Datasource, see [Assign Variants from a Datasource](/product-guide/analytics/experiments-datasource-assignment).
 
 ## Add an Experiment Node
 

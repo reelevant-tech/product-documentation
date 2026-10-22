@@ -11,23 +11,21 @@ Choose **From a datasource** when your CRM already assigns customer groups, such
 
 Otherwise, choose **Random assignment (recommended)**. It assigns Variants at random and provides the standard way to measure their impact.
 
-Datasource assignment can also preserve a population selected by a CRM field.
-
 <Warning>
   Only random assignment guarantees that results measure the impact of the Variants. Use a Datasource only when the values your conditions use were assigned at random.
 
-  Examples of existing segments include opt-outs, hand-picked groups, behavioural cohorts, and regions. Results then show differences between segments, not the effect of the Variants.
+  If they reflect an existing segment, such as opt-outs, hand-picked groups, behavioural cohorts or regions, results show differences between segments. They do not show the effect of the Variants.
 </Warning>
 
 ## Set it up
 
-1. Create an Experiment or edit a draft, then open **Measurement**.
-2. Under **Variant assignment**, choose **From a datasource**.
-3. Set **Randomization unit** to **Per customer**. Datasource assignment is unavailable with **Per display**.
-4. Choose a live CRM Datasource using **Select a CRM datasource**.
+1. Create an Experiment or edit a draft, then go to **Variants and allocation**.
+2. Keep **Randomization unit** on **Per customer**: a Datasource cannot be used with **Per display**.
+3. Under **Variant assignment**, choose **From a datasource**.
+4. Under **Datasource**, choose a CRM Datasource. Changing it later clears the rules of every condition.
 5. Build one condition for each Variant with the same field, operator, and value rules as a [Condition Node](/product-guide/workflows/logic-nodes/conditions).
 6. Drag conditions to set their order. Each condition is checked before the next.
-7. Enter each **Expected allocation of {name} (%)** and review the **Expected allocation** summary.
+7. Enter the expected allocation of each Variant. It is only an estimate: the Datasource decides who gets each Variant.
 
 ![Experiment form with Variant assignment set to From a datasource, the causal warning, the Datasource picker and one condition per Variant](/images/analytics/experiment-datasource-assignment.png)
 
@@ -37,23 +35,23 @@ Conditions are checked in the order you set. Each customer gets the Variant for 
 
 Customers who meet no condition or have no row in the Datasource are unclassified. Anonymous customers are unclassified too.
 
-Unclassified customers receive Treatment in a Global holdout or Reference in a Continuous A/B test. They are not counted in the results.
+Unclassified customers receive the Treatment in a Global holdout or the Reference in a Continuous A/B test. They are not counted in the results.
 
 The Experiment Node reads the customer's CRM row itself, so you do not need a Data Node in the Workflow.
 
 ## Edit while live
 
-You can edit the Datasource, its conditions, and their order after the Experiment starts.
+You can edit the Datasource, its conditions, and their order after the Experiment starts, until the Experiment ends.
 
 Changes reach new traffic within about a minute. Customers whose Variant changes because of an edit are excluded from the results.
+
+While the results are finalised, all new traffic goes to the Treatment or the Reference, whatever the conditions.
 
 You cannot switch between random and Datasource assignment after the Experiment starts.
 
 ## What changes vs random assignment
 
-Only customer assignment changes. Your Workflow uses the Experiment in the same way as before.
-
-Branch percentages stay the same, and **Expected allocation** remains an estimate rather than an instruction for assigning customers.
+Assignment is always per customer. The Experiment Node shows the same Branches and percentages as with random assignment. The expected allocation is an estimate, not an instruction.
 
 ## What's Next?
 
