@@ -50,11 +50,13 @@ Select **Show archived** to include archived experiments. Select **Create experi
 5. In **Measurement**, choose a **Randomization unit** and one **Success metric**.
 6. Select **Create experiment** to validate it as Ready, or **Save draft** to finish later.
 
+In **Measurement**, you can also use a CRM Datasource for **Variant assignment**. See [Assign Variants from a Datasource](/product-guide/analytics/experiments-datasource-assignment).
+
 Your **Name** must not match an existing tag name because the Experiment becomes a tag.
 
 Select **Split evenly** to divide traffic evenly between the other Variants. The **Control** or **Reference** Allocation is calculated automatically, keeping the total at 100%.
 
-Before an Experiment starts, its **Control** or **Reference** receives all traffic.
+Before a Global holdout starts, all traffic goes to its **Treatment**. Before a Continuous A/B test starts, all traffic goes to its **Reference**.
 
 Choose **Per customer** to keep each customer in the same Variant. Choose **Per display** to assign a Variant each time Content is displayed.
 
