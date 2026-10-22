@@ -5,13 +5,15 @@ description: 'Utilisez une Datasource CRM pour choisir la variante reçue par ch
 
 L'affectation par [Datasource](/fr/glossary) choisit la variante reçue par chaque client dans un Groupe témoin global ou un Test A/B continu.
 
-Le Groupe témoin global (groupe sans personnalisation) garde un groupe [Témoin](/fr/glossary); le Test A/B continu (comparaison de variantes) mesure leur impact.
+Un Groupe témoin global garde une partie des clients sans personnalisation dans un groupe [Témoin](/fr/glossary). Un Test A/B continu compare plusieurs variantes.
 
 ## Quand l'utiliser
 
 Choisissez **Depuis une source de données** si votre CRM répartit déjà les clients, par exemple avec un groupe témoin aléatoire partagé entre plusieurs canaux.
 
 Si d'autres canaux utilisent aussi ce champ, les résultats mesurent l'effet combiné de tout ce qui diffère entre les groupes.
+
+Cette mesure n'est valable que si les autres canaux ne modifient pas les clients qui accèdent à ce Workflow.
 
 Sinon, choisissez **Répartition aléatoire (recommandée)**. Elle attribue les variantes au hasard et constitue la méthode standard pour mesurer leur impact.
 
@@ -41,29 +43,29 @@ Les clients qui ne remplissent aucune condition ou n'ont aucune ligne dans la Da
 
 Les clients non classés reçoivent le [Traitement](/fr/glossary) dans un Groupe témoin global ou la [Référence](/fr/glossary) dans un Test A/B continu. Ils ne sont pas comptés dans les résultats.
 
-Le Node Expérimentation lit directement la ligne CRM du client. Aucun [Data Node](/fr/glossary) n'est nécessaire dans le Workflow.
-
-Une ligne CRM est la ligne du client dans la Datasource.
+Le Node Expérimentation lit lui-même la ligne CRM du client (sa ligne dans la Datasource) : aucun [Data Node](/fr/glossary) n'est nécessaire dans le Workflow.
 
 ## Modifier une expérimentation en cours
 
-La Datasource, les conditions et leur ordre restent modifiables jusqu'à ce que l'expérimentation soit **Décidée** ou **Non concluante**.
+La Datasource, les conditions et leur ordre restent modifiables jusqu'à la conclusion de l'expérimentation.
 
 Les modifications s'appliquent au nouveau trafic en une minute environ. La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent.
 
-Dans Data Exploration, un client qui a changé de variante apparaît sous chaque variante reçue.
+Dans [Data Exploration](/fr/product-guide/analytics/data-exploration), un client qui a changé de variante apparaît sous chaque variante reçue.
+
+Déplacer des clients classés après le lancement peut biaiser les résultats. Utilisez un champ qui ne change pas pendant l'expérimentation.
 
 Le mode d'affectation ne peut pas être changé après le lancement.
 
 ## Différences avec la répartition aléatoire
 
-L'affectation se fait toujours par client. Le Node Expérimentation affiche les mêmes Branches.
+L'affectation se fait toujours par client. Le Node Expérimentation affiche les mêmes Branches qu'avec la répartition aléatoire.
 
-Une fois l'expérimentation lancée, ses pourcentages indiquent la répartition attendue, pas la répartition réelle.
+Une fois l'expérimentation lancée, les pourcentages du Node indiquent la répartition attendue, pas la répartition réelle.
 
 ## Et ensuite ?
 
-<CardGroup cols={4}>
+<CardGroup cols={2}>
   <Card title="Expérimentations" icon="flask" href="/fr/product-guide/analytics/experiments">
     Créez et gérez des expérimentations dans Analytics.
   </Card>

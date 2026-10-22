@@ -8,8 +8,8 @@ L'affectation depuis une Datasource évalue les conditions CRM pour attribuer de
 ## Prérequis
 
 - Une Datasource CRM publiée doit contenir l'identifiant client utilisé par le Workflow.
-- Utilisez un champ qui ne change pas pendant l'expérimentation.
-- Pour une interprétation causale, le champ utilisé dans les conditions doit contenir des valeurs attribuées au hasard (voir [Validité causale](#validite-causale)).
+- Pour une interprétation causale, utilisez un champ dont les valeurs ne changent pas pendant l'expérimentation.
+- Pour une interprétation causale, le champ utilisé dans les conditions doit contenir des valeurs attribuées au hasard (voir [Validité causale](#validité-causale)).
 - L'affectation depuis une Datasource est disponible uniquement pour les expérimentations de type **Groupe témoin global** ou **Test A/B continu**.
 - L'expérimentation doit utiliser l'**Unité de randomisation** réglée sur **Par client**.
 
@@ -40,13 +40,13 @@ Supposons qu'un champ CRM nommé `holdout_group` contienne `control` ou `treatme
   Une ligne où `holdout_group` est vide ne remplit aucune condition. Le client reçoit le Traitement par défaut et est exclu des résultats.
 </Info>
 
-Les clients sans ligne CRM ou anonymes reçoivent le Traitement par défaut et sont exclus des résultats.
+Les clients sans ligne CRM, anonymes ou dont la ligne CRM ne peut pas être lue reçoivent le Traitement par défaut et sont exclus des résultats.
 
 La répartition attendue de 10 % pour le Témoin est une estimation, pas une règle d'affectation. Le champ CRM détermine la variante reçue par chaque client classé.
 
 ## Clients non classés
 
-Un client est non classé s'il ne remplit aucune condition, n'a aucune ligne CRM ou est anonyme. Il reçoit la variante de repli et n'est pas compté dans les résultats.
+Un client est non classé s'il ne remplit aucune condition, n'a pas de ligne CRM, est anonyme ou si sa ligne CRM ne peut pas être lue. Il reçoit la variante de repli et n'est pas compté dans les résultats.
 
 Les résultats décrivent uniquement les clients classés.
 
@@ -61,16 +61,18 @@ La répartition aléatoire dans l'expérimentation est la seule méthode qui gar
 
 Si un champ représente un segment existant, le biais de sélection empêche d'attribuer les différences observées aux variantes de l'expérimentation. Il peut s'agir de désabonnements, d'une population choisie manuellement, d'une cohorte comportementale ou d'une région.
 
-Les résultats dépendent des effectifs observés dans chaque variante, pas de la répartition attendue. Un Témoin de petite taille met plus de temps à atteindre la significativité.
+Les résultats dépendent des effectifs observés dans chaque variante, pas de la répartition attendue. Quand la significativité statistique est disponible, un Témoin de petite taille met plus de temps à l'atteindre.
 
-Aucun contrôle de déséquilibre d'échantillonnage (SRM) n'est effectué, car la répartition n'est pas aléatoire. Comparez vous-même la répartition observée à la répartition attendue.
+Aucun contrôle de déséquilibre d'échantillonnage (SRM) n'est effectué, car Reelevant ne tire pas la répartition : la répartition attendue est seulement votre estimation. Comparez le nombre de clients uniques par variante à la répartition attendue. Un écart important peut indiquer une condition incorrecte ou des lignes manquantes pour un groupe.
 
-Quel que soit le nombre de variantes, chaque groupe doit provenir du même tirage aléatoire et les autres règles doivent être identiques dans toutes les conditions pour obtenir des résultats causaux. Par exemple, ajouter `country = FR` uniquement à `holdout_group = control` rompt la comparabilité.
+Quel que soit le nombre de variantes, chaque groupe doit provenir du même tirage aléatoire, et toute autre règle doit être identique dans chaque condition et combinée avec **ET**, pour obtenir des résultats causaux. Par exemple, ajouter `country = FR` uniquement à `holdout_group = control` rompt la comparabilité.
 
 ## Modifier une expérimentation en cours
 
-La Datasource, les conditions et leur ordre restent modifiables jusqu'à ce que l'expérimentation soit **Décidée** ou **Non concluante**. Les modifications s'appliquent au nouveau trafic en une minute environ.
+La Datasource, les conditions et leur ordre restent modifiables jusqu'à la conclusion de l'expérimentation. Les modifications s'appliquent au nouveau trafic en une minute environ.
 
-La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent. Dans Data Exploration, un client qui a changé de variante apparaît sous chaque variante reçue. La comparaison est biaisée si le changement dépend de la variante reçue : évitez donc de déplacer les clients classés après le lancement.
+La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent. Dans [Data Exploration](/fr/product-guide/analytics/data-exploration), un client qui a changé de variante apparaît sous chaque variante reçue, ce qui brouille la différence entre les variantes. Les changements biaisent aussi la comparaison s'ils dépendent de la variante reçue. Évitez de déplacer les clients classés après le lancement.
+
+Si un champ utilisé dans une condition est supprimé de la Datasource, aucun client ne peut remplir cette condition. Le formulaire vous demande de choisir un autre champ.
 
 Le mode d'affectation ne peut pas être modifié après le lancement.
