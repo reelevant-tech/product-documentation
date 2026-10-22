@@ -1,18 +1,19 @@
 ---
-title: 'Affectation des variantes depuis une source de données'
+title: 'Affectation des variantes depuis une Datasource'
 description: 'Configurez l’affectation CRM des variantes et comprenez ses implications statistiques'
 ---
 
-L'affectation depuis une source de données évalue les conditions CRM pour attribuer des variantes sans recourir à la répartition aléatoire de l'expérimentation.
+L'affectation depuis une Datasource évalue les conditions CRM pour attribuer des variantes sans recourir à la répartition aléatoire de l'expérimentation.
 
 ## Prérequis
 
-- Une source de données CRM active doit contenir l'identifiant client utilisé par le Workflow.
-- Le champ utilisé dans les conditions doit contenir des valeurs attribuées au hasard pour permettre une mesure causale.
-- L'affectation depuis une source de données est disponible uniquement pour les expérimentations de type **Groupe témoin global** ou **Test A/B continu**.
-- L'expérimentation doit utiliser l'unité de randomisation **Par client**.
+- Une Datasource CRM publiée doit contenir l'identifiant client utilisé par le Workflow.
+- Utilisez un champ qui ne change pas pendant l'expérimentation.
+- Pour une interprétation causale, le champ utilisé dans les conditions doit contenir des valeurs attribuées au hasard (voir [Validité causale](#validite-causale)).
+- L'affectation depuis une Datasource est disponible uniquement pour les expérimentations de type **Groupe témoin global** ou **Test A/B continu**.
+- L'expérimentation doit utiliser l'**Unité de randomisation** réglée sur **Par client**.
 
-Pour les étapes dans l'interface, consultez [Attribuer les variantes depuis une source de données](/fr/product-guide/analytics/experiments-datasource-assignment).
+Pour les étapes dans l'interface, consultez [Affecter les variantes depuis une Datasource](/fr/product-guide/analytics/experiments-datasource-assignment).
 
 ## Évaluation
 
@@ -20,7 +21,9 @@ Les conditions sont évaluées dans l'ordre configuré, indépendamment de l'ord
 
 Chaque variante nécessite une condition avec au moins une règle. Les règles d'une condition peuvent utiliser une logique **ET/OU**, comme dans un Node de condition.
 
-Il n'existe pas de condition fourre-tout pour « le reste de la source de données ». Écrivez une condition pour chaque groupe à classer explicitement.
+<Info>
+  Il n'existe pas de condition fourre-tout pour les autres lignes de la Datasource. Écrivez une condition pour chaque groupe à classer explicitement.
+</Info>
 
 Les champs de type date ou date-heure ne proposent pas d'opérateurs de plage de dates dans l'éditeur de conditions.
 
@@ -33,7 +36,9 @@ Supposons qu'un champ CRM nommé `holdout_group` contienne `control` ou `treatme
 | `holdout_group = control` | Témoin |
 | `holdout_group = treatment` | Traitement |
 
-Une ligne où `holdout_group` est vide ne remplit aucune condition. Le client reçoit le Traitement par défaut et est exclu des résultats.
+<Info>
+  Une ligne où `holdout_group` est vide ne remplit aucune condition. Le client reçoit le Traitement par défaut et est exclu des résultats.
+</Info>
 
 Les clients sans ligne CRM ou anonymes reçoivent le Traitement par défaut et sont exclus des résultats.
 
@@ -43,6 +48,8 @@ La répartition attendue de 10 % pour le Témoin est une estimation, pas une rè
 
 Un client est non classé s'il ne remplit aucune condition, n'a aucune ligne CRM ou est anonyme. Il reçoit la variante de repli et n'est pas compté dans les résultats.
 
+Les résultats décrivent uniquement les clients classés.
+
 | Type d'expérimentation | Variante de repli |
 |-------------------------|-------------------|
 | Groupe témoin global | Traitement |
@@ -50,18 +57,20 @@ Un client est non classé s'il ne remplit aucune condition, n'a aucune ligne CRM
 
 ## Validité causale
 
-La répartition aléatoire dans l'expérimentation est la seule méthode qui garantit une interprétation causale. L'affectation depuis une source de données permet une mesure causale uniquement si les valeurs des conditions ont elles-mêmes été attribuées au hasard.
+La répartition aléatoire dans l'expérimentation est la seule méthode qui garantit une interprétation causale. L'affectation depuis une Datasource permet une mesure causale uniquement si les valeurs des conditions ont elles-mêmes été attribuées au hasard.
 
 Si un champ représente un segment existant, le biais de sélection empêche d'attribuer les différences observées aux variantes de l'expérimentation. Il peut s'agir de désabonnements, d'une population choisie manuellement, d'une cohorte comportementale ou d'une région.
 
-Les nombres observés par variante déterminent les intervalles statistiques, pas les répartitions attendues. Un Témoin de faible taille produit des intervalles de confiance plus larges et une puissance statistique moindre.
+Les résultats dépendent des effectifs observés dans chaque variante, pas de la répartition attendue. Un Témoin de petite taille met plus de temps à atteindre la significativité.
 
-Pour une expérimentation avec plus de deux variantes, les valeurs de chaque groupe doivent être attribuées au hasard.
+Aucun contrôle de déséquilibre d'échantillonnage (SRM) n'est effectué, car la répartition n'est pas aléatoire. Comparez vous-même la répartition observée à la répartition attendue.
+
+Quel que soit le nombre de variantes, chaque groupe doit provenir du même tirage aléatoire et les autres règles doivent être identiques dans toutes les conditions pour obtenir des résultats causaux. Par exemple, ajouter `country = FR` uniquement à `holdout_group = control` rompt la comparabilité.
 
 ## Modifier une expérimentation en cours
 
-La source de données, les conditions et leur ordre restent modifiables après le lancement, y compris pendant le statut **Maturing**. Les modifications s'appliquent au nouveau trafic sous environ une minute.
+La Datasource, les conditions et leur ordre restent modifiables jusqu'à ce que l'expérimentation soit **Décidée** ou **Non concluante**. Les modifications s'appliquent au nouveau trafic en une minute environ.
 
-Les clients qui changent de variante à cause d'une modification sont exclus des résultats. Des modifications fréquentes réduisent la population mesurée et peuvent la biaiser si les clients déplacés diffèrent des autres.
+La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent. Dans Data Exploration, un client qui a changé de variante apparaît sous chaque variante reçue. Évitez de déplacer les clients classés après le lancement. Des modifications fréquentes réduisent la population mesurée et peuvent la biaiser si les clients déplacés diffèrent des autres.
 
-Pendant **Maturing**, chaque nouveau client reçoit la variante de repli, quelles que soient les conditions. Le mode d'affectation ne peut pas être modifié après le lancement.
+Le mode d'affectation ne peut pas être modifié après le lancement.

@@ -29,7 +29,7 @@ The kept Variant shows **Winner**, and the Node routes all traffic to it.
 
 An Experiment that has ended stays on the Node and keeps routing to its outcome. You cannot pick it for a new Node.
 
-If the Experiment is archived or missing, the Node shows **Experiment unavailable**. It sends all traffic to Treatment for a Global holdout or Reference for a Continuous A/B test.
+If the Experiment is archived or missing, the Node shows **Experiment unavailable**. It sends all traffic to the **Treatment** of a Global holdout or the **Reference** of a Continuous A/B test. If the Experiment had already ended when the Workflow was last published, it sends traffic to the kept Variant instead.
 
 ## What's Next?
 

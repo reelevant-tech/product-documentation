@@ -3,11 +3,15 @@ title: 'Assign Variants from a Datasource'
 description: 'Use a CRM Datasource to choose which Variant each customer receives in an Experiment'
 ---
 
-Datasource assignment lets you use a CRM Datasource to choose which Variant each customer receives in a Global holdout or Continuous A/B test.
+Use a CRM [Datasource](/glossary) to choose each customer's Variant in an Experiment.
+
+A Global holdout (which keeps a non-personalised [Control](/glossary) group) or a Continuous A/B test (which compares Variants) can use this method.
 
 ## When to use it
 
 Choose **From a datasource** when your CRM already assigns customer groups, such as a randomised holdout shared across channels.
+
+If other channels also use this field, results measure the combined effect of everything that differs between the groups.
 
 Otherwise, choose **Random assignment (recommended)**. It assigns Variants at random and provides the standard way to measure their impact.
 
@@ -19,13 +23,13 @@ Otherwise, choose **Random assignment (recommended)**. It assigns Variants at ra
 
 ## Set it up
 
-1. Create an Experiment or edit a draft, then go to **Variants and allocation**.
+1. Create an Experiment, or edit a **Draft** or **Ready** one, then go to **Variants and allocation**.
 2. Keep **Randomization unit** on **Per customer**: a Datasource cannot be used with **Per display**.
 3. Under **Variant assignment**, choose **From a datasource**.
-4. Under **Datasource**, choose a CRM Datasource. Changing it later clears the rules of every condition.
-5. Build one condition for each Variant with the same field, operator, and value rules as a [Condition Node](/product-guide/workflows/logic-nodes/conditions).
+4. Under **Datasource**, choose a published CRM Datasource that contains the customer identifier used by your Workflow. This creates one condition per Variant. Changing it later clears the rules of every condition.
+5. Under **Who gets each variant**, add field, operator, and value rules to each Variant's condition, as in a [Condition Node](/product-guide/workflows/logic-nodes/conditions).
 6. Drag conditions to set their order. Each condition is checked before the next.
-7. Enter the expected allocation of each Variant. It is only an estimate: the Datasource decides who gets each Variant.
+7. Back in the Variant list, enter each Variant's **Expected allocation**. It is only an estimate: the Datasource decides who gets each Variant.
 
 ![Experiment form with Variant assignment set to From a datasource, the causal warning, the Datasource picker and one condition per Variant](/images/analytics/experiment-datasource-assignment.png)
 
@@ -35,27 +39,31 @@ Conditions are checked in the order you set. Each customer gets the Variant for 
 
 Customers who meet no condition or have no row in the Datasource are unclassified. Anonymous customers are unclassified too.
 
-Unclassified customers receive the Treatment in a Global holdout or the Reference in a Continuous A/B test. They are not counted in the results.
+Unclassified customers receive the [Treatment](/glossary) in a Global holdout or the [Reference](/glossary) in a Continuous A/B test. They are not counted in the results.
 
-The Experiment Node reads the customer's CRM row itself, so you do not need a Data Node in the Workflow.
+The Experiment Node reads the customer's CRM row itself, so you do not need a [Data Node](/glossary) in the Workflow.
+
+A CRM row is the customer's line in the Datasource.
 
 ## Edit while live
 
-You can edit the Datasource, its conditions, and their order after the Experiment starts, until the Experiment ends.
+The Datasource, conditions, and their order stay editable until the Experiment is **Decided** or **Inconclusive**.
 
-Changes reach new traffic within about a minute. Customers whose Variant changes because of an edit are excluded from the results.
+Changes reach new traffic within about a minute. A customer's Variant changes when you edit the conditions or when their CRM values change.
 
-While the results are finalised, all new traffic goes to the Treatment or the Reference, whatever the conditions.
+In Data Exploration, a customer who moved appears under each Variant they received.
 
 You cannot switch between random and Datasource assignment after the Experiment starts.
 
 ## What changes vs random assignment
 
-Assignment is always per customer. The Experiment Node shows the same Branches and percentages as with random assignment. The expected allocation is an estimate, not an instruction.
+Assignment is always per customer. The Experiment Node shows the same Branches.
+
+Once live, its percentages are the expected allocation, not the actual split.
 
 ## What's Next?
 
-<CardGroup cols={3}>
+<CardGroup cols={4}>
   <Card title="Experiments" icon="flask" href="/product-guide/analytics/experiments">
     Create and manage Experiments in Analytics.
   </Card>
@@ -64,5 +72,8 @@ Assignment is always per customer. The Experiment Node shows the same Branches a
   </Card>
   <Card title="Condition Node" icon="code-branch" href="/product-guide/workflows/logic-nodes/conditions">
     Build rules to classify customers.
+  </Card>
+  <Card title="Advanced datasource assignment" icon="book-open" href="/advanced-guide/analytics/experiments-datasource-assignment">
+    Explore a worked example and causal validity.
   </Card>
 </CardGroup>
