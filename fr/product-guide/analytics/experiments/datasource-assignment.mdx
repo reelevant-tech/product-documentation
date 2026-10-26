@@ -28,18 +28,14 @@ Si d'autres canaux utilisent aussi ce champ, les résultats mesurent l'effet com
 3. Dans **Affectation des variantes**, choisissez **Depuis une source de données**.
 4. Sous **Source de données**, choisissez une Datasource CRM publiée qui contient l'identifiant client utilisé par votre Workflow. Cela crée une condition par variante. La changer ensuite efface les règles de toutes les conditions.
 5. Sous **Qui reçoit chaque variante**, ajoutez au moins une règle (champ, opérateur, valeur) à la condition de chaque variante. Combinez les règles avec **ET/OU**.
-6. Faites glisser les conditions pour définir leur ordre. Chaque condition est vérifiée avant la suivante.
-7. De retour dans la liste des variantes, saisissez la **Répartition attendue** de chaque variante. C'est une estimation : la Datasource décide quelle variante reçoit chaque client.
 
 ![Formulaire d'expérimentation avec l'affectation des variantes sur Depuis une source de données, l'avertissement causal, le sélecteur de Datasource et une condition par variante](/images/analytics/experiment-datasource-assignment.png)
 
-<Info>
-  Les champs de type date ou date-heure ne proposent pas d'opérateurs de plage de dates dans les conditions.
-</Info>
-
 ## Qui reçoit chaque variante
 
-Les conditions sont vérifiées dans l'ordre choisi. Chaque client reçoit la variante de la première condition qu'il remplit.
+Les conditions sont vérifiées dans l'ordre, et chaque client reçoit la variante de la première condition qu'il remplit. Si un client peut remplir plusieurs conditions, faites glisser les conditions pour choisir celle qui passe en premier.
+
+La répartition de chaque variante devient une **Répartition attendue**. C'est seulement une estimation : la Datasource décide quelle variante reçoit chaque client.
 
 Un client est non classé s'il ne remplit aucune condition, n'a aucune ligne dans la Datasource, est anonyme ou si sa ligne ne peut pas être lue. Il n'existe pas de condition fourre-tout : écrivez une condition pour chaque groupe à classer.
 
