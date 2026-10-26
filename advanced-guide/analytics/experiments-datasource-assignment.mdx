@@ -62,8 +62,6 @@ If a field reflects an existing segment, selection bias means observed differenc
 
 Results depend on the observed number of customers in each Variant, not on the expected allocation. When statistical significance is available, a small Control takes longer to reach it.
 
-No sample ratio mismatch check runs, because Reelevant does not draw the split: the expected allocation is only your estimate. Compare the unique customers per Variant with your expected allocation. A large gap can mean a condition is wrong or rows are missing for one group.
-
 Whatever the number of Variants, every group must come from the same random draw, and any other rule must be identical in every condition and combined with **and**, for the results to be causal. For example, adding `country = FR` to only `holdout_group = control` breaks comparability.
 
 ## Editing a live Experiment
@@ -71,7 +69,5 @@ Whatever the number of Variants, every group must come from the same random draw
 The Datasource, conditions, and their order stay editable until the Experiment is concluded. Changes reach new traffic within about a minute.
 
 A customer's Variant changes when you edit the conditions or when their CRM values change. In [Data Exploration](/product-guide/analytics/data-exploration), a customer who moved appears under each Variant they received, which blurs the difference between Variants. Moves also bias the comparison when they depend on the Variant a customer received. Avoid moving classified customers after start.
-
-If a field used by a condition is removed from the Datasource, no customer can meet that condition. The form asks you to pick another field.
 
 The assignment method itself cannot be changed after start.

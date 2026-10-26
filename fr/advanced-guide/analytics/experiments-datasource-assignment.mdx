@@ -63,8 +63,6 @@ Si un champ représente un segment existant, le biais de sélection empêche d'a
 
 Les résultats dépendent des effectifs observés dans chaque variante, pas de la répartition attendue. Quand la significativité statistique est disponible, un Témoin de petite taille met plus de temps à l'atteindre.
 
-Aucun contrôle de déséquilibre d'échantillonnage (SRM) n'est effectué, car Reelevant ne tire pas la répartition : la répartition attendue est seulement votre estimation. Comparez le nombre de clients uniques par variante à la répartition attendue. Un écart important peut indiquer une condition incorrecte ou des lignes manquantes pour un groupe.
-
 Quel que soit le nombre de variantes, chaque groupe doit provenir du même tirage aléatoire, et toute autre règle doit être identique dans chaque condition et combinée avec **ET**, pour obtenir des résultats causaux. Par exemple, ajouter `country = FR` uniquement à `holdout_group = control` rompt la comparabilité.
 
 ## Modifier une expérimentation en cours
@@ -72,7 +70,5 @@ Quel que soit le nombre de variantes, chaque groupe doit provenir du même tirag
 La Datasource, les conditions et leur ordre restent modifiables jusqu'à la conclusion de l'expérimentation. Les modifications s'appliquent au nouveau trafic en une minute environ.
 
 La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent. Dans [Data Exploration](/fr/product-guide/analytics/data-exploration), un client qui a changé de variante apparaît sous chaque variante reçue, ce qui brouille la différence entre les variantes. Les changements biaisent aussi la comparaison s'ils dépendent de la variante reçue. Évitez de déplacer les clients classés après le lancement.
-
-Si un champ utilisé dans une condition est supprimé de la Datasource, aucun client ne peut remplir cette condition. Le formulaire vous demande de choisir un autre champ.
 
 Le mode d'affectation ne peut pas être modifié après le lancement.
