@@ -167,8 +167,13 @@
                     ]
                   },
                   "product-guide/analytics/data-exploration",
-                  "product-guide/analytics/experiments",
-                  "product-guide/analytics/experiments-datasource-assignment",
+                  {
+                    "group": "Experiments",
+                    "pages": [
+                      "product-guide/analytics/experiments",
+                      "product-guide/analytics/experiments/datasource-assignment"
+                    ]
+                  },
                   "product-guide/analytics/measures-and-dimensions",
                   "product-guide/analytics/saved-queries",
                   "product-guide/analytics/reports",
@@ -663,8 +668,13 @@
                     ]
                   },
                   "fr/product-guide/analytics/data-exploration",
-                  "fr/product-guide/analytics/experiments",
-                  "fr/product-guide/analytics/experiments-datasource-assignment",
+                  {
+                    "group": "Expérimentations",
+                    "pages": [
+                      "fr/product-guide/analytics/experiments",
+                      "fr/product-guide/analytics/experiments/datasource-assignment"
+                    ]
+                  },
                   "fr/product-guide/analytics/measures-and-dimensions",
                   "fr/product-guide/analytics/saved-queries",
                   "fr/product-guide/analytics/settings"
