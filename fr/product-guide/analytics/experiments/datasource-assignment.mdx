@@ -3,17 +3,13 @@ title: 'Affecter les variantes depuis une Datasource'
 description: 'Utilisez une Datasource CRM pour choisir la variante reçue par chaque client'
 ---
 
-L'affectation par [Datasource](/fr/glossary) choisit la variante reçue par chaque client dans un Groupe témoin global ou un Test A/B continu.
+Utilisez une [Datasource](/fr/glossary) CRM pour choisir la variante de chaque client dans une expérimentation, au lieu d'un tirage aléatoire.
 
-Un Groupe témoin global garde une partie des clients sans personnalisation dans un groupe [Témoin](/fr/glossary). Un Test A/B continu compare plusieurs variantes.
+Un Groupe témoin global (qui garde un groupe [Témoin](/fr/glossary) sans personnalisation) ou un Test A/B continu (qui compare plusieurs variantes) peut utiliser cette méthode.
 
 ## Quand l'utiliser
 
-Choisissez **Depuis une source de données** si votre CRM répartit déjà les clients, par exemple avec un groupe témoin aléatoire partagé entre plusieurs canaux.
-
-Si d'autres canaux utilisent aussi ce champ, les résultats mesurent l'effet combiné de tout ce qui diffère entre les groupes.
-
-Cette mesure n'est valable que si les autres canaux ne modifient pas les clients qui accèdent à ce Workflow.
+Choisissez **Depuis une source de données** si votre CRM répartit déjà les clients en groupes aléatoires, par exemple un groupe témoin partagé entre plusieurs canaux.
 
 Sinon, choisissez **Répartition aléatoire (recommandée)**. Elle attribue les variantes au hasard et constitue la méthode standard pour mesurer leur impact.
 
@@ -23,49 +19,78 @@ Sinon, choisissez **Répartition aléatoire (recommandée)**. Elle attribue les 
   Si ces valeurs décrivent un segment existant (désinscriptions, groupes choisis à la main, cohortes comportementales ou régions), les résultats montrent les différences entre segments. Ils ne montrent pas l'effet des variantes.
 </Warning>
 
+Si d'autres canaux utilisent aussi ce champ, les résultats mesurent l'effet combiné de tout ce qui diffère entre les groupes. Cette mesure n'est valable que si les autres canaux ne modifient pas les clients qui accèdent à ce Workflow.
+
 ## Configuration
 
 1. Créez une expérimentation ou modifiez un brouillon ou une expérimentation prête, puis allez dans **Variantes et répartition**.
 2. Gardez l'**Unité de randomisation** sur **Par client** : une Datasource ne fonctionne pas avec **Par affichage**.
 3. Dans **Affectation des variantes**, choisissez **Depuis une source de données**.
 4. Sous **Source de données**, choisissez une Datasource CRM publiée qui contient l'identifiant client utilisé par votre Workflow. Cela crée une condition par variante. La changer ensuite efface les règles de toutes les conditions.
-5. Sous **Qui reçoit chaque variante**, ajoutez des règles (champ, opérateur, valeur) à la condition de chaque variante, comme dans un [Node de condition](/fr/product-guide/workflows/logic-nodes/conditions).
+5. Sous **Qui reçoit chaque variante**, ajoutez au moins une règle (champ, opérateur, valeur) à la condition de chaque variante. Combinez les règles avec **ET/OU**, comme dans un [Node de condition](/fr/product-guide/workflows/logic-nodes/conditions).
 6. Faites glisser les conditions pour définir leur ordre. Chaque condition est vérifiée avant la suivante.
 7. De retour dans la liste des variantes, saisissez la **Répartition attendue** de chaque variante. C'est une estimation : la Datasource décide quelle variante reçoit chaque client.
 
 ![Formulaire d'expérimentation avec l'affectation des variantes sur Depuis une source de données, l'avertissement causal, le sélecteur de Datasource et une condition par variante](/images/analytics/experiment-datasource-assignment.png)
 
+<Info>
+  Les champs de type date ou date-heure ne proposent pas d'opérateurs de plage de dates dans les conditions.
+</Info>
+
 ## Qui reçoit chaque variante
 
 Les conditions sont vérifiées dans l'ordre choisi. Chaque client reçoit la variante de la première condition qu'il remplit.
 
-Les clients qui ne remplissent aucune condition ou n'ont aucune ligne dans la Datasource sont non classés. Les clients anonymes le sont également.
+Un client est non classé s'il ne remplit aucune condition, n'a aucune ligne dans la Datasource, est anonyme ou si sa ligne ne peut pas être lue. Il n'existe pas de condition fourre-tout : écrivez une condition pour chaque groupe à classer.
 
-Les clients non classés reçoivent le [Traitement](/fr/glossary) dans un Groupe témoin global ou la [Référence](/fr/glossary) dans un Test A/B continu. Ils ne sont pas comptés dans les résultats.
+Les clients non classés reçoivent une variante de repli et ne sont pas comptés dans les résultats.
+
+| Type d'expérimentation | Variante de repli |
+|-------------------------|-------------------|
+| Groupe témoin global | [Traitement](/fr/glossary) |
+| Test A/B continu | [Référence](/fr/glossary) |
 
 Le Node Expérimentation lit lui-même la ligne CRM du client (sa ligne dans la Datasource) : aucun [Data Node](/fr/glossary) n'est nécessaire dans le Workflow.
 
+## Exemple
+
+Votre CRM contient un champ `holdout_group` dont la valeur est `control` ou `treatment`, attribuée au hasard. Vous créez un Groupe témoin global et attendez 10 % de clients dans le Témoin.
+
+| Condition | Variante |
+|-----------|----------|
+| `holdout_group = control` | Témoin |
+| `holdout_group = treatment` | Traitement |
+
+Un client dont le champ `holdout_group` est vide ne remplit aucune condition. Il reçoit le Traitement et n'est pas compté dans les résultats.
+
+Les 10 % saisis sont seulement une estimation. La valeur de `holdout_group` décide de la variante reçue par chaque client.
+
+## Garder des résultats fiables
+
+- Utilisez un champ dont les valeurs ont été attribuées au hasard et ne changent pas pendant l'expérimentation.
+- Faites provenir chaque groupe du même tirage aléatoire.
+- Si vous ajoutez une autre règle, ajoutez-la à chaque condition avec **ET**. Par exemple, ajouter `country = FR` uniquement à la condition du Témoin fausse la comparaison.
+- Évitez de déplacer les clients classés vers une autre variante après le lancement.
+
 ## Modifier une expérimentation en cours
 
-La Datasource, les conditions et leur ordre restent modifiables jusqu'à la conclusion de l'expérimentation.
+La Datasource, les conditions et leur ordre restent modifiables jusqu'à la conclusion de l'expérimentation. Les modifications s'appliquent au nouveau trafic en une minute environ.
 
-Les modifications s'appliquent au nouveau trafic en une minute environ. La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent.
+La variante d'un client change si vous modifiez les conditions ou si ses valeurs CRM changent. Dans [Data Exploration](/fr/product-guide/analytics/data-exploration), ce client apparaît sous chaque variante reçue, ce qui brouille la différence entre les variantes.
 
-Dans [Data Exploration](/fr/product-guide/analytics/data-exploration), un client qui a changé de variante apparaît sous chaque variante reçue.
+Ces changements faussent aussi les résultats s'ils dépendent de la variante reçue. Le mode d'affectation ne peut pas être changé après le lancement.
 
-Déplacer des clients classés après le lancement peut biaiser les résultats. Utilisez un champ qui ne change pas pendant l'expérimentation.
+## Lire les résultats
 
-Le mode d'affectation ne peut pas être changé après le lancement.
+Les résultats décrivent uniquement les clients classés. Ils utilisent le nombre de clients réellement observés dans chaque variante, pas la répartition attendue.
 
-## Différences avec la répartition aléatoire
+Quand la significativité statistique est affichée, un Témoin de petite taille met plus de temps à l'atteindre.
 
-L'affectation se fait toujours par client. Le Node Expérimentation affiche les mêmes branches qu'avec la répartition aléatoire.
-
-Une fois l'expérimentation lancée, les pourcentages du Node indiquent la répartition attendue, pas la répartition réelle.
+Le Node Expérimentation affiche les mêmes branches qu'avec la répartition aléatoire. Une fois l'expérimentation lancée, ses pourcentages indiquent la répartition attendue, pas la répartition réelle.
 
 ## Et ensuite ?
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card title="Expérimentations" icon="flask" href="/fr/product-guide/analytics/experiments">
     Créez et gérez des expérimentations dans Analytics.
   </Card>
@@ -74,8 +99,5 @@ Une fois l'expérimentation lancée, les pourcentages du Node indiquent la répa
   </Card>
   <Card title="Node de condition" icon="code-branch" href="/fr/product-guide/workflows/logic-nodes/conditions">
     Créez des règles pour classer les clients.
-  </Card>
-  <Card title="Fonctionnement de l'affectation depuis une Datasource" icon="book-open" href="/fr/product-guide/analytics/experiments/how-datasource-assignment-works">
-    Découvrez un exemple et quand les résultats mesurent l'effet des variantes.
   </Card>
 </CardGroup>
