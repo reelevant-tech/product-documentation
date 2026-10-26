@@ -171,7 +171,8 @@
                     "group": "Experiments",
                     "pages": [
                       "product-guide/analytics/experiments",
-                      "product-guide/analytics/experiments/datasource-assignment"
+                      "product-guide/analytics/experiments/datasource-assignment",
+                      "product-guide/analytics/experiments/how-datasource-assignment-works"
                     ]
                   },
                   "product-guide/analytics/measures-and-dimensions",
@@ -376,7 +377,6 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "advanced-guide/analytics/attribution",
-                  "advanced-guide/analytics/experiments-datasource-assignment",
                   "advanced-guide/analytics/reports",
                   "advanced-guide/analytics/customer-impact",
                   "advanced-guide/analytics/adoption",
@@ -672,7 +672,8 @@
                     "group": "Expérimentations",
                     "pages": [
                       "fr/product-guide/analytics/experiments",
-                      "fr/product-guide/analytics/experiments/datasource-assignment"
+                      "fr/product-guide/analytics/experiments/datasource-assignment",
+                      "fr/product-guide/analytics/experiments/how-datasource-assignment-works"
                     ]
                   },
                   "fr/product-guide/analytics/measures-and-dimensions",
@@ -876,7 +877,6 @@
                 "group": "Advanced Analytics",
                 "pages": [
                   "fr/advanced-guide/analytics/attribution",
-                  "fr/advanced-guide/analytics/experiments-datasource-assignment",
                   "fr/advanced-guide/analytics/customer-impact",
                   "fr/advanced-guide/analytics/adoption",
                   "fr/advanced-guide/analytics/messaging-and-mobile-measurement",
