@@ -28,18 +28,14 @@ If other channels also use this field, results measure the combined effect of ev
 3. Under **Variant assignment**, choose **From a datasource**.
 4. Under **Datasource**, choose a published CRM Datasource that contains the customer identifier used by your Workflow. This creates one condition per Variant. Changing it later clears the rules of every condition.
 5. Under **Who gets each variant**, add at least one rule (field, operator, value) to each Variant's condition. Combine rules with **and/or**.
-6. Drag conditions to set their order. Each condition is checked before the next.
-7. Back in the Variant list, enter each Variant's **Expected allocation**. It is only an estimate: the Datasource decides who gets each Variant.
 
 ![Experiment form with Variant assignment set to From a datasource, the causal warning, the Datasource picker and one condition per Variant](/images/analytics/experiment-datasource-assignment.png)
 
-<Info>
-  Date and date-time fields do not offer date-range operators in the conditions.
-</Info>
-
 ## Who gets each Variant
 
-Conditions are checked in the order you set. Each customer gets the Variant of the first condition they meet.
+Conditions are checked in order, and each customer gets the Variant of the first condition they meet. If a customer can meet several conditions, drag the conditions to choose which one comes first.
+
+Each Variant's allocation becomes an **Expected allocation**. It is only an estimate: the Datasource decides who gets each Variant.
 
 A customer is unclassified when they meet no condition, have no row in the Datasource, are anonymous, or their row cannot be read. There is no catch-all condition, so write one condition for every group you want to classify.
 
