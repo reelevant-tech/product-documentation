@@ -37,9 +37,10 @@ An attribution model decides how credit is shared between the interactions that 
 
 | Model | How it shares credit | Best for |
 |---|---|---|
-| **Last-touch** (default) | The last interaction before the purchase receives all the credit. | A simple view that matches classic last-click reporting. |
-| **Linear** | Every interaction receives an equal share. | Seeing every interaction contribute evenly. |
-| **Decay** | Interactions closer to the purchase receive more credit. The earliest ones receive the least. | Rewarding the interactions that pushed the customer towards buying. |
+| **Last touch** (default) | The last interaction before the purchase receives all the credit. | A retailer comparing with classic last-click reporting. |
+| **Linear** | Every interaction receives an equal share. | A fashion shopper moves from email to onsite to app, and each interaction matters. |
+| **Time decay** | Interactions closer to the purchase receive more credit, while earlier assists still count. | A subscription brand wants to favour recent interactions without removing earlier email assists. |
+| **Incremental** | Credit follows measured Uplift for each Workflow entrypoint Channel against a modelled non-personalised baseline. Shares are rescaled to the purchase total. It is not a randomised holdout. | Compare the measured Uplift from email and onsite Channels, using the Uplift dashboard's measurement. |
 
 ### Worked example
 
@@ -47,13 +48,25 @@ Imagine a customer interacts with Reelevant content three times, then buys for 1
 
 | Model | First interaction | Middle interaction | Last interaction |
 |---|---|---|---|
-| **Last-touch** | 0 | 0 | 100 |
+| **Last touch** | 0 | 0 | 100 |
 | **Linear** | 33.3 | 33.3 | 33.3 |
-| **Decay** | 16.7 | 33.3 | 50 |
+| **Time decay** | 16.7 | 33.3 | 50 |
 
 <Tip>
-  Last-touch is the default, so your numbers match classic last-click reporting until you pick a model that shares credit across earlier interactions.
+  Last touch is the default, so your numbers match classic last-click reporting until you choose a model that shares credit across earlier interactions.
 </Tip>
+
+## Attribution method
+
+**Default** credits any qualifying interaction from the customer. **Same reference ID** credits an interaction only when the purchased product's reference ID matches a product shown in the Content. Product IDs come from the Output Node's Datasource metadata.
+
+For a product recommendation Workflow, choose **Same reference ID** when you want credit only after the customer buys a recommended product.
+
+## Purchase time precision
+
+With **Customer purchases**, **Date and time** requires an interaction to precede the purchase timestamp. Choose **Date only** when purchase records contain a date but no time, so every purchase is recorded at midnight. It can credit interactions through the end of that day, while the lookback window still starts at midnight.
+
+For example, use Date only for store receipts exported without times. Keep Date and time for real timestamps; Date only could credit a click made after a morning purchase. Web tracking always uses Date and time.
 
 ## The lookback window
 
@@ -81,9 +94,9 @@ Reelevant can measure attribution from two sources. You pick the one that fits y
   Both sources support click and view-through attribution, so you get the same models and measures whichever one you choose.
 </Info>
 
-With **Customer purchases**, you can set different interaction types and lookback windows per **purchase source** (matched against the transaction source in your data). Purchases whose source is not configured use your default settings.
+With **Customer purchases**, each **Channel key** is matched against the purchase's transaction source. A purchase without a matching channel is excluded unless **Any other source (*)** is configured; it claims every source without its own channel.
 
-![Conversion channels for customer purchases, matched against the transaction source with a web fallback](/images/analytics/attribution-settings-customer-purchases.png)
+![Conversion channels for customer purchases matched against transaction sources, with an optional Any other source (*) channel](/images/analytics/attribution-settings-customer-purchases.png)
 
 ## UTM-based attribution
 
@@ -92,6 +105,8 @@ When you use **Web tracking**, you can attribute conversions across the UTM tags
 Each distinct UTM combination before the purchase becomes an interaction and earns a share, using the same models above. This spreads credit across every marketing effort in the customer's path — for example email, paid search, and social.
 
 You choose which UTM tags define an interaction. By default Reelevant groups by `utm_source` and `utm_medium`.
+
+Keep Source and Medium for a channel-level view. Add Campaign when you want to compare individual campaigns.
 
 ![UTM configuration: choose which UTM tags define the grain and set the lookback window](/images/analytics/attribution-settings-utm.png)
 

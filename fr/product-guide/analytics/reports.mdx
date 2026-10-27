@@ -1,0 +1,88 @@
+---
+title: 'Rapports'
+description: 'Créez des rapports Analytics étayés par des données et consultez les rapports automatiques périodiques'
+---
+
+Les rapports transforment une question sur vos données Analytics en une analyse structurée accompagnée d'éléments justificatifs.
+
+<Warning>
+  **Bêta** — Les rapports sont actuellement disponibles pour les administrateurs de la plateforme ; ils peuvent ne pas apparaître dans votre compte. Les invites, options et comportements peuvent évoluer.
+</Warning>
+
+## Avant de commencer
+
+Les rapports utilisent les données Analytics disponibles pour votre entreprise. Ils répondent uniquement aux questions prises en charge par ces données.
+
+Vérifiez toujours les éléments justificatifs, la méthode et les limites avant de partager un résultat. Une analyse peut nécessiter un contexte métier supplémentaire.
+
+## Créer un rapport
+
+1. Ouvrez **Analytics > Reports > List**.
+2. Sélectionnez **New report**.
+3. Ajoutez un titre facultatif.
+4. Choisissez une suggestion ou **Free-form analysis**.
+5. Vérifiez et modifiez la **Question**.
+6. Sélectionnez **Create report**.
+
+![Créer un rapport d'analyse avec une suggestion ou une question libre](/images/analytics/analysis-reports-create.png)
+
+Le rapport s'ouvre pendant la préparation de l'analyse. Vous pouvez quitter la page et le retrouver dans **Reports > List**.
+
+<Tip>
+  Choisissez une analyse suggérée pour être guidé. Sélectionnez **Free-form analysis** si votre question métier est déjà précise.
+</Tip>
+
+| État | Signification |
+|---|---|
+| **Generating** | Reelevant prépare le rapport. |
+| **Ready** | Au moins une section terminée est disponible. |
+| **Failed** | Reelevant n'a pas pu terminer la dernière génération. |
+| **Archived** | Le rapport est masqué de la liste habituelle. |
+
+<Info>
+  Un rapport en échec conserve les éléments justificatifs disponibles. La possibilité de réessayer dépend de son état et de la cause de l'échec.
+</Info>
+
+## Poser une question de suivi
+
+Utilisez la zone de suivi sous un rapport terminé pour demander une nouvelle section. La question et son auteur restent associés à cette section, qui utilise le rapport existant comme contexte.
+
+Posez une question précise à la fois pour obtenir une réponse plus claire.
+
+![Poser une question de suivi sous un rapport terminé](/images/analytics/analysis-report-follow-up.png)
+
+## Vérifier les éléments justificatifs
+
+Chaque section peut contenir des conclusions, tableaux, graphiques, sources, méthodes et limites. Les liens indiquent quels résultats Analytics étayent la section.
+
+Vérifiez la période et les mesures avant d'utiliser une conclusion. Une limite indique où les données ne permettent pas une réponse plus ferme.
+
+![Vérifier la méthode, les limites, les sources et les éléments capturés d'un rapport](/images/analytics/analysis-report-evidence.png)
+
+## Rapports automatiques
+
+Les rapports automatiques créent un rapport périodique mensuel, trimestriel ou annuel. Chaque période terminée reste disponible dans l'historique.
+
+Les administrateurs autorisés à gérer les Paramètres Analytics peuvent configurer la fréquence, la langue, le fuseau horaire et l'invite. Votre contact Customer Success peut vous aider.
+
+Les rapports automatiques apparaissent dans le menu **Reports**.
+
+![Rapports automatiques mensuels, trimestriels et annuels dans les Paramètres Analytics](/images/analytics/automatic-reports-list.png)
+
+<Info>
+  Un rapport automatique peut être bloqué si l'analyse demandée n'est pas prise en charge par votre configuration Analytics.
+</Info>
+
+## Et ensuite ?
+
+<CardGroup cols={3}>
+  <Card title="Guide avancé des rapports" icon="chart-line" href="/fr/advanced-guide/analytics/reports">
+    Configurez les rapports automatiques et examinez leur historique et leur fiabilité.
+  </Card>
+  <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
+    Explorez les mesures et dimensions disponibles.
+  </Card>
+  <Card title="Paramètres Analytics" icon="gear" href="/fr/product-guide/analytics/settings">
+    Consultez la configuration Analytics utilisée par vos rapports.
+  </Card>
+</CardGroup>

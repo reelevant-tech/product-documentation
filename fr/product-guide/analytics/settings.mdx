@@ -13,40 +13,114 @@ Accédez-y depuis le lien **Settings** dans la navigation latérale d'Analytics.
 
 ## Attribution
 
-L'attribution détermine la part de chiffre d'affaires que vos [Workflows](/fr/product-guide/workflows/overview) Reelevant ont aidé à générer. Vous y choisissez le modèle, les fenêtres rétrospectives et la source de données. Voir [Attribution](/fr/product-guide/analytics/attribution) pour une explication complète.
+L'attribution montre la part de chiffre d'affaires générée avec l'aide de vos [Workflows](/fr/product-guide/workflows/overview) Reelevant. Choisissez les paramètres adaptés à vos achats et à vos objectifs de reporting.
 
 ![Configuration de l'attribution sur l'onglet Général : jeu de données, source d'attribution, modèle, méthode et canaux de conversion avec fenêtres rétrospectives](/images/analytics/attribution-settings-reelevant.png)
 
+### Jeu de données et source d'attribution
+
+Choisissez d'abord le **Jeu de données**, puis la **Source d'attribution**. Les paramètres UTM sont disponibles uniquement avec **Suivi web**, car les enregistrements d'achats clients ne contiennent pas d'URL.
+
+| Paramètre | Options et comportement | Exemple |
+|---|---|---|
+| **Jeu de données** | **Suivi web** enregistre les achats suivis par Reelevant. **Achats clients** utilise les achats transmis par votre entreprise. | Une marque uniquement web choisit Suivi web. Un détaillant dont le CRM ou l'ERP rassemble les ventes en magasin et sur le web choisit Achats clients. |
+| **Source d'attribution** | **Interactions Reelevant** crédite les interactions avec le Content Reelevant. **Paramètres UTM** mesure les visites taggées UTM et n'est disponible qu'avec Suivi web. | Choisissez Interactions Reelevant pour isoler la contribution de Reelevant, ou Paramètres UTM pour comparer la recherche payante, les e-mails et les affiliés. |
+
 ### Modèle d'attribution
 
-Le modèle décide comment le crédit est partagé entre les interactions d'un parcours client.
+Le modèle répartit le crédit entre les interactions éligibles avant un achat.
 
-| Modèle | Comment il partage le crédit |
-|-------|-------------|
-| **Last-touch** (par défaut) | La dernière interaction avant l'achat reçoit tout le crédit. |
-| **Linear** | Chaque interaction reçoit une part égale. |
-| **Decay** | Les interactions les plus proches de l'achat reçoivent plus de crédit ; les plus anciennes en reçoivent le moins. |
+| Modèle | Répartition du crédit | Exemple |
+|---|---|---|
+| **Dernier contact** (par défaut) | La dernière interaction éligible reçoit tout le crédit. | Choisissez-le pour comparer vos résultats au reporting last-click classique. |
+| **Linéaire** | Chaque interaction éligible reçoit une part égale. | Choisissez-le quand les interactions par e-mail, sur le site et dans l'application comptent toutes. |
+| **Décroissance temporelle** | Les interactions proches de l'achat reçoivent plus de crédit, sans supprimer les premières contributions. | Choisissez-le quand une marque d'abonnement veut favoriser les interactions récentes tout en gardant les premières assistances. |
+| **Incrémental** | Le crédit suit l'Uplift mesuré pour chaque Channel, type d'entrée du Workflow, par rapport à une base modélisée sans personnalisation. Les parts sont recalculées pour totaliser l'achat. Ce n'est pas un groupe témoin randomisé. | Comparez l'Uplift mesuré des Channels e-mail et onsite, avec la mesure du dashboard Uplift. |
 
-### Fenêtres rétrospectives
+### Méthode d'attribution
 
-La fenêtre rétrospective est la durée précédant un achat pendant laquelle une interaction peut recevoir du crédit. Vous pouvez définir une fenêtre différente pour chaque type d'interaction.
+| Méthode | Fonctionnement | Exemple |
+|---|---|---|
+| **Par défaut** | Crédite toute interaction éligible du client. | Choisissez-la lorsqu'une interaction pertinente peut avoir influencé l'achat. |
+| **Même identifiant de référence** | Crédite une interaction uniquement si l'identifiant de référence du produit acheté correspond à un produit affiché dans le Content. Les identifiants produits proviennent des métadonnées Datasource de l'Output Node. | Choisissez-la pour un Workflow de recommandation de produits lorsque seul l'achat d'un produit recommandé doit être crédité. |
 
-| Champ | Description |
-|-------|-------------|
-| **Click window (hours)** | Fenêtre rétrospective pour les clics sur du Content Reelevant (par exemple, 720 pour 30 jours). Laissez vide pour la valeur par défaut. |
-| **View-through window (hours)** | Fenêtre rétrospective pour les vues display (par exemple, 168 pour 7 jours). Laissez vide pour la valeur par défaut. |
+### Précision de l'heure d'achat
+
+Ce paramètre apparaît uniquement avec **Achats clients**.
+
+| Option | Fonctionnement | Exemple |
+|---|---|---|
+| **Date et heure** (par défaut) | L'interaction doit précéder l'horodatage de l'achat. Suivi web utilise toujours cette précision. | Gardez cette option lorsque les achats ont une heure réelle ; elle évite de créditer un clic d'après-midi après un achat matinal. |
+| **Date uniquement** | Traite l'achat comme une journée. Les interactions jusqu'à la fin de cette journée peuvent être créditées ; la fenêtre commence toujours à minuit. | Choisissez-la pour les tickets de caisse exportés sans heure, dont chaque achat est à minuit. |
+
+### Canaux de conversion
+
+Les canaux de conversion sont disponibles avec **Interactions Reelevant**. Chaque canal comprend une **Clé du canal** et des **Interactions**, avec un type et une **Fenêtre d'attribution (heures)**.
+
+**Suivi web** utilise un canal `web` fixe. Avec **Achats clients**, la clé du canal correspond à la source de transaction de l'achat. Un achat sans clé correspondante est exclu, sauf si **Toute autre source (*)** est configuré ; il prend alors en charge toutes les sources sans canal dédié.
+
+| Paramètre | Options et comportement | Exemple |
+|---|---|---|
+| **Clé du canal** | Correspond à la source de transaction. **Toute autre source (*)** récupère les sources sans canal correspondant. | Configurez `store` et `web` séparément si leurs parcours diffèrent. Ajoutez `*` pour ne pas exclure une nouvelle source comme une marketplace. |
+| **Interactions** | Ajoutez **Clic** et/ou **Affichage**. Par défaut, Clic vaut 720 heures (30 jours) et Affichage 168 heures (7 jours). | Une marque qui utilise beaucoup l'e-mail peut ajouter Affichage pour compter les ouvertures ; les ouvertures privées Apple Mail comptent aussi, ce qui est généreux. |
+| **Fenêtre d'attribution (heures)** | Définit la durée pendant laquelle chaque type d'interaction peut recevoir du crédit avant l'achat. | Utilisez Clic et Affichage avec une fenêtre de 48 heures pour les achats en magasin, où les clics sont rares. Pour le web, utilisez Clic sur 720 heures. |
+
+### Configuration UTM
+
+Avec **Paramètres UTM**, choisissez la granularité UTM et la fenêtre rétrospective.
+
+| Paramètre | Options et comportement | Exemple |
+|---|---|---|
+| **Granularité UTM** | Choisissez Source, Medium, Campaign, Term et/ou Content. Source et Medium sont sélectionnés par défaut. | Gardez Source et Medium pour une vue par canal ; ajoutez Campaign pour comparer les campagnes. |
+| **Fenêtre d'attribution (heures)** | Valeur par défaut : 720 heures. | Gardez 720 heures lorsque les campagnes peuvent influencer un achat pendant 30 jours. |
+
+### Tunnel de conversion
+
+Le tunnel facultatif contient des entrées ordonnées **Step name** et **Events**. La dernière étape est la conversion.
+
+| Paramètre | Fonctionnement | Exemple |
+|---|---|---|
+| **Tunnel de conversion** | Ajoutez dans l'ordre les événements qui marquent chaque étape. | Une marque de génération de leads peut utiliser `signup_start`, puis `signup_complete`. |
 
 ### Configurer l'attribution
 
 1. Rendez-vous dans **Analytics > Settings**.
-2. Choisissez un **modèle d'attribution**.
-3. Définissez les **fenêtres rétrospectives** pour chaque type d'interaction.
-4. Choisissez votre **source de données** (web tracking ou customer purchases).
-5. Cliquez sur **Save**.
+2. Ouvrez l'onglet **Général** et choisissez un **Jeu de données** et une **Source d'attribution**.
+3. Choisissez le **Modèle d'attribution** et la **Méthode d'attribution**.
+4. Configurez les canaux de conversion, les paramètres UTM ou le tunnel lorsqu'ils sont disponibles.
+5. Avec Achats clients, choisissez la **Précision de l'heure d'achat**.
+6. Cliquez sur **Enregistrer les modifications**.
 
 <Info>
-  Modifier l'attribution affecte la façon dont les conversions sont comptabilisées dans le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et [Data Exploration](/fr/product-guide/analytics/data-exploration). Une fenêtre plus longue capte davantage de conversions mais peut inclure des achats moins directement attribuables.
+  Modifier l'attribution affecte le [tableau de bord Conversions](/fr/product-guide/analytics/dashboards/conversions) et [Data Exploration](/fr/product-guide/analytics/data-exploration). Une fenêtre plus longue peut créditer davantage d'interactions.
 </Info>
+
+## Cycle de vie client
+
+Les paramètres du cycle de vie client définissent les seuils d'achat et les périodes utilisés pour classer les clients. Laissez un champ vide pour conserver sa valeur par défaut.
+
+Les stades comprennent `prospect`, `one-time`, `repeater`, `loyal`, `at-risk` et `churned`.
+
+| Paramètre | Par défaut | Rôle | Exemple |
+|---|---:|---|---|
+| **Fenêtre d'activité (jours)** | 180 | Période utilisée pour identifier les clients actifs. | Un détaillant de meubles avec des achats annuels peut choisir 365 jours ; une marque de produits de beauté réapprovisionnés, 90 jours. |
+| **Fenêtre d'attrition (jours)** | 365 | Sans achat après cette période, le client est churned ; entre les fenêtres d'activité et d'attrition, il est at-risk. | Un détaillant de meubles peut choisir 730 jours ; une marque de réapprovisionnement, 180 jours. |
+| **Achats pour être répété** | 2 | Nombre d'achats requis pour atteindre le stade repeater. | Gardez 2 si un second achat de courses ou de produits de beauté indique déjà une répétition. |
+| **Achats pour être fidèle** | 5 | Achats requis pour qu'un client actif soit considéré comme loyal. | Une marque de beauté peut augmenter ce seuil pour réserver le stade aux acheteurs réguliers. |
+| **Fenêtre d'historique (jours)** | 730 | Période pendant laquelle Analytics lit les achats. | Utilisez 180 jours si un jeu de données réingéré récemment ne contient que six mois d'historique. |
+| **Fenêtre d'exposition (jours)** | 90 | Période pendant laquelle un client compte comme exposé à Reelevant. | Un cycle d'achat long peut justifier 180 jours pour inclure les interactions personnalisées antérieures. |
+
+## Reporting
+
+Le **TCO (coût total de possession)** correspond au coût mensuel de la plateforme Reelevant. Analytics le répartit sur la période sélectionnée pour les mesures de coût et de ROI.
+
+| Paramètre | Rôle | Exemple |
+|---|---|---|
+| **Coût total de possession (TCO)** | Coût mensuel utilisé par les mesures de coût et de ROI. À 0 ou vide, les rapports ne calculent pas le ROI. | Saisissez le coût mensuel de Reelevant pour comparer le chiffre d'affaires du rapport au coût réel de la plateforme. |
+
+## Rapports automatiques
+
+Utilisez l'onglet **Rapports automatiques** pour configurer des rapports périodiques. Consultez le [guide des rapports](/fr/product-guide/analytics/reports) et le [guide avancé](/fr/advanced-guide/analytics/reports).
 
 ## Exposition à la personnalisation
 
@@ -54,10 +128,10 @@ Ces deux seuils décident quels clients comptent comme personnalisés dans le da
 
 ![Paramètres d'exposition à la personnalisation avec les champs affichages personnalisés minimum et part personnalisée minimum](/images/analytics/analytics-settings-personalisation-exposure.png)
 
-| Champ | Par défaut | Rôle |
-|---|---|---|
-| **Affichages personnalisés minimum** | 2 | Combien de Contents personnalisés un client doit avoir vus. |
-| **Part personnalisée minimum (%)** | 50 | Quelle part de ce qu'il a vu doit être personnalisée. |
+| Champ | Par défaut | Rôle | Exemple |
+|---|---:|---|---|
+| **Affichages personnalisés minimum** | 2 | Combien de Contents personnalisés un client doit avoir vus. | Un détaillant à fort volume peut exiger plusieurs affichages avant de compter un client comme personnalisé. |
+| **Part personnalisée minimum (%)** | 50 | Quelle part de ce qu'il a vu doit être personnalisée. | Relevez-la si votre entreprise personnalise la plupart de ses Contents et veut un groupe plus régulièrement exposé. |
 
 Les clients au-dessus de zéro mais sous ces seuils ne comptent ni comme personnalisés ni comme non personnalisés. Ils restent hors de la comparaison.
 
@@ -67,16 +141,16 @@ Les clients au-dessus de zéro mais sous ces seuils ne comptent ni comme personn
 4. Cliquez sur **Enregistrer les modifications**.
 
 <Tip>
-  Relevez les deux seuils quand presque tout le Content que vous envoyez est personnalisé. Abaissez-les quand seuls quelques Contents le sont.
+  Relevez **Part personnalisée minimum (%)** lorsque votre entreprise personnalise la plupart de ses Contents. Abaissez-la lorsque seuls quelques Contents le sont.
 </Tip>
 
 ## Fiabilité de la comparaison
 
 Ce seuil décide quand le dashboard [Impact client](/fr/advanced-guide/analytics/customer-impact) affiche un chiffre d'Uplift, et quand il le laisse vide.
 
-| Champ | Par défaut | Rôle |
-|---|---|---|
-| **Minimum de clients par cohorte** | 100 | Combien de clients chaque côté de la comparaison doit compter. |
+| Champ | Par défaut | Rôle | Exemple |
+|---|---:|---|---|
+| **Minimum de clients par cohorte** | 100 | Combien de clients chaque côté de la comparaison doit compter. | Une grande entreprise peut l'augmenter pour réduire les Uplifts instables. Une petite entreprise B2B peut l'abaisser pour garder de petites cohortes, avec moins de fiabilité. |
 
 Les deux côtés ont besoin de ce nombre de clients : les clients personnalisés et les clients non personnalisés comparables. En dessous, le dashboard affiche les effectifs mais aucun chiffre.
 
