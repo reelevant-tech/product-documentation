@@ -1,0 +1,116 @@
+---
+title: 'Rapports Analytics'
+description: 'Configurez, consultez et diagnostiquez les rapports Analytics manuels et automatiques'
+---
+
+<Warning>
+  **Bêta** — Les rapports Analytics sont actuellement disponibles pour les administrateurs de la plateforme. Les champs, invites, analyses et possibilités de réessai peuvent évoluer.
+</Warning>
+
+## Avant de commencer
+
+Vérifiez que la configuration Analytics de l'entreprise expose les mesures et périodes nécessaires. Un rapport ne peut pas compenser des données manquantes d'identité, d'achat, d'attribution ou d'activité Workflow.
+
+Consultez le [guide produit](/fr/product-guide/analytics/reports) pour créer un rapport et poser une question de suivi.
+
+## Types de rapports
+
+| Type | Rôle | Cycle de vie |
+|---|---|---|
+| **Rapport manuel** | Répond à une invite libre ou suggérée. | Les utilisateurs peuvent ajouter des sections, archiver le rapport ou le restaurer. |
+| **Rapport automatique** | Exécute une invite configurée pour chaque période mensuelle, trimestrielle ou annuelle terminée. | Chaque période est conservée ; la plus récente devient le rapport courant. |
+
+Les rapports manuels conservent l'auteur initial. Chaque section de suivi enregistre aussi son auteur.
+
+Les rapports automatiques enregistrent la plateforme comme auteur initial. Un réessai manuel indique son auteur sans remplacer l'attribution initiale.
+
+## Configurer un rapport automatique
+
+Les administrateurs autorisés à gérer les Paramètres Analytics peuvent créer un rapport automatique dans **Analytics > Settings > Automatic reports**.
+
+![Modifier la fréquence, le fuseau horaire, la langue et l'invite d'un rapport automatique](/images/analytics/automatic-report-settings.png)
+
+| Paramètre | Comportement |
+|---|---|
+| **Slug** | Identifiant stable dans l'adresse du rapport ; défini à la création et non modifiable. |
+| **Title** | Nom affiché dans le menu **Reports** et sur la page. |
+| **Description** | Explication facultative du rapport. |
+| **Refresh automatically** | Indique si les prochaines périodes sont générées. |
+| **Cadence** | Génère des rapports mensuels, trimestriels ou annuels. |
+| **Timezone** | Définit les limites de période. |
+| **Report language** | Choisit le français ou l'anglais. |
+| **Analysis prompt** | Définit les questions, comparaisons et analyses attendues. |
+
+Les nouveaux paramètres affichent l'invite par défaut correspondant à la fréquence. Modifier ce texte crée une version propre à l'entreprise.
+
+Utilisez **Reset to platform default** pour adopter la valeur par défaut actuelle. Vérifiez l'invite complète avant de la réinitialiser, car les valeurs par défaut peuvent évoluer pendant la bêta.
+
+<Info>
+  Désactiver un paramètre arrête les prochaines générations. Le paramètre et son historique restent disponibles.
+</Info>
+
+## Rédiger une invite fiable
+
+Une invite automatique fiable formule la question sans imposer de dates. La plateforme fournit la période terminée et ses limites de comparaison.
+
+Précisez :
+
+- la question métier et son public ;
+- les mesures à évaluer ;
+- les comparaisons requises, comme la période précédente ;
+- les ventilations par Channel, Workflow ou autre dimension disponible ;
+- les limites attendues si les éléments justificatifs manquent ;
+- l'interdiction de conclure à une causalité non étayée.
+
+Évitez les analyses de fidélisation ou de valeur par client si l'identité n'est pas stable. N'utilisez pas de mesure cumulative pour une seule période.
+
+## Historique et états des périodes
+
+Les pages de rapport automatique présentent le rapport courant et les périodes historiques immuables. Une période conserve ses éléments justificatifs, sections terminées, échecs et attribution.
+
+| État | Interprétation |
+|---|---|
+| **Generating** | La génération est en attente ou en cours. |
+| **Ready** | La période contient une section terminée. |
+| **Failed** | La dernière génération non résolue a échoué. |
+| **Blocked** | Les vérifications préalables ont détecté une analyse non prise en charge. |
+
+Une génération réussie remplace l'état d'échec non résolu affiché. L'historique des échecs reste consultable.
+
+## Éléments justificatifs et interprétation
+
+Considérez le texte généré comme une interprétation des éléments Analytics capturés, et non comme une source indépendante. Vérifiez les tableaux, graphiques, méthodes, fraîcheur et limites avant de partager une conclusion.
+
+Pour une analyse périodique, confirmez que les mesures décrivent la période demandée et non la durée de vie entière. Vérifiez aussi la devise des données de chiffre d'affaires.
+
+<Info>
+  Les éléments peuvent étayer une association sans prouver une causalité. Utilisez les termes Exposed Population et Non-Exposed Population ; réservez les affirmations causales à un dispositif randomisé approprié.
+</Info>
+
+## Réessayer ou corriger un rapport bloqué
+
+Le réessai est disponible uniquement si l'état courant du rapport l'autorise. L'interface vérifie cette éligibilité plutôt que la seule classification de l'échec passé.
+
+Un réessai reprend la question et le type de génération en échec. Il conserve les éléments existants et empêche les doublons simultanés.
+
+Ne réessayez pas un rapport automatique bloqué sans modifier son invite ou sa configuration Analytics. Une demande inchangée reproduira la même limite.
+
+1. Lisez la raison affichée pour l'échec ou le blocage.
+2. Vérifiez que les mesures et capacités du jeu de données répondent à la demande.
+3. Corrigez l'invite ou la configuration si nécessaire.
+4. Utilisez **Retry** uniquement si le rapport l'autorise.
+5. Vérifiez que la nouvelle section s'appuie sur des éléments justificatifs.
+
+## Guides associés
+
+<CardGroup cols={3}>
+  <Card title="Guide produit des rapports" icon="chart-line" href="/fr/product-guide/analytics/reports">
+    Créez des rapports manuels et consultez leurs sections.
+  </Card>
+  <Card title="Mesures et dimensions" icon="table-list" href="/fr/product-guide/analytics/measures-and-dimensions">
+    Vérifiez les mesures et dimensions Analytics disponibles.
+  </Card>
+  <Card title="Attribution" icon="bullseye-arrow" href="/fr/advanced-guide/analytics/attribution">
+    Consultez la méthode d'attribution des résultats aux interactions Reelevant.
+  </Card>
+</CardGroup>

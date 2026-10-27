@@ -37,9 +37,10 @@ Un modèle d'attribution décide comment le crédit est partagé entre les inter
 
 | Modèle | Comment il partage le crédit | Idéal pour |
 |---|---|---|
-| **Last-touch** (par défaut) | La dernière interaction avant l'achat reçoit tout le crédit. | Une vue simple, alignée sur le reporting last-click classique. |
-| **Linear** | Chaque interaction reçoit une part égale. | Voir l'ensemble du parcours contribuer uniformément. |
-| **Decay** | Les interactions les plus proches de l'achat reçoivent plus de crédit. Les plus anciennes en reçoivent le moins. | Récompenser les interactions qui ont poussé le client à acheter. |
+| **Dernier contact** (par défaut) | La dernière interaction avant l'achat reçoit tout le crédit. | Un détaillant qui compare ses résultats au reporting last-click classique. |
+| **Linéaire** | Chaque interaction reçoit une part égale. | Un client passe de l'e-mail au site puis à l'application : chaque interaction compte. |
+| **Décroissance temporelle** | Les interactions proches de l'achat reçoivent plus de crédit, sans effacer les assistances antérieures. | Une marque d'abonnement veut favoriser les interactions récentes tout en gardant les premiers e-mails. |
+| **Incrémental** | Le crédit suit l'Uplift mesuré pour chaque Channel, type d'entrée du Workflow, par rapport à une base modélisée sans personnalisation. Les parts sont recalculées pour totaliser l'achat. Ce n'est pas un groupe témoin randomisé. | Comparez l'Uplift mesuré des Channels e-mail et onsite, avec la mesure du dashboard Uplift. |
 
 ### Exemple concret
 
@@ -47,13 +48,25 @@ Imaginez un client qui interagit trois fois avec du Content Reelevant, puis ach�
 
 | Modèle | Première interaction | Interaction du milieu | Dernière interaction |
 |---|---|---|---|
-| **Last-touch** | 0 | 0 | 100 |
-| **Linear** | 33,3 | 33,3 | 33,3 |
-| **Decay** | 16,7 | 33,3 | 50 |
+| **Dernier contact** | 0 | 0 | 100 |
+| **Linéaire** | 33,3 | 33,3 | 33,3 |
+| **Décroissance temporelle** | 16,7 | 33,3 | 50 |
 
 <Tip>
-  Last-touch est le modèle par défaut : vos chiffres correspondent au reporting last-click classique tant que vous ne choisissez pas un modèle qui répartit le crédit sur les interactions antérieures.
+  Dernier contact est le modèle par défaut : vos chiffres correspondent au reporting last-click classique tant que vous ne choisissez pas un modèle qui répartit le crédit sur les interactions antérieures.
 </Tip>
+
+## Méthode d'attribution
+
+**Par défaut** crédite toute interaction éligible du client. **Même identifiant de référence** crédite une interaction uniquement si l'identifiant de référence du produit acheté correspond à un produit affiché dans le Content. Les identifiants produits proviennent des métadonnées Datasource de l'Output Node.
+
+Pour un Workflow de recommandation de produits, choisissez **Même identifiant de référence** si vous voulez créditer uniquement l'achat d'un produit recommandé.
+
+## Précision de l'heure d'achat
+
+Avec **Achats clients**, **Date et heure** exige que l'interaction précède l'horodatage de l'achat. Choisissez **Date uniquement** si les enregistrements contiennent une date sans heure, donc si chaque achat est enregistré à minuit. Les interactions jusqu'à la fin de cette journée peuvent alors être créditées, mais la fenêtre commence toujours à minuit.
+
+Par exemple, utilisez Date uniquement pour des tickets de caisse exportés sans heure. Gardez Date et heure lorsque les horodatages sont réels ; Date uniquement pourrait créditer un clic après un achat matinal. Suivi web utilise toujours Date et heure.
 
 ## La fenêtre rétrospective
 
@@ -74,29 +87,31 @@ Reelevant peut mesurer l'attribution à partir de deux sources. Vous choisissez 
 
 | Source | À utiliser lorsque |
 |---|---|
-| **Web tracking** | Vous laissez Reelevant suivre les achats sur votre site web. |
-| **Customer purchases** | Vous transmettez vos propres données d'achat à Reelevant. |
+| **Suivi web** | Vous laissez Reelevant suivre les achats sur votre site web. |
+| **Achats clients** | Vous transmettez vos propres données d'achat à Reelevant. |
 
 <Info>
   Les deux sources gèrent l'attribution au clic et view-through, vous bénéficiez donc des mêmes modèles et mesures quel que soit votre choix.
 </Info>
 
-Avec **Customer purchases**, vous pouvez définir des types d'interaction et des fenêtres rétrospectives différents par **source d'achat** (rapprochée de la source de transaction présente dans vos données). Les achats dont la source n'est pas configurée utilisent vos paramètres par défaut.
+Avec **Achats clients**, chaque **Clé du canal** correspond à la source de transaction de l'achat. Un achat sans canal correspondant est exclu, sauf si **Toute autre source (*)** est configuré ; il prend alors en charge toutes les sources sans canal dédié.
 
-![Canaux de conversion pour Customer purchases, rapprochés de la source de transaction avec repli sur web](/images/analytics/attribution-settings-customer-purchases.png)
+![Canaux de conversion pour Achats clients rapprochés des sources de transaction, avec un canal Toute autre source (*) facultatif](/images/analytics/attribution-settings-customer-purchases.png)
 
 ## Attribution basée sur les UTM
 
-Avec le **Web tracking**, vous pouvez attribuer les conversions aux tags UTM de vos liens de destination plutôt qu'aux interactions Reelevant.
+Avec le **Suivi web**, vous pouvez attribuer les conversions aux tags UTM de vos liens de destination plutôt qu'aux interactions Reelevant.
 
 Chaque combinaison UTM distincte précédant l'achat devient une interaction et reçoit une part, selon les mêmes modèles ci-dessus. Cela répartit le crédit sur chaque effort marketing du parcours — par exemple e-mail, référencement payant et réseaux sociaux.
 
 Vous choisissez quels tags UTM définissent une interaction. Par défaut, Reelevant regroupe par `utm_source` et `utm_medium`.
 
+Gardez Source et Medium pour une vue par canal. Ajoutez Campaign pour comparer les campagnes.
+
 ![Configuration UTM : choisissez quels tags UTM définissent la granularité et réglez la fenêtre rétrospective](/images/analytics/attribution-settings-utm.png)
 
 <Info>
-  L'attribution basée sur les UTM n'est disponible qu'avec le Web tracking, car elle lit les tags UTM que Reelevant capture depuis vos liens de destination.
+  L'attribution basée sur les UTM n'est disponible qu'avec le Suivi web, car elle lit les tags UTM que Reelevant capture depuis vos liens de destination.
 </Info>
 
 ## Au-delà des achats

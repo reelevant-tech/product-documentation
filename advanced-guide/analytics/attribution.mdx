@@ -37,24 +37,25 @@ The attribution model determines how a conversion's value is distributed across 
 
 | Model | Distribution rule |
 |---|---|
-| **Last-touch** (default) | 100% to the last qualifying interaction; earlier interactions receive 0%. |
+| **Last touch** (default) | 100% to the last qualifying interaction; earlier interactions receive 0%. |
 | **Linear** | Equal share to every qualifying interaction (`1 / n`). |
-| **Decay** | Credit increases towards the conversion. For `n` interactions ordered oldest to newest, interaction at position `i` receives `i / (1 + 2 + … + n)`, i.e. `i / (n(n+1)/2)`. |
+| **Time decay** | Credit increases towards the conversion. For `n` interactions ordered oldest to newest, interaction at position `i` receives `i / (1 + 2 + … + n)`, i.e. `i / (n(n+1)/2)`. |
+| **Incremental** | Credit is proportional to the measured Uplift produced by each Channel's Workflow entrypoint type (for example, email versus onsite) over the queried period, relative to the modelled non-personalised baseline. Shares are renormalised per conversion so attributed revenue sums to its value. This uses the Uplift dashboard's measurement; it is not a randomised holdout. |
 
-Last-touch is the default so that a configuration left unchanged reproduces classic last-click reporting, including when results are grouped by dimension.
+Last touch is the default so that a configuration left unchanged reproduces classic last-click reporting, including when results are grouped by dimension.
 
 ### Worked example
 
 A customer records three qualifying interactions before a conversion worth 100.
 
-| Interaction | Last-touch | Linear | Decay |
+| Interaction | Last touch | Linear | Time decay |
 |---|---|---|---|
 | First | 0.00 | 33.33 | 16.67 |
 | Middle | 0.00 | 33.33 | 33.33 |
 | Last | 100.00 | 33.33 | 50.00 |
 | **Total** | **100.00** | **100.00** | **100.00** |
 
-Under decay the denominator is `1 + 2 + 3 = 6`, so the interactions receive `1/6`, `2/6`, and `3/6`. For every model, the credits for a conversion sum to the full conversion value, and the fractional conversion count sums to 1.
+Under Time decay the denominator is `1 + 2 + 3 = 6`, so the interactions receive `1/6`, `2/6`, and `3/6`. For every model, the credits for a conversion sum to the full conversion value, and the fractional conversion count sums to 1.
 
 ## Lookback windows per interaction type
 
@@ -91,13 +92,25 @@ With the customer-purchases dataset you can define several **purchase sources**,
 | Source key | A free-form value matched against the transaction source in your purchase data. |
 | Interaction types | One or more of click / view-through, each with its own lookback window. |
 
-A purchase whose transaction source matches no configured source falls back to the `web` source, so every conversion is evaluated against a defined configuration. Web tracking always uses a single fixed `web` source.
+A purchase whose transaction source has no matching Channel key is excluded from attribution. Configure **Any other source (*)** to claim every source without its own channel. Web tracking always uses one fixed `web` channel.
+
+### Attribution method
+
+**Default** credits any qualifying interaction from the customer. **Same reference ID** requires the purchased product's reference ID to match a product shown in the Content; product IDs are carried by the Output Node's Datasource metadata.
+
+For a product-recommendation Workflow, use Same reference ID when only purchases of recommended products should receive credit.
+
+### Purchase time precision
+
+This setting applies only to customer-purchases data. **Date and time** requires the interaction to precede the purchase timestamp. **Date only** treats the purchase as a day: interactions through its end can qualify, while the lookback window still counts back from midnight.
+
+Use Date only when purchase records have no time of day and every purchase is timestamped at midnight. Keep Date and time for real timestamps; Date only could credit a click after a morning purchase. Web tracking always uses Date and time.
 
 ## UTM-based attribution
 
 Web tracking additionally supports **UTM-based attribution**, which distributes a conversion across the UTM-tagged interactions that preceded it rather than across Reelevant content interactions. It is available only with web tracking, because it relies on the UTM tags Reelevant parses from tracked landing-page URLs.
 
-Each distinct UTM combination in the lookback window is one interaction and earns a share under the selected model (last-touch, linear, or decay). This attributes a conversion across all marketing sources present in the path — paid search, display networks, email, and so on — not only Reelevant.
+Each distinct UTM combination in the lookback window is one interaction and earns a share under the selected model (Last touch, Linear, Time decay, or Incremental). This attributes a conversion across all marketing sources present in the path — paid search, display networks, email, and so on — not only Reelevant.
 
 | Aspect | Behaviour |
 |---|---|
@@ -106,9 +119,24 @@ Each distinct UTM combination in the lookback window is one interaction and earn
 | Conversion interaction | The UTM tags on the converting page count as the most recent interaction. |
 | Lookback | A single configurable window applies to all UTM interactions. |
 
+For channel-level reporting, retain Source and Medium. Add Campaign when campaign-level comparison is required.
+
 <Info>
   UTM-based attribution measures every marketing source in the path, which is broader than Reelevant-influenced revenue. Use it when you want a cross-source view; use the Reelevant interaction datasets when you want to isolate Reelevant's contribution.
 </Info>
+
+## Email UTM classification
+
+The API-only Reporting field `emailUtmMediums` defines case-insensitive `utm_medium` values counted by Navigation's email UTM measures. If unset, the default is `email`. Set it with `PUT /analytics/settings/reporting`, using the API base URL and bearer-token convention shown in the [API authentication guide](/developer-docs/api-reference/authentication).
+
+For a brand that tags newsletters as `newsletter` and CRM messages as `crm`, configure both values:
+
+```bash
+curl --request PUT "https://api.reelevant.com/v2/analytics/settings/reporting" \
+  --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{ "emailUtmMediums": ["newsletter", "crm"] }'
+```
 
 ## Generic conversion funnels
 

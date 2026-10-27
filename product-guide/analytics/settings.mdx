@@ -13,40 +13,114 @@ Access it from the **Settings** link in the Analytics sidebar navigation.
 
 ## Attribution
 
-Attribution decides how much revenue your Reelevant [workflows](/product-guide/workflows/overview) helped generate. Here you choose the model, the lookback windows, and the data source. See [Attribution](/product-guide/analytics/attribution) for a full explanation.
+Attribution shows how much revenue your Reelevant [Workflows](/product-guide/workflows/overview) helped generate. Choose the settings that match your purchase data and reporting goals.
 
 ![Attribution configuration on the General tab: dataset, attribution source, model, method, and conversion channels with lookback windows](/images/analytics/attribution-settings-reelevant.png)
 
+### Dataset and attribution source
+
+Start with **Dataset**, then choose an **Attribution source**. UTM parameters are available only with Web tracking because customer purchase records have no URL.
+
+| Setting | Options and behaviour | Example |
+|---|---|---|
+| **Dataset** | **Web tracking** records purchases tracked by Reelevant. **Customer purchases** uses purchase records supplied by your business. | A web-only brand uses Web tracking. A retailer with store and web sales in its CRM or ERP uses Customer purchases. |
+| **Attribution source** | **Reelevant interactions** credits qualifying interactions with Reelevant Content. **UTM parameters** measures UTM-tagged marketing visits and is available only with Web tracking. | Choose Reelevant interactions to isolate Reelevant's contribution. Choose UTM parameters to compare paid search, email, and affiliate sources. |
+
 ### Attribution model
 
-The model decides how credit is shared between the interactions that led to a purchase.
+The model decides how credit is shared between qualifying interactions before a purchase.
 
-| Model | How it shares credit |
-|-------|-------------|
-| **Last-touch** (default) | The last interaction before the purchase receives all the credit. |
-| **Linear** | Every interaction receives an equal share. |
-| **Decay** | Interactions closer to the purchase receive more credit; the earliest receive the least. |
+| Model | How credit is shared | Example |
+|---|---|---|
+| **Last touch** (default) | The last qualifying interaction receives all the credit. | Choose it when you want results comparable with classic last-click reporting. |
+| **Linear** | Every qualifying interaction receives an equal share. | Choose it when a fashion shopper's email, onsite, and app interactions all matter. |
+| **Time decay** | Interactions closer to the purchase receive more credit, while earlier assists still receive some. | Choose it when a subscription brand wants recent interactions to count more without removing earlier assists. |
+| **Incremental** | Credit follows measured Uplift for each Workflow entrypoint Channel against a modelled non-personalised baseline. Shares are rescaled to the purchase total. This is not a randomised holdout. | Choose it to compare measured Uplift from email and onsite Channels, using the Uplift dashboard's measurement. |
 
-### Lookback windows
+### Attribution method
 
-The lookback window is the time before a purchase during which an interaction can earn credit. You can set a different window for each interaction type.
+| Method | How it works | Example |
+|---|---|---|
+| **Default** | Credits any qualifying interaction from the customer. | Choose it when any relevant interaction may have influenced the purchase. |
+| **Same reference ID** | Credits an interaction only when the purchased product's reference ID matches a product shown in the Content. Product IDs come from the Output Node's Datasource metadata. | Choose it for product recommendation Workflows when you only want credit for products the customer bought after seeing them recommended. |
 
-| Field | Description |
-|-------|-------------|
-| **Click window (hours)** | Lookback for clicks on Reelevant content (e.g., 720 for 30 days). Leave empty to use the default. |
-| **View-through window (hours)** | Lookback for display views (e.g., 168 for 7 days). Leave empty to use the default. |
+### Purchase time precision
+
+This setting appears only with **Customer purchases**.
+
+| Option | How it works | Example |
+|---|---|---|
+| **Date and time** (default) | An interaction must happen before the purchase timestamp. Web tracking always uses this precision. | Keep it when purchase records contain real times. It avoids crediting an afternoon click after a morning purchase. |
+| **Date only** | Treats the purchase as a calendar day. Interactions through the end of that day can qualify, while the lookback window still starts at midnight. | Choose it for store receipts exported with dates only, where every purchase time is midnight. |
+
+### Conversion channels
+
+Conversion channels are available with **Reelevant interactions**. Each channel has a **Channel key** and **Interactions**, with an interaction type and **Lookback window (hours)**.
+
+**Web tracking** uses one fixed `web` channel. With **Customer purchases**, each Channel key matches the purchase's transaction source. Purchases without a matching key are excluded unless **Any other source (*)** is configured; it claims every source without its own channel.
+
+| Setting | Options and behaviour | Example |
+|---|---|---|
+| **Channel key** | Matches the purchase transaction source. **Any other source (*)** catches sources without a matching channel. | Set `store` and `web` separately when their buyer journeys differ. Add `*` if new sources such as a marketplace must not be dropped. |
+| **Interactions** | Add **Click** and/or **Display** for each channel. Defaults are 720 hours (30 days) for Click and 168 hours (7 days) for Display. | An email-heavy brand can add Display to count opens; Apple Mail privacy opens also count as displays, so this is generous. |
+| **Lookback window (hours)** | Sets how long each interaction type can earn credit before the purchase. | Use Click and Display with a 48-hour window for store buyers who rarely click. Use a 720-hour Click window for web buyers. |
+
+### UTM configuration
+
+When **UTM parameters** is selected, choose the UTM grain and lookback window.
+
+| Setting | Options and behaviour | Example |
+|---|---|---|
+| **UTM grain** | Choose Source, Medium, Campaign, Term, and/or Content. Source and Medium are selected by default. | Keep Source and Medium for a channel-level view. Add Campaign to compare campaigns. |
+| **Lookback window (hours)** | Defaults to 720 hours. | Keep 720 hours when campaigns may influence purchases over 30 days. |
+
+### Conversion funnel
+
+The optional funnel contains ordered **Step name** and **Events** entries. Its last step is the conversion.
+
+| Setting | How it works | Example |
+|---|---|---|
+| **Conversion funnel** | Add the events that mark each stage, in order. | A lead-generation brand can use `signup_start` followed by `signup_complete`. |
 
 ### Configuring attribution
 
-1. Navigate to **Analytics > Settings**.
-2. Choose an **attribution model**.
-3. Set the **lookback windows** for each interaction type.
-4. Choose your **data source** (web tracking or customer purchases).
-5. Click **Save**.
+1. Open **Analytics > Settings**, then select the **General** tab.
+2. Choose a **Dataset** and **Attribution source**.
+3. Choose your **Attribution model** and **Attribution method**.
+4. Configure conversion channels, UTM settings, or a conversion funnel when available.
+5. For Customer purchases, choose **Purchase time precision**.
+6. Click **Save changes**.
 
 <Info>
-  Changing attribution affects how conversions are counted in the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). A longer window captures more conversions but may include less directly attributable purchases.
+  Changing attribution affects the [Conversions dashboard](/product-guide/analytics/dashboards/conversions) and [Data Exploration](/product-guide/analytics/data-exploration). A longer window may credit more interactions.
 </Info>
+
+## Customer lifecycle
+
+Customer lifecycle settings define purchase thresholds and the periods used to classify customers. Leave a field empty to use its default.
+
+Stages include `prospect`, `one-time`, `repeater`, `loyal`, `at-risk`, and `churned`.
+
+| Setting | Default | What it controls | Example |
+|---|---:|---|---|
+| **Active window (days)** | 180 | The period used to identify active customers. | A furniture retailer with annual purchases might use 365 days; a grocery replenishment brand might use 90. |
+| **Churn window (days)** | 365 | Past this period without a purchase, a customer is churned; between the active and churn windows, they are at risk. | A furniture retailer might use 730 days; a replenishment brand might use 180. |
+| **Repeater purchases** | 2 | Purchases needed for the repeater stage. | Keep 2 when a second grocery or beauty purchase shows a repeat buying pattern. |
+| **Loyal purchases** | 5 | Purchases needed for the loyal stage. | A beauty brand can raise this threshold so loyalty means several replenishment purchases. |
+| **History window (days)** | 730 | How far back Analytics reads purchases. | Use 180 days when a recently re-ingested dataset contains only six months of history. |
+| **Exposure window (days)** | 90 | The period over which a customer counts as exposed to Reelevant. | A brand with a longer buying cycle might use 180 days so earlier personalised interactions remain in scope. |
+
+## Reporting
+
+**TCO (total cost of ownership)** is the monthly Reelevant platform cost. Analytics prorates it over the selected period for cost and ROI measures.
+
+| Setting | What it controls | Example |
+|---|---|---|
+| **Total cost of ownership (TCO)** | Monthly cost used by cost and ROI measures. Leaving it at 0 or empty means reports do not calculate ROI. | Enter your monthly Reelevant cost to compare report revenue with the real platform cost. |
+
+## Automatic reports
+
+Use the **Automatic reports** tab to configure recurring period reports. See the [Reports guide](/product-guide/analytics/reports) and the [advanced guide](/advanced-guide/analytics/reports).
 
 ## Personalisation exposure
 
@@ -54,10 +128,10 @@ These two thresholds decide which customers count as personalised in the [Custom
 
 ![Personalization exposure settings with the minimum personalised displays and minimum personalised share fields](/images/analytics/analytics-settings-personalisation-exposure.png)
 
-| Field | Default | What it does |
-|---|---|---|
-| **Minimum personalized displays** | 2 | How many personalised Contents a customer must have seen. |
-| **Minimum personalized share (%)** | 50 | How much of what they saw must be personalised. |
+| Field | Default | What it does | Example |
+|---|---:|---|---|
+| **Minimum personalized displays** | 2 | How many personalised Contents a customer must have seen. | A high-volume retailer can raise this to require several displays before counting a customer as personalised. |
+| **Minimum personalized share (%)** | 50 | How much of what they saw must be personalised. | Raise it when your company personalises most of its Content and you want a more consistently personalised group. |
 
 Customers above zero but below these thresholds count as neither personalised nor non-personalised. They stay out of the comparison.
 
@@ -67,16 +141,16 @@ Customers above zero but below these thresholds count as neither personalised no
 4. Click **Save changes**.
 
 <Tip>
-  Raise both thresholds when almost every Content you send is personalised. Lower them when only a few Contents are.
+  For a company that personalises most of its Content, raise **Minimum personalized share (%)**. Lower it when personalisation is limited to a few Contents.
 </Tip>
 
 ## Comparison reliability
 
 This threshold decides when the [Customer Impact](/advanced-guide/analytics/customer-impact) dashboard shows an Uplift figure, and when it leaves it empty.
 
-| Field | Default | What it does |
-|---|---|---|
-| **Minimum customers per cohort** | 100 | How many customers each side of the comparison must hold. |
+| Field | Default | What it does | Example |
+|---|---:|---|---|
+| **Minimum customers per cohort** | 100 | How many customers each side of the comparison must hold. | A large retailer can raise it to reduce noisy Uplift figures. A small B2B company can lower it to keep smaller cohorts, accepting less reliable comparisons. |
 
 Both sides need that many customers: the personalised ones and the comparable non-personalised ones. Below it, the dashboard shows the customer counts but no figure.
 
