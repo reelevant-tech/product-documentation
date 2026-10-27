@@ -40,7 +40,7 @@ The attribution model determines how a conversion's value is distributed across 
 | **Last touch** (default) | 100% to the last qualifying interaction; earlier interactions receive 0%. |
 | **Linear** | Equal share to every qualifying interaction (`1 / n`). |
 | **Time decay** | Credit increases towards the conversion. For `n` interactions ordered oldest to newest, interaction at position `i` receives `i / (1 + 2 + … + n)`, i.e. `i / (n(n+1)/2)`. |
-| **Incremental** | Credit is proportional to the measured Uplift produced by each Channel's Workflow entrypoint type (for example, email versus onsite) over the queried period, relative to the modelled non-personalised baseline. Shares are renormalised per conversion so attributed revenue sums to its value. This uses the Uplift dashboard's measurement; it is not a randomised holdout. |
+| **Incremental** | Credit is proportional to the measured Uplift of each Channel (for example, email versus onsite) over the queried period, relative to the modelled non-personalised baseline. Shares are renormalised per conversion so attributed revenue sums to its value. This uses the Uplift dashboard's measurement; it is not a randomised holdout. |
 
 Last touch is the default so that a configuration left unchanged reproduces classic last-click reporting, including when results are grouped by dimension.
 
@@ -127,7 +127,7 @@ For channel-level reporting, retain Source and Medium. Add Campaign when campaig
 
 ## Email UTM classification
 
-The API-only Reporting field `emailUtmMediums` defines case-insensitive `utm_medium` values counted by Navigation's email UTM measures. If unset, the default is `email`. Set it with `PUT /statistics/analytics/settings/reporting`, using the API base URL and bearer-token convention shown in the [API authentication guide](/developer-docs/api-reference/authentication).
+The API-only Reporting field `emailUtmMediums` defines case-insensitive `utm_medium` values counted by Navigation's email UTM measures. If unset, the default is `email`. Set it with `PUT /statistics/analytics/settings/reporting`, using the API base URL; `ACCESS_TOKEN` is a bearer token obtained as described in the [API authentication guide](/developer-docs/api-reference/authentication).
 
 Replace the example cost and active-window values with your current values, and keep every lifecycle threshold you need in the `lifecycle` object.
 

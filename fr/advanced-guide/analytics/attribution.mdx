@@ -40,7 +40,7 @@ Le modèle d'attribution détermine comment la valeur d'une conversion est répa
 | **Dernier contact** (par défaut) | 100 % à la dernière interaction éligible ; les précédentes reçoivent 0 %. |
 | **Linéaire** | Part égale pour chaque interaction éligible (`1 / n`). |
 | **Décroissance temporelle** | Le crédit augmente vers la conversion. Pour `n` interactions classées de la plus ancienne à la plus récente, l'interaction en position `i` reçoit `i / (1 + 2 + … + n)`, soit `i / (n(n+1)/2)`. |
-| **Incrémental** | Le crédit est proportionnel à l'Uplift mesuré par type de Channel du Workflow (par exemple, e-mail ou onsite) sur la période interrogée, par rapport à une base modélisée sans personnalisation. Les parts sont recalculées par conversion pour totaliser sa valeur. Cette mesure correspond au dashboard Uplift ; ce n'est pas un groupe témoin randomisé. |
+| **Incrémental** | Le crédit est proportionnel à l'Uplift mesuré de chaque Channel (par exemple, e-mail ou onsite) sur la période interrogée, par rapport à une base modélisée sans personnalisation. Les parts sont recalculées par conversion pour totaliser sa valeur. Cette mesure correspond au dashboard Uplift ; ce n'est pas un groupe témoin randomisé. |
 
 Dernier contact est le modèle par défaut afin qu'une configuration laissée inchangée reproduise le reporting last-click classique, y compris lorsque les résultats sont groupés par dimension.
 
@@ -127,7 +127,7 @@ Gardez Source et Medium pour une vue par canal. Ajoutez Campaign pour comparer l
 
 ## Classification UTM des e-mails
 
-Le champ Reporting `emailUtmMediums`, réservé à l'API, définit les valeurs `utm_medium`, sans distinction de casse, comptées par les mesures UTM e-mail de Navigation. Sans configuration, la valeur par défaut est `email`. Utilisez `PUT /statistics/analytics/settings/reporting`, avec la base API et l'en-tête Bearer décrits dans le [guide d'authentification](/developer-docs/api-reference/authentication).
+Le champ Reporting `emailUtmMediums`, réservé à l'API, définit les valeurs `utm_medium`, sans distinction de casse, comptées par les mesures UTM e-mail de Navigation. Sans configuration, la valeur par défaut est `email`. Configurez-le avec `PUT /statistics/analytics/settings/reporting`, en utilisant l'URL de base de l'API ; `ACCESS_TOKEN` est un jeton Bearer obtenu comme indiqué dans le [guide d'authentification](/developer-docs/api-reference/authentication).
 
 Remplacez le coût et la fenêtre d'activité de l'exemple par vos valeurs actuelles, et conservez dans l'objet `lifecycle` tous les seuils à garder.
 
