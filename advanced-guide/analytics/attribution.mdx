@@ -110,7 +110,7 @@ Use Date only when purchase records have no time of day and every purchase is ti
 
 Web tracking additionally supports **UTM-based attribution**, which distributes a conversion across the UTM-tagged interactions that preceded it rather than across Reelevant content interactions. It is available only with web tracking, because it relies on the UTM tags Reelevant parses from tracked landing-page URLs.
 
-Each distinct UTM combination in the lookback window is one interaction and earns a share under the selected model (Last touch, Linear, Time decay, or Incremental). This attributes a conversion across all marketing sources present in the path — paid search, display networks, email, and so on — not only Reelevant.
+Each distinct UTM combination in the lookback window is one interaction and earns a share under the selected model. This attributes a conversion across all marketing sources present in the path — paid search, display networks, email, and so on — not only Reelevant.
 
 | Aspect | Behaviour |
 |---|---|
@@ -127,15 +127,21 @@ For channel-level reporting, retain Source and Medium. Add Campaign when campaig
 
 ## Email UTM classification
 
-The API-only Reporting field `emailUtmMediums` defines case-insensitive `utm_medium` values counted by Navigation's email UTM measures. If unset, the default is `email`. Set it with `PUT /analytics/settings/reporting`, using the API base URL and bearer-token convention shown in the [API authentication guide](/developer-docs/api-reference/authentication).
+The API-only Reporting field `emailUtmMediums` defines case-insensitive `utm_medium` values counted by Navigation's email UTM measures. If unset, the default is `email`. Set it with `PUT /statistics/analytics/settings/reporting`, using the API base URL and bearer-token convention shown in the [API authentication guide](/developer-docs/api-reference/authentication).
+
+Replace the example cost and active-window values with your current values, and keep every lifecycle threshold you need in the `lifecycle` object.
+
+<Warning>
+  `PUT` replaces the entire Reporting definition. Read the current settings with `GET` at this same URL first, then send all three fields. Omitting `monthlyCost` or `lifecycle` clears their current values.
+</Warning>
 
 For a brand that tags newsletters as `newsletter` and CRM messages as `crm`, configure both values:
 
 ```bash
-curl --request PUT "https://api.reelevant.com/v2/analytics/settings/reporting" \
+curl --request PUT "https://api.reelevant.com/v2/statistics/analytics/settings/reporting" \
   --header "Authorization: Bearer ${ACCESS_TOKEN}" \
   --header "Content-Type: application/json" \
-  --data '{ "emailUtmMediums": ["newsletter", "crm"] }'
+  --data '{ "monthlyCost": 5000, "lifecycle": { "activeWindowDays": 180 }, "emailUtmMediums": ["newsletter", "crm"] }'
 ```
 
 ## Generic conversion funnels

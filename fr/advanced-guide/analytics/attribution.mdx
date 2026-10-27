@@ -110,7 +110,7 @@ Utilisez Date uniquement lorsque les achats n'ont pas d'heure et sont enregistr�
 
 Le web tracking prend également en charge l'**attribution basée sur les UTM**, qui répartit une conversion sur les interactions taggées UTM qui l'ont précédée plutôt que sur les interactions avec le Content Reelevant. Elle n'est disponible qu'avec le web tracking, car elle s'appuie sur les tags UTM que Reelevant extrait des URL de destination suivies.
 
-Chaque combinaison UTM distincte dans la fenêtre rétrospective constitue une interaction et reçoit une part selon le modèle sélectionné (Dernier contact, Linéaire, Décroissance temporelle ou Incrémental). Cela attribue une conversion à toutes les sources marketing présentes dans le parcours — référencement payant, réseaux display, e-mail, etc. — pas seulement Reelevant.
+Chaque combinaison UTM distincte dans la fenêtre rétrospective constitue une interaction et reçoit une part selon le modèle sélectionné. Cela attribue une conversion à toutes les sources marketing présentes dans le parcours — référencement payant, réseaux display, e-mail, etc. — pas seulement Reelevant.
 
 | Aspect | Comportement |
 |---|---|
@@ -127,15 +127,21 @@ Gardez Source et Medium pour une vue par canal. Ajoutez Campaign pour comparer l
 
 ## Classification UTM des e-mails
 
-Le champ Reporting `emailUtmMediums`, réservé à l'API, définit les valeurs `utm_medium`, sans distinction de casse, comptées par les mesures UTM e-mail de Navigation. Sans configuration, la valeur par défaut est `email`. Utilisez `PUT /analytics/settings/reporting`, avec la base API et l'en-tête Bearer décrits dans le [guide d'authentification](/developer-docs/api-reference/authentication).
+Le champ Reporting `emailUtmMediums`, réservé à l'API, définit les valeurs `utm_medium`, sans distinction de casse, comptées par les mesures UTM e-mail de Navigation. Sans configuration, la valeur par défaut est `email`. Utilisez `PUT /statistics/analytics/settings/reporting`, avec la base API et l'en-tête Bearer décrits dans le [guide d'authentification](/developer-docs/api-reference/authentication).
+
+Remplacez le coût et la fenêtre d'activité de l'exemple par vos valeurs actuelles, et conservez dans l'objet `lifecycle` tous les seuils à garder.
+
+<Warning>
+  `PUT` remplace toute la définition Reporting. Lisez d'abord les paramètres actuels avec `GET` sur cette même URL, puis envoyez les trois champs. Omettre `monthlyCost` ou `lifecycle` efface leurs valeurs actuelles.
+</Warning>
 
 Une marque qui balise ses newsletters avec `newsletter` et son CRM avec `crm` configure ces deux valeurs :
 
 ```bash
-curl --request PUT "https://api.reelevant.com/v2/analytics/settings/reporting" \
+curl --request PUT "https://api.reelevant.com/v2/statistics/analytics/settings/reporting" \
   --header "Authorization: Bearer ${ACCESS_TOKEN}" \
   --header "Content-Type: application/json" \
-  --data '{ "emailUtmMediums": ["newsletter", "crm"] }'
+  --data '{ "monthlyCost": 5000, "lifecycle": { "activeWindowDays": 180 }, "emailUtmMediums": ["newsletter", "crm"] }'
 ```
 
 ## Funnels de conversion génériques

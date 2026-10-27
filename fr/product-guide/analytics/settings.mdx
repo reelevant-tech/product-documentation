@@ -99,14 +99,14 @@ Le tunnel facultatif contient des entrées ordonnées **Step name** et **Events*
 
 Les paramètres du cycle de vie client définissent les seuils d'achat et les périodes utilisés pour classer les clients. Laissez un champ vide pour conserver sa valeur par défaut.
 
-Les stades comprennent `prospect`, `one-time`, `repeater`, `loyal`, `at-risk` et `churned`.
+Les stades comprennent Prospect, Acheteur ponctuel, Acheteur récurrent, Client fidèle, À risque et Client perdu.
 
 | Paramètre | Par défaut | Rôle | Exemple |
 |---|---:|---|---|
 | **Fenêtre d'activité (jours)** | 180 | Période utilisée pour identifier les clients actifs. | Un détaillant de meubles avec des achats annuels peut choisir 365 jours ; une marque de produits de beauté réapprovisionnés, 90 jours. |
-| **Fenêtre d'attrition (jours)** | 365 | Sans achat après cette période, le client est churned ; entre les fenêtres d'activité et d'attrition, il est at-risk. | Un détaillant de meubles peut choisir 730 jours ; une marque de réapprovisionnement, 180 jours. |
-| **Achats pour être répété** | 2 | Nombre d'achats requis pour atteindre le stade repeater. | Gardez 2 si un second achat de courses ou de produits de beauté indique déjà une répétition. |
-| **Achats pour être fidèle** | 5 | Achats requis pour qu'un client actif soit considéré comme loyal. | Une marque de beauté peut augmenter ce seuil pour réserver le stade aux acheteurs réguliers. |
+| **Fenêtre d'attrition (jours)** | 365 | Sans achat après cette période, le client est considéré comme perdu ; entre les fenêtres d'activité et d'attrition, il est à risque. | Un détaillant de meubles peut choisir 730 jours ; une marque de réapprovisionnement, 180 jours. |
+| **Achats pour être répété** | 2 | Nombre d'achats requis pour atteindre le stade d'acheteur récurrent. | Gardez 2 si un second achat de courses ou de produits de beauté indique déjà une répétition. |
+| **Achats pour être fidèle** | 5 | Achats requis pour qu'un client actif soit considéré comme fidèle. | Une marque de beauté peut augmenter ce seuil pour réserver le stade aux acheteurs réguliers. |
 | **Fenêtre d'historique (jours)** | 730 | Période pendant laquelle Analytics lit les achats. | Utilisez 180 jours si un jeu de données réingéré récemment ne contient que six mois d'historique. |
 | **Fenêtre d'exposition (jours)** | 90 | Période pendant laquelle un client compte comme exposé à Reelevant. | Un cycle d'achat long peut justifier 180 jours pour inclure les interactions personnalisées antérieures. |
 
@@ -116,7 +116,7 @@ Le **TCO (coût total de possession)** correspond au coût mensuel de la platefo
 
 | Paramètre | Rôle | Exemple |
 |---|---|---|
-| **Coût total de possession (TCO)** | Coût mensuel utilisé par les mesures de coût et de ROI. À 0 ou vide, les rapports ne calculent pas le ROI. | Saisissez le coût mensuel de Reelevant pour comparer le chiffre d'affaires du rapport au coût réel de la plateforme. |
+| **Coût total de possession (TCO)** | Coût mensuel utilisé par les mesures de coût et de ROI. Les mesures de coût et de ROI nécessitent que ce champ soit renseigné. | Saisissez le coût mensuel de Reelevant pour comparer le chiffre d'affaires du rapport au coût réel de la plateforme. |
 
 ## Rapports automatiques
 
