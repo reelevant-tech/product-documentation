@@ -122,11 +122,11 @@ La scène remplit toujours tout le composant, sous chaque image, quelle que soit
 
 ### Préparer vos images
 
-Les packshots enregistrés en détourage, avec un fond transparent, donnent le meilleur résultat. Une photo prise sur fond blanc garde un liseré blanc autour d'un packaging blanc : la plateforme ne peut pas distinguer le fond du pack blanc. Ces photos doivent être corrigées dans le catalogue source, en détourages propres.
+Les packshots enregistrés en détourage, avec un fond transparent, donnent le meilleur résultat. Une photo prise sur fond blanc garde un liseré blanc autour d'un packaging blanc. La plateforme ne peut pas distinguer le fond du pack blanc. Ces photos doivent être corrigées dans le catalogue source, en détourages propres.
 
 ### Faire varier la scène par destinataire
 
-Insérez des variables dans la description pour changer la scène selon le destinataire. Seules les variables dont les valeurs peuvent être énumérées à l'avance fonctionnent ici : les champs de [Datasource](/fr/product-guide/contents/data-binding), les champs de famille d'objets et les variables personnalisées construites dessus.
+Insérez des variables dans la description pour changer la scène selon le destinataire. Seules les variables dont les valeurs peuvent être énumérées à l'avance fonctionnent ici. Ce sont les champs de [Datasource](/fr/product-guide/contents/data-binding), les champs de Datagraph Object Family et les variables personnalisées construites dessus.
 
 Les variables qui dépendent de données du Workflow ne peuvent pas être utilisées. En ajouter une affiche « Cette variable dépend de données du workflow, elle ne peut pas être utilisée dans un fond généré. »
 
@@ -138,17 +138,17 @@ Par exemple, un enseigne de surgelés conserve une Datasource de correspondance 
 | Glaces | Un comptoir vitré givré aux pots pastel et à la vanille |
 | Poissons et fruits de mer | Un étal de poissonnier au marché, glace pilée et rondelles de citron |
 
-La description est alors une variable Scène suivie de « Photorealistic food photography, no text, no other product. ». Avec 5 produits et 9 rayons, la publication prépare 45 scènes.
+La description est alors une variable Scène suivie de « Photorealistic food photography, no text, no other product. ». Les images des produits viennent d'un champ de Datasource produit lié à chaque image : les produits sont la deuxième variable. Avec 5 produits et 9 rayons, la publication prépare 45 scènes.
 
 Passer le **Type** de **Couleur** à **Généré** (ou l'inverse) remplace le réglage précédent. Revenir à **Généré** repart d'une description vide.
 
 ### Publier avec un fond généré
 
-À la publication d'un Content qui utilise un fond généré, une scène est préparée pour chaque combinaison des variables utilisées — chaque produit et chaque rayon de l'exemple ci-dessus — avant que la nouvelle version ne passe en ligne.
+À la publication d'un Content qui utilise un fond généré, la nouvelle version attend toutes les scènes. Une scène est préparée pour chaque combinaison de variables — chaque produit et chaque rayon de l'exemple ci-dessus.
 
 Pendant la préparation, l'éditeur est verrouillé : il s'ouvre en lecture seule et **Save** et **Publish** restent désactivés. L'en-tête affiche la progression, par exemple « Génération des arrière-plans : 12/45 ». La nouvelle version passe en ligne une fois toutes les scènes prêtes.
 
-La version en ligne précédente continue de servir pendant la génération. Au-delà d'un nombre maximal de combinaisons, la publication est refusée avec « Les variables d'arrière-plan généré produiraient N images, ce qui dépasse le maximum de M. ». Retravaillez les variables pour réduire les combinaisons.
+La version en ligne précédente continue de servir pendant la génération. Au-delà d'un nombre maximal de combinaisons, la publication est refusée. Le message est « Les variables d'arrière-plan généré produiraient N images, ce qui dépasse le maximum de M. ». Retravaillez les variables pour réduire les combinaisons.
 
 <Note>
   Un destinataire dont la combinaison n'a pas de scène voit les images sans le fond généré.
