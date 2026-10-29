@@ -1,0 +1,71 @@
+---
+title: 'Opt-out du tracking des ouvertures et des clics'
+description: "Respectez l'opt-out individuel du tracking des ouvertures et clics grâce à un flag de consentement sur votre Datasource CRM"
+---
+
+## Vue d'ensemble
+
+Certains clients ne consentent pas au tracking des ouvertures et des clics. Le type de champ **Tracking Opt-Out** permet à une Datasource CRM de transporter ce consentement par client : quand le flag est activé pour un destinataire, Reelevant stocke ses événements d'ouverture et de clic sous un pseudonyme stable plutôt que sous son identifiant client.
+
+Le pseudonyme est un hash à clé de l'identifiant client. Il est stable par client, donc les ouvreurs et cliqueurs uniques restent comptés correctement, mais il ne peut pas être relié à la fiche client ni à ses achats.
+
+## Fonctionnement
+
+```mermaid
+flowchart LR
+    CRM["Votre flux CRM<br/>(flag tracking_optout)"] --> DS["Datasource CRM<br/>Field Mapping"]
+    DS --> WF["Exécution du Workflow<br/>(ouverture ou clic)"]
+    WF --> DEC{"Flag à true pour<br/>ce client ?"}
+    DEC -->|"Non ou vide"| RAW["Événement stocké avec<br/>l'identifiant client"]
+    DEC -->|"Oui"| ANON["Événement stocké sous<br/>anon + pseudonyme"]
+    ANON --> STATS["Comptages uniques<br/>toujours valides.<br/>Aucun lien vers les achats."]
+    RAW --> STATS2["Mesure complète<br/>comme d'habitude"]
+```
+
+Quand un Workflow s'exécute pour un client, le Personalisation Engine lit sa fiche CRM — dont le flag — pour construire le contexte de personnalisation. Ce contexte détermine comment l'événement d'ouverture ou de clic est stocké :
+
+| Valeur du flag | Stockage de l'événement | Effet |
+|----------------|-------------------------|-------|
+| `true` | Identifiant pseudonyme (`anon_…`) | Ouvertures et clics comptés en agrégé uniquement ; aucun lien entre les événements et le client ou ses achats |
+| `false`, vide, ou champ non mappé | Identifiant client | Tracking standard — la fonctionnalité est opt-in par défaut |
+
+Pour les clients opt-out, la redirection du clic ne transporte pas l'identifiant de tracking vers votre site : le tag web Reelevant ne peut pas les réidentifier via le lien.
+
+<Info>
+  L'opt-out du tracking n'affecte pas la personnalisation. La fiche CRM du client est toujours lue pour générer le Content — seul ce qui est stocké dans les événements d'ouverture et de clic change.
+</Info>
+
+## Avant de commencer
+
+- Votre flux CRM doit exposer un flag de consentement par client sous forme de colonne booléenne (`true`/`false`), alimentée par votre gestion du consentement ou votre centre de préférences.
+- La Datasource CRM doit être celle que vos Workflows utilisent pour charger le contexte client. Les clients dont le profil n'est jamais lu par le Workflow conservent le tracking standard.
+
+## Configurer le flag
+
+1. Ajoutez la colonne de consentement à votre flux CRM, avec `true` pour les clients ayant refusé le tracking des ouvertures et clics.
+2. Ouvrez la Datasource CRM et allez à l'étape [Field Mapping](/fr/advanced-guide/datahub/field-mapping).
+3. Mappez la colonne au type de champ **Tracking Opt-Out** (`tracking_opt_out`).
+4. Publiez la Datasource. Les nouvelles ouvertures et clics respectent le flag dès l'exécution suivante ; les événements déjà stockés restent inchangés.
+
+Une seule colonne par Datasource CRM peut porter le type Tracking Opt-Out. Les valeurs manquantes ou vides sont traitées comme un opt-in — écrivez `true` explicitement pour chaque client ayant refusé.
+
+## Exemple détaillé
+
+Une marque de voyage stocke le consentement email dans son CRM. Son flux `contacts` inclut désormais une colonne `tracking_optout` :
+
+| customer_id | tracking_optout |
+|-------------|-----------------|
+| C-1042 | false |
+| C-2088 | true |
+
+- `C-1042` ouvre une newsletter → l'événement d'ouverture stocke `C-1042` ; le reporting attribue ouvertures et clics à ce client comme d'habitude.
+- `C-2088` ouvre la même newsletter → l'événement stocke `anon_8f3c…`. Il compte toujours comme un ouvreur unique dans les rapports, mais la plateforme ne peut pas relier l'événement à `C-2088`, à son profil ni à ses achats.
+
+## Ce que la fonctionnalité ne fait pas
+
+- **Personnalisation** — les clients opt-out reçoivent toujours un Content personnalisé.
+- **Événements historiques** — les ouvertures et clics déjà stockés conservent leur identifiant d'origine.
+- **Données CRM** — la fiche client reste dans la Datasource ; pour la supprimer, voir [Anonymiser des enregistrements clients](/fr/advanced-guide/datahub/anonymise-customer-records).
+- **Comportement sur le site** — les événements collectés par le tag web Reelevant relèvent de votre plateforme de gestion du consentement, pas de ce flag. Le flag empêche uniquement la redirection du clic de transmettre l'identifiant de tracking.
+
+Pour le contexte juridique des opt-outs de tracking, voir [Comment Reelevant fonctionne pour les DPO](/fr/why-reelevant/data-protection/overview).
