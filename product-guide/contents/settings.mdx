@@ -1,6 +1,6 @@
 ---
 title: 'Content Settings'
-description: 'Manage custom fonts and other content-level settings'
+description: 'Manage custom fonts, generated backgrounds and other content-level settings'
 ---
 
 ![Content settings page showing font management](/images/contents/settings-fonts-v2.png)
@@ -8,6 +8,8 @@ description: 'Manage custom fonts and other content-level settings'
 ## Overview
 
 The Content Settings page lets you manage resources that are shared across all your content templates. Access it from the **Settings** link in the Content Editor sidebar navigation.
+
+The **Generated backgrounds** tab lets you review and fix the scenes prepared for a [generated background](/product-guide/contents/components/image-composition#generating-a-background), one per variable combination.
 
 ## Fonts
 
@@ -48,3 +50,59 @@ Click the **Edit** button next to an existing font to update its family name or 
 <Info>
   At least one font file variant is required per font family.
 </Info>
+
+## Generated Backgrounds
+
+The **Generated backgrounds** tab lists every precomputed generated background for a Content, one per variable combination. It appears only when the **Generated backgrounds in contents** feature is on — see [Workflow settings](/product-guide/workflows/settings#features).
+
+![Generated backgrounds tab showing a grid of scene cards](/images/contents/settings-generated-backgrounds.png)
+
+### Opening the Tab
+
+Open the **Generated backgrounds** tab, then pick a Content in **Select a content**. The picker only lists Contents that have generated backgrounds, hidden ones included, and you can search by name.
+
+### Filtering by Status
+
+Use the status badges to filter the grid.
+
+| Status | Meaning |
+|--------|---------|
+| **Pending** | The scene is queued for generation. |
+| **Running** | The scene is being generated right now. |
+| **Done** | The scene is ready and served with the Content. |
+| **Failed** | Generation failed; open the card to see the error. |
+| **Rejected** | The scene was rejected and is no longer drawn. |
+
+Each card shows the image, a status badge, a **Custom prompt** badge when the prompt was overridden, and the description. The grid shows 24 cards per page.
+
+### Reviewing a Background
+
+Click a card to open its window. On the left sit the **Generation prompt** field and the details: Status, Prompt, Inputs (the variable values), and the Error when it failed. On the right, the image, or a spinner while it is pending or running.
+
+![Generated background window with the generation prompt on the left and the scene on the right](/images/contents/settings-generated-backgrounds-detail.png)
+
+### Regenerating a Background
+
+<Steps>
+  <Step title="Open the background">
+    Click its card to open the window.
+  </Step>
+  <Step title="Edit the generation prompt">
+    Change the **Generation prompt** for this combination only. Leaving it equal to the Content's description clears any custom prompt.
+  </Step>
+  <Step title="Regenerate">
+    Click **Regenerate**. The window stays open and the image updates in place once the new scene is ready.
+  </Step>
+</Steps>
+
+<Note>
+  Only one generation runs at a time per background. While one is in progress, regenerating shows "A generation is already in progress for this background."
+</Note>
+
+### Rejecting a Background
+
+<Warning>
+  **Reject** deletes the generated image and renders no longer draw it. Recipients with that combination then see the images without the generated background.
+</Warning>
+
+Click **Reject** on a background, then confirm. Regenerate and Reject are only shown to users allowed to edit Contents.

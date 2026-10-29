@@ -5,9 +5,10 @@ description: 'Configurer les Variable Profiles et les JSON Templates pour vos Wo
 
 ## Accéder aux paramètres du Workflow
 
-Ouvrez l'application **Workflows** depuis la barre latérale, puis naviguez vers la page **Settings**. La page de paramètres comporte deux onglets :
+Ouvrez l'application **Workflows** depuis la barre latérale, puis naviguez vers la page **Settings**. La page de paramètres comporte trois onglets :
 - **Variable profiles** — Configurer des modèles de paramètres d'URL réutilisables.
 - **JSON Templates** — Définir et gérer les templates de sortie JSON pour les intégrations headless.
+- **Fonctionnalités** — Activer ou désactiver les canaux et les fonctionnalités avancées pour ce compte.
 
 <Note>
   Les catégories de branche se configurent avec les tags dans les [paramètres Analytics](/fr/product-guide/analytics/settings), pour regrouper toute votre nomenclature au même endroit.
@@ -176,3 +177,13 @@ Lorsqu'un Workflow avec des Output Nodes JSON Template est publié, le système 
 2. **Cohérence inter-branches** — Tous les Nodes JSON Template de toutes les branches doivent référencer le **même template**. Cela garantit que chaque branche produit la même forme JSON.
 
 Si la validation échoue, la publication est bloquée avec un message d'erreur clair indiquant quel Node ou quelle branche présente une incohérence.
+
+---
+
+## Fonctionnalités
+
+![Onglet Fonctionnalités avec les interrupteurs de canaux et de fonctionnalités avancées](/images/workflows/settings-features-fr.png)
+
+L'onglet **Fonctionnalités** active ou désactive les canaux et les fonctionnalités avancées pour ce compte. Ses interrupteurs contrôlent ce qui est disponible dans l'éditeur de Workflow.
+
+**Fonds générés dans les contenus** débloque le type de fond **Généré** du [composant Composition d'images](/fr/product-guide/contents/components/image-composition#générer-un-fond) et l'onglet [Arrière-plans générés](/fr/product-guide/contents/settings#arrière-plans-générés) dans les paramètres du Content. Tant que la fonctionnalité est désactivée, les deux restent masqués, et les Contents qui utilisent déjà un fond généré restent modifiables.

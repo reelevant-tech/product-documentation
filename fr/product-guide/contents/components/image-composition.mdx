@@ -6,7 +6,7 @@ description: "Combinez plusieurs images produits en un seul visuel, avec détour
 Le composant Composition d'images construit un visuel unique à partir de plusieurs images, disposées automatiquement et personnalisées par destinataire.
 
 <Note>
-  **Bêta** — La Composition d'images est en bêta et réservée aux administrateurs techniques. Ses options peuvent encore évoluer. Contactez votre Technical Account Manager si vous ne la voyez pas dans la barre d'outils.
+  **Bêta** — La Composition d'images est en bêta et réservée aux administrateurs techniques. Ses options peuvent encore évoluer. Contactez votre Technical Account Manager si vous ne la voyez pas dans la barre d'outils. L'option de fond généré nécessite aussi l'activation de la fonctionnalité **Fonds générés dans les contenus** dans les [paramètres du Workflow](/fr/product-guide/workflows/settings#fonctionnalités).
 </Note>
 
 ![Éditeur de Content avec une Composition d'images de trois flacons détourés disposés en arc et son panneau de configuration](/images/contents/component-image-composition-v1.png)
@@ -120,17 +120,45 @@ La scène remplit toujours tout le composant, sous chaque image, quelle que soit
   Décrivez un lieu vide : une table, un plan de travail, une plage. Ne mentionnez pas les produits — ils viennent de vos images.
 </Tip>
 
+### Préparer vos images
+
+Les packshots enregistrés en détourage, avec un fond transparent, donnent le meilleur résultat. Une photo prise sur fond blanc garde un liseré blanc autour d'un packaging blanc : la plateforme ne peut pas distinguer le fond du pack blanc.
+
+<Tip>
+  Si votre catalogue ne contient que des photos sur fond blanc, activez **Détourer l'image** sur chaque image d'abord pour obtenir des détourages propres.
+</Tip>
+
 ### Faire varier la scène par destinataire
 
-Insérez des variables dans la description pour changer la scène selon le destinataire. Par exemple, « Une terrasse ensoleillée à » suivi d'une variable Ville de votre [Datasource](/fr/product-guide/contents/data-binding) donne à chaque ville sa propre scène.
+Insérez des variables dans la description pour changer la scène selon le destinataire. Seules les variables dont les valeurs peuvent être énumérées à l'avance fonctionnent ici : les champs de Datasource, les champs de Datagraph Object Family et les variables personnalisées construites dessus.
 
-Chaque description différente crée sa scène une seule fois. La même scène est ensuite réutilisée pour tous les destinataires et tous les produits qui partagent cette description.
+Les variables qui dépendent de données du Workflow ne peuvent pas être utilisées. En ajouter une affiche « Cette variable dépend de données du workflow, elle ne peut pas être utilisée dans un fond généré. »
 
-<Note>
-  Une nouvelle description prend un moment à être créée la première fois. Tant que sa scène n'est pas prête, les destinataires voient les images sur un fond transparent.
-</Note>
+Par exemple, un enseigne de surgelés conserve une Datasource de correspondance avec une ligne par rayon :
+
+| Rayon | Description de la scène |
+|-------|-------------------------|
+| Desserts | Un comptoir de pâtisserie élégant, marbre blanc saupoudré de cacao, framboises fraîches |
+| Glaces | Un comptoir vitré givré aux pots pastel et à la vanille |
+| Poissons et fruits de mer | Un étal de poissonnier au marché, glace pilée et rondelles de citron |
+
+La description est alors une variable Scène suivie de « Photorealistic food photography, no text, no other product. ». Avec 5 produits et 9 rayons, la publication prépare 45 scènes.
 
 Passer le **Type** de **Couleur** à **Généré** (ou l'inverse) remplace le réglage précédent. Revenir à **Généré** repart d'une description vide.
+
+### Publier avec un fond généré
+
+À la publication d'un Content qui utilise un fond généré, une scène est préparée pour chaque combinaison des variables utilisées — chaque produit et chaque rayon de l'exemple ci-dessus — avant que la nouvelle version ne passe en ligne.
+
+Pendant la préparation, l'éditeur est verrouillé : il s'ouvre en lecture seule et **Save** et **Publish** restent désactivés. L'en-tête affiche la progression, par exemple « Génération des arrière-plans : 12/45 ». La nouvelle version passe en ligne une fois toutes les scènes prêtes.
+
+La version en ligne précédente continue de servir pendant la génération. Au-delà d'un nombre maximal de combinaisons, la publication est refusée avec « Les variables d'arrière-plan généré produiraient N images, ce qui dépasse le maximum de M. ». Retravaillez les variables pour réduire les combinaisons.
+
+<Note>
+  Un destinataire dont la combinaison n'a pas de scène voit les images sans le fond généré.
+</Note>
+
+Vous pouvez passer en revue chaque scène, et régénérer ou rejeter une scène en échec, dans les [paramètres du Content](/fr/product-guide/contents/settings#arrière-plans-générés).
 
 ## Prévisualiser le résultat
 
@@ -151,6 +179,9 @@ La composition est construite pour vous et affichée directement sur le canvas :
   </Card>
   <Card title="Conditions" icon="filter" href="/fr/product-guide/contents/conditions">
     N'affichez la composition qu'à la bonne audience.
+  </Card>
+  <Card title="Paramètres du Content" icon="gear" href="/fr/product-guide/contents/settings#arrière-plans-générés">
+    Passez en revue, régénérez ou rejetez chaque scène générée.
   </Card>
   <Card title="Tous les composants" icon="shapes" href="/fr/product-guide/contents/components">
     Découvrez les autres types de composants.
