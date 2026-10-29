@@ -126,7 +126,7 @@ Packshots stored as cutouts, with a transparent background, give the best result
 
 ### Varying the Scene per Recipient
 
-Insert variables in the description to change the scene per recipient. Only variables whose values can be listed in advance work here: [Datasource](/product-guide/contents/data-binding) fields, Object family fields, and custom variables built on them.
+Insert variables in the description to change the scene per recipient. Only variables whose values can be listed in advance work here: [Datasource](/product-guide/contents/data-binding) fields, Datagraph Object Family fields, and custom variables built on them.
 
 Variables that depend on Workflow data cannot be used. Adding one shows "This variable depends on workflow data, so it can't be used in a generated background."
 
@@ -138,17 +138,17 @@ For example, a frozen-food retailer keeps a mapping Datasource with one row per 
 | Ice creams | A frosty glass counter with pastel tubs and a scoop of vanilla |
 | Fish & seafood | A market fishmonger's stall with crushed ice and lemon slices |
 
-The description is then a Scene variable followed by "Photorealistic food photography, no text, no other product." With 5 products and 9 aisles, publishing prepares 45 scenes.
+The description is then a Scene variable followed by "Photorealistic food photography, no text, no other product." The product images come from a product Datasource field bound to each image, which makes the products the second variable. With 5 products and 9 aisles, publishing prepares 45 scenes.
 
 Switching **Type** between **Color** and **Generated** replaces the previous setting. Coming back to **Generated** starts from an empty description.
 
 ### Publishing With a Generated Background
 
-When you publish a Content that uses a generated background, one scene is prepared for every combination of the variables used — each product and each aisle in the example above — before the new version goes live.
+When you publish a Content that uses a generated background, the new version waits for every scene. One scene is prepared per variable combination — each product and each aisle in the example above.
 
 While the scenes are prepared, the editor is locked: it opens read-only and **Save** and **Publish** stay disabled. The header shows the progress, for example "Generating backgrounds: 12/45". The new version goes live once every scene is ready.
 
-The previously live version keeps serving during the generation. Above a maximum number of combinations, the publish is refused with "The generated background variables would produce N images, which exceeds the maximum of M." Rework the variables to reduce the combinations.
+The previously live version keeps serving during the generation. Above a maximum number of combinations, the publish is refused. The message reads "The generated background variables would produce N images, which exceeds the maximum of M." Rework the variables to reduce the combinations.
 
 <Note>
   A recipient whose combination has no scene sees the images without the generated background.
