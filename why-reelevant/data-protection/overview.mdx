@@ -144,7 +144,7 @@ The URL placed in the email carries a customer identifier so that the Personalis
 
 When a request arrives, the email client or browser also transmits technical data, such as the IP address and the user agent. Reelevant uses them to serve the request (for example device type, email client or approximate location when a Workflow uses it). Behavioural events store the customer identifier and derived context, not the raw IP address.
 
-For customers who do not consent to open and click tracking, you can declare a per-customer opt-out flag on the CRM Datasource. Their open and click events are then stored under a stable pseudonym: they still count in unique statistics, but cannot be linked back to the customer or their purchases. See [Tracking Opt-Out for Opens and Clicks](/advanced-guide/datahub/tracking-opt-out).
+For customers who do not consent to open tracking, you can declare a per-customer opt-out flag on the CRM Datasource. Their open events are then stored under a stable pseudonym: they still count in unique statistics, but cannot be linked back to the customer. Clicks keep the customer identifier so click → purchase attribution is preserved. See [Tracking Opt-Out for Opens](/advanced-guide/datahub/tracking-opt-out).
 
 ## Website Behaviour Collection (Optional)
 

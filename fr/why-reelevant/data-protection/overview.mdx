@@ -144,7 +144,7 @@ L'URL placée dans l'email contient un identifiant client pour que le Personalis
 
 Lors d'un appel, le client de messagerie ou le navigateur transmet aussi des données techniques, comme l'adresse IP et le user agent. Reelevant les utilise pour servir la requête (par exemple type d'appareil, client de messagerie ou localisation approximative si un Workflow l'utilise). Les événements comportementaux stockent l'identifiant client et le contexte dérivé, pas l'adresse IP brute.
 
-Pour les clients qui ne consentent pas au tracking des ouvertures et des clics, vous pouvez déclarer un flag d'opt-out par client sur la Datasource CRM. Leurs événements d'ouverture et de clic sont alors stockés sous un pseudonyme stable : ils comptent toujours dans les statistiques uniques, mais ne peuvent pas être reliés au client ni à ses achats. Voir [Opt-out du tracking des ouvertures et des clics](/fr/advanced-guide/datahub/tracking-opt-out).
+Pour les clients qui ne consentent pas au tracking des ouvertures, vous pouvez déclarer un flag d'opt-out par client sur la Datasource CRM. Leurs événements d'ouverture sont alors stockés sous un pseudonyme stable : ils comptent toujours dans les statistiques uniques, mais ne peuvent pas être reliés au client. Les clics conservent l'identifiant client pour préserver l'attribution clic → achat. Voir [Opt-out du tracking des ouvertures](/fr/advanced-guide/datahub/tracking-opt-out).
 
 ## Collecte du comportement sur le site (optionnelle)
 

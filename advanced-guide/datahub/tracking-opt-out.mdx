@@ -1,6 +1,6 @@
 ---
-title: 'Tracking Opt-Out for Opens and Clicks'
-description: 'Honour per-user opt-out of open and click tracking with a consent flag on your CRM Datasource'
+title: 'Tracking Opt-Out for Opens'
+description: 'Honour per-user opt-out of open tracking with a consent flag on your CRM Datasource'
 ---
 
 ## Before you begin
@@ -10,9 +10,9 @@ description: 'Honour per-user opt-out of open and click tracking with a consent 
 
 ## Overview
 
-Some customers do not consent to open and click tracking. The **Tracking Opt-Out** field type lets a CRM Datasource carry that consent per customer. When the flag is set for a recipient, Reelevant stores their open and click events under a stable pseudonym instead of their customer identifier.
+Some customers do not consent to open tracking. The **Tracking Opt-Out** field type lets a CRM Datasource carry that consent per customer. When the flag is set for a recipient, Reelevant stores their open events under a stable pseudonym instead of their customer identifier.
 
-The pseudonym is a keyed hash of the customer identifier. It is stable per customer, so unique openers and clickers are still counted correctly, but it cannot be linked back to the customer record or to their purchases.
+The pseudonym is a keyed hash of the customer identifier. It is stable per customer, so unique openers are still counted correctly, but it cannot be linked back to the customer record. Clicks are not affected: they keep the customer identifier so click → purchase attribution keeps working.
 
 ## How it works
 
@@ -21,33 +21,33 @@ flowchart LR
     CRM["Your CRM feed<br/>(tracking_optout flag)"] --> DS["CRM Datasource<br/>Field Mapping"]
     DS --> WF["Workflow run<br/>(open or click)"]
     WF --> DEC{"Flag true for<br/>this customer?"}
-    DEC -->|"No or empty"| RAW["Event stored with the<br/>customer identifier"]
-    DEC -->|"Yes"| ANON["Event stored as<br/>anon + pseudonym"]
-    ANON --> STATS["Unique counts still work.<br/>No link to purchases."]
+    DEC -->|"No or empty"| RAW["Open event stored with the<br/>customer identifier"]
+    DEC -->|"Yes"| ANON["Open event stored as<br/>anon + pseudonym"]
+    ANON --> STATS["Unique openers still counted.<br/>Clicks keep the identifier."]
     RAW --> STATS2["Full measurement<br/>as usual"]
 ```
 
 When a Workflow runs for a customer, the Personalisation Engine reads their CRM record — including the flag — to build the personalisation context. That context decides how the open or click event is stored:
 
-| Flag value | Event storage | Effect |
-|------------|---------------|--------|
-| `true` | Pseudonymous identifier (`anon_…`) | Opens and clicks counted in aggregate only; no link between the events and the customer or their purchases |
+| Flag value | Open event storage | Effect |
+|------------|--------------------|--------|
+| `true` | Pseudonymous identifier (`anon_…`) | Opens counted in aggregate only; the open cannot be linked back to the customer |
 | `false`, empty, or field not mapped | Customer identifier | Standard tracking — the feature is opt-in by default |
 
-For opted-out customers, the click redirect does not carry the tracking identifier to your website, so the Reelevant web tag cannot re-identify them from the link.
+Click events are never anonymised. The click keeps the customer identifier and the redirect still carries it to your website, so click → purchase attribution and onsite linking work exactly as before.
 
 <Info>
-  Opting out of tracking does not affect personalisation. The customer's CRM record is still read to generate the Content — only what is stored in open and click events changes.
+  Opting out of tracking does not affect personalisation. The customer's CRM record is still read to generate the Content — only what is stored in open events changes.
 </Info>
 
 ## Configure the flag
 
-1. Add the consent column to your CRM feed, with `true` for customers who opted out of open and click tracking.
+1. Add the consent column to your CRM feed, with `true` for customers who opted out of open tracking.
 2. Open the CRM Datasource and go to the [Field Mapping](/advanced-guide/datahub/field-mapping) step.
 3. Map the column to the **Tracking Opt-Out** (`tracking_opt_out`) field type.
-4. Publish the Datasource. New opens and clicks honour the flag on the next run; already stored events are unchanged.
+4. Publish the Datasource. New opens honour the flag on the next run; already stored events are unchanged.
 
-Only one column per CRM Datasource can carry the Tracking Opt-Out type. Missing or empty values are treated as opted in — write `true` explicitly for every customer who opted out.
+Only one column per CRM Datasource can carry the Tracking Opt-Out type. Missing or empty values are treated as opted in — write `true` explicitly for every customer who opted out of open tracking.
 
 ## Worked example
 
@@ -59,13 +59,15 @@ A travel brand stores email consent in its CRM. Its `contacts` feed now includes
 | C-2088 | true |
 
 - `C-1042` opens a newsletter → the open event stores `C-1042`; reporting attributes opens and clicks to this customer as usual.
-- `C-2088` opens the same newsletter → the event stores `anon_8f3c…`. They still count as one unique opener in reports, but the platform cannot link the event to `C-2088`, their profile, or their purchases.
+- `C-2088` opens the same newsletter → the open event stores `anon_8f3c…`. They still count as one unique opener, but the platform cannot link the open to `C-2088` or their profile.
+- `C-2088` clicks → the click event stores `C-2088` and the redirect carries the tracking identifier, so the click attributes to their purchases like anyone else.
 
 ## What it does not do
 
+- **Clicks** — click events keep the customer identifier and the click redirect keeps the tracking identifier, preserving attribution and onsite linking.
 - **Personalisation** — opted-out customers still receive personalised Content.
-- **Historical events** — previously stored opens and clicks keep their original identifier.
+- **Historical events** — previously stored opens keep their original identifier.
 - **CRM data** — the customer record itself stays in the Datasource; to remove it, see [Anonymising Customer Records](/advanced-guide/datahub/anonymise-customer-records).
-- **Website behaviour** — events collected by the Reelevant web tag are governed by your consent management platform, not by this flag. The flag only prevents the click redirect from passing the tracking identifier.
+- **Website behaviour** — events collected by the Reelevant web tag are governed by your consent management platform, not by this flag.
 
 For the legal context behind tracking opt-outs, see [How Reelevant Works for DPOs](/why-reelevant/data-protection/overview).
