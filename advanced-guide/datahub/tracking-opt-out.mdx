@@ -3,9 +3,14 @@ title: 'Tracking Opt-Out for Opens and Clicks'
 description: 'Honour per-user opt-out of open and click tracking with a consent flag on your CRM Datasource'
 ---
 
+## Before you begin
+
+- Your CRM source feed must expose a consent flag per customer as a boolean column (`true`/`false`), fed from your consent management or preference centre.
+- The CRM Datasource must be the one your Workflows use to load the customer context. Customers whose profile is never read by the Workflow keep standard tracking.
+
 ## Overview
 
-Some customers do not consent to open and click tracking. The **Tracking Opt-Out** field type lets a CRM Datasource carry that consent per customer: when the flag is set for a recipient, Reelevant stores their open and click events under a stable pseudonym instead of their customer identifier.
+Some customers do not consent to open and click tracking. The **Tracking Opt-Out** field type lets a CRM Datasource carry that consent per customer. When the flag is set for a recipient, Reelevant stores their open and click events under a stable pseudonym instead of their customer identifier.
 
 The pseudonym is a keyed hash of the customer identifier. It is stable per customer, so unique openers and clickers are still counted correctly, but it cannot be linked back to the customer record or to their purchases.
 
@@ -34,11 +39,6 @@ For opted-out customers, the click redirect does not carry the tracking identifi
 <Info>
   Opting out of tracking does not affect personalisation. The customer's CRM record is still read to generate the Content — only what is stored in open and click events changes.
 </Info>
-
-## Before you begin
-
-- Your CRM source feed must expose a consent flag per customer as a boolean column (`true`/`false`), fed from your consent management or preference centre.
-- The CRM Datasource must be the one your Workflows use to load the customer context. Customers whose profile is never read by the Workflow keep standard tracking.
 
 ## Configure the flag
 
