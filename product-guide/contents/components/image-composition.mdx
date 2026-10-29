@@ -6,7 +6,7 @@ description: 'Combine several product images into one visual, with automatic bac
 The Image Composition component builds a single visual from several images, arranged automatically and personalised per recipient.
 
 <Note>
-  **Beta** — Image Composition is in beta and only available to technical administrators. Its options can still change. Ask your Technical Account Manager if you cannot see it in the toolbar.
+  **Beta** — Image Composition is in beta and only available to technical administrators. Its options can still change. Ask your Technical Account Manager if you cannot see it in the toolbar. The generated background option also needs the **Generated backgrounds in contents** feature switched on in [Workflow settings](/product-guide/workflows/settings#features).
 </Note>
 
 ![Content Editor with an Image Composition of three transparent perfume bottles arranged in an arc, and its configuration panel](/images/contents/component-image-composition-v1.png)
@@ -120,17 +120,45 @@ The scene always fills the whole component, under every image, whatever the layo
   Describe an empty place: a table, a kitchen counter, a beach. Don't mention the products — they come from your images.
 </Tip>
 
+### Preparing Your Images
+
+Packshots stored as cutouts, with a transparent background, give the best result. A picture shot on a white backdrop keeps a white frame around white packaging, because the backdrop cannot be told apart from the white pack.
+
+<Tip>
+  If your catalogue only holds white-backdrop pictures, run **Remove background** on each image first to get clean cutouts.
+</Tip>
+
 ### Varying the Scene per Recipient
 
-Insert variables in the description to change the scene per recipient. For example, "A sunny terrace in" followed by a City variable from your [Datasource](/product-guide/contents/data-binding) gives each city its own scene.
+Insert variables in the description to change the scene per recipient. Only variables whose values can be listed in advance work here: Datasource fields, Datagraph Object Family fields, and custom variables built on them.
 
-Each different description creates its scene once. The same scene is then reused for every recipient and every product sharing that description.
+Variables that depend on Workflow data cannot be used. Adding one shows "This variable depends on workflow data, so it can't be used in a generated background."
 
-<Note>
-  A new description takes a moment to create the first time. Until its scene is ready, recipients see the images on a transparent background.
-</Note>
+For example, a frozen-food retailer keeps a mapping Datasource with one row per aisle:
+
+| Aisle | Scene description |
+|-------|-------------------|
+| Desserts | An elegant pâtisserie counter, white marble dusted with cocoa, fresh raspberries |
+| Ice creams | A frosty glass counter with pastel tubs and a scoop of vanilla |
+| Fish & seafood | A market fishmonger's stall with crushed ice and lemon slices |
+
+The description is then a Scene variable followed by "Photorealistic food photography, no text, no other product." With 5 products and 9 aisles, publishing prepares 45 scenes.
 
 Switching **Type** between **Color** and **Generated** replaces the previous setting. Coming back to **Generated** starts from an empty description.
+
+### Publishing With a Generated Background
+
+When you publish a Content that uses a generated background, one scene is prepared for every combination of the variables used — each product and each aisle in the example above — before the new version goes live.
+
+While the scenes are prepared, the editor is locked: it opens read-only and **Save** and **Publish** stay disabled. The header shows the progress, for example "Generating backgrounds: 12/45". The new version goes live once every scene is ready.
+
+The previously live version keeps serving during the generation. Above a maximum number of combinations, the publish is refused with "The generated background variables would produce N images, which exceeds the maximum of M." Rework the variables to reduce the combinations.
+
+<Note>
+  A recipient whose combination has no scene sees the images without the generated background.
+</Note>
+
+You can review every scene, and regenerate or reject a failed one, in [Content settings](/product-guide/contents/settings#generated-backgrounds).
 
 ## Previewing the Result
 
@@ -151,6 +179,9 @@ The composition is built for you and shown directly on the canvas, so you see th
   </Card>
   <Card title="Conditions" icon="filter" href="/product-guide/contents/conditions">
     Show the composition only to the right audience.
+  </Card>
+  <Card title="Content Settings" icon="gear" href="/product-guide/contents/settings#generated-backgrounds">
+    Review, regenerate or reject every generated scene.
   </Card>
   <Card title="All Components" icon="shapes" href="/product-guide/contents/components">
     Explore the other component types.

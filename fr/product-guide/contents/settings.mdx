@@ -1,6 +1,6 @@
 ---
 title: 'Paramètres du Content'
-description: 'Gérez les polices personnalisées et autres paramètres au niveau du contenu'
+description: 'Gérez les polices personnalisées, les arrière-plans générés et autres paramètres au niveau du contenu'
 ---
 
 ![Page de paramètres du Content affichant la gestion des polices](/images/contents/settings-fonts-v2.png)
@@ -8,6 +8,8 @@ description: 'Gérez les polices personnalisées et autres paramètres au niveau
 ## Présentation
 
 La page de paramètres du Content vous permet de gérer les ressources partagées entre tous vos templates de contenu. Accédez-y depuis le lien **Settings** dans la navigation latérale du Content Editor.
+
+L'onglet **Arrière-plans générés** vous permet de passer en revue et de corriger les scènes préparées pour un [fond généré](/fr/product-guide/contents/components/image-composition#générer-un-fond), une par combinaison de variables.
 
 ## Polices
 
@@ -48,3 +50,59 @@ Cliquez sur le bouton **Edit** à côté d'une police existante pour mettre à j
 <Info>
   Au moins une variante de fichier de police est requise par famille de polices.
 </Info>
+
+## Arrière-plans générés
+
+L'onglet **Arrière-plans générés** liste chaque arrière-plan généré précalculé d'un Content, un par combinaison de variables. Il n'apparaît que lorsque la fonctionnalité **Fonds générés dans les contenus** est activée — voir les [paramètres du Workflow](/fr/product-guide/workflows/settings#fonctionnalités).
+
+![Onglet Arrière-plans générés affichant une grille de cartes de scènes](/images/contents/settings-generated-backgrounds-fr.png)
+
+### Ouvrir l'onglet
+
+Ouvrez l'onglet **Arrière-plans générés**, puis choisissez un Content dans **Sélectionner un contenu**. Le sélecteur ne liste que les Contents qui ont des arrière-plans générés, les contenus masqués inclus, et vous pouvez rechercher par nom.
+
+### Filtrer par statut
+
+Utilisez les badges de statut pour filtrer la grille.
+
+| Statut | Signification |
+|--------|---------------|
+| **En attente** | La scène est en file d'attente pour la génération. |
+| **En cours** | La scène est en cours de génération. |
+| **Terminé** | La scène est prête et servie avec le Content. |
+| **Échoué** | La génération a échoué ; ouvrez la carte pour voir l'erreur. |
+| **Rejeté** | La scène a été rejetée et n'est plus dessinée. |
+
+Chaque carte montre l'image, un badge de statut, un badge **Prompt personnalisé** lorsque le prompt a été modifié, et la description. La grille affiche 24 cartes par page.
+
+### Examiner un arrière-plan
+
+Cliquez sur une carte pour ouvrir sa fenêtre. À gauche se trouvent le champ **Prompt de génération** et les détails : Statut, Prompt, Entrées (les valeurs des variables), et l'Erreur en cas d'échec. À droite, l'image, ou un chargement tant qu'elle est en attente ou en cours.
+
+![Fenêtre d'un fond généré avec le prompt de génération à gauche et la scène à droite](/images/contents/settings-generated-backgrounds-detail-fr.png)
+
+### Régénérer un arrière-plan
+
+<Steps>
+  <Step title="Ouvrez l'arrière-plan">
+    Cliquez sur sa carte pour ouvrir la fenêtre.
+  </Step>
+  <Step title="Modifiez le prompt de génération">
+    Changez le **Prompt de génération** pour cette combinaison uniquement. Le laisser identique à la description du Content efface tout prompt personnalisé.
+  </Step>
+  <Step title="Régénérez">
+    Cliquez sur **Régénérer**. La fenêtre reste ouverte et l'image se met à jour sur place une fois la nouvelle scène prête.
+  </Step>
+</Steps>
+
+<Note>
+  Une seule génération peut tourner à la fois par arrière-plan. Tant qu'une génération est en cours, régénérer affiche « Une génération est déjà en cours pour cet arrière-plan. »
+</Note>
+
+### Rejeter un arrière-plan
+
+<Warning>
+  **Rejeter** supprime l'image générée et les rendus ne l'utiliseront plus. Les destinataires de cette combinaison verront alors les images sans le fond généré.
+</Warning>
+
+Cliquez sur **Rejeter** sur un arrière-plan, puis confirmez. Régénérer et Rejeter ne s'affichent que pour les utilisateurs autorisés à modifier les Contents.

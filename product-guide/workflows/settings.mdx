@@ -5,9 +5,10 @@ description: 'Configure variable profiles and JSON templates for your workflows'
 
 ## Accessing Workflow Settings
 
-Open the **Workflows** application from the sidebar, then navigate to the **Settings** page. The settings page has two tabs:
+Open the **Workflows** application from the sidebar, then navigate to the **Settings** page. The settings page has three tabs:
 - **Variable profiles** — Configure reusable URL parameter templates.
 - **JSON Templates** — Define and manage JSON output templates for headless integrations.
+- **Features** — Enable or disable channels and advanced features for this account.
 
 <Note>
   Branch categories are configured together with tags in [Analytics Settings](/product-guide/analytics/settings), so your whole nomenclature lives in one place.
@@ -176,3 +177,13 @@ When a workflow with JSON Template output nodes is published, the system validat
 2. **Cross-branch consistency** — All JSON Template nodes across all branches must reference the **same template**. This ensures every branch produces the same JSON shape.
 
 If validation fails, the publish is blocked with a clear error message indicating which node or branch has a mismatch.
+
+---
+
+## Features
+
+![Features settings tab with the channel and advanced feature toggles](/images/workflows/settings-features.png)
+
+The **Features** tab enables or disables channels and advanced features for this account. Its toggles control what is available in the workflow editor.
+
+**Generated backgrounds in contents** unlocks the **Generated** background type in the [Image Composition component](/product-guide/contents/components/image-composition#generating-a-background) and the [Generated backgrounds tab](/product-guide/contents/settings#generated-backgrounds) in Content settings. While the feature is off, both stay hidden, and Contents that already use a generated background remain editable.
