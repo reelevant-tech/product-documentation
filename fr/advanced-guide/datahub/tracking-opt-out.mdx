@@ -3,9 +3,14 @@ title: 'Opt-out du tracking des ouvertures et des clics'
 description: "Respectez l'opt-out individuel du tracking des ouvertures et clics grâce à un flag de consentement sur votre Datasource CRM"
 ---
 
+## Avant de commencer
+
+- Votre flux CRM doit exposer un flag de consentement par client sous forme de colonne booléenne (`true`/`false`), alimentée par votre gestion du consentement ou votre centre de préférences.
+- La Datasource CRM doit être celle que vos Workflows utilisent pour charger le contexte client. Les clients dont le profil n'est jamais lu par le Workflow conservent le tracking standard.
+
 ## Vue d'ensemble
 
-Certains clients ne consentent pas au tracking des ouvertures et des clics. Le type de champ **Tracking Opt-Out** permet à une Datasource CRM de transporter ce consentement par client : quand le flag est activé pour un destinataire, Reelevant stocke ses événements d'ouverture et de clic sous un pseudonyme stable plutôt que sous son identifiant client.
+Certains clients ne consentent pas au tracking des ouvertures et des clics. Le type de champ **Tracking Opt-Out** permet à une Datasource CRM de transporter ce consentement par client. Quand le flag est activé pour un destinataire, Reelevant stocke ses événements d'ouverture et de clic sous un pseudonyme stable plutôt que sous son identifiant client.
 
 Le pseudonyme est un hash à clé de l'identifiant client. Il est stable par client, donc les ouvreurs et cliqueurs uniques restent comptés correctement, mais il ne peut pas être relié à la fiche client ni à ses achats.
 
@@ -34,11 +39,6 @@ Pour les clients opt-out, la redirection du clic ne transporte pas l'identifiant
 <Info>
   L'opt-out du tracking n'affecte pas la personnalisation. La fiche CRM du client est toujours lue pour générer le Content — seul ce qui est stocké dans les événements d'ouverture et de clic change.
 </Info>
-
-## Avant de commencer
-
-- Votre flux CRM doit exposer un flag de consentement par client sous forme de colonne booléenne (`true`/`false`), alimentée par votre gestion du consentement ou votre centre de préférences.
-- La Datasource CRM doit être celle que vos Workflows utilisent pour charger le contexte client. Les clients dont le profil n'est jamais lu par le Workflow conservent le tracking standard.
 
 ## Configurer le flag
 
