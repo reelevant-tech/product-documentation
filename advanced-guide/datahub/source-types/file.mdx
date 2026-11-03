@@ -195,9 +195,13 @@ When a file-upload datasource is created, Reelevant automatically generates FTP 
     |-------|-------|
     | **Host** | `ftp.reelevant.com` |
     | **FTP/FTPS Port** | `21` |
-    | **SFTP Port** | `8022` |
+    | **SFTP Port** | `22` |
     | **Username** | Your datasource ID (the 24-character hex string) |
     | **Password** | The password returned in step 1 |
+
+    <Info>
+      Port `22` is the standard SFTP port. Port `8022` is still accepted for existing integrations. Use port `22` for new setups: some systems, such as Salesforce Commerce Cloud, only allow outbound connections on ports 22, 80, 443 and 587.
+    </Info>
   </Step>
 </Steps>
 
@@ -232,7 +236,7 @@ Instead of using a password, you can configure your datasource to authenticate v
   </Step>
   <Step title="Connect using your private key">
     ```bash
-    sftp -P 8022 -i sftp-key ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp -i sftp-key ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -251,7 +255,7 @@ Once you have credentials (password or SSH key), upload a file using any standar
 <Tabs>
   <Tab title="SFTP (password)">
     ```bash
-    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -259,13 +263,13 @@ Once you have credentials (password or SSH key), upload a file using any standar
 
     Or using an SFTP library/client, connect with:
     - Host: `ftp.reelevant.com`
-    - Port: `8022`
+    - Port: `22`
     - Username: `<datasource_id>`
     - Password: `<password from API>`
   </Tab>
   <Tab title="SFTP (SSH key)">
     ```bash
-    sftp -P 8022 -i /path/to/private-key ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp -i /path/to/private-key ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -273,7 +277,7 @@ Once you have credentials (password or SSH key), upload a file using any standar
 
     Or using an SFTP library/client, connect with:
     - Host: `ftp.reelevant.com`
-    - Port: `8022`
+    - Port: `22`
     - Username: `<datasource_id>`
     - Private key: `<path to your private key file>`
   </Tab>
@@ -301,7 +305,7 @@ Over both SFTP and FTP, files pushed back-to-back within the same session (conne
 <Tabs>
   <Tab title="SFTP">
     ```bash
-    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/products.csv products.csv
     put /path/to/your/stores.csv stores.csv
     quit

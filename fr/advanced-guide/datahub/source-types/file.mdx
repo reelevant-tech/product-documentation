@@ -195,9 +195,13 @@ Lorsqu'une Datasource par upload de fichier est créée, Reelevant génère auto
     |-------|-------|
     | **Host** | `ftp.reelevant.com` |
     | **Port FTP/FTPS** | `21` |
-    | **Port SFTP** | `8022` |
+    | **Port SFTP** | `22` |
     | **Username** | L'ID de votre Datasource (chaîne hexadécimale de 24 caractères) |
     | **Password** | Le mot de passe renvoyé à l'étape 1 |
+
+    <Info>
+      Le port `22` est le port SFTP standard. Le port `8022` reste accepté pour les intégrations existantes. Utilisez le port `22` pour toute nouvelle configuration : certains systèmes, comme Salesforce Commerce Cloud, n'autorisent les connexions sortantes que sur les ports 22, 80, 443 et 587.
+    </Info>
   </Step>
 </Steps>
 
@@ -232,7 +236,7 @@ Au lieu d'utiliser un mot de passe, vous pouvez configurer votre Datasource pour
   </Step>
   <Step title="Se connecter avec votre clé privée">
     ```bash
-    sftp -P 8022 -i sftp-key ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp -i sftp-key ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -251,7 +255,7 @@ Une fois que vous avez des identifiants (mot de passe ou clé SSH), uploadez un 
 <Tabs>
   <Tab title="SFTP (mot de passe)">
     ```bash
-    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -259,13 +263,13 @@ Une fois que vous avez des identifiants (mot de passe ou clé SSH), uploadez un 
 
     Ou en utilisant une bibliothèque/un client SFTP, connectez-vous avec :
     - Host : `ftp.reelevant.com`
-    - Port : `8022`
+    - Port : `22`
     - Username : `<datasource_id>`
     - Password : `<password from API>`
   </Tab>
   <Tab title="SFTP (clé SSH)">
     ```bash
-    sftp -P 8022 -i /path/to/private-key ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp -i /path/to/private-key ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/data.csv data.csv
     quit
     EOF
@@ -273,7 +277,7 @@ Une fois que vous avez des identifiants (mot de passe ou clé SSH), uploadez un 
 
     Ou en utilisant une bibliothèque/un client SFTP, connectez-vous avec :
     - Host : `ftp.reelevant.com`
-    - Port : `8022`
+    - Port : `22`
     - Username : `<datasource_id>`
     - Clé privée : `<path to your private key file>`
   </Tab>
@@ -301,7 +305,7 @@ En SFTP comme en FTP, les fichiers envoyés à la suite au cours d'une même ses
 <Tabs>
   <Tab title="SFTP">
     ```bash
-    sftp -P 8022 ${datasource_id}@ftp.reelevant.com <<EOF
+    sftp ${datasource_id}@ftp.reelevant.com <<EOF
     put /path/to/your/products.csv products.csv
     put /path/to/your/stores.csv stores.csv
     quit
