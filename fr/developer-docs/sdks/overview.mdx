@@ -5,6 +5,30 @@ description: 'Choisissez la couche sur laquelle construire (API REST, SDK TypeSc
 
 ## Vue d'ensemble
 
+Les SDK TypeScript permettent de scripter la plateforme Reelevant avec la même validation que ses éditeurs. Ce script liste les Datasources de votre compte avec le SDK Data :
+
+```typescript
+import { createClient } from '@reelevant-tech/data-sdk/client'
+
+const data = createClient({
+  baseURL: 'https://api.reelevant.com/v2/datasources',
+  axios: { headers: { authorization: `Bearer ${process.env.REELEVANT_ACCESS_TOKEN ?? ''}` } },
+})
+
+data.datasources
+  .list({ perPage: 20 })
+  .then(({ items, count }) => {
+    console.log(`${count} Datasources`)
+    for (const datasource of items) {
+      console.log(datasource.id, datasource.name)
+    }
+  })
+  .catch(error => {
+    console.error(error)
+    process.exit(1)
+  })
+```
+
 Reelevant expose la même plateforme à travers trois couches. Chaque couche appelle celle du dessous : vous choisissez la part de validation que vous voulez reconstruire vous-même.
 
 ```mermaid
