@@ -87,14 +87,14 @@ Use the root entrypoint to validate a Datagraph Object's SQL or a Datagraph Sche
 const data = createClient(options)
 ```
 
-| Option | Type | Required | Description |
-|---|---|---|---|
-| `baseURL` | `string` | Yes, unless `api` is set | Datasources API, `https://api.reelevant.com/v2/datasources` |
-| `api` | `DatasourcesApi` | No | An already configured `@reelevant-tech/datasources-openapi-client` instance, used instead of `baseURL` and `axios` |
-| `axios` | `AxiosRequestConfig` | No | Applied to every request: headers, timeout, proxy |
-| `collectorURL` | `string` | For row writes | Collector used by Mutable Datasource writes, `https://collector.reelevant.com` |
-| `contentsURL` | `string` | No | Contents API, `https://api.reelevant.com`. When set, `image_url` values are downloaded and re-hosted on Reelevant before they are written |
-| `images` | `object` | No | How `image_url` values are fetched: public hosts only by default, allowed content types, maximum size |
+| Option | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `baseURL` | `string` | Yes, unless `api` is set | — | Datasources API, `https://api.reelevant.com/v2/datasources` |
+| `api` | `DatasourcesApi` | No | — | An already configured `@reelevant-tech/datasources-openapi-client` instance, used instead of `baseURL` and `axios` |
+| `axios` | `AxiosRequestConfig` | No | — | Applied to every request: headers, timeout, proxy |
+| `collectorURL` | `string` | For row writes | — | Collector used by Mutable Datasource writes, `https://collector.reelevant.com` |
+| `contentsURL` | `string` | No | — | Contents API, `https://api.reelevant.com`. When set, `image_url` values are downloaded and re-hosted on Reelevant before they are written |
+| `images` | `object` | No | `{ allowPrivateUrls: false }` | How `image_url` values are fetched: public hosts only by default, allowed content types, maximum size |
 
 | Namespace | Scope |
 |---|---|

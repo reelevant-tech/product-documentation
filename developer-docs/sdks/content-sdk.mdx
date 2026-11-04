@@ -88,21 +88,21 @@ Both modes use CanvasKit (WebAssembly). In Node.js, load the `canvaskit.wasm` by
 
 ## Settings
 
-| Setting | Type | Required | Description |
-|---|---|---|---|
-| `datasources.apiBaseURL` | `string` | Yes | Datasources API, `https://api.reelevant.com/v2/datasources` |
-| `contents.apiBaseURL` | `string` | No | Contents API, `https://api.reelevant.com/v2`. Needed by components the API renders, such as image composition |
-| `camoBaseURL` | `string` | Yes | Image proxy, `https://camo.reelevant.com/v1/camo/` |
-| `locateCanvasKitFile` | `(file: string) => string` | Yes | URL of a CanvasKit file. In Node.js, pre-load CanvasKit instead |
-| `fonts.token` | `string` | Yes | Google Fonts API key used to list and load fonts |
-| `fonts.defaultFonts` | `string[]` | Yes | Fonts loaded up front |
-| `fonts.locateCustom` | `(id: string) => Promise<{ files }>` | Yes | Returns the files of a custom font uploaded to the account |
-| `googleMaps.token` / `googleMaps.secret` | `string` | Yes / No | Google Maps key for map components, and the signing secret (server only) |
-| `authenticatedAxiosInstanceGenerator` | `(config) => AxiosInstance` | No | Axios instance used for authenticated calls (Datasources, Datagraph Object Families). Set the `authorization` header here |
-| `axiosInstanceGenerator` | `(config) => AxiosInstance` | No | Axios instance used for public calls (fonts, images) |
-| `cache` | `{ get, set }` | No | Cache for downloaded fonts and images, shared between renders |
-| `disablePreviews` | `boolean` | No | Skip page preview generation |
-| `logger` | `{ info, warn, error }` | No | Receives non-fatal issues |
+| Setting | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `datasources.apiBaseURL` | `string` | Yes | — | Datasources API, `https://api.reelevant.com/v2/datasources` |
+| `contents.apiBaseURL` | `string` | No | `''` | Contents API, `https://api.reelevant.com/v2`. Needed by components the API renders, such as image composition |
+| `camoBaseURL` | `string` | Yes | — | Image proxy, `https://camo.reelevant.com/v1/camo/` |
+| `locateCanvasKitFile` | `(file: string) => string` | Yes | — | URL of a CanvasKit file. In Node.js, pre-load CanvasKit instead |
+| `fonts.token` | `string` | Yes | — | Google Fonts API key used to list and load fonts |
+| `fonts.defaultFonts` | `string[]` | Yes | — | Fonts loaded up front |
+| `fonts.locateCustom` | `(id: string) => Promise<{ files }>` | Yes | — | Returns the files of a custom font uploaded to the account |
+| `googleMaps.token` / `googleMaps.secret` | `string` | Yes / No | — | Google Maps key for map components, and the signing secret (server only) |
+| `authenticatedAxiosInstanceGenerator` | `(config) => AxiosInstance` | No | `axios.create(config)`, no `authorization` header | Axios instance used for authenticated calls (Datasources, Datagraph Object Families). Set the `authorization` header here |
+| `axiosInstanceGenerator` | `(config) => AxiosInstance` | No | `axios.create(config)` | Axios instance used for public calls (fonts, images) |
+| `cache` | `{ get, set }` | No | No-op | Cache for downloaded fonts and images, shared between renders |
+| `disablePreviews` | `boolean` | No | `false` | Skip page preview generation |
+| `logger` | `{ info, warn, error }` | No | No-op | Receives non-fatal issues |
 
 ## Template model
 
