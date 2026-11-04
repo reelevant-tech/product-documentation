@@ -113,16 +113,16 @@ const sdk = new WorkflowsSDK(apis, options)
 
 The SDK caches successful responses to identical requests for the lifetime of the instance, so loading a large Workflow fetches each Datasource and Content once. Send the `x-rlvt-sdk-no-cache` header on a request to bypass the cache.
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `typecheck` | `boolean` | `true` | Type check the Workflow after every committed change |
-| `hints` | `boolean` | `true` | Preload the suggestions of each builder (compatible upstream Nodes, Content templates, option values) when it is created. Turn it off in scripts that already know the values they set |
-| `tolerateMissingResources` | `boolean` | `false` | Treat a deleted Datasource or Datagraph Object as unconfigured instead of throwing, so a Workflow that still references it can be loaded and repaired |
-| `autoRefreshBindings` | `boolean \| object` | `false` | Recompute the bindings of the Content Nodes affected by a change (debounced) |
-| `automaticExclusions` | `boolean` | `false` | Make every `datagraph-query` Node exclude the products already returned by earlier `datagraph-query` Nodes of its Branches |
-| `resolveResourceGroupAttributes` | `() => Promise<Record<string, string[]>>` | none | Returns the attributes of the Workflow's Teams (Resource Groups), used by `datagraph-query` option suggestions |
-| `nodesWhitelist` | `Set<string>` | none | Only build these Node ids in `use()`. The other Nodes stay in the definition but are not type checked |
-| `compute` | `ComputeOptions` | none | Run `analyze()` and Branch computation on a worker instead of the calling thread. Useful in browsers only |
+| Option | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `typecheck` | `boolean` | No | `true` | Type check the Workflow after every committed change |
+| `hints` | `boolean` | No | `true` | Preload the suggestions of each builder (compatible upstream Nodes, Content templates, option values) when it is created. Turn it off in scripts that already know the values they set |
+| `tolerateMissingResources` | `boolean` | No | `false` | Treat a deleted Datasource or Datagraph Object as unconfigured instead of throwing, so a Workflow that still references it can be loaded and repaired |
+| `autoRefreshBindings` | `boolean \| object` | No | `false` | Recompute the bindings of the Content Nodes affected by a change (debounced) |
+| `automaticExclusions` | `boolean` | No | `false` | Make every `datagraph-query` Node exclude the products already returned by earlier `datagraph-query` Nodes of its Branches |
+| `resolveResourceGroupAttributes` | `() => Promise<Record<string, string[]>>` | No | none | Returns the attributes of the Workflow's Teams (Resource Groups), used by `datagraph-query` option suggestions |
+| `nodesWhitelist` | `Set<string>` | No | none | Only build these Node ids in `use()`. The other Nodes stay in the definition but are not type checked |
+| `compute` | `ComputeOptions` | No | none | Run `analyze()` and Branch computation on a worker instead of the calling thread. Useful in browsers only |
 
 ## Node builders
 

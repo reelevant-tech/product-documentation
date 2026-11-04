@@ -87,14 +87,14 @@ Utilisez le point d'entrée racine pour valider le SQL d'un Datagraph Object ou 
 const data = createClient(options)
 ```
 
-| Option | Type | Requis | Description |
-|---|---|---|---|
-| `baseURL` | `string` | Oui, sauf si `api` est défini | API Datasources, `https://api.reelevant.com/v2/datasources` |
-| `api` | `DatasourcesApi` | Non | Une instance déjà configurée de `@reelevant-tech/datasources-openapi-client`, utilisée à la place de `baseURL` et `axios` |
-| `axios` | `AxiosRequestConfig` | Non | Appliquée à chaque requête : headers, timeout, proxy |
-| `collectorURL` | `string` | Pour écrire des lignes | Collector utilisé par les écritures dans les Mutable Datasources, `https://collector.reelevant.com` |
-| `contentsURL` | `string` | Non | API Contents, `https://api.reelevant.com`. Quand elle est définie, les valeurs `image_url` sont téléchargées et réhébergées chez Reelevant avant d'être écrites |
-| `images` | `object` | Non | Comment les valeurs `image_url` sont récupérées : hôtes publics uniquement par défaut, types de contenu autorisés, taille maximale |
+| Option | Type | Requis | Défaut | Description |
+|---|---|---|---|---|
+| `baseURL` | `string` | Oui, sauf si `api` est défini | — | API Datasources, `https://api.reelevant.com/v2/datasources` |
+| `api` | `DatasourcesApi` | Non | — | Une instance déjà configurée de `@reelevant-tech/datasources-openapi-client`, utilisée à la place de `baseURL` et `axios` |
+| `axios` | `AxiosRequestConfig` | Non | — | Appliquée à chaque requête : headers, timeout, proxy |
+| `collectorURL` | `string` | Pour écrire des lignes | — | Collector utilisé par les écritures dans les Mutable Datasources, `https://collector.reelevant.com` |
+| `contentsURL` | `string` | Non | — | API Contents, `https://api.reelevant.com`. Quand elle est définie, les valeurs `image_url` sont téléchargées et réhébergées chez Reelevant avant d'être écrites |
+| `images` | `object` | Non | `{ allowPrivateUrls: false }` | Comment les valeurs `image_url` sont récupérées : hôtes publics uniquement par défaut, types de contenu autorisés, taille maximale |
 
 | Namespace | Périmètre |
 |---|---|

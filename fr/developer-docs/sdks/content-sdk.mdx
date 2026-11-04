@@ -88,21 +88,21 @@ Les deux modes utilisent CanvasKit (WebAssembly). Dans Node.js, chargez les octe
 
 ## Settings
 
-| Setting | Type | Requis | Description |
-|---|---|---|---|
-| `datasources.apiBaseURL` | `string` | Oui | API Datasources, `https://api.reelevant.com/v2/datasources` |
-| `contents.apiBaseURL` | `string` | Non | API Contents, `https://api.reelevant.com/v2`. Nécessaire aux composants rendus par l'API, comme la composition d'image |
-| `camoBaseURL` | `string` | Oui | Proxy d'images, `https://camo.reelevant.com/v1/camo/` |
-| `locateCanvasKitFile` | `(file: string) => string` | Oui | URL d'un fichier CanvasKit. Dans Node.js, préchargez CanvasKit à la place |
-| `fonts.token` | `string` | Oui | Clé d'API Google Fonts utilisée pour lister et charger les polices |
-| `fonts.defaultFonts` | `string[]` | Oui | Polices chargées d'emblée |
-| `fonts.locateCustom` | `(id: string) => Promise<{ files }>` | Oui | Renvoie les fichiers d'une police personnalisée uploadée sur le compte |
-| `googleMaps.token` / `googleMaps.secret` | `string` | Oui / Non | Clé Google Maps pour les composants carte, et le secret de signature (serveur uniquement) |
-| `authenticatedAxiosInstanceGenerator` | `(config) => AxiosInstance` | Non | Instance axios utilisée pour les appels authentifiés (Datasources, Datagraph Object Families). Définissez le header `authorization` ici |
-| `axiosInstanceGenerator` | `(config) => AxiosInstance` | Non | Instance axios utilisée pour les appels publics (polices, images) |
-| `cache` | `{ get, set }` | Non | Cache des polices et images téléchargées, partagé entre les rendus |
-| `disablePreviews` | `boolean` | Non | Ne pas générer les aperçus des pages |
-| `logger` | `{ info, warn, error }` | Non | Reçoit les problèmes non bloquants |
+| Setting | Type | Requis | Défaut | Description |
+|---|---|---|---|---|
+| `datasources.apiBaseURL` | `string` | Oui | — | API Datasources, `https://api.reelevant.com/v2/datasources` |
+| `contents.apiBaseURL` | `string` | Non | `''` | API Contents, `https://api.reelevant.com/v2`. Nécessaire aux composants rendus par l'API, comme la composition d'image |
+| `camoBaseURL` | `string` | Oui | — | Proxy d'images, `https://camo.reelevant.com/v1/camo/` |
+| `locateCanvasKitFile` | `(file: string) => string` | Oui | — | URL d'un fichier CanvasKit. Dans Node.js, préchargez CanvasKit à la place |
+| `fonts.token` | `string` | Oui | — | Clé d'API Google Fonts utilisée pour lister et charger les polices |
+| `fonts.defaultFonts` | `string[]` | Oui | — | Polices chargées d'emblée |
+| `fonts.locateCustom` | `(id: string) => Promise<{ files }>` | Oui | — | Renvoie les fichiers d'une police personnalisée uploadée sur le compte |
+| `googleMaps.token` / `googleMaps.secret` | `string` | Oui / Non | — | Clé Google Maps pour les composants carte, et le secret de signature (serveur uniquement) |
+| `authenticatedAxiosInstanceGenerator` | `(config) => AxiosInstance` | Non | `axios.create(config)`, sans header `authorization` | Instance axios utilisée pour les appels authentifiés (Datasources, Datagraph Object Families). Définissez le header `authorization` ici |
+| `axiosInstanceGenerator` | `(config) => AxiosInstance` | Non | `axios.create(config)` | Instance axios utilisée pour les appels publics (polices, images) |
+| `cache` | `{ get, set }` | Non | Aucun effet | Cache des polices et images téléchargées, partagé entre les rendus |
+| `disablePreviews` | `boolean` | Non | `false` | Ne pas générer les aperçus des pages |
+| `logger` | `{ info, warn, error }` | Non | Aucun effet | Reçoit les problèmes non bloquants |
 
 ## Modèle de template
 
