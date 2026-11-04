@@ -403,6 +403,15 @@
                 ]
               },
               {
+                "group": "SDKs",
+                "pages": [
+                  "developer-docs/sdks/overview",
+                  "developer-docs/sdks/workflows-sdk",
+                  "developer-docs/sdks/data-sdk",
+                  "developer-docs/sdks/content-sdk"
+                ]
+              },
+              {
                 "group": "Data Collection",
                 "pages": [
                   "developer-docs/data-collection/overview",
@@ -901,6 +910,15 @@
                   "fr/developer-docs/api-reference/introduction",
                   "fr/developer-docs/api-reference/authentication",
                   "fr/developer-docs/api-reference/scim"
+                ]
+              },
+              {
+                "group": "SDKs",
+                "pages": [
+                  "fr/developer-docs/sdks/overview",
+                  "fr/developer-docs/sdks/workflows-sdk",
+                  "fr/developer-docs/sdks/data-sdk",
+                  "fr/developer-docs/sdks/content-sdk"
                 ]
               },
               {
