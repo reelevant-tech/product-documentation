@@ -45,8 +45,15 @@ async function addLocaleParameter(): Promise<void> {
   localeParameter.set('name', 'locale')
   const nodeId = await sdk.nodes.add(localeParameter)
 
+  // Splice the new Node between the first entrypoint and the Node it pointed to
   const [entrypointId] = Object.keys(sdk.workflow.entrypoints)
+  const previousTarget = sdk.workflow.edges[entrypointId]?.to
+  const batch = sdk.startBatchUpdate()
   sdk.edges.add(entrypointId, nodeId)
+  if (previousTarget !== undefined) {
+    sdk.edges.add(nodeId, previousTarget)
+  }
+  batch.end()
 
   const errors = sdk.typecheck()
   if (errors.length > 0) {

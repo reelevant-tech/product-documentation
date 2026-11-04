@@ -8,7 +8,8 @@ description: 'Load, edit and render Content templates in the browser or in Node.
 `@reelevant-tech/content-sdk` is the library the Content Editor is built on. It loads a Content template, resolves its dependencies (Datasources, Datagraph Object Families, Workflow values), and renders its pages to an image. The example below reads the live version of a Content, lists its pages and the sources it uses, and renders the first page to a PNG in Node.js.
 
 ```typescript
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
+import axios from 'axios'
 import ContentsApi, { ContentVersionState } from '@reelevant-tech/contents-openapi-client'
 import { ContentSDK, validateTemplate } from '@reelevant-tech/content-sdk'
 
@@ -48,6 +49,11 @@ async function inspectContent(): Promise<void> {
       locateCustom: async () => ({ files: {} }),
     },
     googleMaps: { token: process.env.GOOGLE_MAPS_TOKEN ?? '', secret: process.env.GOOGLE_MAPS_SECRET ?? '' },
+    authenticatedAxiosInstanceGenerator: config => {
+      const instance = axios.create(config)
+      instance.defaults.headers.common.authorization = `Bearer ${accessToken}`
+      return instance
+    },
   })
 
   const [firstPage] = Object.keys(validation.template.pages)
@@ -60,7 +66,8 @@ async function inspectContent(): Promise<void> {
 
   await sdk.render.render()
   const png = sdk.render.toBinary('png')
-  console.log(`Rendered ${png.byteLength} bytes`)
+  await writeFile('first-page.png', png)
+  console.log(`Wrote first-page.png (${png.byteLength} bytes)`)
   sdk.destroy()
 }
 
