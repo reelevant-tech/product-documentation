@@ -5,6 +5,30 @@ description: 'Pick the layer you build on (REST API, TypeScript SDKs or MCP) and
 
 ## Overview
 
+The TypeScript SDKs script the Reelevant platform with the same validation as its editors. This lists the Datasources of your account with the Data SDK:
+
+```typescript
+import { createClient } from '@reelevant-tech/data-sdk/client'
+
+const data = createClient({
+  baseURL: 'https://api.reelevant.com/v2/datasources',
+  axios: { headers: { authorization: `Bearer ${process.env.REELEVANT_ACCESS_TOKEN ?? ''}` } },
+})
+
+data.datasources
+  .list({ perPage: 20 })
+  .then(({ items, count }) => {
+    console.log(`${count} Datasources`)
+    for (const datasource of items) {
+      console.log(datasource.id, datasource.name)
+    }
+  })
+  .catch(error => {
+    console.error(error)
+    process.exit(1)
+  })
+```
+
 Reelevant exposes the same platform through three layers. Every layer calls the one below it, so you choose how much validation you want to rebuild yourself.
 
 ```mermaid
