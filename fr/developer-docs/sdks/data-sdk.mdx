@@ -1,0 +1,131 @@
+---
+title: 'SDK Data'
+description: 'Scriptez les Datasources, les Mutable Datasources et le Datagraph (Schema, Objects, Object Families) avec @reelevant-tech/data-sdk'
+---
+
+## Vue d'ensemble
+
+`@reelevant-tech/data-sdk` couvre DataHub et le Datagraph : les Datasources et leurs étapes de configuration, les Mutable Datasources, le Datagraph Schema, les Datagraph Objects et les Datagraph Object Families. L'exemple ci-dessous interroge un Datagraph Object pour un client, puis crée une Mutable Datasource et y écrit deux lignes.
+
+```typescript
+import {
+  createClient,
+  FieldMapType,
+  isDatasourcesApiError,
+  MutableDatasources,
+} from '@reelevant-tech/data-sdk/client'
+
+const accessToken = process.env.REELEVANT_ACCESS_TOKEN ?? ''
+
+const data = createClient({
+  baseURL: 'https://api.reelevant.com/v2/datasources',
+  collectorURL: 'https://collector.reelevant.com',
+  axios: {
+    headers: { authorization: `Bearer ${accessToken}` },
+  },
+})
+
+async function previewRecommendations(customerId: string): Promise<void> {
+  const object = await data.datagraph.objects.findByName('recommended_products')
+  if (object === null) {
+    throw new Error('Datagraph Object not found')
+  }
+
+  const result = await data.datagraph.objects.query(object.id, {
+    userIds: [customerId],
+    perPage: 10,
+  })
+  console.log(`${result.count} rows`, result.entries)
+}
+
+async function syncStores(): Promise<void> {
+  const { id } = await data.datasources.mutable.create({
+    name: 'Stores',
+    fields: [
+      MutableDatasources.field({ name: 'store_id', type: FieldMapType.STRING }),
+      MutableDatasources.field({ name: 'city', type: FieldMapType.STRING }),
+      MutableDatasources.field({ name: 'opening_hours', type: FieldMapType.STRING }),
+    ],
+  })
+
+  await data.datasources.mutable.upsertRows(id, [
+    { entry_index: 'paris-01', store_id: 'paris-01', city: 'Paris', opening_hours: '09:00-20:00' },
+    { entry_index: 'lyon-02', store_id: 'lyon-02', city: 'Lyon', opening_hours: '10:00-19:00' },
+  ])
+}
+
+previewRecommendations('customer-42')
+  .then(syncStores)
+  .catch(error => {
+    if (isDatasourcesApiError(error)) {
+      console.error(`Reelevant API error ${error.status}`, error.errorCode, error.data)
+    } else {
+      console.error(error)
+    }
+    process.exit(1)
+  })
+```
+
+## Deux points d'entrée
+
+| Import | Réseau | Contenu |
+|---|---|---|
+| `@reelevant-tech/data-sdk` | Aucun | Schémas Zod et builders pour les Datagraph Schemas, Objects et Object Families, le DSL de requête, le parsing et la validation SQL. Fonctionne dans le navigateur, dans Node.js et en CI |
+| `@reelevant-tech/data-sdk/client` | API Datasources et collector | `createClient()` : des appels typés regroupés par namespace, construits sur le point d'entrée racine |
+
+Utilisez le point d'entrée racine pour valider le SQL d'un Datagraph Object ou un Datagraph Schema dans une pull request, sans identifiants. Utilisez le client pour lire et écrire dans le compte.
+
+## Client
+
+```typescript
+const data = createClient(options)
+```
+
+| Option | Type | Requis | Description |
+|---|---|---|---|
+| `baseURL` | `string` | Oui, sauf si `api` est défini | API Datasources, `https://api.reelevant.com/v2/datasources` |
+| `api` | `DatasourcesApi` | Non | Une instance déjà configurée de `@reelevant-tech/datasources-openapi-client`, utilisée à la place de `baseURL` et `axios` |
+| `axios` | `AxiosRequestConfig` | Non | Appliquée à chaque requête : headers, timeout, proxy |
+| `collectorURL` | `string` | Pour écrire des lignes | Collector utilisé par les écritures dans les Mutable Datasources, `https://collector.reelevant.com` |
+| `contentsURL` | `string` | Non | API Contents, `https://api.reelevant.com`. Quand elle est définie, les valeurs `image_url` sont téléchargées et réhébergées chez Reelevant avant d'être écrites |
+| `images` | `object` | Non | Comment les valeurs `image_url` sont récupérées : hôtes publics uniquement par défaut, types de contenu autorisés, taille maximale |
+
+| Namespace | Périmètre |
+|---|---|
+| `datasources` | Lister, créer, lire et supprimer des Datasources ; lire les logs et une ligne d'exemple ; parcourir les étapes de configuration |
+| `datasources.mutable` | Créer des Mutable Datasources et gérer leurs champs ; valider, upserter et supprimer des lignes |
+| `datasources.worker` / `datasources.proxy` | Analyser les champs, uploader un fichier, lancer ou mettre en pause l'import d'une Datasource en pull |
+| `query` | Lire les lignes, les valeurs distinctes et les comptages d'une Datasource avec le DSL de requête ; parcourir toutes les pages |
+| `datagraph.schema` | Lire, valider, écrire et publier le Datagraph Schema de la company ; construire un Schema draft à partir de Datasources |
+| `datagraph.objects` | Lire, écrire, publier, interroger et prévisualiser des Datagraph Objects ; linter leur SQL et inférer leurs answers |
+| `datagraph.objectFamilies` | Lire, écrire et publier des Datagraph Object Families ; vérifier la conformité des Datagraph Objects membres |
+| `oauth` / `settings` | Clients OAuth utilisés par les Datasources en pull ; notifications des Datasources au niveau de la company |
+| `api` | Le client généré brut, pour les endpoints que les namespaces ne couvrent pas |
+
+## Concepts clés
+
+**Étapes de configuration.** Une Datasource se configure via une liste ordonnée d'étapes (`configure_name`, `configure_sources`, `configure_fields`, ... `validate`). `datasources.runSteps(id, steps)` les valide dans l'ordre, vérifie avant chaque appel que l'étape est celle attendue, et s'arrête avant `validate` si vous passez `stopAt: 'validate'`.
+
+**Mutable Datasources.** Une Mutable Datasource est une Datasource dans laquelle vous écrivez ligne par ligne. Les lignes sont identifiées par `entry_index` : une ligne sans `entry_index` est insérée, une ligne avec est upsertée. `deleteRows()` supprime des lignes (suppression logique) par `entry_index`. `upsertRows()` valide chaque valeur contre le type de son champ avant tout envoi, puis écrit par lots de 500.
+
+**Provisioning du Datagraph.** `upsertByName()` sur les Datagraph Objects et les Datagraph Object Families crée ou met à jour par nom, puis publie si vous passez `publish: true`. Lancer deux fois le même script donne le même résultat, ce qui convient à la promotion entre environnements et à la CI.
+
+**Contrôles locaux.** `datagraph.schema.validateLocal()` vérifie un Datagraph Schema sans aucune requête. `datagraph.objects.lintSql()`, `datagraph.objects.inferAnswers()` et `datagraph.objectFamilies.checkConformance()` vérifient un Datagraph Object contre le Datagraph Schema live (récupéré si vous n'en passez pas) et renvoient les mêmes erreurs que l'éditeur du Datagraph, avant toute sauvegarde.
+
+**Pagination.** Les appels de liste renvoient `{ items, count, page, perPage }`. `query.iterateRows()` est un générateur asynchrone sur toutes les pages.
+
+## Erreurs
+
+| Erreur | Levée quand | Champs |
+|---|---|---|
+| `DatasourcesApiError` | L'API répond avec un statut non-2xx. Testez-la avec `isDatasourcesApiError(error)` | `status`, `errorCode` (`error_code` JSend), `data` (par exemple `{ expectedStep }`) |
+| `ZodError` | Une entrée ne respecte pas son schéma. Rien n'est envoyé | `issues` |
+| `MutableRowValidationError` | Une valeur de ligne ne correspond pas au type de son champ dans `upsertRows()`. Rien n'est envoyé | `issues: { row, path, expected, received }[]` |
+| `InvalidImageSourceError` | Une valeur `image_url` ne peut pas être réhébergée | `url`, `reason` (`invalid_url`, `protocol`, `private_host`, `content_type`) |
+
+## Pages associées
+
+- [Vue d'ensemble des SDK](/fr/developer-docs/sdks/overview)
+- [API Datagraph Schema](/fr/developer-docs/guides/datagraph-schema-api)
+- [Filtres de requête des Datasources](/fr/developer-docs/guides/datasource-query-filters)
+- [SDK Workflows](/fr/developer-docs/sdks/workflows-sdk)

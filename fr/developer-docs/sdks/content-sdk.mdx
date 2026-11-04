@@ -1,0 +1,133 @@
+---
+title: 'SDK Content'
+description: 'Chargez, modifiez et rendez des templates de Content dans le navigateur ou dans Node.js avec @reelevant-tech/content-sdk'
+---
+
+## Vue d'ensemble
+
+`@reelevant-tech/content-sdk` est la librairie sur laquelle repose le Content Editor. Il charge un template de Content, résout ses dépendances (Datasources, Datagraph Object Families, valeurs du Workflow) et rend ses pages en image. L'exemple ci-dessous lit la version live d'un Content, liste ses pages et les sources qu'il utilise, puis rend la première page en PNG dans Node.js.
+
+```typescript
+import { readFile } from 'node:fs/promises'
+import ContentsApi, { ContentVersionState } from '@reelevant-tech/contents-openapi-client'
+import { ContentSDK, validateTemplate } from '@reelevant-tech/content-sdk'
+
+type CanvasKitOptions = Parameters<typeof ContentSDK.initCanvasKit>[0] & { wasmBinary: Buffer }
+
+const accessToken = process.env.REELEVANT_ACCESS_TOKEN ?? ''
+const contentId = process.env.REELEVANT_CONTENT_ID ?? ''
+
+const contentsApi = new ContentsApi({
+  baseURL: 'https://api.reelevant.com/v2',
+  headers: { authorization: `Bearer ${accessToken}` },
+})
+
+async function inspectContent(): Promise<void> {
+  const { data } = await contentsApi.Content.get({ id: contentId, versions: [ContentVersionState.LIVE] })
+  const live = data.data.versions.find(version => version.state === ContentVersionState.LIVE)
+  if (live === undefined) {
+    throw new Error('The Content has no live version')
+  }
+
+  const validation = validateTemplate(live.template)
+  if (!validation.ok) {
+    throw new Error('The template is not valid')
+  }
+
+  const wasmBinary = await readFile(require.resolve('canvaskit-wasm/bin/canvaskit.wasm'))
+  const canvasKitOptions: CanvasKitOptions = { wasmBinary, locateFile: file => file }
+  await ContentSDK.initCanvasKit(canvasKitOptions)
+
+  const sdk = new ContentSDK('server', {
+    datasources: { apiBaseURL: 'https://api.reelevant.com/v2/datasources' },
+    camoBaseURL: 'https://camo.reelevant.com/v1/camo/',
+    locateCanvasKitFile: file => file,
+    fonts: {
+      token: process.env.GOOGLE_FONTS_TOKEN ?? '',
+      defaultFonts: [],
+      locateCustom: async () => ({ files: {} }),
+    },
+    googleMaps: { token: process.env.GOOGLE_MAPS_TOKEN ?? '', secret: process.env.GOOGLE_MAPS_SECRET ?? '' },
+  })
+
+  const [firstPage] = Object.keys(validation.template.pages)
+  await sdk.use(validation.template, firstPage)
+
+  for (const page of sdk.pages.list()) {
+    console.log(page.id, page.title)
+  }
+  console.log(sdk.dependencies.analyzeSources())
+
+  await sdk.render.render()
+  const png = sdk.render.toBinary('png')
+  console.log(`Rendered ${png.byteLength} bytes`)
+  sdk.destroy()
+}
+
+inspectContent().catch(error => {
+  console.error(error)
+  process.exit(1)
+})
+```
+
+## Modes
+
+| Mode | S'exécute dans | Rendu | Usage type |
+|---|---|---|---|
+| `browser` | Une page web | `render.setSource(elementId)` dessine dans un élément HTML. Le SDK gère aussi la sélection et l'édition interactive | Un éditeur ou un aperçu intégré à votre back-office |
+| `server` | Node.js | Canvas hors écran, lu avec `render.toBinary('png')` ou `render.toRGBA()` | Contrôles en masse, aperçus en CI, assets générés |
+
+Les deux modes utilisent CanvasKit (WebAssembly). Dans Node.js, chargez les octets de `canvaskit.wasm` et appelez `ContentSDK.initCanvasKit()` avant de créer le SDK, comme dans l'exemple : l'appel est mis en cache, l'initialisation du SDK est donc ignorée ensuite.
+
+## Settings
+
+| Setting | Type | Requis | Description |
+|---|---|---|---|
+| `datasources.apiBaseURL` | `string` | Oui | API Datasources, `https://api.reelevant.com/v2/datasources` |
+| `contents.apiBaseURL` | `string` | Non | API Contents, `https://api.reelevant.com/v2`. Nécessaire aux composants rendus par l'API, comme la composition d'image |
+| `camoBaseURL` | `string` | Oui | Proxy d'images, `https://camo.reelevant.com/v1/camo/` |
+| `locateCanvasKitFile` | `(file: string) => string` | Oui | URL d'un fichier CanvasKit. Dans Node.js, préchargez CanvasKit à la place |
+| `fonts.token` | `string` | Oui | Clé d'API Google Fonts utilisée pour lister et charger les polices |
+| `fonts.defaultFonts` | `string[]` | Oui | Polices chargées d'emblée |
+| `fonts.locateCustom` | `(id: string) => Promise<{ files }>` | Oui | Renvoie les fichiers d'une police personnalisée uploadée sur le compte |
+| `googleMaps.token` / `googleMaps.secret` | `string` | Oui / Non | Clé Google Maps pour les composants carte, et le secret de signature (serveur uniquement) |
+| `authenticatedAxiosInstanceGenerator` | `(config) => AxiosInstance` | Non | Instance axios utilisée pour les appels authentifiés (Datasources, Datagraph Object Families). Définissez le header `authorization` ici |
+| `axiosInstanceGenerator` | `(config) => AxiosInstance` | Non | Instance axios utilisée pour les appels publics (polices, images) |
+| `cache` | `{ get, set }` | Non | Cache des polices et images téléchargées, partagé entre les rendus |
+| `disablePreviews` | `boolean` | Non | Ne pas générer les aperçus des pages |
+| `logger` | `{ info, warn, error }` | Non | Reçoit les problèmes non bloquants |
+
+## Modèle de template
+
+| Partie | Description |
+|---|---|
+| Pages | Un template a une ou plusieurs pages (par exemple une par image d'animation). Le SDK rend une page à la fois : `use(template, pageId)` la choisit, `setCurrentPage(pageId)` en change |
+| Composants | Texte, image, image animée, composition d'image, formes, code-barres, compte à rebours, carte, barre et arc de progression, organisés en arbre par page |
+| Dépendances | Les données auxquelles le template se lie : Datasources, Datagraph Object Families, valeurs envoyées par le Workflow, settings et transformations personnalisées. `use()` les charge, sauf si vous passez leurs données dans `dependenciesData`, indexées par id de dépendance |
+| Groupes de conditions | Une liste ordonnée de conditions sur des valeurs de dépendances : les composants de la première condition vraie sont rendus, les autres sont ignorés, et une entrée `else` donne le repli |
+| Groupes de composants | Des groupes de composants réutilisables |
+
+`sdk.pages`, `sdk.components`, `sdk.dependencies`, `sdk.conditionGroups` et `sdk.componentGroups` modifient chaque partie. `sdk.render` dessine la page courante et expose les aperçus de chaque page.
+
+## Modifier et exporter
+
+1. Chargez un template avec `await sdk.use(template, pageId)`. Validez d'abord avec `validateTemplate()` les données venant de l'extérieur.
+2. Faites vos changements via les namespaces. Encadrez plusieurs changements entre `sdk.startUpdate()` et `sdk.commitUpdate()` pour les enregistrer comme une seule entrée d'historique (`undo()`, `redo()`), ou appelez `sdk.discardUpdate()` pour les abandonner.
+3. Appelez `sdk.export()` pour obtenir le `Template` résultant, et sauvegardez-le via l'API Contents.
+
+N'exportez pas tant que `sdk.hasPendingUpdate()` vaut `true` : le template est alors un draft avec des changements partiellement appliqués.
+
+## Erreurs
+
+| Source | Forme | Traitement |
+|---|---|---|
+| `validateTemplate(value)` | `{ ok: true, template }` ou `{ ok: false, ... }` | Rejetez l'entrée avant d'appeler `use()` |
+| `sdk.use()` | `Error` levée | Une dépendance ne peut pas être chargée (Datasource supprimée, permission manquante) |
+| Réordonnancement d'un groupe de conditions | `ReorderConditionsError` avec un `ReorderConditionsErrorCode` | L'ordre demandé casse une condition |
+| Client de l'API Contents | Erreur axios | Lisez `error.response.status` et `error.response.data` |
+
+## Pages associées
+
+- [Vue d'ensemble des SDK](/fr/developer-docs/sdks/overview)
+- [SDK Workflows](/fr/developer-docs/sdks/workflows-sdk)
+- [Content Editor](/fr/product-guide/contents/editor)
