@@ -39,14 +39,20 @@ async function previewRecommendations(customerId: string): Promise<void> {
 }
 
 async function syncStores(): Promise<void> {
-  const { id } = await data.datasources.mutable.create({
-    name: 'Stores',
-    fields: [
-      MutableDatasources.field({ name: 'store_id', type: FieldMapType.STRING }),
-      MutableDatasources.field({ name: 'city', type: FieldMapType.STRING }),
-      MutableDatasources.field({ name: 'opening_hours', type: FieldMapType.STRING }),
-    ],
-  })
+  // Create the Mutable Datasource on the first run, then reuse its id
+  const id =
+    process.env.REELEVANT_STORES_DATASOURCE_ID ??
+    (
+      await data.datasources.mutable.create({
+        name: 'Stores',
+        fields: [
+          MutableDatasources.field({ name: 'store_id', type: FieldMapType.STRING }),
+          MutableDatasources.field({ name: 'city', type: FieldMapType.STRING }),
+          MutableDatasources.field({ name: 'opening_hours', type: FieldMapType.STRING }),
+        ],
+      })
+    ).id
+  console.log(`Stores Datasource: ${id}`)
 
   await data.datasources.mutable.upsertRows(id, [
     { entry_index: 'paris-01', store_id: 'paris-01', city: 'Paris', opening_hours: '09:00-20:00' },
