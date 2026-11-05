@@ -1,6 +1,6 @@
 ---
 title: 'Workflows SDK'
-description: 'Load, edit, type check and analyse Workflows from TypeScript, or write them as code, with @reelevant-tech/workflows-sdk'
+description: 'Load, edit, type check and analyse Workflows from TypeScript with @reelevant-tech/workflows-sdk'
 ---
 
 ## Overview
@@ -160,46 +160,6 @@ Entrypoints (`sdk.entrypoints.add({ type: 'email', format: 'content-image' })`) 
 | `circular_dependencies` | Two Nodes depend on each other |
 
 Some Node types add their own error types (for example a Datagraph Object that no longer exists). Log `type` and `payload` rather than matching a closed list.
-
-## Workflows as code
-
-The `@reelevant-tech/workflows-sdk/codegen` entrypoint turns a Workflow into TypeScript and back. `decompile()` writes a definition as a `defineWorkflow()` module, and `compile()` turns that module back into a definition. Each Node becomes a typed `ctx` call, and a Logic Node becomes an `if`:
-
-```typescript
-import { compile, diagnose } from '@reelevant-tech/workflows-sdk/codegen'
-
-const source = `
-import { defineWorkflow } from '@reelevant-tech/workflows-sdk/codegen'
-
-export default defineWorkflow({
-  entrypoints: [{ type: 'email', format: 'content-image' }],
-  async run(ctx) {
-    const locale = await ctx.data.urlParameter({ name: 'locale' })
-    if (ctx.condition({ type: 'and', conditions: [{ field: ctx.ref([locale], value => value), operation: '$eq', values: ['fr-FR'] }] })) {
-      return ctx.content({ contents: [{ type: 'email', id: '6650f1c2a1b2c3d4e5f60718', bindings: {} }] })
-    }
-    return ctx.empty()
-  },
-})
-`
-
-const { typescript, compile: compileErrors } = diagnose(source)
-if (typescript.length > 0 || compileErrors.length > 0) {
-  for (const issue of [...typescript, ...compileErrors]) {
-    console.error(`line ${issue.line}: ${issue.message}`)
-  }
-  process.exit(1)
-}
-
-const document = compile(source)
-console.log(Object.keys(document.definition.nodes).length, 'nodes')
-```
-
-- `diagnose()` returns every TypeScript and compile error at once. Run it before `compile()`, which stops on the first fatal error and ignores the option values it cannot evaluate.
-- `decompile()` writes `/** @id ... */` doc tags above each call. Keep them when you edit the code: `compile()` reuses these ids, so the Node ids and the analytics attached to them stay stable.
-- A compiled definition still goes through `sdk.use()` and `sdk.typecheck()`: codegen checks the TypeScript surface, the SDK checks the definition against your Datasources and Contents.
-
-This is the shape to give an AI agent or a code review: one TypeScript file per Workflow, diffable, with the same checks as the editor.
 
 ## Saving and publishing
 
