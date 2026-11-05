@@ -1,6 +1,6 @@
 ---
 title: 'SDK Workflows'
-description: 'Chargez, modifiez, type checkez et analysez des Workflows en TypeScript, ou écrivez-les en code, avec @reelevant-tech/workflows-sdk'
+description: 'Chargez, modifiez, type checkez et analysez des Workflows en TypeScript avec @reelevant-tech/workflows-sdk'
 ---
 
 ## Vue d'ensemble
@@ -160,46 +160,6 @@ Les entrypoints (`sdk.entrypoints.add({ type: 'email', format: 'content-image' }
 | `circular_dependencies` | Deux Nodes dépendent l'un de l'autre |
 
 Certains types de Node ajoutent leurs propres types d'erreur (par exemple un Datagraph Object qui n'existe plus). Journalisez `type` et `payload` plutôt que de comparer à une liste fermée.
-
-## Workflows en code
-
-Le point d'entrée `@reelevant-tech/workflows-sdk/codegen` transforme un Workflow en TypeScript et inversement. `decompile()` écrit une définition sous forme de module `defineWorkflow()`, et `compile()` retransforme ce module en définition. Chaque Node devient un appel `ctx` typé, et un Logic Node devient un `if` :
-
-```typescript
-import { compile, diagnose } from '@reelevant-tech/workflows-sdk/codegen'
-
-const source = `
-import { defineWorkflow } from '@reelevant-tech/workflows-sdk/codegen'
-
-export default defineWorkflow({
-  entrypoints: [{ type: 'email', format: 'content-image' }],
-  async run(ctx) {
-    const locale = await ctx.data.urlParameter({ name: 'locale' })
-    if (ctx.condition({ type: 'and', conditions: [{ field: ctx.ref([locale], value => value), operation: '$eq', values: ['fr-FR'] }] })) {
-      return ctx.content({ contents: [{ type: 'email', id: '6650f1c2a1b2c3d4e5f60718', bindings: {} }] })
-    }
-    return ctx.empty()
-  },
-})
-`
-
-const { typescript, compile: compileErrors } = diagnose(source)
-if (typescript.length > 0 || compileErrors.length > 0) {
-  for (const issue of [...typescript, ...compileErrors]) {
-    console.error(`line ${issue.line}: ${issue.message}`)
-  }
-  process.exit(1)
-}
-
-const document = compile(source)
-console.log(Object.keys(document.definition.nodes).length, 'nodes')
-```
-
-- `diagnose()` renvoie toutes les erreurs TypeScript et de compilation d'un coup. Lancez-le avant `compile()`, qui s'arrête à la première erreur fatale et ignore les valeurs d'option qu'il ne sait pas évaluer.
-- `decompile()` écrit des doc tags `/** @id ... */` au-dessus de chaque appel. Conservez-les quand vous modifiez le code : `compile()` réutilise ces ids, ce qui garde stables les ids de Node et les analytics qui y sont rattachées.
-- Une définition compilée passe quand même par `sdk.use()` et `sdk.typecheck()` : le codegen vérifie la surface TypeScript, le SDK vérifie la définition contre vos Datasources et vos Contents.
-
-C'est la forme à donner à un agent IA ou à une revue de code : un fichier TypeScript par Workflow, diffable, avec les mêmes contrôles que l'éditeur.
 
 ## Sauvegarder et publier
 
