@@ -8,14 +8,14 @@ description: 'Collect behavioural events from your website with the Reelevant tr
 The tracking tag is a small bootstrap script that loads the Reelevant client tracker and exposes `window.reel`. Send an event with two lines:
 
 ```html
-<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}" async></script>
+<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}"></script>
 <script>
   window.reel.identify('user@example.com')
   window.reel.event('product_page', { ids: ['SKU-12345'], locale: 'EN-GB' })
 </script>
 ```
 
-Both calls are safe before the tracker finishes loading: the bootstrap script defines `window.reel` synchronously and buffers calls in `window.reel.queue`, which the tracker drains once per second after it initialises.
+The bootstrap loads synchronously in this example, so both calls are buffered safely while the tracker and its configuration load. With an `async` bootstrap, wait for it to load before calling `window.reel`.
 
 The exact snippet, with your `companyId` and `datasourceId` already substituted, is displayed by the **Configure Reelevant Script** step of the tracking Datasource wizard.
 
@@ -51,9 +51,80 @@ export const trackProductView = (productId: string, locale: string): void => {
 
 </CodeGroup>
 
-The tag injects the tracker from the same origin (`/rlvt?company=…&datasource=…`). The tracker is cached for 5 minutes, or 60 seconds when the company has on-site integrations, so tag or Workflow changes propagate without a deploy.
+### Auto-updated tag (default)
+
+The `/tag-rlvt?company=&datasource=` URL remains supported. Its bootstrap loads the latest versioned tracker from the same origin. Keep this option to receive tracker updates automatically; do not attach a fixed SRI hash to this changing bootstrap.
+
+The tracker fetches `/config?company=&datasource=` from its own script origin for collection URLs and Workflow integrations. Configuration can change independently of the static JavaScript bundle.
 
 Loading the tag twice is a no-op: the bootstrap exits early when `window.reel` already exists.
+
+### Pinned version with Subresource Integrity (SRI)
+
+Retrieve the release manifest when preparing your deployment, not on each visitor's page load:
+
+```bash
+curl --fail --silent --show-error https://scripts-repo.reelevant.com/rlvt.json
+```
+
+Example response for version `1.1.0`:
+
+```json
+{
+  "version": "1.1.0",
+  "url": "https://scripts-repo.reelevant.com/rlvt-1.1.0.js",
+  "integrity": "sha384-Z8mA0aO/5Puep/gsARGJdIeW3awJhFGk7S9nFN3JJVNBFK1+8TUg+oUH+Lo8st7N"
+}
+```
+
+Copy the returned `url` and `integrity` together. Replace the example identifiers with your company and Datasource IDs:
+
+```html
+<script>
+  window.reel = { companyId: '507f1f77bcf86cd799439011', datasourceId: '507f191e810c19729de860ea' }
+</script>
+<script src="https://scripts-repo.reelevant.com/rlvt-1.1.0.js" integrity="sha384-Z8mA0aO/5Puep/gsARGJdIeW3awJhFGk7S9nFN3JJVNBFK1+8TUg+oUH+Lo8st7N" crossorigin="anonymous" async></script>
+```
+
+Versioned releases are immutable. Upgrade deliberately by replacing both attributes from a new manifest. An unknown release returns `404`; a hash mismatch makes the browser refuse execution. If the manifest request fails, retain your existing pin rather than deploying an incomplete snippet.
+
+| Setting | Type | Required | Default | Description |
+|---------|------|----------|---------|-------------|
+| `window.reel.companyId` | `string` | Yes | None | Company identifier. |
+| `window.reel.datasourceId` | `string` | Yes | None | Tracking Datasource identifier. |
+| `window.reel.customCode` | `boolean` | No | `false` | Explicit opt-in to custom integration code. |
+| `src` | URL | Yes | None | Immutable manifest `url`. |
+| `integrity` | `string` | Yes | None | Manifest SHA-384 integrity value. |
+| `crossorigin` | `string` | Yes, for SRI | None | Set to `anonymous`. |
+| `async` | Boolean attribute | No | Absent | Load without blocking HTML parsing. |
+
+The minimal pinned snippet does not install event-method stubs before the bundle loads. Wait for the external script's `load` event before calling `event()` or `identify()`.
+
+### Custom code integrations
+
+Pinned installations run custom integration code only when both conditions hold:
+
+- Reelevant has enabled `workflow_integration_custom_code` for your company.
+- You explicitly set `customCode: true` in `window.reel` before loading the tracker.
+
+For example, add `customCode: true` alongside `companyId` and `datasourceId` in the initialiser above. It is off otherwise. The legacy `/tag-rlvt` bootstrap already opts in, so existing installations continue running custom code when Reelevant enables it for the company.
+
+Without company enablement, saving new or changed non-empty integration code returns `403`. Removing code remains allowed. Contact Reelevant to request enablement; changing the browser flag cannot bypass the company restriction.
+
+### Content Security Policy
+
+Merge these sources into your site's existing CSP; preserve any other sources your application needs:
+
+```text
+script-src 'self' https://scripts-repo.reelevant.com;
+connect-src 'self' https://scripts-repo.reelevant.com https://reelevant.run https://collector.reelevant.com;
+```
+
+Authorise the inline `window.reel` initialiser with a CSP hash or a fresh per-response nonce on its `<script>` element and in `script-src`. Do not enable unrestricted inline scripts just for this initialiser.
+
+Add `'unsafe-eval'` to `script-src` only if you opt into custom code integrations, which use `eval`. SRI pins the bundle, not runtime configuration, custom code, or rendered [Content](/glossary).
+
+The production Runner is `https://reelevant.run`; collection uses `https://collector.reelevant.com`. If your company uses a custom Runner domain, allow it in `connect-src` too. Rendered web HTML may include inline scripts or event handlers requiring separate CSP review, independently of custom integration code.
 
 ## `window.reel` API
 
