@@ -31,6 +31,22 @@ This capability is required when binding a Node option of another Datagraph Obje
 
 For a Workflow with several [Channel](/glossary) entrypoints, such as several email images, every entrypoint reads the first row. This matches a Datasource configured with a limit of 1.
 
+#### Using the output without an exists condition
+
+A single-row Object is read as one value per answer, not as a list of rows. You can bind its answers directly in the Nodes placed after it on the Branch, such as an option of another Datagraph Object or a Content binding. You do not need an `exists(result)` condition or a list mapping first.
+
+| | Object without single-row | Object with single-row |
+|---|---|---|
+| Output read as | A list of rows | One row |
+| Bind an answer to another Object's option | Refused (**Invalid used data**) | Accepted |
+| Row read by each Channel entrypoint | The row at the entrypoint's position | Always the first row |
+
+Example: a `customer_profile` Object returns the visitor's `store_code`. With **Single row** enabled, bind `store_code` straight to the `store_code` option of a `recently_viewed_products` Object. Every image of the email then uses the same store.
+
+<Info>
+  If the Object returns no row, the bound answer is empty. Make the target option optional or give it a default value, or add an `exists(result)` condition when a Branch must handle that case separately.
+</Info>
+
 <Info>
   Setting the Data Node's result limit to 1 does not declare the Object single-row. Enable **Single row** in the Object's annotations to allow scalar bindings and first-row behaviour across Channel entrypoints.
 </Info>

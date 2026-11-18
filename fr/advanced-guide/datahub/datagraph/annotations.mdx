@@ -31,6 +31,22 @@ Cette capacité est nécessaire pour lier une option d'un Node d'un autre Datagr
 
 Lorsqu'un Workflow comporte plusieurs [Channels](/fr/glossary), par exemple plusieurs images d'email, chacun lit la première ligne. Ce comportement correspond à celui d'une Datasource limitée à 1 résultat.
 
+#### Utiliser la sortie sans condition d'existence
+
+Un Datagraph Object single-row est lu comme une valeur par réponse, et non comme une liste de lignes. Vous pouvez lier ses réponses directement dans les Nodes placés après lui sur la Branch, par exemple une option d'un autre Datagraph Object ou une liaison de Content. Aucune condition `existe(résultat)` ni correspondance de liste n'est nécessaire au préalable.
+
+| | Object sans single-row | Object avec single-row |
+|---|---|---|
+| Sortie lue comme | Une liste de lignes | Une ligne |
+| Lier une réponse à l'option d'un autre Object | Refusé (**Une des données utilisées est invalide**) | Accepté |
+| Ligne lue par chaque Channel | La ligne correspondant à la position du Channel | Toujours la première ligne |
+
+Exemple : un Datagraph Object `customer_profile` renvoie le `store_code` du visiteur. Avec **Une seule ligne** activé, liez directement `store_code` à l'option `store_code` d'un Datagraph Object `recently_viewed_products`. Chaque image de l'email utilise alors le même magasin.
+
+<Info>
+  Si le Datagraph Object ne renvoie aucune ligne, la réponse liée est vide. Rendez l'option cible facultative ou donnez-lui une valeur par défaut, ou ajoutez une condition `existe(résultat)` lorsqu'une Branch doit traiter ce cas séparément.
+</Info>
+
 <Info>
   Limiter les résultats du Data Node à 1 ne déclare pas le Datagraph Object single-row. Activez **Une seule ligne** pour autoriser les liaisons scalaires et utiliser la première ligne pour chaque Channel.
 </Info>
