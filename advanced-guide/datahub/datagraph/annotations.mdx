@@ -1,0 +1,111 @@
+---
+title: 'Datagraph Object Annotations'
+description: 'Configure capabilities, answer roles and Analytics tags, then republish the Workflows using your Datagraph Object'
+---
+
+## Before You Begin
+
+- Create a [Datagraph Object](/advanced-guide/datahub/datagraph/entities) against a published [Datagraph Schema](/advanced-guide/datahub/datagraph/schema).
+- For DataHub navigation basics, see [Datagraph](/product-guide/datahub/datagraph).
+- Identify the [Workflows](/glossary) that use the Object: they must be republished after annotation changes.
+
+## Open the Annotations Tab
+
+In the Object editor, open **Annotations** from the right rail, next to **Input / Output**. The tab contains **Workflow capabilities**, **Answer roles** and **Analytics tags**.
+
+Annotations describe how Workflows and Analytics interpret the Object. They do not change its query results or the primitive types of its answers.
+
+An Object supports at most **100 annotations** across all three sections. Validation errors appear in the tab, including duplicate capabilities, duplicate tags and repeated answer roles.
+
+<Warning>
+  Workflows read the Object's annotations when the Workflows are published. After publishing an annotation change, republish every Workflow using the Object. The tab always displays this reminder.
+</Warning>
+
+## Workflow Capabilities
+
+### Single row — single-row
+
+Enable **Single row** to declare that the Object returns one row. Workflows use only the first returned row, even if the query returns several.
+
+This capability is required when binding a Node option of another Datagraph Object to an answer from this Object. Without it, the Workflow editor reports **Invalid used data** for that scalar binding.
+
+For a Workflow with several [Channel](/glossary) entrypoints, such as several email images, every entrypoint reads the first row. This matches a Datasource configured with a limit of 1.
+
+<Info>
+  Setting the Data Node's result limit to 1 does not declare the Object single-row. Enable **Single row** in the Object's annotations to allow scalar bindings and first-row behaviour across Channel entrypoints.
+</Info>
+
+### Automatic context — auto-context
+
+Enable **Automatic context** to load the Object into the Workflow context automatically, like Datasource context. It is available on all [Branches](/glossary) and preloaded at each run.
+
+- An Object with a required option lacking a static default is not loaded automatically. Configure a **Fixed value** suggestion for that option.
+- Automatic context does not fill missing inputs. Context-based suggestions do not replace a static default for a required option.
+- Answer roles do not populate context fields such as locale or tracking opt-out as CRM Datasources do.
+
+## Answer Roles
+
+Each answer is an output column with a primitive type, such as `string`, `number` or `boolean`. An optional role describes its meaning without changing that type.
+
+For each answer, choose one of the following settings:
+
+| Setting | Meaning |
+|---------|---------|
+| **Inherited · role** | Use the role inferred from the Datagraph Schema column. |
+| An explicit role | Assign the selected meaning to this answer. |
+| **None** | Remove the inherited role. The answer keeps its primitive type but has no role-based behaviour. |
+
+<Info>
+  After saving, an inherited role is stored and shown as an explicit role. Each answer can have at most one role, and each role can appear only once per Object.
+</Info>
+
+### Available Roles
+
+| Role | Editor label | Meaning |
+|------|--------------|---------|
+| `reference_id` | **Product reference** | A product reference for attribution, exclusions and deduplication. |
+| `reference_ids` | **Product references** | A list of product references. |
+| `product_id` | **Product ID** | A product identifier for attribution. |
+| `price` | **Purchase price** | The purchase amount. |
+| `locale` | **Locale** | The user's language or locale. |
+| `transaction_id` | **Transaction ID** | The purchase transaction identifier. |
+| `transaction_source` | **Transaction source** | The source of a purchase transaction. |
+| `tracking_opt_out` | **Tracking opt-out** | A boolean answer: true means tracking must be disabled for this user. |
+| `user` | **User identifier** | The user identifier. |
+| `purchase_user` | **Purchasing user** | The identifier of the user associated with a purchase. |
+| `purchase_datetime` | **Purchase date** | The purchase date and time. |
+
+### How Roles Are Used
+
+- **Workflow behaviour:** `reference_id` enables excluding references already displayed in earlier product slots. An `excluded_reference_ids` option lets the query receive references to exclude for deduplication.
+- **Analytics attribution:** roles identify references and products for impression attribution.
+- **Object Family validation:** an [Object Family](/advanced-guide/datahub/datagraph/entity-groups) field requiring a role must be matched by an Object answer with the same role.
+
+### Product Catalogue Example
+
+A recommendation Object returns `sku` as `string`, `product_code` as `string` and `purchase_amount` as `number`.
+
+| Answer | Before annotation | After annotation |
+|--------|-------------------|------------------|
+| `sku` | Text without product-reference meaning. | `reference_id` identifies the reference for attribution and exclusions. |
+| `product_code` | Text without product-identifier meaning. | `product_id` identifies the product for Analytics. |
+| `purchase_amount` | A number without purchase meaning. | `price` identifies the purchase amount. |
+
+The query results and primitive types stay unchanged. Publish the Object, then republish its Workflows to apply these meanings.
+
+## Analytics Tags
+
+In **Analytics tags**, choose tag key/value pairs with the existing tag selector. Analytics attributes impressions of this Object to the selected tags.
+
+Tags describe the Object's impressions; they do not modify the rows returned by the query.
+
+## Saving, Publishing and Republishing
+
+1. Edit the annotations and resolve validation errors in the tab.
+2. Save the Object Draft. Draft saving does not show the annotation republication notification.
+3. Publish the Object. When the published annotations change, a notification reminds you to republish its Workflows.
+4. Republish each Workflow using the Object. Until then, it keeps the annotations captured at its previous publication.
+
+Annotation-only changes never block Object publication, even when Workflows use the Object.
+
+Removing output fields or parameters used by Workflows is still blocked; the editor lists the affected Workflows. If the Workflow usage check is unavailable, retry later.

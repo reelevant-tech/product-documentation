@@ -1,0 +1,111 @@
+---
+title: 'Annotations des Datagraph Objects'
+description: 'Configurez les capacités, les rôles des réponses et les tags Analytics, puis republiez les Workflows utilisant votre Datagraph Object'
+---
+
+## Avant de commencer
+
+- Créez un [Datagraph Object](/fr/advanced-guide/datahub/datagraph/entities) à partir d'un [Datagraph Schema](/fr/advanced-guide/datahub/datagraph/schema) publié.
+- Pour les bases de la navigation dans DataHub, consultez [Datagraph](/fr/product-guide/datahub/datagraph).
+- Identifiez les [Workflows](/fr/glossary) utilisant cet Object : vous devrez les republier après toute modification des annotations.
+
+## Ouvrir l'onglet Annotations
+
+Dans l'éditeur du Datagraph Object, ouvrez **Annotations** depuis la barre latérale droite, à côté des **Entrées / Sorties**. L'onglet contient **Capacités des workflows**, **Rôles des réponses** et **Tags analytiques**.
+
+Les annotations décrivent comment les Workflows et Analytics interprètent le Datagraph Object. Elles ne modifient ni les résultats de sa requête ni les types primitifs de ses réponses.
+
+Un Datagraph Object accepte au maximum **100 annotations**, toutes sections confondues. Les erreurs de validation apparaissent dans l'onglet, notamment les capacités, tags et rôles attribués plusieurs fois.
+
+<Warning>
+  Les Workflows lisent les annotations du Datagraph Object lors de leur publication. Après avoir publié une modification des annotations, republiez chaque Workflow utilisant cet Object. L'onglet affiche ce rappel en permanence.
+</Warning>
+
+## Capacités des workflows
+
+### Une seule ligne — single-row
+
+Activez **Une seule ligne** pour déclarer que le Datagraph Object renvoie une ligne. Les Workflows utilisent uniquement la première ligne renvoyée, même si la requête en retourne plusieurs.
+
+Cette capacité est nécessaire pour lier une option d'un Node d'un autre Datagraph Object à une réponse de cet Object. Sans elle, l'éditeur de Workflow signale **Une des données utilisées est invalide** (**Invalid used data** en anglais).
+
+Lorsqu'un Workflow comporte plusieurs [Channels](/fr/glossary), par exemple plusieurs images d'email, chacun lit la première ligne. Ce comportement correspond à celui d'une Datasource limitée à 1 résultat.
+
+<Info>
+  Limiter les résultats du Data Node à 1 ne déclare pas le Datagraph Object single-row. Activez **Une seule ligne** pour autoriser les liaisons scalaires et utiliser la première ligne pour chaque Channel.
+</Info>
+
+### Contexte automatique — auto-context
+
+Activez **Contexte automatique** pour charger automatiquement le Datagraph Object dans le contexte du Workflow, comme le contexte Datasource. Il est disponible sur toutes les [Branches](/fr/glossary) et préchargé à chaque exécution.
+
+- Un Datagraph Object ayant une option obligatoire sans valeur statique par défaut n'est pas chargé automatiquement. Configurez une suggestion **Une valeur fixe** pour cette option.
+- Le contexte automatique ne remplit pas les entrées manquantes. Une suggestion issue du contexte ne remplace pas une valeur statique par défaut pour une option obligatoire.
+- Les rôles des réponses ne renseignent pas les champs du contexte, comme la langue ou le refus du suivi, contrairement aux Datasources CRM.
+
+## Rôles des réponses
+
+Chaque réponse est une colonne de sortie avec un type primitif, comme `string`, `number` ou `boolean`. Un rôle facultatif précise sa signification sans changer ce type.
+
+Pour chaque réponse, choisissez l'un des réglages suivants :
+
+| Réglage | Signification |
+|---------|---------------|
+| **Hérité · rôle** | Utilise le rôle déduit de la colonne du Datagraph Schema. |
+| Un rôle explicite | Attribue la signification sélectionnée à cette réponse. |
+| **Aucun** | Supprime le rôle hérité. La réponse conserve son type primitif, sans comportement lié à un rôle. |
+
+<Info>
+  Après l'enregistrement, un rôle hérité est stocké et affiché comme un rôle explicite. Chaque réponse accepte au maximum un rôle, et chaque rôle ne peut apparaître qu'une fois par Datagraph Object.
+</Info>
+
+### Rôles disponibles
+
+| Rôle | Libellé dans l'éditeur | Signification |
+|------|-----------------------|---------------|
+| `reference_id` | **Référence produit** | Une référence produit pour l'attribution, les exclusions et la déduplication. |
+| `reference_ids` | **Références produits** | Une liste de références produits. |
+| `product_id` | **Identifiant produit** | Un identifiant produit pour l'attribution. |
+| `price` | **Montant de l'achat** | Le montant de l'achat. |
+| `locale` | **Langue et région** | La langue ou la région de l'utilisateur. |
+| `transaction_id` | **Identifiant de transaction** | L'identifiant de la transaction d'achat. |
+| `transaction_source` | **Source de la transaction** | La source d'une transaction d'achat. |
+| `tracking_opt_out` | **Refus du suivi** | Une réponse booléenne : vrai signifie que le suivi doit être désactivé pour cet utilisateur. |
+| `user` | **Identifiant utilisateur** | L'identifiant de l'utilisateur. |
+| `purchase_user` | **Acheteur** | L'identifiant de l'utilisateur associé à un achat. |
+| `purchase_datetime` | **Date d'achat** | La date et l'heure de l'achat. |
+
+### Utilisation des rôles
+
+- **Comportement du Workflow :** `reference_id` permet d'exclure les références déjà affichées dans les emplacements précédents. Une option `excluded_reference_ids` permet à la requête de recevoir les références à exclure pour la déduplication.
+- **Attribution Analytics :** les rôles identifient les références et les produits pour l'attribution des impressions.
+- **Validation des Object Families :** un champ d'une [Object Family](/fr/advanced-guide/datahub/datagraph/entity-groups) exigeant un rôle doit correspondre à une réponse portant ce même rôle.
+
+### Exemple de catalogue produits
+
+Un Datagraph Object de recommandation renvoie `sku` en `string`, `product_code` en `string` et `purchase_amount` en `number`.
+
+| Réponse | Avant annotation | Après annotation |
+|---------|------------------|------------------|
+| `sku` | Du texte sans signification de référence produit. | `reference_id` identifie la référence pour l'attribution et les exclusions. |
+| `product_code` | Du texte sans signification d'identifiant produit. | `product_id` identifie le produit pour Analytics. |
+| `purchase_amount` | Un nombre sans signification d'achat. | `price` identifie le montant de l'achat. |
+
+Les résultats de la requête et les types primitifs restent inchangés. Publiez le Datagraph Object, puis republiez ses Workflows pour appliquer ces significations.
+
+## Tags analytiques
+
+Dans **Tags analytiques**, choisissez des paires clé/valeur avec le sélecteur de tags existant. Analytics attribue les impressions de ce Datagraph Object aux tags sélectionnés.
+
+Les tags décrivent les impressions du Datagraph Object ; ils ne modifient pas les lignes renvoyées par la requête.
+
+## Enregistrer, publier et republier
+
+1. Modifiez les annotations et corrigez les erreurs de validation dans l'onglet.
+2. Enregistrez le brouillon du Datagraph Object. L'enregistrement du brouillon n'affiche pas la notification de republication liée aux annotations.
+3. Publiez le Datagraph Object. Si les annotations publiées changent, une notification vous rappelle de republier ses Workflows.
+4. Republiez chaque Workflow utilisant cet Object. Jusque-là, il conserve les annotations enregistrées lors de sa publication précédente.
+
+Les modifications limitées aux annotations ne bloquent jamais la publication du Datagraph Object, même lorsqu'il est utilisé par des Workflows.
+
+La suppression de champs de sortie ou de paramètres utilisés par des Workflows reste bloquée ; l'éditeur liste les Workflows concernés. Si la vérification des usages est indisponible, réessayez plus tard.
