@@ -22,6 +22,8 @@ La liste **Objets** affiche les colonnes **Nom**, **Statut** et **Dernière mise
 | **INPUT / OUTPUT** | Les paramètres de l'Objet et les champs de sortie, en lecture seule pour ces derniers. |
 | **VERSIONS** | Les versions disponibles de l'Objet. |
 
+La barre latérale droite comprend aussi **Annotations** pour les capacités, les rôles des réponses et les tags Analytics. Voir [Annotations des Datagraph Objects](/fr/advanced-guide/datahub/datagraph/annotations), notamment pour savoir quand republier les Workflows concernés.
+
 Le fil d'Ariane indique **Datagraph > Objets**. Le sous-titre est *Définissez et gérez la requête SQL et les options de votre objet datagraph*.
 
 | Champ | Description |
@@ -127,7 +129,9 @@ Pour les paramètres `string`, `number`, `string[]` et `number[]`, **Allowed val
 
 ## Colonnes de sortie
 
-Le panneau **INPUT / OUTPUT** liste les colonnes et leurs types, affichés comme **Texte**, **Nombre** ou **URL d'image**. Les colonnes sont calculées à partir du SQL sur le modèle publié du Datagraph et recalculées à chaque enregistrement.
+Le panneau **Entrées / Sorties** liste les colonnes de sortie et leurs types primitifs, comme `string`, `number` ou `boolean`. Les colonnes sont calculées à partir du SQL sur le Datagraph Schema publié et recalculées à chaque enregistrement.
+
+La signification se configure séparément avec les [rôles des réponses](/fr/advanced-guide/datahub/datagraph/annotations#rôles-des-réponses), et non avec le type primitif.
 
 ## Prévisualiser les résultats
 

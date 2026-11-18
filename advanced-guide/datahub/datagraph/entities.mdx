@@ -21,6 +21,8 @@ The editor breadcrumb is **Datagraph > Objects**. Its subtitle is *Define and ma
 
 The **Object name** field uses snake_case. The **Edited object** selector switches the version being edited. The side panels are **INPUT / OUTPUT** and **VERSIONS**.
 
+The right rail also includes **Annotations** for capabilities, answer roles and Analytics tags. See [Datagraph Object Annotations](/advanced-guide/datahub/datagraph/annotations), including when to republish the Workflows using the Object.
+
 The SQL editor runs a preview against the selected Object. Results include up to 10 rows, a row count, and a **Trace ID**.
 
 | Field | Description |
@@ -125,7 +127,9 @@ For `string`, `number`, `string[]` and `number[]` parameters, **Allowed values**
 
 ## Output Columns
 
-The **INPUT / OUTPUT** panel lists each output **Column** and **Type**. Displayed types include **Text**, **Number**, and **Image URL**. The list is computed from SQL against the Published Datagraph model and recalculated on every save.
+The **Input / Output** panel lists each output **Column** and its primitive **Type**, such as `string`, `number` or `boolean`. The list is computed from SQL against the published Datagraph Schema and recalculated on every save.
+
+Semantic meaning is configured separately through [answer roles](/advanced-guide/datahub/datagraph/annotations#answer-roles), not through the primitive type.
 
 ## Previewing Results
 
