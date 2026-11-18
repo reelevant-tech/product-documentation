@@ -13,6 +13,10 @@ description: 'Configurez les capacités, les rôles des réponses et les tags An
 
 Dans l'éditeur du Datagraph Object, ouvrez **Annotations** depuis la barre latérale droite, à côté des **Entrées / Sorties**. L'onglet contient **Capacités des workflows**, **Rôles des réponses** et **Tags analytiques**.
 
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-overview.png" alt="Barre latérale de l'éditeur avec Annotations sélectionné à côté d'Input / Output et le rappel de republication des Workflows" />
+</Frame>
+
 Les annotations décrivent comment les Workflows et Analytics interprètent le Datagraph Object. Elles ne modifient ni les résultats de sa requête ni les types primitifs de ses réponses.
 
 Un Datagraph Object accepte au maximum **100 annotations**, toutes sections confondues. Les erreurs de validation apparaissent dans l'onglet, notamment les capacités, tags et rôles attribués plusieurs fois.
@@ -22,6 +26,10 @@ Un Datagraph Object accepte au maximum **100 annotations**, toutes sections conf
 </Warning>
 
 ## Capacités des workflows
+
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-capabilities.png" alt="Section des capacités avec les interrupteurs Single row et Automatic context et leurs descriptions" />
+</Frame>
 
 ### Une seule ligne — single-row
 
@@ -66,6 +74,10 @@ Activez **Contexte automatique** pour ajouter automatiquement le Data Node du Da
 Chaque réponse est une colonne de sortie avec un type primitif, comme `string`, `number` ou `boolean`. Un rôle facultatif précise sa signification sans changer ce type.
 
 Pour chaque réponse, choisissez l'un des réglages suivants :
+
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-answer-roles.png" alt="Sélecteur de rôle ouvert affichant les choix hérités, aucun rôle et des rôles de référence produit, d'identifiant produit, de langue et de refus du suivi" />
+</Frame>
 
 | Réglage | Signification |
 |---------|---------------|
@@ -114,6 +126,10 @@ Les résultats de la requête et les types primitifs restent inchangés. Publiez
 ## Tags analytiques
 
 Dans **Tags analytiques**, choisissez des paires clé/valeur avec le sélecteur de tags existant. Analytics attribue les impressions de ce Datagraph Object aux tags sélectionnés.
+
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-analytics-tags.png" alt="Section des tags analytiques avec le sélecteur d'ajout d'un tag pour l'attribution des impressions" />
+</Frame>
 
 Les tags décrivent les impressions du Datagraph Object ; ils ne modifient pas les lignes renvoyées par la requête.
 
