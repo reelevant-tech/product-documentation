@@ -13,6 +13,10 @@ description: 'Configure capabilities, answer roles and Analytics tags, then repu
 
 In the Object editor, open **Annotations** from the right rail, next to **Input / Output**. The tab contains **Workflow capabilities**, **Answer roles** and **Analytics tags**.
 
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-overview.png" alt="Object editor right rail with Annotations selected beside Input / Output and the Workflow republication reminder visible" />
+</Frame>
+
 Annotations describe how Workflows and Analytics interpret the Object. They do not change its query results or the primitive types of its answers.
 
 An Object supports at most **100 annotations** across all three sections. Validation errors appear in the tab, including duplicate capabilities, duplicate tags and repeated answer roles.
@@ -22,6 +26,10 @@ An Object supports at most **100 annotations** across all three sections. Valida
 </Warning>
 
 ## Workflow Capabilities
+
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-capabilities.png" alt="Workflow capabilities section with Single row and Automatic context toggles and their descriptions" />
+</Frame>
 
 ### Single row — single-row
 
@@ -66,6 +74,10 @@ At each run, the Object is preloaded only when at least one Node uses its output
 Each answer is an output column with a primitive type, such as `string`, `number` or `boolean`. An optional role describes its meaning without changing that type.
 
 For each answer, choose one of the following settings:
+
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-answer-roles.png" alt="Open answer role selector showing Inherited, None and roles including Product reference, Product ID, Locale and Tracking opt-out" />
+</Frame>
 
 | Setting | Meaning |
 |---------|---------|
@@ -114,6 +126,10 @@ The query results and primitive types stay unchanged. Publish the Object, then r
 ## Analytics Tags
 
 In **Analytics tags**, choose tag key/value pairs with the existing tag selector. Analytics attributes impressions of this Object to the selected tags.
+
+<Frame>
+  <img src="/images/advanced-guide/datagraph/object-annotations-analytics-tags.png" alt="Analytics tags section with the Add an analytics tag selector for impression attribution" />
+</Frame>
 
 Tags describe the Object's impressions; they do not modify the rows returned by the query.
 
