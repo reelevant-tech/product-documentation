@@ -37,7 +37,9 @@ For a Workflow with several [Channel](/glossary) entrypoints, such as several em
 
 ### Automatic context — auto-context
 
-Enable **Automatic context** to load the Object into the Workflow context automatically, like Datasource context. It is available on all [Branches](/glossary) and preloaded at each run.
+Enable **Automatic context** to add the Object's Data Node automatically to every Workflow. It is available on all [Branches](/glossary).
+
+At each run, the Object is preloaded only when at least one Node uses its output. An unused auto-context Object is not queried.
 
 - An Object with a required option lacking a static default is not loaded automatically. Configure a **Fixed value** suggestion for that option.
 - Automatic context does not fill missing inputs. Context-based suggestions do not replace a static default for a required option.

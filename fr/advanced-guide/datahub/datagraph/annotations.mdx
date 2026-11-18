@@ -37,7 +37,9 @@ Lorsqu'un Workflow comporte plusieurs [Channels](/fr/glossary), par exemple plus
 
 ### Contexte automatique — auto-context
 
-Activez **Contexte automatique** pour charger automatiquement le Datagraph Object dans le contexte du Workflow, comme le contexte Datasource. Il est disponible sur toutes les [Branches](/fr/glossary) et préchargé à chaque exécution.
+Activez **Contexte automatique** pour ajouter automatiquement le Data Node du Datagraph Object à chaque Workflow. Il est disponible sur toutes les [Branches](/fr/glossary).
+
+À chaque exécution, le Datagraph Object est préchargé uniquement si au moins un Node utilise sa sortie. Aucune requête n'est effectuée pour un Datagraph Object auto-context inutilisé.
 
 - Un Datagraph Object ayant une option obligatoire sans valeur statique par défaut n'est pas chargé automatiquement. Configurez une suggestion **Une valeur fixe** pour cette option.
 - Le contexte automatique ne remplit pas les entrées manquantes. Une suggestion issue du contexte ne remplace pas une valeur statique par défaut pour une option obligatoire.
