@@ -67,3 +67,32 @@ Tous les endpoints de l'API nécessitent une authentification via OAuth2. Consul
 >
   Découvrez comment authentifier vos requêtes
 </Card>
+
+## Permissions des Workflows et Contents
+
+Les règles de rôle sont limitées à l’entreprise et aux [Teams (Resource Groups)](/fr/product-guide/account/teams).
+Les actions suivantes sont évaluées sur le Workflow ou le Content ciblé :
+
+| Opération | Actions requises |
+|-----------|------------------|
+| `POST /v2/workflows/duplicate` | `duplicate` sur Workflow, à la place de `read` et `create`. |
+| `POST /v2/contents/duplicate` | `duplicate` sur Content, à la place de `read` et `create`. |
+| `PATCH /v2/workflows/usage/{id}` | `update` sur Workflow ; aussi `configure_web_integration` si les options web changent. |
+
+Pour le PATCH, tout ajout, retrait ou changement d’une entrée de type `web` nécessite les deux actions.
+Cela inclut les sélecteurs et les identifiants de point d’entrée.
+Les autres options, les paramètres de page de destination et `variableProfileId` nécessitent uniquement `update`.
+Renvoyer des entrées web identiques ne nécessite pas `configure_web_integration`.
+
+Les libellés de ces actions sont **Dupliquer** et **Intégrations web**.
+Les rôles existants avec `update` sur Workflow ont reçu `duplicate` et `configure_web_integration`.
+Ceux avec `update` sur Content ont reçu `duplicate` ; les utilisateurs existants conservent leurs accès.
+
+Le JavaScript personnalisé exige aussi la fonctionnalité d’entreprise `workflow_integration_custom_code`, activée uniquement par Reelevant.
+Cette condition s’ajoute aux permissions du rôle.
+
+Si la recherche autorisée ne trouve pas la ressource, la duplication ou le PATCH renvoie `404`.
+Une modification web sans `configure_web_integration` renvoie `403`.
+Vérifiez les règles du rôle et les Teams concernées avant de réessayer.
+
+Voir [Permissions](/fr/product-guide/account/permissions) pour la portée des actions et [Authentification](/fr/developer-docs/api-reference/authentication) pour les tokens d’accès.

@@ -87,13 +87,15 @@ Each user is assigned a [role](/product-guide/account/roles) that defines permit
 
 | Resource | Actions |
 |----------|---------|
-| Workflows | Create, read, update, delete, publish |
-| Contents | Create, read, update, delete |
+| Workflows | Create, read, update, duplicate, delete, publish, configure web integrations |
+| Contents | Create, read, update, duplicate, delete |
 | Datasources | Create, read, update, delete, configure |
 | Analytics | Read, export |
 | Roles | Create, read, update, delete |
 | Teams | Create, read, update, delete, assign members |
 | Settings | Read, update |
+
+Duplication uses a dedicated permission rather than read plus create. Web integration changes require update and web integration permissions; other integration settings require only update.
 
 ### ABAC (Attribute-Based Access Control)
 
