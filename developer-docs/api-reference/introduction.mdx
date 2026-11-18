@@ -86,7 +86,8 @@ Resending identical web entries does not require `configure_web_integration`.
 
 The role editor labels are **Duplicate** and **Web integrations**.
 Existing roles with `update` on Workflow received `duplicate` and `configure_web_integration`.
-Those with `update` on Content received `duplicate`; existing users retain their access.
+Those with `update` on Content received `duplicate`.
+Roles with only `read` and `create` no longer allow duplication until `duplicate` is added.
 
 Custom JavaScript additionally requires the company feature `workflow_integration_custom_code`, enabled only by Reelevant.
 This requirement is separate from role permissions.

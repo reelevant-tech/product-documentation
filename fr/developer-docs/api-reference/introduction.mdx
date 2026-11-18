@@ -86,7 +86,8 @@ Renvoyer des entrées web identiques ne nécessite pas `configure_web_integratio
 
 Les libellés de ces actions sont **Dupliquer** et **Intégrations web**.
 Les rôles existants avec `update` sur Workflow ont reçu `duplicate` et `configure_web_integration`.
-Ceux avec `update` sur Content ont reçu `duplicate` ; les utilisateurs existants conservent leurs accès.
+Ceux avec `update` sur Content ont reçu `duplicate`.
+Les rôles avec uniquement `read` et `create` ne permettent plus la duplication tant que `duplicate` n’est pas ajouté.
 
 Le JavaScript personnalisé exige aussi la fonctionnalité d’entreprise `workflow_integration_custom_code`, activée uniquement par Reelevant.
 Cette condition s’ajoute aux permissions du rôle.
