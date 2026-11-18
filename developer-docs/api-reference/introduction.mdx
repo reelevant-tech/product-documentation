@@ -67,3 +67,32 @@ All API endpoints require authentication using OAuth2. Please see the [Authentic
 >
   Learn how to authenticate your requests
 </Card>
+
+## Workflow and Content permissions
+
+Role rules are scoped to the company and [Teams (Resource Groups)](/product-guide/account/teams).
+The following actions are evaluated against the target Workflow or Content:
+
+| Operation | Required actions |
+|-----------|------------------|
+| `POST /v2/workflows/duplicate` | `duplicate` on Workflow, replacing `read` plus `create`. |
+| `POST /v2/contents/duplicate` | `duplicate` on Content, replacing `read` plus `create`. |
+| `PATCH /v2/workflows/usage/{id}` | `update` on Workflow; also `configure_web_integration` when web options change. |
+
+For PATCH, adding, removing or modifying any `web` entry requires both actions.
+This includes selectors and entrypoint identifiers.
+Other options, landing page parameters and `variableProfileId` require only `update`.
+Resending identical web entries does not require `configure_web_integration`.
+
+The role editor labels are **Duplicate** and **Web integrations**.
+Existing roles with `update` on Workflow received `duplicate` and `configure_web_integration`.
+Those with `update` on Content received `duplicate`; existing users retain their access.
+
+Custom JavaScript additionally requires the company feature `workflow_integration_custom_code`, enabled only by Reelevant.
+This requirement is separate from role permissions.
+
+If the authorised lookup does not find the resource, duplication or PATCH returns `404`.
+A web change without `configure_web_integration` returns `403`.
+Check the role rules and Team scope before retrying.
+
+See [Permissions](/product-guide/account/permissions) for action scoping and [Authentication](/developer-docs/api-reference/authentication) for access tokens.

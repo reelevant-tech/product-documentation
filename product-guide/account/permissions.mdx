@@ -70,30 +70,53 @@ Actions define what operations a user can perform on a given resource. Not every
 | **Update** | Permission to modify existing resources. |
 | **Delete** | Permission to remove resources. |
 | **Export** | Permission to export resource data. |
+| **Duplicate** | Permission to duplicate a Workflow or Content. |
+| **Web integrations** | With **Update**, permission to change a Workflow’s web integration options. |
 
 ## Permissions Matrix
 
 The table below shows which actions are available for each resource. When configuring a [role](/product-guide/account/roles), you set each available action individually, together with its [team scope](#team-scope).
 
-| Resource | Access | Create | Read | Query | Update | Delete | Export |
-|----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|
-| **Datasource** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | |
-| **Workflow** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Content** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Workflow Settings** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Statistics** | ✓ | | | | | | ✓ |
-| **User** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Role** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Teams** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Company** | | | ✓ | | ✓ | | |
-| **Billing** | ✓ | | | | | | |
-| **Invitation** | | ✓ | ✓ | | | ✓ | |
-| **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
-| **Datagraph** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
+| Resource | Access | Create | Read | Query | Update | Delete | Export | Duplicate | Web integrations |
+|----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|:---------:|:----------------:|
+| **Datasource** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | | | |
+| **Workflow** | | ✓ | ✓ | | ✓ | ✓ | | ✓ | ✓ |
+| **Content** | | ✓ | ✓ | | ✓ | ✓ | | ✓ | |
+| **Workflow Settings** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Statistics** | ✓ | | | | | | ✓ | | |
+| **User** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Role** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Teams** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Company** | | | ✓ | | ✓ | | | | |
+| **Billing** | ✓ | | | | | | | | |
+| **Invitation** | | ✓ | ✓ | | | ✓ | | | |
+| **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Datagraph** | ✓ | ✓ | ✓ | | ✓ | ✓ | | | |
 
 <Tip>
   The **Access** action controls whether the section appears in the platform navigation. For example, granting **Statistics → Access** makes the Analytics section visible to the user.
 </Tip>
+
+### Duplication and web integrations
+
+You need **Duplicate** to duplicate a [Workflow](/product-guide/workflows/overview) or [Content](/product-guide/contents/overview).
+This replaces the previous combination of **Read** and **Create**.
+
+To add, remove or modify web integration options, you need both **Update** and **Web integrations** on the Workflow.
+This includes the web integration’s selectors and entrypoints.
+
+Other integration settings still need only **Update**.
+These include landing page parameters and the [Variable Profile](/glossary).
+Resending unchanged web options does not require **Web integrations**.
+
+These permissions follow the same company and [Team](/product-guide/account/teams) limits as other actions.
+Custom JavaScript also needs company-level activation, which only Reelevant enables.
+
+<Note>
+  Existing roles were migrated: **Update** on Workflow received **Duplicate** and **Web integrations**.
+  **Update** on Content received **Duplicate**.
+  Existing users retain their access.
+</Note>
 
 ## Permission Evaluation
 
@@ -111,7 +134,7 @@ When a user tries to perform an action, the system checks the following conditio
   </Step>
 </Steps>
 
-If any check fails, the action is denied with a **403 Forbidden** error.
+If any check fails, you cannot perform the requested action.
 
 ## Team Scope
 

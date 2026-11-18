@@ -70,30 +70,53 @@ Les actions définissent les opérations qu'un utilisateur peut effectuer sur un
 | **Update** | Permission de modifier les ressources existantes. |
 | **Delete** | Permission de supprimer les ressources. |
 | **Export** | Permission d'exporter les données de la ressource. |
+| **Dupliquer** | Permission de dupliquer un Workflow ou un Content. |
+| **Intégrations web** | Avec **Update**, permission de modifier les options d’intégration web d’un Workflow. |
 
 ## Matrice des permissions
 
 Le tableau ci-dessous indique quelles actions sont disponibles pour chaque ressource. Lors de la configuration d'un [rôle](/fr/product-guide/account/roles), vous réglez chaque action disponible individuellement, ainsi que sa [portée de Team](#team-scope).
 
-| Ressource | Access | Create | Read | Query | Update | Delete | Export |
-|----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|
-| **Datasource** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | |
-| **Workflow** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Content** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Workflow Settings** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Statistics** | ✓ | | | | | | ✓ |
-| **User** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Role** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Teams** | | ✓ | ✓ | | ✓ | ✓ | |
-| **Company** | | | ✓ | | ✓ | | |
-| **Billing** | ✓ | | | | | | |
-| **Invitation** | | ✓ | ✓ | | | ✓ | |
-| **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
-| **Datagraph** | ✓ | ✓ | ✓ | | ✓ | ✓ | |
+| Ressource | Access | Create | Read | Query | Update | Delete | Export | Dupliquer | Intégrations web |
+|----------|:------:|:------:|:----:|:-----:|:------:|:------:|:------:|:---------:|:----------------:|
+| **Datasource** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | | | |
+| **Workflow** | | ✓ | ✓ | | ✓ | ✓ | | ✓ | ✓ |
+| **Content** | | ✓ | ✓ | | ✓ | ✓ | | ✓ | |
+| **Workflow Settings** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Statistics** | ✓ | | | | | | ✓ | | |
+| **User** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Role** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Teams** | | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Company** | | | ✓ | | ✓ | | | | |
+| **Billing** | ✓ | | | | | | | | |
+| **Invitation** | | ✓ | ✓ | | | ✓ | | | |
+| **Datagraph Schema** | ✓ | ✓ | ✓ | | ✓ | ✓ | | | |
+| **Datagraph** | ✓ | ✓ | ✓ | | ✓ | ✓ | | | |
 
 <Tip>
   L'action **Access** détermine si la section apparaît dans la navigation de la plateforme. Par exemple, accorder **Statistics → Access** rend la section Analytics visible pour l'utilisateur.
 </Tip>
+
+### Dupliquer et gérer les intégrations web
+
+Vous devez disposer de **Dupliquer** pour dupliquer un [Workflow](/fr/product-guide/workflows/overview) ou un [Content](/fr/product-guide/contents/overview).
+Cette permission remplace l’ancienne combinaison **Read** et **Create**.
+
+Pour ajouter, supprimer ou modifier une intégration web, vous devez disposer de **Update** et **Intégrations web** sur le Workflow.
+Cela inclut les sélecteurs et les points d’entrée de l’intégration web.
+
+Les autres réglages d’intégration nécessitent uniquement **Update**.
+Cela inclut les paramètres de page de destination et le [Variable Profile](/fr/glossary).
+Renvoyer des options web inchangées ne nécessite pas **Intégrations web**.
+
+Ces permissions respectent les mêmes limites d’entreprise et de [Team](/fr/product-guide/account/teams) que les autres actions.
+Le JavaScript personnalisé nécessite aussi une activation pour votre entreprise, effectuée uniquement par Reelevant.
+
+<Note>
+  Les rôles existants ont été migrés : **Update** sur Workflow a reçu **Dupliquer** et **Intégrations web**.
+  **Update** sur Content a reçu **Dupliquer**.
+  Les utilisateurs existants conservent leurs accès.
+</Note>
 
 ## Évaluation des permissions
 
@@ -111,7 +134,7 @@ Lorsqu'un utilisateur tente d'effectuer une action, le système vérifie les con
   </Step>
 </Steps>
 
-Si l'une des vérifications échoue, l'action est refusée avec une erreur **403 Forbidden**.
+Si l’une des vérifications échoue, vous ne pouvez pas effectuer l’action demandée.
 
 ## Portée de Team
 
