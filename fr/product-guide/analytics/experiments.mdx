@@ -75,7 +75,7 @@ Choisissez une **Métrique de succès** : **Taux de conversion unique**, **Taux 
 | **Brouillon** | Vous pouvez continuer à modifier l'expérimentation. |
 | **Prête** | La configuration est validée et l'expérimentation peut être rattachée à un Workflow. |
 | **En cours** | L'expérimentation répartit le trafic. |
-| **Décidée** | Une variante a été choisie pour recevoir tout le trafic. |
+| **Décidée** | Une variante a été choisie pour recevoir tout le trafic. **Non validé statistiquement** s'affiche quand les résultats ne l'ont pas démontrée gagnante. |
 | **Archivée** | L'expérimentation est archivée et masquée dans la liste active. |
 
 ### Valider ou revenir au brouillon
@@ -98,11 +98,11 @@ Si aucun Workflow n'utilise l'expérimentation, un avertissement apparaît. Elle
 
 ![Fenêtre de conclusion avec l'option Variante à conserver](/images/analytics/experiment-conclude.png)
 
-La fenêtre **Conclure l'expérimentation** propose des options radio sous **Variante à conserver**.
+La fenêtre **Conclure l'expérimentation** propose des options radio sous **Variante à conserver**. Elle présélectionne la variante que les résultats favorisent.
 
-Choisissez une variante, puis sélectionnez **Conclure**.
+Choisissez une variante, puis sélectionnez **Conclure**. La fenêtre indique si votre choix sera enregistré comme validé statistiquement.
 
-Tout le trafic est alors dirigé vers cette variante et l'expérimentation devient **Décidée**.
+Tout le trafic est alors dirigé vers cette variante et l'expérimentation devient **Décidée**. Consultez [Lire les résultats d'une expérimentation](/fr/product-guide/analytics/experiments/results).
 
 Un **Groupe témoin global** n'a pas de date de fin automatique, mais vous pouvez le conclure manuellement. Vous ne pouvez pas arrêter une expérimentation au statut **En cours** sans choisir une variante à conserver.
 
@@ -124,17 +124,15 @@ Sélectionnez **Dupliquer** pour créer un brouillon dont le nom se termine par 
 
 ## Lire les données d'une expérimentation
 
-La page de l'expérimentation indique **Tableau de bord des résultats bientôt disponible**.
+Une fois démarrée, la page de l'expérimentation affiche son tableau de bord des résultats : l'Uplift de chaque Traitement, son intervalle de confiance et sa significativité. Consultez [Lire les résultats d'une expérimentation](/fr/product-guide/analytics/experiments/results).
 
-En attendant, ouvrez [Data Exploration](/fr/product-guide/analytics/data-exploration). Votre expérimentation apparaît comme un tag portant son nom, avec une valeur par variante.
+Pour détailler davantage les résultats, ouvrez [Data Exploration](/fr/product-guide/analytics/data-exploration). Votre expérimentation apparaît comme un tag portant son nom, avec une valeur par variante.
 
-Ajoutez **Tag: {name}** comme dimension pour comparer les variantes. Consultez [Référence des mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions) pour choisir les champs.
-
-Ces chiffres ne sont pas validés statistiquement.
+Ajoutez **Tag: {name}** comme dimension pour comparer les variantes. Consultez [Référence des mesures et dimensions](/fr/product-guide/analytics/measures-and-dimensions) pour choisir les champs. Ces chiffres ne sont pas validés statistiquement.
 
 ## Bientôt disponible
 
-Le tableau de bord des résultats et la significativité statistique seront bientôt disponibles. Le démarrage programmé et les dates de fin automatiques seront également disponibles prochainement.
+Le démarrage programmé et les dates de fin automatiques seront bientôt disponibles. Les tests A/B à horizon fixe et les expérimentations Real-Time Testing arriveront plus tard.
 
 ## Et ensuite ?
 
@@ -142,10 +140,10 @@ Le tableau de bord des résultats et la significativité statistique seront bien
   <Card title="Expérimentation" icon="flask" href="/fr/product-guide/workflows/logic-nodes/experiment">
     Utilisez une expérimentation dans un Workflow.
   </Card>
+  <Card title="Lire les résultats" icon="chart-line" href="/fr/product-guide/analytics/experiments/results">
+    Lisez l'Uplift et la significativité de vos variantes.
+  </Card>
   <Card title="Data Exploration" icon="magnifying-glass-chart" href="/fr/product-guide/analytics/data-exploration">
     Explorez vos données analytiques.
-  </Card>
-  <Card title="Logic Nodes" icon="code-branch" href="/fr/product-guide/workflows/logic-nodes">
-    Découvrez les Logic Nodes des Workflows.
   </Card>
 </CardGroup>

@@ -35,7 +35,7 @@ If other channels also use this field, results measure the combined effect of ev
 
 Conditions are checked in order, and each customer gets the Variant of the first condition they meet. If a customer can meet several conditions, drag the conditions to choose which one comes first.
 
-Each Variant's allocation becomes an **Expected allocation**. It is only an estimate: the Datasource decides who gets each Variant.
+Each Variant's allocation becomes an **Expected allocation**: the split you configured in your Datasource. The Datasource decides who gets each Variant, and results check the actual split against it.
 
 A customer is unclassified when they meet no condition, have no row in the Datasource, are anonymous, or their row cannot be read. There is no catch-all condition, so write one condition for every group you want to classify.
 
@@ -59,7 +59,7 @@ Your CRM has a field named `holdout_group` that contains `control` or `treatment
 
 A customer whose `holdout_group` is empty meets neither condition. They receive the Treatment and are not counted in the results.
 
-The 10% you entered is only an estimate. The `holdout_group` value decides which Variant each customer receives.
+The `holdout_group` value decides which Variant each customer receives. Results check that about 10% of participants end up in the Control.
 
 ## Keep your results reliable
 
@@ -78,9 +78,11 @@ These moves also bias the results when they depend on the Variant a customer rec
 
 ## Read the results
 
-Results describe classified customers only. They use the number of customers actually seen in each Variant, not the expected allocation.
+Results describe classified customers only. They use the number of customers actually seen in each Variant, shown as **Participants by variant**.
 
-When statistical significance is shown, a small Control takes longer to reach it.
+If the actual split drifts from the expected allocation, a **Traffic was not split as configured** warning appears. A small Control also takes longer to reach significance.
+
+See [Experiments that use a Datasource](/product-guide/analytics/experiments/results#experiments-that-use-a-datasource).
 
 The Experiment Node shows the same Branches as with random assignment. Once live, its percentages show the expected allocation, not the actual split.
 
