@@ -35,7 +35,7 @@ Si d'autres canaux utilisent aussi ce champ, les résultats mesurent l'effet com
 
 Les conditions sont vérifiées dans l'ordre, et chaque client reçoit la variante de la première condition qu'il remplit. Si un client peut remplir plusieurs conditions, faites glisser les conditions pour choisir celle qui passe en premier.
 
-La répartition de chaque variante devient une **Répartition attendue**. C'est seulement une estimation : la Datasource décide quelle variante reçoit chaque client.
+La répartition de chaque variante devient une **Répartition attendue** : celle que vous avez configurée dans votre Datasource. La Datasource décide quelle variante reçoit chaque client, et les résultats comparent la répartition réelle à celle-ci.
 
 Un client est non classé s'il ne remplit aucune condition, n'a aucune ligne dans la Datasource, est anonyme ou si sa ligne ne peut pas être lue. Il n'existe pas de condition fourre-tout : écrivez une condition pour chaque groupe à classer.
 
@@ -59,7 +59,7 @@ Votre CRM contient un champ `holdout_group` dont la valeur est `control` ou `tre
 
 Un client dont le champ `holdout_group` est vide ne remplit aucune condition. Il reçoit le Traitement et n'est pas compté dans les résultats.
 
-Les 10 % saisis sont seulement une estimation. La valeur de `holdout_group` décide de la variante reçue par chaque client.
+La valeur de `holdout_group` décide de la variante reçue par chaque client. Les résultats vérifient qu'environ 10 % des participants se retrouvent dans le Témoin.
 
 ## Garder des résultats fiables
 
@@ -78,9 +78,11 @@ Ces changements faussent aussi les résultats s'ils dépendent de la variante re
 
 ## Lire les résultats
 
-Les résultats décrivent uniquement les clients classés. Ils utilisent le nombre de clients réellement observés dans chaque variante, pas la répartition attendue.
+Les résultats décrivent uniquement les clients classés. Ils utilisent le nombre de clients réellement observés dans chaque variante, affiché sous **Participants par variante**.
 
-Quand la significativité statistique est affichée, un Témoin de petite taille met plus de temps à l'atteindre.
+Si la répartition réelle s'écarte de la répartition attendue, l'alerte **Le trafic n'a pas été réparti comme configuré** apparaît. Un Témoin de petite taille met aussi plus de temps à atteindre la significativité.
+
+Consultez [Expérimentations qui utilisent une Datasource](/fr/product-guide/analytics/experiments/results#expérimentations-qui-utilisent-une-datasource).
 
 Le Node Expérimentation affiche les mêmes branches qu'avec la répartition aléatoire. Une fois l'expérimentation lancée, ses pourcentages indiquent la répartition attendue, pas la répartition réelle.
 

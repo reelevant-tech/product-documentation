@@ -171,7 +171,8 @@
                     "group": "Experiments",
                     "pages": [
                       "product-guide/analytics/experiments",
-                      "product-guide/analytics/experiments/datasource-assignment"
+                      "product-guide/analytics/experiments/datasource-assignment",
+                      "product-guide/analytics/experiments/results"
                     ]
                   },
                   "product-guide/analytics/measures-and-dimensions",
@@ -682,7 +683,8 @@
                     "group": "Expérimentations",
                     "pages": [
                       "fr/product-guide/analytics/experiments",
-                      "fr/product-guide/analytics/experiments/datasource-assignment"
+                      "fr/product-guide/analytics/experiments/datasource-assignment",
+                      "fr/product-guide/analytics/experiments/results"
                     ]
                   },
                   "fr/product-guide/analytics/measures-and-dimensions",
