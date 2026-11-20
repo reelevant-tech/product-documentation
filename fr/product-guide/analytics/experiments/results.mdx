@@ -1,9 +1,9 @@
 ---
 title: "Lire les résultats d'une expérimentation"
-description: "Lisez l'Uplift, l'intervalle de confiance et la significativité d'un Groupe témoin global ou d'un Test A/B continu"
+description: "Lisez l'écart, l'intervalle de confiance et la significativité d'un Groupe témoin global ou d'un Test A/B continu"
 ---
 
-Le tableau de bord des résultats indique si vos variantes font mieux que le [Témoin](/fr/glossary) ou la [Référence](/fr/glossary), et avec quelle certitude.
+Le tableau de bord des résultats indique si vos [variantes](/fr/glossary) font mieux que le [Témoin](/fr/glossary) ou la [Référence](/fr/glossary), et avec quelle certitude.
 
 ![Page d'un Groupe témoin global en cours avec son résumé, l'Écart vs Témoin et son intervalle de confiance à 95 %, et le tableau Résultats par variante](/images/analytics/experiment-results-dashboard.png)
 
@@ -33,24 +33,24 @@ Un participant est un client, ou un affichage avec **Par affichage**, qui a vu u
 
 ## L'en-tête des résultats
 
-L'en-tête compare un Traitement (une variante qui n'est ni le Témoin ni la Référence) au Témoin ou à la Référence, sur la métrique de succès.
+L'en-tête compare un [Traitement](/fr/glossary) (une variante autre que le Témoin ou la Référence) au Témoin ou à la Référence, sur la métrique de succès.
 
-### Uplift vs Témoin ou Référence
+### Écart vs Témoin ou Référence
 
-**Écart vs** suivi du nom de votre Témoin ou de votre Référence affiche l'Uplift (l'écart relatif sur la métrique de succès). Par exemple, +8,7 % sur **Revenu par client** signifie que les clients du Traitement dépensent 8,7 % de plus.
+**Écart vs** suivi du nom de votre Témoin ou de votre Référence affiche l'écart relatif sur la métrique de succès (l'[Uplift](/fr/glossary)). Par exemple, +8,7 % sur **Revenu par client** signifie que les clients du Traitement dépensent en moyenne 8,7 % de plus que ceux du Témoin.
 
 À côté, un second chiffre donne le même écart dans l'unité de la métrique. Les taux l'affichent en points de pourcentage (pts), comme **Écart de taux de conversion unique (pts)**.
 
-Avec **Revenu par client**, **Revenu incrémental** estime le revenu apporté par le Traitement. C'est l'écart par client multiplié par le nombre de participants du Traitement.
+Avec **Revenu par client**, **Revenu incrémental** estime le revenu apporté par le Traitement : l'écart par client multiplié par ses participants. Comme l'écart, c'est une estimation : ne vous y fiez que si le Traitement est en **Hausse significative**.
 
 ### Intervalle de confiance à 95 %
 
-L'**Intervalle de confiance à 95 %** est la plage où se situe très probablement le véritable Uplift. Il se resserre à mesure que les participants s'accumulent.
+L'**Intervalle de confiance à 95 %** est la plage d'écarts compatible avec les données à ce stade. Quelle que soit la fréquence de consultation, il manque le véritable écart au plus 5 % du temps sur toute l'expérimentation.
 
-Vous pouvez consulter les résultats à tout moment, aussi souvent que vous le souhaitez. L'intervalle reste fiable quelle que soit la fréquence de consultation : vous pouvez conclure quand vous le décidez.
+L'intervalle se resserre en général à mesure que les participants s'accumulent. Vous pouvez consulter les résultats à tout moment et conclure quand vous le décidez.
 
 <Tip>
-  Cet intervalle est plus large que dans un test classique lu une seule fois. Attendez-vous à voir **Pas encore significatif** plus longtemps, surtout avec un petit Témoin.
+  Cet intervalle est plus large que dans une expérimentation lue une seule fois, à une fin fixée. Attendez-vous à voir **Pas encore significatif** plus longtemps, surtout avec un petit Témoin.
 </Tip>
 
 ### Significativité
@@ -59,18 +59,22 @@ Vous pouvez consulter les résultats à tout moment, aussi souvent que vous le s
 |---------|-------------------|
 | **Hausse significative** | Tout l'intervalle est au-dessus de 0 : le Traitement fait mieux. |
 | **Baisse significative** | Tout l'intervalle est en dessous de 0 : le Traitement fait moins bien. |
-| **Pas encore significatif** | L'intervalle contient encore 0 : il est trop tôt pour conclure. |
-| **Pas encore assez de données** | Trop peu d'achats ou de clics, ou tous les participants ont la même valeur pour l'instant. |
+| **Pas encore significatif** | L'intervalle contient encore 0 : les données ne distinguent pas encore ce Traitement du Témoin ou de la Référence. L'écart est peut-être trop petit pour être détecté, ou il n'y en a pas. |
+| **Pas encore assez de données** | Trop peu d'achats ou de clics, tous les participants ont la même valeur pour l'instant, ou la valeur du Témoin ou de la Référence est encore trop incertaine. |
 
-Survolez le libellé pour en voir la raison. Une fois l'expérimentation terminée et ses chiffres figés, les libellés deviennent **Non significatif** et **Pas assez de données**.
+Survolez **Pas encore significatif** ou **Pas encore assez de données** pour en voir la raison. Une fois l'expérimentation terminée et ses chiffres figés, ces libellés deviennent **Non significatif** et **Pas assez de données**.
+
+**Non significatif** ne prouve pas que les variantes font jeu égal : tout écart compris dans l'intervalle reste possible.
 
 ### Plusieurs Traitements
 
 Dans un Test A/B continu à plusieurs Traitements, chaque Traitement est comparé à la Référence uniquement. Les Traitements ne sont jamais comparés entre eux.
 
-Le seuil de significativité est relevé selon le nombre de Traitements. Cela évite de trouver un gagnant par hasard, simplement parce que vous comparez plus de variantes.
+Le seuil de significativité est relevé selon le nombre de Traitements, pour ne pas trouver un gagnant par hasard. Chaque intervalle est élargi : ensemble, tous les intervalles tiennent à 95 %, donc chacun est plus large.
 
-L'en-tête n'affiche alors que le Traitement **En tête** : celui qui a le plus fort Uplift parmi ceux en **Hausse significative**. Sinon, il indique qu'aucune variante ne fait encore significativement mieux que votre Référence.
+L'en-tête n'affiche alors que le Traitement **En tête** : celui qui a le plus fort écart parmi ceux en **Hausse significative**. Sinon, il indique qu'aucune variante ne fait encore significativement mieux que votre Référence.
+
+**En tête** ne signifie pas qu'il fait significativement mieux que les autres Traitements. Son écart tend aussi à être surestimé : l'intervalle montre son ampleur réelle possible.
 
 ## Résultats par variante
 
@@ -80,7 +84,7 @@ Le tableau **Résultats par variante** liste toutes les variantes, le Témoin ou
 |---------|--------------------|
 | **Participants** | Les participants de cette variante. |
 | Métrique de succès | La valeur de la variante sur la métrique de succès, comme **Revenu par client**. |
-| **Écart vs** Témoin ou Référence | L'Uplift de la variante sur la métrique de succès. |
+| **Écart vs** Témoin ou Référence | L'écart de la variante sur la métrique de succès. |
 | **Significativité** | Le même libellé que dans l'en-tête. |
 | **Clics uniques** | Les participants avec au moins un clic. |
 | **Acheteurs** | Les participants avec au moins un achat. |
@@ -97,6 +101,8 @@ Chaque achat compte une fois, en entier. Les retours ne comptent pas comme des a
 
 Ces chiffres peuvent différer des chiffres attribués de [Data Exploration](/fr/product-guide/analytics/data-exploration). La répartition aléatoire indique déjà quelle variante cause un écart : aucun modèle d'attribution n'est nécessaire.
 
+Les achats d'un participant s'accumulent tant que l'expérimentation tourne. Juste après l'arrivée de nombreux participants, ceux-ci ont eu peu de temps pour acheter. L'écart se rapproche alors de 0 un moment, pour toutes les variantes.
+
 ## Graphique cumulé
 
 ![Graphique Évolution de l'écart vs Référence avec trois Traitements, l'intervalle de confiance de celui en tête et la ligne Aucun écart](/images/analytics/experiment-results-chart.png)
@@ -107,10 +113,10 @@ Basculez entre deux vues :
 
 | Vue | Ce qu'elle affiche |
 |-----|--------------------|
-| **Écart** (par défaut) | L'Uplift de chaque Traitement, l'**Intervalle de confiance à 95 %** d'un Traitement et la ligne **Aucun écart** à 0. |
+| **Écart** (par défaut) | L'écart de chaque Traitement, l'**Intervalle de confiance à 95 %** d'un Traitement et la ligne **Aucun écart** à 0. |
 | **Valeurs** | La valeur de chaque variante sur la métrique de succès, Témoin ou Référence compris. Elle n'affiche pas d'intervalle. |
 
-Dans la vue **Écart**, un Uplift est significatif dès que sa zone ne croise plus la ligne **Aucun écart**. Avec plusieurs Traitements, sélectionnez un Traitement dans la légende pour afficher sa zone.
+Dans la vue **Écart**, un écart est significatif tant que sa zone ne croise pas la ligne **Aucun écart**. Avec plusieurs Traitements, sélectionnez un Traitement dans la légende pour afficher sa zone.
 
 Seuls trois Traitements ont leur propre couleur. Les suivants apparaissent en fines lignes grises.
 
@@ -122,7 +128,7 @@ Les points du graphique dépendent de la durée de l'expérimentation :
 | Jusqu'à 4 mois | Semaine |
 | Plus de 4 mois | Mois |
 
-Tant que l'expérimentation est en cours, le dernier point n'est pas terminé. Survolez-le pour voir jusqu'à quelle date vont ses données.
+Tant que les chiffres bougent, le dernier point n'est pas terminé. Survolez-le pour voir jusqu'à quelle date vont ses données.
 
 ## Le trafic n'a pas été réparti comme configuré
 
@@ -130,19 +136,21 @@ Tant que l'expérimentation est en cours, le dernier point n'est pas terminé. S
 
 L'expérimentation vérifie que les participants sont répartis entre les variantes comme configuré. Quand la répartition s'écarte plus que le hasard ne l'explique, une alerte rouge apparaît en haut de la page.
 
-On parle de déséquilibre de répartition (sample ratio mismatch). Il signifie généralement que des participants n'ont pas été servis ou comptés comme prévu : les résultats ne sont pas fiables.
+On parle de déséquilibre de répartition (sample ratio mismatch). Il signifie généralement que des affichages ont été perdus pour une variante après l'affectation des clients : les résultats ne sont pas fiables.
 
 Quand la répartition est encore faussée, l'alerte affiche la **Part configurée** et la **Part observée** de chaque variante. Les libellés de significativité passent alors en gris, et **En tête** devient **En tête, non fiable**.
 
-Que faire :
+La même alerte apparaît quand des participants sont enregistrés sur une variante sans part de trafic. Elle n'affiche alors pas de tableau de parts.
 
-1. Vérifiez les Workflows qui utilisent l'expérimentation, par exemple une Branch qui contourne le Node Expérimentation pour certains clients.
-2. Si le problème ne peut pas être corrigé, concluez l'expérimentation en conservant le Témoin ou la Référence.
-3. Si l'expérimentation est déjà terminée, corrigez le problème avant de relancer une expérimentation similaire.
+Une fois l'alerte affichée, cette expérimentation ne peut plus être enregistrée comme validée statistiquement, même après correction. Que faire :
 
-<Warning>
+1. Cherchez la cause dans les Workflows qui utilisent l'expérimentation. Par exemple, une Branch de variante n'affiche pas toujours de Content, ou une condition suit le Node Expérimentation sur une seule Branch.
+2. Concluez l'expérimentation en conservant le Témoin ou la Référence.
+3. Corrigez la cause, puis **Dupliquez** l'expérimentation pour la relancer.
+
+<Note>
   L'alerte reste affichée une fois déclenchée, même si la répartition redevient correcte. Les participants comptés pendant l'écart restent dans les résultats.
-</Warning>
+</Note>
 
 ## Expérimentations qui utilisent une Datasource
 
@@ -152,9 +160,9 @@ Quand les [variantes viennent d'une Datasource](/fr/product-guide/analytics/expe
 
 La ligne en dessous rappelle votre **Répartition attendue**, celle que vous avez configurée dans votre Datasource. Les clients non classés ne sont pas comptés.
 
-La vérification de la répartition s'applique aussi. Une alerte signifie que votre champ ne répartit pas les clients comme configuré, que les conditions ne lui correspondent pas, ou que ses valeurs n'ont pas été attribuées au hasard.
+La vérification de la répartition s'applique aussi. Une alerte peut signifier que votre champ ne répartit pas les clients comme configuré. Les conditions ne lui correspondent peut-être pas, ou des clients n'ont pas été servis comme prévu.
 
-Dans ce cas, vérifiez le champ de la Datasource et les conditions de chaque variante. Si le problème ne peut pas être corrigé, concluez l'expérimentation en conservant le Témoin ou la Référence.
+Une vérification réussie ne prouve pas que les valeurs ont été attribuées au hasard. En cas d'alerte, vérifiez le champ et les conditions, puis concluez, corrigez et dupliquez comme ci-dessus.
 
 ## Exporter en CSV
 
@@ -168,34 +176,39 @@ Si le trafic n'a pas été réparti comme configuré, chaque ligne porte la mêm
 
 ![Fenêtre Conclure l'expérimentation avec Personalized experience sélectionnée et enregistrée comme gagnante validée statistiquement](/images/analytics/experiment-conclude.png)
 
-Quand vous sélectionnez **Conclure**, la fenêtre **Conclure l'expérimentation** présélectionne une variante à conserver :
+Quand vous sélectionnez **Conclure**, la fenêtre **Conclure l'expérimentation** présélectionne une variante à conserver. Le premier cas qui s'applique l'emporte :
 
-- le Traitement **En tête**, s'il y en a un ;
-- sinon le Traitement d'un Groupe témoin global, sauf s'il fait significativement moins bien ;
-- sinon, ou si le trafic n'a pas été réparti comme configuré, le Témoin ou la Référence.
+| Cas | Variante présélectionnée |
+|-----|--------------------------|
+| Le trafic n'a pas été réparti comme configuré | Le Témoin ou la Référence |
+| Un Traitement est **En tête** | Ce Traitement |
+| Groupe témoin global | Le Traitement, sauf s'il est en **Baisse significative** |
+| Tout autre cas | Le Témoin ou la Référence |
 
 Sous votre choix, la fenêtre indique comment il sera enregistré :
 
 | Message | Quand |
 |---------|-------|
-| Enregistrée comme gagnante validée statistiquement | Le Traitement est en **Hausse significative** et le trafic a été réparti comme configuré. |
-| Enregistrée comme gagnante non validée statistiquement | Tout autre Traitement. |
-| Enregistré comme une décision, sans validation statistique | Vous conservez le Témoin ou la Référence. |
+| Gagnante validée statistiquement | Le Traitement est en **Hausse significative** et le trafic a été réparti comme configuré. |
+| Gagnante non validée statistiquement | Tout autre Traitement. |
+| Décision, sans validation statistique | Vous conservez le Témoin ou la Référence. |
 
 Si vous choisissez un Traitement en **Baisse significative**, un message rouge vous suggère de conserver plutôt le Témoin ou la Référence.
 
 Le résultat est enregistré au moment de la conclusion et ne change plus ensuite. Une expérimentation **Décidée** non validée affiche **Non validé statistiquement** à côté de son statut.
 
-Si les résultats ne peuvent pas être calculés, l'expérimentation n'est pas conclue. Réessayez plus tard, ou sélectionnez **Conclure sans les résultats** : votre choix est alors enregistré comme non validé statistiquement.
+Si vous conservez un Traitement et que ses résultats ne peuvent pas être calculés, l'expérimentation n'est pas conclue et la fenêtre vous l'indique. Réessayez plus tard, ou sélectionnez de nouveau **Conclure** puis confirmez avec **Conclure sans les résultats**.
 
-<Tip>
-  Après la conclusion, les achats continuent d'être comptés pendant 7 jours, et les clics pendant environ une heure. Les chiffres bougent un peu, mais le résultat enregistré ne change pas.
-</Tip>
+Avec **Conclure sans les résultats**, votre choix est enregistré comme non validé statistiquement.
+
+<Note>
+  Après la conclusion, aucun nouveau participant n'entre. Les achats des participants existants comptent encore 7 jours, et les clics environ une heure. Les chiffres, et même un libellé de significativité, peuvent encore changer, mais le résultat enregistré ne change pas.
+</Note>
 
 ## Pas encore disponible
 
 - Les dates de fin automatiques, avec une lecture automatique des résultats une fois les chiffres figés.
-- Les tests A/B à horizon fixe, dimensionnés à l'avance et lus une seule fois.
+- Les expérimentations A/B à horizon fixe, dimensionnées à l'avance et lues une seule fois.
 - Les expérimentations Real-Time Testing et leur tableau de bord.
 
 ## Et ensuite ?

@@ -68,14 +68,14 @@ Choose one **Success metric**: **Unique conversion rate**, **Unique click rate**
 
 ## Lifecycle
 
-![Experiment page showing its status, configuration, and traffic allocation](/images/analytics/experiment-page.png)
+![Page of a Ready Experiment with its status, configuration, traffic allocation and the Start next step](/images/analytics/experiment-page.png)
 
 | Status | What it means |
 |--------|---------------|
 | **Draft** | You can continue editing the Experiment. |
 | **Ready** | The configuration is validated and can be attached to a Workflow. |
 | **Live** | The Experiment is running and allocating traffic. |
-| **Decided** | A Variant was chosen to receive all traffic. **Not statistically validated** shows when the results did not prove it the winner. |
+| **Decided** | A Variant was chosen to receive all traffic. **Not statistically validated** shows when the kept Variant is not a validated winner, for example when you keep the Control or Reference. |
 | **Archived** | The Experiment is archived and hidden from the active listing. |
 
 ### Validate or return to draft
@@ -98,7 +98,7 @@ If no Workflow uses the Experiment, a warning appears. The Experiment receives n
 
 ![Conclude experiment modal with the Variant to keep option](/images/analytics/experiment-conclude.png)
 
-The **Conclude experiment** modal offers **Variant to keep** radio options. It preselects the Variant the results favour.
+The **Conclude experiment** modal offers **Variant to keep** radio options. It preselects a Variant based on the results.
 
 Choose a Variant, then select **Conclude**. The modal tells you whether your choice will be recorded as statistically validated.
 
@@ -107,7 +107,7 @@ All traffic then goes to that Variant, and the Experiment becomes Decided. See [
 A **Global holdout** has no automatic end date, but you can conclude it manually. You cannot stop a **Live** Experiment without choosing a Variant to keep.
 
 <Warning>
-  Concluding is irreversible. The Experiment stops collecting data and cannot be restarted.
+  Concluding is irreversible. The Experiment stops enrolling new participants and cannot be restarted.
 </Warning>
 
 ### Archive
@@ -132,7 +132,7 @@ Add **Tag: {name}** as a dimension to compare Variants. See [Measures and Dimens
 
 ## Coming soon
 
-Scheduled start and automatic end dates are coming soon. Fixed-horizon A/B tests and Real-Time Testing Experiments are also coming later.
+Scheduled start and automatic end dates are coming soon. Fixed-horizon A/B Experiments and Real-Time Testing Experiments are also coming later.
 
 ## What's Next?
 

@@ -3,7 +3,7 @@ title: 'Read Experiment Results'
 description: 'Read the Uplift, confidence interval and significance of a Global holdout or Continuous A/B test'
 ---
 
-The results dashboard shows whether your Variants beat the [Control](/glossary) or [Reference](/glossary), and how sure you can be.
+The results dashboard shows whether your [Variants](/glossary) beat the [Control](/glossary) or [Reference](/glossary), and how sure you can be.
 
 ![Experiment page of a live Global holdout with its summary, the Lift vs Control headline with its 95% confidence interval, and the Results per variant table](/images/analytics/experiment-results-dashboard.png)
 
@@ -33,24 +33,24 @@ A participant is a customer, or a display with **Per display**, who saw a Varian
 
 ## The headline
 
-The headline compares a Treatment (a Variant that is not the Control or Reference) with the Control or Reference, on the success metric.
+The headline compares a [Treatment](/glossary) (a Variant other than the Control or Reference) with the Control or Reference, on the success metric.
 
 ### Uplift vs Control or Reference
 
-**Lift vs** followed by your Control or Reference name shows the Uplift (the relative difference on the success metric). For example, +8.7% on **Revenue per customer** means Treatment customers spend 8.7% more.
+**Lift vs** followed by your Control or Reference name shows the Uplift (the relative difference on the success metric). For example, +8.7% on **Revenue per customer** means Treatment customers spend 8.7% more on average than Control customers.
 
 Next to it, a second figure gives the same difference in the metric's own unit. Rates show it in percentage points (pts), such as **Unique conversion rate difference (pts)**.
 
-With **Revenue per customer**, **Incremental revenue** estimates the revenue the Treatment brought in. It is the difference per customer multiplied by the Treatment's participants.
+With **Revenue per customer**, **Incremental revenue** estimates the revenue the Treatment brought in: the difference per customer multiplied by the Treatment's participants. Like the Uplift, it is an estimate: only rely on it when the Treatment is **Significantly better**.
 
 ### 95% confidence interval
 
-The **95% confidence interval** is the range where the true Uplift most likely sits. It narrows as participants accumulate.
+The **95% confidence interval** is the range of Uplifts the data is consistent with so far. However often you look, it misses the true Uplift at most 5% of the time over the whole Experiment.
 
-You can check results at any time, as often as you like. The interval is built to stay reliable however often you look, so you can conclude whenever you choose.
+The interval usually narrows as participants accumulate. You can check results at any time and conclude whenever you choose.
 
 <Tip>
-  This interval is wider than in a classic one-time test. Expect **Not yet significant** for longer, especially with a small Control.
+  This interval is wider than in an experiment read only once, at a set end. Expect **Not yet significant** for longer, especially with a small Control.
 </Tip>
 
 ### Significance
@@ -59,18 +59,22 @@ You can check results at any time, as often as you like. The interval is built t
 |-------|---------------|
 | **Significantly better** | The whole interval is above 0: the Treatment does better. |
 | **Significantly worse** | The whole interval is below 0: the Treatment does worse. |
-| **Not yet significant** | The interval still includes 0: it is too early to tell. |
-| **Not enough data yet** | Too few purchases or clicks, or every participant has the same value so far. |
+| **Not yet significant** | The interval still includes 0: the data cannot yet tell this Treatment apart from the Control or Reference. The difference may be too small to detect so far, or there may be none. |
+| **Not enough data yet** | Too few purchases or clicks, every participant has the same value so far, or the Control or Reference value is still too uncertain. |
 
-Hover the label to see the reason. Once the Experiment has ended and its figures stopped moving, the labels read **Not significant** and **Not enough data**.
+Hover **Not yet significant** or **Not enough data yet** to see why. Once the Experiment has ended and its figures stopped moving, these labels read **Not significant** and **Not enough data**.
+
+**Not significant** does not prove the Variants perform the same: any Uplift inside the interval is still possible.
 
 ### Several Treatments
 
 In a Continuous A/B test with several Treatments, each Treatment is compared with the Reference only. Treatments are never compared with each other.
 
-The bar for significance is raised with the number of Treatments. This keeps you from finding a winner by chance just because you compared more Variants.
+The bar for significance is raised with the number of Treatments, so you do not find a winner by chance just by comparing more Variants. Each Treatment's interval is widened: all intervals together hold at 95%, so each one alone is wider.
 
 The headline then shows only the **Leading** Treatment: the one with the largest Uplift among those **Significantly better**. If none is, it reads "No variant is significantly better than" your Reference "yet".
+
+**Leading** does not mean it does significantly better than the other Treatments. Its Uplift also tends to be on the high side: the interval shows how large it can really be.
 
 ## Results per variant
 
@@ -97,6 +101,8 @@ Each purchase counts once and in full. Returns are not counted as purchases and 
 
 These figures can differ from the attributed figures in [Data Exploration](/product-guide/analytics/data-exploration). The random split already tells which Variant caused a difference, so no attribution model is needed.
 
+A participant's purchases keep adding up while the Experiment runs. Right after many new participants arrive, they have had little time to buy. The Uplift then moves toward 0 for a while, for every Variant alike.
+
 ## Cumulative chart
 
 ![Lift over time vs Reference chart with three Treatments, the confidence interval band of the leading one, and the No difference line](/images/analytics/experiment-results-chart.png)
@@ -110,7 +116,7 @@ Switch between two views:
 | **Lift** (default) | Each Treatment's Uplift, the **95% confidence interval** of one Treatment, and the **No difference** line at 0. |
 | **Values** | Each Variant's value on the success metric, Control or Reference included. It shows no interval. |
 
-In the **Lift** view, an Uplift is significant once its band no longer crosses the **No difference** line. With several Treatments, select a Treatment in the legend to show its band.
+In the **Lift** view, an Uplift is significant while its band does not cross the **No difference** line. With several Treatments, select a Treatment in the legend to show its band.
 
 Only three Treatments get their own colour. Others appear as thin grey lines.
 
@@ -122,7 +128,7 @@ The chart's points follow the Experiment's length:
 | Up to 4 months | Week |
 | More than 4 months | Month |
 
-While the Experiment is live, the last point is still in progress. Hover it to see the date its data runs to.
+Until the figures stop moving, the last point is still in progress. Hover it to see the date its data runs to.
 
 ## Traffic was not split as configured
 
@@ -130,19 +136,21 @@ While the Experiment is live, the last point is still in progress. Hover it to s
 
 The Experiment checks that participants are split between Variants as configured. When the split drifts more than chance allows, a red warning appears at the top of the page.
 
-This is called a sample ratio mismatch. It usually means some participants were not delivered or not counted as planned, so the results cannot be trusted.
+This is called a sample ratio mismatch. It usually means displays were lost for one Variant after customers were assigned, so the results cannot be trusted.
 
 When the split is still off, the warning shows each Variant's **Configured share** and **Observed share**. While it shows, significance labels are greyed out, and **Leading** reads **Leading, unreliable**.
 
-What to do:
+The same warning appears when participants are recorded on a Variant with no traffic share. It then shows no share table.
 
-1. Check the Workflows that run the Experiment, for example a Branch that skips the Experiment Node for some customers.
-2. If you cannot fix the issue, conclude the Experiment and keep the Control or Reference.
-3. If the Experiment has already ended, fix the issue before running a similar Experiment.
+Once this warning shows, this Experiment can no longer be recorded as statistically validated, even after a fix. What to do:
 
-<Warning>
+1. Find the cause in the Workflows that run the Experiment. For example, a Variant's Branch does not always show a Content, or a condition follows the Experiment Node on one Branch only.
+2. Conclude the Experiment and keep the Control or Reference.
+3. Fix the cause, then **Clone** the Experiment to run it again.
+
+<Note>
   The warning stays once raised, even if the split looks right again later. Participants counted while it drifted are still in the results.
-</Warning>
+</Note>
 
 ## Experiments that use a Datasource
 
@@ -152,9 +160,9 @@ When [Variants come from a Datasource](/product-guide/analytics/experiments/data
 
 The line under it recalls your **Expected allocation**, the split you configured from your Datasource. Unclassified customers are not counted.
 
-The split check also applies. A warning means your field does not split customers as configured, the conditions do not match it, or its values were not assigned at random.
+The split check also applies. A warning can mean your field does not split customers as configured, or the conditions do not match it. Some customers may also not have been delivered as planned.
 
-In that case, check the Datasource field and the conditions of each Variant. If you cannot fix it, conclude the Experiment and keep the Control or Reference.
+A check that passes does not prove the values were assigned at random. If the warning shows, check the Datasource field and the conditions, then conclude, fix and **Clone** as above.
 
 ## Export to CSV
 
@@ -168,11 +176,14 @@ If traffic was not split as configured, every row carries the same warning as th
 
 ![Conclude experiment modal with Personalized experience selected and recorded as a statistically validated winner](/images/analytics/experiment-conclude.png)
 
-When you select **Conclude**, the **Conclude experiment** modal preselects a Variant to keep:
+When you select **Conclude**, the **Conclude experiment** modal preselects a Variant to keep. The first case that matches wins:
 
-- the **Leading** Treatment, when there is one;
-- otherwise the Treatment of a Global holdout, unless it does significantly worse;
-- otherwise, or if traffic was not split as configured, the Control or Reference.
+| Case | Preselected Variant |
+|------|---------------------|
+| Traffic was not split as configured | The Control or Reference |
+| A Treatment is **Leading** | That Treatment |
+| Global holdout | The Treatment, unless it is **Significantly worse** |
+| Any other case | The Control or Reference |
 
 Under your choice, the modal tells you how it will be recorded:
 
@@ -186,16 +197,18 @@ If you pick a Treatment that is **Significantly worse**, a red message suggests 
 
 The outcome is recorded when you conclude and never changes afterwards. A Decided Experiment that is not validated shows **Not statistically validated** next to its status.
 
-If the results cannot be computed, the Experiment is not concluded. Try again later, or select **Conclude without results**: your choice is then recorded as not statistically validated.
+If you keep a Treatment and its results cannot be computed, the Experiment is not concluded and the modal tells you so. Try again later, or select **Conclude** again and confirm with **Conclude without results**.
 
-<Tip>
-  After you conclude, purchases keep counting for 7 days, and clicks for about an hour. The figures move a little, but the recorded outcome does not.
-</Tip>
+With **Conclude without results**, your choice is recorded as not statistically validated.
+
+<Note>
+  After you conclude, no new participants join. Purchases by existing participants keep counting for 7 days, and clicks for about an hour. The figures, and even a significance label, can still change, but the recorded outcome does not.
+</Note>
 
 ## Not available yet
 
 - Automatic end dates, with an automatic reading of results once figures stop moving.
-- Fixed-horizon A/B tests, sized in advance and read once.
+- Fixed-horizon A/B Experiments, sized in advance and read once.
 - Real-Time Testing Experiments and their dashboard.
 
 ## What's Next?
