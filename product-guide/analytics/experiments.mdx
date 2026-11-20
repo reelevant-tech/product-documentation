@@ -75,7 +75,7 @@ Choose one **Success metric**: **Unique conversion rate**, **Unique click rate**
 | **Draft** | You can continue editing the Experiment. |
 | **Ready** | The configuration is validated and can be attached to a Workflow. |
 | **Live** | The Experiment is running and allocating traffic. |
-| **Decided** | A Variant was chosen to receive all traffic. |
+| **Decided** | A Variant was chosen to receive all traffic. **Not statistically validated** shows when the results did not prove it the winner. |
 | **Archived** | The Experiment is archived and hidden from the active listing. |
 
 ### Validate or return to draft
@@ -98,11 +98,11 @@ If no Workflow uses the Experiment, a warning appears. The Experiment receives n
 
 ![Conclude experiment modal with the Variant to keep option](/images/analytics/experiment-conclude.png)
 
-The **Conclude experiment** modal offers **Variant to keep** radio options.
+The **Conclude experiment** modal offers **Variant to keep** radio options. It preselects the Variant the results favour.
 
-Choose a Variant, then select **Conclude**.
+Choose a Variant, then select **Conclude**. The modal tells you whether your choice will be recorded as statistically validated.
 
-All traffic then goes to that Variant, and the Experiment becomes Decided.
+All traffic then goes to that Variant, and the Experiment becomes Decided. See [Conclude with results](/product-guide/analytics/experiments/results#conclude-with-results).
 
 A **Global holdout** has no automatic end date, but you can conclude it manually. You cannot stop a **Live** Experiment without choosing a Variant to keep.
 
@@ -124,17 +124,15 @@ Select **Clone** to create a new draft named with “(copy)”.
 
 ## Read experiment data
 
-The Experiment page shows **Results dashboard coming soon**.
+Once started, the Experiment page shows its results dashboard: the Uplift of each Treatment, its confidence interval, and whether it is significant. See [Read Experiment Results](/product-guide/analytics/experiments/results).
 
-Meanwhile, open [Data Exploration](/product-guide/analytics/data-exploration). Your Experiment appears as a tag named after it, with one value for each Variant.
+To break results down further, open [Data Exploration](/product-guide/analytics/data-exploration). Your Experiment appears as a tag named after it, with one value for each Variant.
 
-Add **Tag: {name}** as a dimension to compare Variants. See [Measures and Dimensions](/product-guide/analytics/measures-and-dimensions) for help choosing fields.
-
-These figures are not statistically validated.
+Add **Tag: {name}** as a dimension to compare Variants. See [Measures and Dimensions](/product-guide/analytics/measures-and-dimensions) for help choosing fields. These figures are not statistically validated.
 
 ## Coming soon
 
-The results dashboard and statistical significance are coming soon. Scheduled start and automatic end dates are also coming soon.
+Scheduled start and automatic end dates are coming soon. Fixed-horizon A/B tests and Real-Time Testing Experiments are also coming later.
 
 ## What's Next?
 
@@ -142,10 +140,10 @@ The results dashboard and statistical significance are coming soon. Scheduled st
   <Card title="Experiment Node" icon="flask" href="/product-guide/workflows/logic-nodes/experiment">
     Use an Experiment in a Workflow.
   </Card>
+  <Card title="Read Experiment Results" icon="chart-line" href="/product-guide/analytics/experiments/results">
+    Read the Uplift and significance of your Variants.
+  </Card>
   <Card title="Data Exploration" icon="chart-pie" href="/product-guide/analytics/data-exploration">
     Explore your analytics data.
-  </Card>
-  <Card title="Logic Nodes" icon="code-branch" href="/product-guide/workflows/logic-nodes">
-    Learn about Workflow Logic Nodes.
   </Card>
 </CardGroup>
