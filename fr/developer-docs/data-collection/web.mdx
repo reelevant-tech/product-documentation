@@ -8,14 +8,14 @@ description: 'Collecter les événements comportementaux de votre site avec le t
 Le tag de tracking est un petit script d'amorçage qui charge le tracker Reelevant et expose `window.reel`. Deux lignes suffisent pour envoyer un événement :
 
 ```html
-<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}" async></script>
+<script src="https://scripts-repo.reelevant.com/tag-rlvt?company={companyId}&datasource={datasourceId}"></script>
 <script>
   window.reel.identify('user@example.com')
   window.reel.event('product_page', { ids: ['SKU-12345'], locale: 'EN-GB' })
 </script>
 ```
 
-Ces deux appels sont sûrs avant la fin du chargement du tracker : le script d'amorçage définit `window.reel` de façon synchrone et met les appels en file dans `window.reel.queue`, que le tracker vide une fois par seconde après son initialisation.
+Dans cet exemple, l'amorçage est chargé de manière synchrone : les appels sont mis en attente pendant le chargement du tracker et de sa configuration. Avec un amorçage `async`, attendez son chargement avant d'appeler `window.reel`.
 
 Le snippet exact, avec vos `companyId` et `datasourceId` déjà substitués, est affiché par l'étape **Configure Reelevant Script** de l'assistant de la Datasource de tracking.
 
@@ -51,9 +51,84 @@ export const trackProductView = (productId: string, locale: string): void => {
 
 </CodeGroup>
 
-Le tag injecte le tracker depuis la même origine (`/rlvt?company=…&datasource=…`). Le tracker est mis en cache 5 minutes, ou 60 secondes lorsque la company a des intégrations on-site : les changements de tag ou de Workflow se propagent sans déploiement.
+### Tag mis à jour automatiquement (par défaut)
+
+L'URL `/tag-rlvt?company=&datasource=` reste compatible. Son amorçage charge la dernière version du tracker depuis la même origine. Conservez cette option pour recevoir automatiquement les mises à jour ; n'attachez pas d'empreinte SRI fixe à cet amorçage évolutif.
+
+Le tracker récupère `/config?company=&datasource=` depuis l'origine de son script pour obtenir les URL de collecte et les intégrations de Workflow. Cette configuration évolue indépendamment du fichier JavaScript statique.
 
 Charger le tag deux fois n'a aucun effet : l'amorçage s'arrête immédiatement si `window.reel` existe déjà.
+
+### Version figée avec Subresource Integrity (SRI)
+
+Récupérez le manifeste lors de la préparation du déploiement, et non à chaque visite :
+
+```bash
+curl --fail --silent --show-error https://scripts-repo.reelevant.com/rlvt.json
+```
+
+Exemple de réponse pour la version `1.1.0` :
+
+```json
+{
+  "version": "1.1.0",
+  "url": "https://scripts-repo.reelevant.com/rlvt-1.1.0.js",
+  "integrity": "sha384-Z8mA0aO/5Puep/gsARGJdIeW3awJhFGk7S9nFN3JJVNBFK1+8TUg+oUH+Lo8st7N"
+}
+```
+
+Copiez ensemble les valeurs `url` et `integrity` retournées. Remplacez les identifiants d'exemple par ceux de votre entreprise et de votre Datasource :
+
+```html
+<script>
+  window.reel = { companyId: '507f1f77bcf86cd799439011', datasourceId: '507f191e810c19729de860ea' }
+</script>
+<script src="https://scripts-repo.reelevant.com/rlvt-1.1.0.js" integrity="sha384-Z8mA0aO/5Puep/gsARGJdIeW3awJhFGk7S9nFN3JJVNBFK1+8TUg+oUH+Lo8st7N" crossorigin="anonymous" async></script>
+```
+
+Les versions publiées sont immuables. Pour une mise à niveau volontaire, remplacez les deux attributs depuis un nouveau manifeste. Une version inconnue renvoie `404` ; une empreinte incorrecte bloque l'exécution dans le navigateur.
+
+Si la récupération du manifeste échoue, conservez votre version figée plutôt que de déployer un snippet incomplet.
+
+| Paramètre | Type | Obligatoire | Défaut | Description |
+|-----------|------|-------------|--------|-------------|
+| `window.reel.companyId` | `string` | Oui | Aucun | Identifiant de l'entreprise. |
+| `window.reel.datasourceId` | `string` | Oui | Aucun | Identifiant de la Datasource de tracking. |
+| `window.reel.customCode` | `boolean` | Non | `false` | Activation explicite du code personnalisé. |
+| `src` | URL | Oui | Aucun | Champ `url` immuable du manifeste. |
+| `integrity` | `string` | Oui | Aucun | Empreinte SHA-384 du manifeste. |
+| `crossorigin` | `string` | Oui, pour SRI | Aucun | Valeur `anonymous`. |
+| `async` | Attribut booléen | Non | Absent | Chargement sans bloquer l'analyse HTML. |
+
+Ce snippet minimal n'installe pas de méthodes temporaires avant le chargement du fichier. Attendez l'événement `load` du script externe avant d'appeler `event()` ou `identify()`.
+
+### Intégrations de code personnalisé
+
+Les installations figées exécutent ce code uniquement si les deux conditions suivantes sont réunies :
+
+- Reelevant a activé `workflow_integration_custom_code` pour votre entreprise.
+- Vous définissez explicitement `customCode: true` dans `window.reel` avant de charger le tracker.
+
+Ajoutez par exemple `customCode: true` à côté de `companyId` et `datasourceId` dans l'initialisation ci-dessus. Le code est désactivé sinon. L'amorçage historique `/tag-rlvt` active déjà cette option : les installations existantes continuent donc à l'exécuter lorsque Reelevant l'autorise pour l'entreprise.
+
+Sans activation pour l'entreprise, l'enregistrement d'un code non vide nouveau ou modifié renvoie `403`. La suppression reste autorisée. Contactez Reelevant pour demander l'activation ; modifier l'option du navigateur ne contourne pas cette restriction.
+
+### Content Security Policy
+
+Ajoutez ces sources à la CSP existante de votre site, en conservant celles nécessaires à votre application :
+
+```text
+script-src 'self' https://scripts-repo.reelevant.com;
+connect-src 'self' https://scripts-repo.reelevant.com https://reelevant.run https://collector.reelevant.com;
+```
+
+Autorisez l'initialisation inline de `window.reel` avec une empreinte CSP ou un nonce renouvelé à chaque réponse, présent sur le `<script>` et dans `script-src`. N'autorisez pas tous les scripts inline uniquement pour cette initialisation.
+
+Ajoutez `'unsafe-eval'` à `script-src` uniquement si vous activez les intégrations de code personnalisé, qui utilisent `eval`. SRI fige le fichier, pas la configuration dynamique, le code personnalisé ni le [Content](/fr/glossary) rendu.
+
+Le Runner de production est `https://reelevant.run` et la collecte utilise `https://collector.reelevant.com`. Si votre entreprise utilise un domaine Runner personnalisé, autorisez-le aussi dans `connect-src`.
+
+Le HTML web rendu peut contenir des scripts inline ou des gestionnaires d'événements nécessitant une revue CSP distincte, indépendamment du code personnalisé des intégrations.
 
 ## API `window.reel`
 
