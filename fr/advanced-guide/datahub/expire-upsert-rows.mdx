@@ -1,0 +1,118 @@
+---
+title: 'Faire expirer les lignes Upsert'
+description: "Supprimez les lignes qu'une Datasource Upsert conserve après que sa source a cessé de les envoyer"
+---
+
+## Avant de commencer
+
+Un import Upsert met à jour les lignes qu'il envoie et insère les nouvelles. Il ne supprime jamais de ligne : une ligne qui disparaît de la source reste dans la Datasource.
+
+Deux options suppriment ces lignes après chaque import. Elles sont disponibles lorsque toutes les conditions suivantes sont remplies :
+
+| Prérequis | Configuration attendue |
+|-----------|------------------------|
+| **Stratégie de mise à jour** | La Datasource utilise **Upsert** avec une clé primaire. |
+| **Mode d'ingestion** | La Datasource utilise le mode **Worker**. |
+| **Colonne de comparaison** | Aucune. Avec une colonne de comparaison, une ligne renvoyée qui n'est pas plus récente garde son ancienne date de réception et finirait par expirer. |
+| **Compte** | L'expiration est activée pour votre compte par Reelevant. |
+
+## Choisir une option
+
+| Option | Supprimé après chaque import | À utiliser quand |
+|--------|------------------------------|------------------|
+| **Durée de rétention** (`retentionDays`) | Les lignes non reçues depuis le nombre de jours défini. | Chaque import envoie le jeu de données complet, ou une ligne doit disparaître quelques jours après que la source a cessé de l'envoyer. |
+| **Remplacement par champ** (`overwriteBy`) | Pour chaque valeur du champ présente dans l'import, les lignes de cette valeur que l'import n'a pas envoyées. | Chaque import recalcule des groupes complets, comme les commandes des 8 derniers jours. |
+
+Une Datasource peut utiliser les deux options.
+
+## Durée de rétention
+
+`retentionDays` est un nombre entier de jours, au moins 1. À la fin de chaque import, Reelevant supprime les lignes reçues pour la dernière fois avant cette période.
+
+Chaque import met à jour la date de réception de toutes les lignes qu'il envoie, même inchangées. Une ligne n'expire donc qu'après que la source a cessé de l'envoyer pendant toute la période.
+
+<Info>
+  Les lignes sont supprimées à la fin d'un import. Si aucun import n'a lieu, les lignes expirées restent jusqu'au suivant.
+</Info>
+
+### Exemple
+
+Une Datasource CRM utilise `customer_id` comme clé primaire et reçoit un export complet chaque nuit. Sa durée de rétention est de 15 jours. À partir du 1er novembre, la source n'exporte plus `C-2088`.
+
+Le 10 novembre :
+
+| customer_id | segment | Dernière réception |
+|-------------|---------|--------------------|
+| C-1042 | loyal_customer | 10 novembre |
+| C-2088 | new_customer | 31 octobre |
+
+Le 20 novembre :
+
+| customer_id | segment | Dernière réception |
+|-------------|---------|--------------------|
+| C-1042 | loyal_customer | 20 novembre |
+
+`C-2088` est resté tant que sa dernière réception datait de moins de 15 jours. Le premier import suivant l'a supprimé.
+
+## Remplacement par champ
+
+`overwriteBy` désigne un champ texte, nombre ou date. Après chaque import, Reelevant prend les valeurs de ce champ que l'import a envoyées. Pour chacune de ces valeurs, il supprime les lignes que l'import n'a pas envoyées.
+
+Une valeur absente de l'import conserve toutes ses lignes. Choisissez un champ dont la source recalcule toujours les valeurs en entier, comme une date de commande sur une fenêtre glissante.
+
+Les valeurs sont comparées exactement. Avec un champ date et heure, chaque heure distincte est une valeur à part : utilisez un champ qui ne contient que le jour pour remplacer les lignes jour par jour.
+
+### Exemple
+
+Une Datasource de commandes utilise `order_id` comme clé primaire et `order_date` pour `overwriteBy`. Chaque nuit, la source envoie toutes les commandes des 8 derniers jours.
+
+Avant l'import du 23 novembre :
+
+| order_id | order_date | status |
+|----------|------------|--------|
+| O-501 | 2026-11-14 | delivered |
+| O-502 | 2026-11-20 | paid |
+| O-503 | 2026-11-20 | paid |
+
+La commande `O-503` a été annulée et retirée de la source. L'import du 23 novembre envoie les commandes du 15 au 22 novembre, dont `O-502` mais pas `O-503`.
+
+Après l'import :
+
+| order_id | order_date | status |
+|----------|------------|--------|
+| O-501 | 2026-11-14 | delivered |
+| O-502 | 2026-11-20 | paid |
+
+L'import supprime `O-503` car il a envoyé des commandes du 20 novembre sans elle. `O-501` reste car l'import n'a envoyé aucune commande du 14 novembre.
+
+<Info>
+  Quand toutes les lignes d'une valeur disparaissent de la source, l'import n'envoie aucune ligne de cette valeur, et ses anciennes lignes restent. Par exemple, un jour dont toutes les commandes ont été annulées les conserve.
+</Info>
+
+## Limite de sécurité
+
+Quand un import supprimerait plus de 30 % des lignes concernées, il n'en supprime aucune. Les lignes concernées sont toute la Datasource pour une durée de rétention, et les lignes des valeurs envoyées pour un remplacement par champ.
+
+L'import réussit quand même. Les lignes restent jusqu'à ce que la source les renvoie ou que Reelevant les supprime à votre demande. Chaque import suivant vérifie de nouveau la limite.
+
+## Logs et notifications
+
+L'expiration apparaît dans les [logs de la Datasource](/fr/advanced-guide/datahub/logs) de chaque import :
+
+| Niveau | Événement |
+|--------|-----------|
+| **Info** | Des lignes ont été supprimées. Le log indique leur nombre, la date de réception limite et, pour un remplacement par champ, le champ. |
+| **Warning** | La limite de sécurité a conservé les lignes. Le log indique les lignes périmées et les lignes concernées. |
+| **Warning** | La suppression a échoué. Les lignes restent jusqu'à ce qu'un import suivant les supprime. |
+
+Les deux warnings envoient aussi les notifications d'erreur de la Datasource.
+
+<Warning>
+  Les lignes supprimées ne peuvent pas être restaurées. Pour les retrouver, la source doit les renvoyer.
+</Warning>
+
+## Mettre en place l'expiration
+
+L'éditeur de Datasource n'affiche pas encore ces options. Demandez à votre contact Reelevant d'activer l'expiration pour votre compte et de définir `retentionDays` ou `overwriteBy` sur la Datasource.
+
+Pour supprimer des enregistrements précis, consultez [Anonymiser des enregistrements clients](/fr/advanced-guide/datahub/anonymise-customer-records). Pour la durée de conservation de chaque type de données, consultez [Description du traitement](/fr/why-reelevant/data-protection/processing-details).

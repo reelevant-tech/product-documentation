@@ -54,7 +54,7 @@ Utilisez un identifiant opaque dans l'URL du Content. L'identifiant est visible 
 
 | Données | Durée de conservation |
 |---------|-----------------------|
-| Enregistrements des Datasources | Conservés jusqu'à leur mise à jour ou suppression. Avec une stratégie de remplacement complet (Override), un enregistrement supprimé à la source disparaît à la synchronisation suivante ; en Append ou Upsert, les lignes existantes sont conservées jusqu'à leur effacement (voir [Droits des personnes](#droits-des-personnes)) |
+| Enregistrements des Datasources | Conservés jusqu'à leur mise à jour ou suppression. Avec une stratégie de remplacement complet (Override), un enregistrement supprimé à la source disparaît à la synchronisation suivante ; en Append ou Upsert, les lignes existantes sont conservées jusqu'à leur effacement (voir [Droits des personnes](#droits-des-personnes)), sauf si une Datasource Upsert en mode Worker est configurée pour [faire expirer les lignes que la source n'envoie plus](/fr/advanced-guide/datahub/expire-upsert-rows) |
 | Événements comportementaux (expositions, clics, événements du site) | 90 jours par défaut, configurable par Datasource |
 | Logs de sécurité | 1 an, conformément à la recommandation de la CNIL |
 | Sauvegardes | Chiffrées, expirées au plus tard 180 jours après la suppression |

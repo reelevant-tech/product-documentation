@@ -57,6 +57,8 @@ When new data arrives, three strategies control how it merges with existing reco
 | **Append** | Keep existing records, add new rows | Time-series events, purchase history |
 | **Upsert** | Merge by primary key — update existing, insert new | CRM profiles, stock levels, price changes |
 
+Upsert never deletes on its own: a row that disappears from the source stays. Upsert Datasources in Worker mode can expire these rows after each import, after a retention period or by replacing the rows of each value an import sends. See [Expiring Upsert Rows](/advanced-guide/datahub/expire-upsert-rows).
+
 ## Record-Level Anonymisation
 
 Upsert Datasources in Worker and Ingester modes support targeted anonymisation by primary key. Privacy systems can remove selected CRM records without replacing the complete dataset.

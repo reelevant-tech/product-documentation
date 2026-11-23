@@ -54,7 +54,7 @@ Use an opaque identifier in the Content URL. The identifier is visible in the em
 
 | Data | Retention |
 |------|-----------|
-| Datasource records | Kept until updated or removed. With a full-replacement (Override) strategy, a record deleted at source disappears at the next sync; with Append or Upsert, existing rows persist until erased (see [Data Subject Rights](#data-subject-rights)) |
+| Datasource records | Kept until updated or removed. With a full-replacement (Override) strategy, a record deleted at source disappears at the next sync; with Append or Upsert, existing rows persist until erased (see [Data Subject Rights](#data-subject-rights)), unless an Upsert Datasource in Worker mode is set to [expire the rows the source stops sending](/advanced-guide/datahub/expire-upsert-rows) |
 | Behavioural events (exposures, clicks, website events) | 90 days by default, configurable per Datasource |
 | Security logs | 1 year, in line with the CNIL recommendation |
 | Backups | Encrypted, expire no later than 180 days after deletion |

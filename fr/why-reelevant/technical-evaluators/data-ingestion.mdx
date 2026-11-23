@@ -57,6 +57,8 @@ Lorsque de nouvelles données arrivent, trois stratégies contrôlent la fusion 
 | **Append** | Conserver les enregistrements existants, ajouter les nouvelles lignes | Événements en séries temporelles, historique d'achats |
 | **Upsert** | Fusionner par clé primaire — mettre à jour les existants, insérer les nouveaux | Profils CRM, niveaux de stock, changements de prix |
 
+Upsert ne supprime jamais rien de lui-même : une ligne qui disparaît de la source reste. Les Datasources Upsert en mode Worker peuvent faire expirer ces lignes après chaque import, au bout d'une durée de rétention ou en remplaçant les lignes de chaque valeur envoyée par un import. Voir [Faire expirer les lignes Upsert](/fr/advanced-guide/datahub/expire-upsert-rows).
+
 ## Anonymisation au niveau de l'enregistrement
 
 Les Datasources Upsert en modes Worker et Ingester supportent l'anonymisation ciblée par clé primaire. Les processus de confidentialité peuvent supprimer des enregistrements CRM sélectionnés sans remplacer tout le jeu de données.
