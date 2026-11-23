@@ -3,7 +3,7 @@ title: "Analyser les résultats d'une expérimentation"
 description: "Découvrez si vos variantes font mieux que la référence, et quand conclure"
 ---
 
-Le tableau de bord des résultats indique si vos [variantes](/fr/glossary) font mieux que la [Référence](/fr/glossary), et avec quelle certitude.
+Le tableau de bord des résultats indique si vos [variantes](/fr/glossary) font mieux que la [référence](/fr/glossary), et avec quelle certitude.
 
 ![Page d'un Groupe témoin global en cours avec son résumé, l'Écart vs Control et son intervalle de confiance à 95 %, et le tableau Résultats par variante](/images/analytics/experiment-results-dashboard-fr.png)
 
@@ -31,15 +31,15 @@ Un participant est un client, ou un affichage avec **Par affichage**, qui a vu u
 
 ## L'en-tête des résultats
 
-L'en-tête compare un [Traitement](/fr/glossary) (une variante autre que la Référence) à la Référence, sur la métrique de succès.
+L'en-tête compare un [traitement](/fr/glossary) (une variante autre que la référence) à la référence, sur la métrique de succès.
 
-### Écart vs Référence
+### Écart vs référence
 
-**Écart vs** suivi du nom de votre Référence affiche l'écart relatif sur la métrique de succès (l'[Uplift](/fr/glossary)). Par exemple, +8,7 % sur **Revenu par client** signifie que les clients du Traitement dépensent en moyenne 8,7 % de plus que ceux de la Référence.
+**Écart vs** suivi du nom de votre référence affiche l'écart relatif sur la métrique de succès (l'[Uplift](/fr/glossary)). Par exemple, +8,7 % sur **Revenu par client** signifie que les clients du traitement dépensent en moyenne 8,7 % de plus que ceux de la référence.
 
 À côté, un second chiffre donne le même écart dans l'unité de la métrique. Les taux l'affichent en points de pourcentage (pts), comme **Écart de taux de conversion unique (pts)**.
 
-Avec **Revenu par client**, **Revenu incrémental** estime le revenu apporté par le Traitement : l'écart par client multiplié par ses participants. Comme l'écart, c'est une estimation : ne vous y fiez que si le Traitement est en **Hausse significative**.
+Avec **Revenu par client**, **Revenu incrémental** estime le revenu apporté par le traitement : l'écart par client multiplié par ses participants. Comme l'écart, c'est une estimation : ne vous y fiez que si le traitement est en **Hausse significative**.
 
 ### Intervalle de confiance à 95 %
 
@@ -51,34 +51,34 @@ L'intervalle se resserre en général à mesure que les participants s'accumulen
 
 | Libellé | Ce qu'il signifie |
 |---------|-------------------|
-| **Hausse significative** | Tout l'intervalle est au-dessus de 0 : le Traitement fait mieux. |
-| **Baisse significative** | Tout l'intervalle est en dessous de 0 : le Traitement fait moins bien. |
-| **Pas encore significatif** | L'intervalle contient encore 0 : les données ne distinguent pas encore ce Traitement de la Référence. L'écart est peut-être trop petit pour être détecté, ou il n'y en a pas. |
-| **Pas encore assez de données** | Trop peu d'achats ou de clics, tous les participants ont la même valeur pour l'instant, ou la valeur de la Référence est encore trop incertaine. |
+| **Hausse significative** | Tout l'intervalle est au-dessus de 0 : le traitement fait mieux. |
+| **Baisse significative** | Tout l'intervalle est en dessous de 0 : le traitement fait moins bien. |
+| **Pas encore significatif** | L'intervalle contient encore 0 : les données ne distinguent pas encore ce traitement de la référence. L'écart est peut-être trop petit pour être détecté, ou il n'y en a pas. |
+| **Pas encore assez de données** | Trop peu d'achats ou de clics, tous les participants ont la même valeur pour l'instant, ou la valeur de la référence est encore trop incertaine. |
 
 Survolez **Pas encore significatif** ou **Pas encore assez de données** pour en voir la raison. Une fois l'expérimentation terminée et ses chiffres figés, ces libellés deviennent **Non significatif** et **Pas assez de données**.
 
 **Non significatif** ne prouve pas que les variantes font jeu égal : tout écart compris dans l'intervalle reste possible.
 
-### Plusieurs Traitements
+### Plusieurs traitements
 
-Dans un Test A/B continu à plusieurs Traitements, chaque Traitement est comparé à la Référence uniquement. Les Traitements ne sont jamais comparés entre eux.
+Dans un Test A/B continu à plusieurs traitements, chaque traitement est comparé à la référence uniquement. Les traitements ne sont jamais comparés entre eux.
 
-Le seuil de significativité est relevé selon le nombre de Traitements, pour ne pas trouver un gagnant par hasard. Chaque intervalle est élargi : ensemble, tous les intervalles tiennent à 95 %, donc chacun est plus large.
+Le seuil de significativité est relevé selon le nombre de traitements, pour ne pas trouver un gagnant par hasard. Chaque intervalle est élargi : ensemble, tous les intervalles tiennent à 95 %, donc chacun est plus large.
 
-L'en-tête n'affiche alors que le Traitement **En tête** : celui qui a le plus fort écart parmi ceux en **Hausse significative**. Sinon, il indique qu'aucune variante ne fait encore significativement mieux que votre Référence.
+L'en-tête n'affiche alors que le traitement **En tête** : celui qui a le plus fort écart parmi ceux en **Hausse significative**. Sinon, il indique qu'aucune variante ne fait encore significativement mieux que votre référence.
 
-**En tête** ne signifie pas qu'il fait significativement mieux que les autres Traitements. Son écart tend aussi à être surestimé : l'intervalle montre son ampleur réelle possible.
+**En tête** ne signifie pas qu'il fait significativement mieux que les autres traitements. Son écart tend aussi à être surestimé : l'intervalle montre son ampleur réelle possible.
 
 ## Résultats par variante
 
-Le tableau **Résultats par variante** liste toutes les variantes, la Référence en premier avec son rôle.
+Le tableau **Résultats par variante** liste toutes les variantes, la référence en premier avec son rôle.
 
 | Colonne | Ce qu'elle affiche |
 |---------|--------------------|
 | **Participants** | Les participants de cette variante. |
 | Métrique de succès | La valeur de la variante sur la métrique de succès, comme **Revenu par client**. |
-| **Écart vs** Référence | L'écart de la variante sur la métrique de succès. |
+| **Écart vs** référence | L'écart de la variante sur la métrique de succès. |
 | **Significativité** | Le même libellé que dans l'en-tête. |
 | **Clics uniques** | Les participants avec au moins un clic. |
 | **Acheteurs** | Les participants avec au moins un achat. |
@@ -99,7 +99,7 @@ Les achats d'un participant s'accumulent tant que l'expérimentation tourne. Jus
 
 ## Graphique cumulé
 
-![Graphique Évolution de l'écart vs Référence avec trois Traitements, l'intervalle de confiance de celui en tête et la ligne Aucun écart](/images/analytics/experiment-results-chart-fr.png)
+![Graphique Évolution de l'écart vs référence avec trois traitements, l'intervalle de confiance de celui en tête et la ligne Aucun écart](/images/analytics/experiment-results-chart-fr.png)
 
 Le graphique sous le tableau montre comment les résultats se sont construits dans le temps. Chaque point cumule tous les participants depuis le démarrage.
 
@@ -107,12 +107,12 @@ Basculez entre deux vues :
 
 | Vue | Ce qu'elle affiche |
 |-----|--------------------|
-| **Écart** (par défaut) | L'écart de chaque Traitement, l'**Intervalle de confiance à 95 %** d'un Traitement et la ligne **Aucun écart** à 0. |
-| **Valeurs** | La valeur de chaque variante sur la métrique de succès, Référence comprise. Elle n'affiche pas d'intervalle. |
+| **Écart** (par défaut) | L'écart de chaque traitement, l'**Intervalle de confiance à 95 %** d'un traitement et la ligne **Aucun écart** à 0. |
+| **Valeurs** | La valeur de chaque variante sur la métrique de succès, référence comprise. Elle n'affiche pas d'intervalle. |
 
-Dans la vue **Écart**, un écart est significatif tant que sa zone ne croise pas la ligne **Aucun écart**. Avec plusieurs Traitements, sélectionnez un Traitement dans la légende pour afficher sa zone.
+Dans la vue **Écart**, un écart est significatif tant que sa zone ne croise pas la ligne **Aucun écart**. Avec plusieurs traitements, sélectionnez un traitement dans la légende pour afficher sa zone.
 
-Seuls trois Traitements ont leur propre couleur. Les suivants apparaissent en fines lignes grises.
+Seuls trois traitements ont leur propre couleur. Les suivants apparaissent en fines lignes grises.
 
 Les points du graphique dépendent de la durée de l'expérimentation :
 
@@ -139,7 +139,7 @@ La même alerte apparaît quand des participants sont enregistrés sur une varia
 Une fois l'alerte affichée, cette expérimentation ne peut plus être enregistrée comme validée statistiquement, même après correction. Que faire :
 
 1. Cherchez la cause dans les Workflows qui utilisent l'expérimentation. Par exemple, une Branch de variante n'affiche pas toujours de Content, ou une condition suit le Node Expérimentation sur une seule Branch.
-2. Concluez l'expérimentation en conservant la Référence.
+2. Concluez l'expérimentation en conservant la référence.
 3. Corrigez la cause, puis **Dupliquez** l'expérimentation pour la relancer.
 
 <Note>
@@ -174,24 +174,24 @@ Quand vous sélectionnez **Conclure**, la fenêtre **Conclure l'expérimentation
 
 | Cas | Variante présélectionnée |
 |-----|--------------------------|
-| Le trafic n'a pas été réparti comme configuré | La Référence |
-| Un Traitement est **En tête** | Ce Traitement |
-| Groupe témoin global | Le Traitement, sauf s'il est en **Baisse significative** |
-| Tout autre cas | La Référence |
+| Le trafic n'a pas été réparti comme configuré | La référence |
+| Un traitement est **En tête** | Ce traitement |
+| Groupe témoin global | Le traitement, sauf s'il est en **Baisse significative** |
+| Tout autre cas | La référence |
 
 Sous votre choix, la fenêtre indique comment il sera enregistré :
 
 | Message | Quand |
 |---------|-------|
-| Gagnante validée statistiquement | Le Traitement est en **Hausse significative** et le trafic a été réparti comme configuré. |
-| Gagnante non validée statistiquement | Tout autre Traitement. |
-| Décision, sans validation statistique | Vous conservez la Référence. |
+| Gagnante validée statistiquement | Le traitement est en **Hausse significative** et le trafic a été réparti comme configuré. |
+| Gagnante non validée statistiquement | Tout autre traitement. |
+| Décision, sans validation statistique | Vous conservez la référence. |
 
-Si vous choisissez un Traitement en **Baisse significative**, un message rouge vous suggère de conserver plutôt la Référence.
+Si vous choisissez un traitement en **Baisse significative**, un message rouge vous suggère de conserver plutôt la référence.
 
 Le résultat est enregistré au moment de la conclusion et ne change plus ensuite. Une expérimentation **Décidée** non validée affiche **Non validé statistiquement** à côté de son statut.
 
-Si vous conservez un Traitement et que ses résultats ne peuvent pas être calculés, l'expérimentation n'est pas conclue et la fenêtre vous l'indique. Réessayez plus tard, ou sélectionnez de nouveau **Conclure** puis confirmez avec **Conclure sans les résultats**.
+Si vous conservez un traitement et que ses résultats ne peuvent pas être calculés, l'expérimentation n'est pas conclue et la fenêtre vous l'indique. Réessayez plus tard, ou sélectionnez de nouveau **Conclure** puis confirmez avec **Conclure sans les résultats**.
 
 Avec **Conclure sans les résultats**, votre choix est enregistré comme non validé statistiquement.
 
