@@ -7,7 +7,7 @@ description: 'Create reusable experiments in Analytics and use them in Workflows
 
 Experiments help you compare Variants across Workflows and measure their impact in Analytics.
 
-An [Experiment](/glossary) is created and managed in Analytics, then reused by Workflows through the Experiment Node. It has a type, [Variants](/glossary), an [Allocation](/glossary) for each Variant, a [Control](/glossary) or [Reference](/glossary), a business hypothesis, and a success metric.
+An [Experiment](/glossary) is created and managed in Analytics, then reused by Workflows through the Experiment Node. It has a type, [Variants](/glossary), an [Allocation](/glossary) for each Variant, a [Reference](/glossary), a business hypothesis, and a success metric.
 
 ## Availability
 
@@ -19,7 +19,7 @@ Experiments are activated on request: contact your Reelevant contact.
 
 | Type | Objective | Variants | **Randomization unit** | End |
 |------|-----------|----------|--------------------|-----|
-| **Global holdout** | **Measure incremental impact** | Exactly two: **Control** and [**Treatment**](/glossary) | Always **Per customer** | No automatic end; you can conclude it manually. |
+| **Global holdout** | **Measure incremental impact** | Exactly two: **Reference** and [**Treatment**](/glossary) | Always **Per customer** | No automatic end; you can conclude it manually. |
 | **Continuous A/B test** | **Compare variants** | Two to four, including a **Reference** | **Per customer** or **Per display** | Conclude it when you choose. |
 
 A **Global holdout** keeps part of your audience on the non-personalised experience. This helps you measure the value personalisation adds.
@@ -54,7 +54,7 @@ In **Variants and allocation**, you can also use a CRM Datasource for **Variant 
 
 Your **Name** must not match an existing tag name because the Experiment becomes a tag.
 
-Select **Split evenly** to divide traffic evenly between the other Variants. The **Control** or **Reference** Allocation is calculated automatically, keeping the total at 100%.
+Select **Split evenly** to divide traffic evenly between the other Variants. The **Reference** Allocation is calculated automatically, keeping the total at 100%.
 
 Before a Global holdout starts, all traffic goes to its **Treatment**. Before a Continuous A/B test starts, all traffic goes to its **Reference**.
 
@@ -75,7 +75,7 @@ Choose one **Success metric**: **Unique conversion rate**, **Unique click rate**
 | **Draft** | You can continue editing the Experiment. |
 | **Ready** | The configuration is validated and can be attached to a Workflow. |
 | **Live** | The Experiment is running and allocating traffic. |
-| **Decided** | A Variant was chosen to receive all traffic. **Not statistically validated** shows when the kept Variant is not a validated winner, for example when you keep the Control or Reference. |
+| **Decided** | A Variant was chosen to receive all traffic. **Not statistically validated** shows when the kept Variant is not a validated winner, for example when you keep the Reference. |
 | **Archived** | The Experiment is archived and hidden from the active listing. |
 
 ### Validate or return to draft

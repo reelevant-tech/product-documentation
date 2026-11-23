@@ -98,19 +98,14 @@ terms:
     definition: "One version in an Experiment that receives a share of traffic."
     synonyms_forbidden: []
 
-  control:
-    canonical_name: "Control"
-    definition: "The Variant in a Global holdout that keeps the non-personalised experience."
-    synonyms_forbidden: []
-
   treatment:
     canonical_name: "Treatment"
-    definition: "Any Variant that is not the Control or Reference."
+    definition: "Any Variant that is not the Reference."
     synonyms_forbidden: []
 
   reference:
     canonical_name: "Reference"
-    definition: "The baseline Variant in a Continuous A/B test; other Variants are compared with it. Named **Reference variant** in the form."
+    definition: "The baseline Variant that other Variants are compared with. In a Global holdout, it keeps the non-personalised experience. Named **Reference variant** in the form."
     synonyms_forbidden: []
 
   allocation:

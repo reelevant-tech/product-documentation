@@ -1,11 +1,11 @@
 ---
 title: "Analyser les résultats d'une expérimentation"
-description: "Découvrez si vos variantes font mieux que le témoin ou la référence, et quand conclure"
+description: "Découvrez si vos variantes font mieux que la référence, et quand conclure"
 ---
 
-Le tableau de bord des résultats indique si vos [variantes](/fr/glossary) font mieux que le [Témoin](/fr/glossary) ou la [Référence](/fr/glossary), et avec quelle certitude.
+Le tableau de bord des résultats indique si vos [variantes](/fr/glossary) font mieux que la [Référence](/fr/glossary), et avec quelle certitude.
 
-![Page d'un Groupe témoin global en cours avec son résumé, l'Écart vs Témoin et son intervalle de confiance à 95 %, et le tableau Résultats par variante](/images/analytics/experiment-results-dashboard-fr.png)
+![Page d'un Groupe témoin global en cours avec son résumé, l'Écart vs Control et son intervalle de confiance à 95 %, et le tableau Résultats par variante](/images/analytics/experiment-results-dashboard-fr.png)
 
 ## Quand les résultats sont disponibles
 
@@ -31,11 +31,11 @@ Un participant est un client, ou un affichage avec **Par affichage**, qui a vu u
 
 ## L'en-tête des résultats
 
-L'en-tête compare un [Traitement](/fr/glossary) (une variante autre que le Témoin ou la Référence) au Témoin ou à la Référence, sur la métrique de succès.
+L'en-tête compare un [Traitement](/fr/glossary) (une variante autre que la Référence) à la Référence, sur la métrique de succès.
 
-### Écart vs Témoin ou Référence
+### Écart vs Référence
 
-**Écart vs** suivi du nom de votre Témoin ou de votre Référence affiche l'écart relatif sur la métrique de succès (l'[Uplift](/fr/glossary)). Par exemple, +8,7 % sur **Revenu par client** signifie que les clients du Traitement dépensent en moyenne 8,7 % de plus que ceux du Témoin.
+**Écart vs** suivi du nom de votre Référence affiche l'écart relatif sur la métrique de succès (l'[Uplift](/fr/glossary)). Par exemple, +8,7 % sur **Revenu par client** signifie que les clients du Traitement dépensent en moyenne 8,7 % de plus que ceux de la Référence.
 
 À côté, un second chiffre donne le même écart dans l'unité de la métrique. Les taux l'affichent en points de pourcentage (pts), comme **Écart de taux de conversion unique (pts)**.
 
@@ -48,7 +48,7 @@ L'**Intervalle de confiance à 95 %** est la plage d'écarts compatible avec les
 L'intervalle se resserre en général à mesure que les participants s'accumulent. Vous pouvez consulter les résultats à tout moment et conclure quand vous le décidez.
 
 <Tip>
-  Cet intervalle est plus large que dans une expérimentation lue une seule fois, à une fin fixée. Attendez-vous à voir **Pas encore significatif** plus longtemps, surtout avec un petit Témoin.
+  Cet intervalle est plus large que dans une expérimentation lue une seule fois, à une fin fixée. Attendez-vous à voir **Pas encore significatif** plus longtemps, surtout avec une petite Référence.
 </Tip>
 
 ### Significativité
@@ -57,8 +57,8 @@ L'intervalle se resserre en général à mesure que les participants s'accumulen
 |---------|-------------------|
 | **Hausse significative** | Tout l'intervalle est au-dessus de 0 : le Traitement fait mieux. |
 | **Baisse significative** | Tout l'intervalle est en dessous de 0 : le Traitement fait moins bien. |
-| **Pas encore significatif** | L'intervalle contient encore 0 : les données ne distinguent pas encore ce Traitement du Témoin ou de la Référence. L'écart est peut-être trop petit pour être détecté, ou il n'y en a pas. |
-| **Pas encore assez de données** | Trop peu d'achats ou de clics, tous les participants ont la même valeur pour l'instant, ou la valeur du Témoin ou de la Référence est encore trop incertaine. |
+| **Pas encore significatif** | L'intervalle contient encore 0 : les données ne distinguent pas encore ce Traitement de la Référence. L'écart est peut-être trop petit pour être détecté, ou il n'y en a pas. |
+| **Pas encore assez de données** | Trop peu d'achats ou de clics, tous les participants ont la même valeur pour l'instant, ou la valeur de la Référence est encore trop incertaine. |
 
 Survolez **Pas encore significatif** ou **Pas encore assez de données** pour en voir la raison. Une fois l'expérimentation terminée et ses chiffres figés, ces libellés deviennent **Non significatif** et **Pas assez de données**.
 
@@ -76,13 +76,13 @@ L'en-tête n'affiche alors que le Traitement **En tête** : celui qui a le plus 
 
 ## Résultats par variante
 
-Le tableau **Résultats par variante** liste toutes les variantes, le Témoin ou la Référence en premier avec son rôle.
+Le tableau **Résultats par variante** liste toutes les variantes, la Référence en premier avec son rôle.
 
 | Colonne | Ce qu'elle affiche |
 |---------|--------------------|
 | **Participants** | Les participants de cette variante. |
 | Métrique de succès | La valeur de la variante sur la métrique de succès, comme **Revenu par client**. |
-| **Écart vs** Témoin ou Référence | L'écart de la variante sur la métrique de succès. |
+| **Écart vs** Référence | L'écart de la variante sur la métrique de succès. |
 | **Significativité** | Le même libellé que dans l'en-tête. |
 | **Clics uniques** | Les participants avec au moins un clic. |
 | **Acheteurs** | Les participants avec au moins un achat. |
@@ -112,7 +112,7 @@ Basculez entre deux vues :
 | Vue | Ce qu'elle affiche |
 |-----|--------------------|
 | **Écart** (par défaut) | L'écart de chaque Traitement, l'**Intervalle de confiance à 95 %** d'un Traitement et la ligne **Aucun écart** à 0. |
-| **Valeurs** | La valeur de chaque variante sur la métrique de succès, Témoin ou Référence compris. Elle n'affiche pas d'intervalle. |
+| **Valeurs** | La valeur de chaque variante sur la métrique de succès, Référence comprise. Elle n'affiche pas d'intervalle. |
 
 Dans la vue **Écart**, un écart est significatif tant que sa zone ne croise pas la ligne **Aucun écart**. Avec plusieurs Traitements, sélectionnez un Traitement dans la légende pour afficher sa zone.
 
@@ -143,7 +143,7 @@ La même alerte apparaît quand des participants sont enregistrés sur une varia
 Une fois l'alerte affichée, cette expérimentation ne peut plus être enregistrée comme validée statistiquement, même après correction. Que faire :
 
 1. Cherchez la cause dans les Workflows qui utilisent l'expérimentation. Par exemple, une Branch de variante n'affiche pas toujours de Content, ou une condition suit le Node Expérimentation sur une seule Branch.
-2. Concluez l'expérimentation en conservant le Témoin ou la Référence.
+2. Concluez l'expérimentation en conservant la Référence.
 3. Corrigez la cause, puis **Dupliquez** l'expérimentation pour la relancer.
 
 <Note>
@@ -178,10 +178,10 @@ Quand vous sélectionnez **Conclure**, la fenêtre **Conclure l'expérimentation
 
 | Cas | Variante présélectionnée |
 |-----|--------------------------|
-| Le trafic n'a pas été réparti comme configuré | Le Témoin ou la Référence |
+| Le trafic n'a pas été réparti comme configuré | La Référence |
 | Un Traitement est **En tête** | Ce Traitement |
 | Groupe témoin global | Le Traitement, sauf s'il est en **Baisse significative** |
-| Tout autre cas | Le Témoin ou la Référence |
+| Tout autre cas | La Référence |
 
 Sous votre choix, la fenêtre indique comment il sera enregistré :
 
@@ -189,9 +189,9 @@ Sous votre choix, la fenêtre indique comment il sera enregistré :
 |---------|-------|
 | Gagnante validée statistiquement | Le Traitement est en **Hausse significative** et le trafic a été réparti comme configuré. |
 | Gagnante non validée statistiquement | Tout autre Traitement. |
-| Décision, sans validation statistique | Vous conservez le Témoin ou la Référence. |
+| Décision, sans validation statistique | Vous conservez la Référence. |
 
-Si vous choisissez un Traitement en **Baisse significative**, un message rouge vous suggère de conserver plutôt le Témoin ou la Référence.
+Si vous choisissez un Traitement en **Baisse significative**, un message rouge vous suggère de conserver plutôt la Référence.
 
 Le résultat est enregistré au moment de la conclusion et ne change plus ensuite. Une expérimentation **Décidée** non validée affiche **Non validé statistiquement** à côté de son statut.
 
