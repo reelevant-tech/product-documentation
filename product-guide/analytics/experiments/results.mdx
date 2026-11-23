@@ -1,9 +1,9 @@
 ---
 title: 'Analyse Experiment Results'
-description: 'Find out whether your Variants beat the Control or Reference, and when to conclude'
+description: 'Find out whether your Variants beat the Reference, and when to conclude'
 ---
 
-The results dashboard shows whether your [Variants](/glossary) beat the [Control](/glossary) or [Reference](/glossary), and how sure you can be.
+The results dashboard shows whether your [Variants](/glossary) beat the [Reference](/glossary), and how sure you can be.
 
 ![Experiment page of a live Global holdout with its summary, the Lift vs Control headline with its 95% confidence interval, and the Results per variant table](/images/analytics/experiment-results-dashboard-en.png)
 
@@ -31,11 +31,11 @@ A participant is a customer, or a display with **Per display**, who saw a Varian
 
 ## The headline
 
-The headline compares a [Treatment](/glossary) (a Variant other than the Control or Reference) with the Control or Reference, on the success metric.
+The headline compares a [Treatment](/glossary) (a Variant other than the Reference) with the Reference, on the success metric.
 
-### Uplift vs Control or Reference
+### Uplift vs Reference
 
-**Lift vs** followed by your Control or Reference name shows the Uplift (the relative difference on the success metric). For example, +8.7% on **Revenue per customer** means Treatment customers spend 8.7% more on average than Control customers.
+**Lift vs** followed by your Reference name shows the Uplift (the relative difference on the success metric). For example, +8.7% on **Revenue per customer** means Treatment customers spend 8.7% more on average than Reference customers.
 
 Next to it, a second figure gives the same difference in the metric's own unit. Rates show it in percentage points (pts), such as **Unique conversion rate difference (pts)**.
 
@@ -48,7 +48,7 @@ The **95% confidence interval** is the range of Uplifts the data is consistent w
 The interval usually narrows as participants accumulate. You can check results at any time and conclude whenever you choose.
 
 <Tip>
-  This interval is wider than in an experiment read only once, at a set end. Expect **Not yet significant** for longer, especially with a small Control.
+  This interval is wider than in an experiment read only once, at a set end. Expect **Not yet significant** for longer, especially with a small Reference.
 </Tip>
 
 ### Significance
@@ -57,8 +57,8 @@ The interval usually narrows as participants accumulate. You can check results a
 |-------|---------------|
 | **Significantly better** | The whole interval is above 0: the Treatment does better. |
 | **Significantly worse** | The whole interval is below 0: the Treatment does worse. |
-| **Not yet significant** | The interval still includes 0: the data cannot yet tell this Treatment apart from the Control or Reference. The difference may be too small to detect so far, or there may be none. |
-| **Not enough data yet** | Too few purchases or clicks, every participant has the same value so far, or the Control or Reference value is still too uncertain. |
+| **Not yet significant** | The interval still includes 0: the data cannot yet tell this Treatment apart from the Reference. The difference may be too small to detect so far, or there may be none. |
+| **Not enough data yet** | Too few purchases or clicks, every participant has the same value so far, or the Reference value is still too uncertain. |
 
 Hover **Not yet significant** or **Not enough data yet** to see why. Once the Experiment has ended and its figures stopped moving, these labels read **Not significant** and **Not enough data**.
 
@@ -76,13 +76,13 @@ The headline then shows only the **Leading** Treatment: the one with the largest
 
 ## Results per variant
 
-The **Results per variant** table lists every Variant, the Control or Reference first marked with its role.
+The **Results per variant** table lists every Variant, the Reference first marked with its role.
 
 | Column | What it shows |
 |--------|---------------|
 | **Participants** | Participants in this Variant. |
 | Success metric | The Variant's value on the success metric, such as **Revenue per customer**. |
-| **Lift vs** Control or Reference | The Variant's Uplift on the success metric. |
+| **Lift vs** Reference | The Variant's Uplift on the success metric. |
 | **Significance** | The same label as in the headline. |
 | **Unique clicks** | Participants with at least one click. |
 | **Buyers** | Participants with at least one purchase. |
@@ -112,7 +112,7 @@ Switch between two views:
 | View | What it shows |
 |------|---------------|
 | **Lift** (default) | Each Treatment's Uplift, the **95% confidence interval** of one Treatment, and the **No difference** line at 0. |
-| **Values** | Each Variant's value on the success metric, Control or Reference included. It shows no interval. |
+| **Values** | Each Variant's value on the success metric, Reference included. It shows no interval. |
 
 In the **Lift** view, an Uplift is significant while its band does not cross the **No difference** line. With several Treatments, select a Treatment in the legend to show its band.
 
@@ -143,7 +143,7 @@ The same warning appears when participants are recorded on a Variant with no tra
 Once this warning shows, this Experiment can no longer be recorded as statistically validated, even after a fix. What to do:
 
 1. Find the cause in the Workflows that run the Experiment. For example, a Variant's Branch does not always show a Content, or a condition follows the Experiment Node on one Branch only.
-2. Conclude the Experiment and keep the Control or Reference.
+2. Conclude the Experiment and keep the Reference.
 3. Fix the cause, then **Clone** the Experiment to run it again.
 
 <Note>
@@ -178,10 +178,10 @@ When you select **Conclude**, the **Conclude experiment** modal preselects a Var
 
 | Case | Preselected Variant |
 |------|---------------------|
-| Traffic was not split as configured | The Control or Reference |
+| Traffic was not split as configured | The Reference |
 | A Treatment is **Leading** | That Treatment |
 | Global holdout | The Treatment, unless it is **Significantly worse** |
-| Any other case | The Control or Reference |
+| Any other case | The Reference |
 
 Under your choice, the modal tells you how it will be recorded:
 
@@ -189,9 +189,9 @@ Under your choice, the modal tells you how it will be recorded:
 |---------|------|
 | Recorded as a statistically validated winner | The Treatment is **Significantly better** and traffic was split as configured. |
 | Recorded as a winner that is not statistically validated | Any other Treatment. |
-| Recorded as a decision rather than a statistically validated win | You keep the Control or Reference. |
+| Recorded as a decision rather than a statistically validated win | You keep the Reference. |
 
-If you pick a Treatment that is **Significantly worse**, a red message suggests keeping the Control or Reference instead.
+If you pick a Treatment that is **Significantly worse**, a red message suggests keeping the Reference instead.
 
 The outcome is recorded when you conclude and never changes afterwards. A Decided Experiment that is not validated shows **Not statistically validated** next to its status.
 

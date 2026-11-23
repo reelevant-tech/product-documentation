@@ -5,7 +5,7 @@ description: 'Use a CRM Datasource to choose which Variant each customer receive
 
 Use a CRM [Datasource](/glossary) to choose each customer's Variant in an Experiment, instead of a random draw.
 
-A Global holdout (which keeps a non-personalised [Control](/glossary) group) or a Continuous A/B test (which compares Variants) can use this method.
+A Global holdout (which keeps a non-personalised [Reference](/glossary)) or a Continuous A/B test (which compares Variants) can use this method.
 
 ## When to use it
 
@@ -50,22 +50,22 @@ The Experiment Node reads the customer's CRM row (their line in the Datasource) 
 
 ## Example
 
-Your CRM has a field named `holdout_group` that contains `control` or `treatment`, assigned at random. You create a Global holdout and expect 10% of customers in the Control.
+Your CRM has a field named `holdout_group` that contains `control` or `treatment`, assigned at random. You create a Global holdout and expect 10% of customers in the Reference.
 
 | Condition | Variant |
 |-----------|---------|
-| `holdout_group = control` | Control |
+| `holdout_group = control` | Reference |
 | `holdout_group = treatment` | Treatment |
 
 A customer whose `holdout_group` is empty meets neither condition. They receive the Treatment and are not counted in the results.
 
-The `holdout_group` value decides which Variant each customer receives. Results check that about 10% of participants end up in the Control.
+The `holdout_group` value decides which Variant each customer receives. Results check that about 10% of participants end up in the Reference.
 
 ## Keep your results reliable
 
 - Use a field whose values were assigned at random and do not change during the Experiment.
 - Make every group come from the same random draw.
-- If you add another rule, add it to every condition with **and**. For example, adding `country = FR` only to the Control condition breaks the comparison.
+- If you add another rule, add it to every condition with **and**. For example, adding `country = FR` only to the Reference condition breaks the comparison.
 - Avoid moving classified customers to another Variant after start.
 
 ## Edit while live
@@ -80,7 +80,7 @@ These moves also bias the results when they depend on the Variant a customer rec
 
 Results describe classified customers only. They use the number of customers actually seen in each Variant, not the expected allocation.
 
-When statistical significance is shown, a small Control takes longer to reach it.
+When statistical significance is shown, a small Reference takes longer to reach it.
 
 The Experiment Node shows the same Branches as with random assignment. Once live, its percentages show the expected allocation, not the actual split.
 

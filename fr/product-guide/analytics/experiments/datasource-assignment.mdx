@@ -5,7 +5,7 @@ description: 'Utilisez une Datasource CRM pour choisir la variante reçue par ch
 
 Utilisez une [Datasource](/fr/glossary) CRM pour choisir la variante de chaque client dans une expérimentation, au lieu d'un tirage aléatoire.
 
-Un Groupe témoin global (qui garde un groupe [Témoin](/fr/glossary) sans personnalisation) ou un Test A/B continu (qui compare plusieurs variantes) peut utiliser cette méthode.
+Un Groupe témoin global (qui garde une [Référence](/fr/glossary) sans personnalisation) ou un Test A/B continu (qui compare plusieurs variantes) peut utiliser cette méthode.
 
 ## Quand l'utiliser
 
@@ -50,22 +50,22 @@ Le Node Expérimentation lit lui-même la ligne CRM du client (sa ligne dans la 
 
 ## Exemple
 
-Votre CRM contient un champ `holdout_group` dont la valeur est `control` ou `treatment`, attribuée au hasard. Vous créez un Groupe témoin global et attendez 10 % de clients dans le Témoin.
+Votre CRM contient un champ `holdout_group` dont la valeur est `control` ou `treatment`, attribuée au hasard. Vous créez un Groupe témoin global et attendez 10 % de clients dans la Référence.
 
 | Condition | Variante |
 |-----------|----------|
-| `holdout_group = control` | Témoin |
+| `holdout_group = control` | Référence |
 | `holdout_group = treatment` | Traitement |
 
 Un client dont le champ `holdout_group` est vide ne remplit aucune condition. Il reçoit le Traitement et n'est pas compté dans les résultats.
 
-La valeur de `holdout_group` décide de la variante reçue par chaque client. Les résultats vérifient qu'environ 10 % des participants se retrouvent dans le Témoin.
+La valeur de `holdout_group` décide de la variante reçue par chaque client. Les résultats vérifient qu'environ 10 % des participants se retrouvent dans la Référence.
 
 ## Garder des résultats fiables
 
 - Utilisez un champ dont les valeurs ont été attribuées au hasard et ne changent pas pendant l'expérimentation.
 - Faites provenir chaque groupe du même tirage aléatoire.
-- Si vous ajoutez une autre règle, ajoutez-la à chaque condition avec **ET**. Par exemple, ajouter `country = FR` uniquement à la condition du Témoin fausse la comparaison.
+- Si vous ajoutez une autre règle, ajoutez-la à chaque condition avec **ET**. Par exemple, ajouter `country = FR` uniquement à la condition de la Référence fausse la comparaison.
 - Évitez de déplacer les clients classés vers une autre variante après le lancement.
 
 ## Modifier une expérimentation en cours
@@ -80,7 +80,7 @@ Ces changements faussent aussi les résultats s'ils dépendent de la variante re
 
 Les résultats décrivent uniquement les clients classés. Ils utilisent le nombre de clients réellement observés dans chaque variante, pas la répartition attendue.
 
-Quand la significativité statistique est affichée, un Témoin de petite taille met plus de temps à l'atteindre.
+Quand la significativité statistique est affichée, une Référence de petite taille met plus de temps à l'atteindre.
 
 Le Node Expérimentation affiche les mêmes branches qu'avec la répartition aléatoire. Une fois l'expérimentation lancée, ses pourcentages indiquent la répartition attendue, pas la répartition réelle.
 
