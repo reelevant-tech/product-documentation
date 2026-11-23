@@ -43,7 +43,7 @@ With **Revenue per customer**, **Incremental revenue** estimates the revenue the
 
 ### 95% confidence interval
 
-The **95% confidence interval** is the range of Uplifts the data is consistent with so far. However often you look, it misses the true Uplift at most 5% of the time over the whole experiment.
+The **95% confidence interval** is the range of Uplifts the data is consistent with so far.
 
 The interval usually narrows as participants accumulate. You can check results at any time and conclude whenever you choose.
 
@@ -53,22 +53,18 @@ The interval usually narrows as participants accumulate. You can check results a
 |-------|---------------|
 | **Significantly better** | The whole interval is above 0: the treatment does better. |
 | **Significantly worse** | The whole interval is below 0: the treatment does worse. |
-| **Not yet significant** | The interval still includes 0: the data cannot yet tell this treatment apart from the reference. The difference may be too small to detect so far, or there may be none. |
-| **Not enough data yet** | Too few purchases or clicks, every participant has the same value so far, or the reference value is still too uncertain. |
-
-Hover **Not yet significant** or **Not enough data yet** to see why. Once the experiment has ended and its figures stopped moving, these labels read **Not significant** and **Not enough data**.
-
-**Not significant** does not prove the variants perform the same: any Uplift inside the interval is still possible.
+| **Not yet significant** | The interval still includes 0: the data cannot yet tell this treatment apart from the reference. |
+| **Not enough data yet** | Too few purchases or clicks so far. |
 
 ### Several treatments
 
 In a Continuous A/B test with several treatments, each treatment is compared with the reference only. Treatments are never compared with each other.
 
-The bar for significance is raised with the number of treatments, so you do not find a winner by chance just by comparing more variants. Each treatment's interval is widened: all intervals together hold at 95%, so each one alone is wider.
+The bar for significance is raised with the number of treatments, so you do not find a winner by chance just by comparing more variants.
 
 The headline then shows only the **Leading** treatment: the one with the largest Uplift among those **Significantly better**. If none is, it reads "No variant is significantly better than" your reference "yet".
 
-**Leading** does not mean it does significantly better than the other treatments. Its Uplift also tends to be on the high side: the interval shows how large it can really be.
+**Leading** does not mean it does significantly better than the other treatments.
 
 ## Results per variant
 
@@ -89,13 +85,11 @@ With **Per display**, the table shows clicks only, since a display cannot be lin
 
 ### How purchases are counted
 
-A purchase counts when a participant makes it after their first display. There is no attribution window (the time after a click during which a purchase is credited).
+A purchase counts when a participant makes it after their first display.
 
 Each purchase counts once and in full. Returns are not counted as purchases and do not lower revenue, and purchases with no value are not counted either.
 
-These figures can differ from the attributed figures in [Data Exploration](/product-guide/analytics/data-exploration). The random split already tells which variant caused a difference, so no attribution model is needed.
-
-A participant's purchases keep adding up while the experiment runs. Right after many new participants arrive, they have had little time to buy. The Uplift then moves toward 0 for a while, for every variant alike.
+These figures can differ from the attributed figures in [Data Exploration](/product-guide/analytics/data-exploration).
 
 ## Cumulative chart
 
@@ -122,15 +116,13 @@ The chart's points follow the experiment's length:
 | Up to 4 months | Week |
 | More than 4 months | Month |
 
-Until the figures stop moving, the last point is still in progress. Hover it to see the date its data runs to.
-
 ## Traffic was not split as configured
 
 ![Traffic was not split as configured warning with the configured and observed share of each variant](/images/analytics/experiment-results-srm-en.png)
 
 The experiment checks that participants are split between variants as configured. When the split drifts more than chance allows, a red warning appears at the top of the page.
 
-This is called a sample ratio mismatch. It usually means displays were lost for one variant after customers were assigned, so the results cannot be trusted.
+This usually means displays were lost for one variant after customers were assigned, so the results cannot be trusted.
 
 When the split is still off, the warning shows each variant's **Configured share** and **Observed share**. While it shows, significance labels are greyed out, and **Leading** reads **Leading, unreliable**.
 
@@ -156,7 +148,7 @@ The line under it recalls your **Expected allocation**, the split you configured
 
 The split check also applies. A warning can mean your field does not split customers as configured, or the conditions do not match it. Some customers may also not have been delivered as planned.
 
-A check that passes does not prove the values were assigned at random. If the warning shows, check the Datasource field and the conditions, then conclude, fix and **Clone** as above.
+If the warning shows, check the Datasource field and the conditions, then conclude, fix and **Clone** as above.
 
 ## Export to CSV
 
