@@ -105,7 +105,7 @@ terms:
 
   reference:
     canonical_name: "Reference"
-    definition: "The baseline Variant that other Variants are compared with. In a Global holdout, it keeps the non-personalised experience. Named **Reference variant** in the form."
+    definition: "The baseline Variant that other Variants are compared with."
     synonyms_forbidden: []
 
   allocation:
