@@ -160,7 +160,7 @@ terms:
 
   uplift:
     canonical_name: "Uplift"
-    definition: "The incremental performance gain from personalised content compared to default content. In an Experiment, the relative difference of a Variant's success metric versus the Control or Reference (shown as Lift, Écart in French)."
+    definition: "The incremental performance gain from personalised content compared to default content."
     synonyms_forbidden: ["lift", "improvement", "gain", "boost"]
 
   field_mapping:
