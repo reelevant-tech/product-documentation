@@ -16,8 +16,8 @@
   Cross-persona links are allowed and encouraged.
 - Images: Store in `/images/{section}/`. Use descriptive alt text.
 - Localised screenshots: a page under `fr/` shows the French UI. Take each screenshot
-  in both languages and name the French one with a `-fr` suffix
-  (`/images/{section}/{name}-fr.png`); English pages keep `{name}.png`.
+  in both languages and suffix the file name with its language
+  (`/images/{section}/{name}-en.png`, `/images/{section}/{name}-fr.png`).
 - Frontmatter: Every page MUST have `title` and `description` in YAML frontmatter.
 - Language: English (UK spelling: "personalisation", "behaviour", "colour").
 
