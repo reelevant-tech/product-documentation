@@ -5,9 +5,9 @@ description: 'Create reusable experiments in Analytics and use them in Workflows
 
 ![Experiments listing with experiment names, statuses, types, periods, traffic allocations, and last updates](/images/analytics/experiments-listing-en.png)
 
-Experiments help you compare Variants across Workflows and measure their impact in Analytics.
+Experiments help you compare variants across Workflows and measure their impact in Analytics.
 
-An [Experiment](/glossary) is created and managed in Analytics, then reused by Workflows through the Experiment Node. It has a type, [Variants](/glossary), an [Allocation](/glossary) for each Variant, a [Reference](/glossary), a business hypothesis, and a success metric.
+An [experiment](/glossary) is created and managed in Analytics, then reused by Workflows through the Experiment Node. It has a type, [variants](/glossary), an [allocation](/glossary) for each variant, a [reference](/glossary), a business hypothesis, and a success metric.
 
 ## Availability
 
@@ -19,8 +19,8 @@ Experiments are activated on request: contact your Reelevant contact.
 
 | Type | Objective | Variants | **Randomization unit** | End |
 |------|-----------|----------|--------------------|-----|
-| **Global holdout** | **Measure incremental impact** | Exactly two: **Reference** and [**Treatment**](/glossary) | Always **Per customer** | No automatic end; you can conclude it manually. |
-| **Continuous A/B test** | **Compare variants** | Two to four, including a **Reference** | **Per customer** or **Per display** | Conclude it when you choose. |
+| **Global holdout** | **Measure incremental impact** | Exactly two: **reference** and [**treatment**](/glossary) | Always **Per customer** | No automatic end; you can conclude it manually. |
+| **Continuous A/B test** | **Compare variants** | Two to four, including a **reference** | **Per customer** or **Per display** | Conclude it when you choose. |
 
 A **Global holdout** keeps part of your audience on the non-personalised experience. This helps you measure the value personalisation adds.
 
@@ -43,71 +43,71 @@ Select **Show archived** to include archived experiments. Select **Create experi
 
 ![Experiment configuration showing General, Variants and allocation, and Measurement sections](/images/analytics/experiment-configuration-en.png)
 
-1. In the Experiments listing, select **Create experiment**.
+1. In the experiments listing, select **Create experiment**.
 2. Under **What is your objective?**, choose **Measure incremental impact** or **Compare variants**.
 3. In **General**, enter a **Name** and **Business hypothesis**.
-4. In **Variants and allocation**, name your Variants, set their Allocation and choose a **Randomization unit**.
+4. In **Variants and allocation**, name your variants, set their allocation and choose a **Randomization unit**.
 5. In **Measurement**, choose one **Success metric**.
 6. Select **Create experiment** to validate it as Ready, or **Save draft** to finish later.
 
-In **Variants and allocation**, you can also use a CRM Datasource for **Variant assignment**. See [Assign Variants from a Datasource](/product-guide/analytics/experiments/datasource-assignment).
+In **Variants and allocation**, you can also use a CRM Datasource for **Variant assignment**. See [Assign variants from a Datasource](/product-guide/analytics/experiments/datasource-assignment).
 
-Your **Name** must not match an existing tag name because the Experiment becomes a tag.
+Your **Name** must not match an existing tag name because the experiment becomes a tag.
 
-Select **Split evenly** to divide traffic evenly between the other Variants. The **Reference** Allocation is calculated automatically, keeping the total at 100%.
+Select **Split evenly** to divide traffic evenly between the other variants. The **reference** allocation is calculated automatically, keeping the total at 100%.
 
-Before a Global holdout starts, all traffic goes to its **Treatment**. Before a Continuous A/B test starts, all traffic goes to its **Reference**.
+Before a Global holdout starts, all traffic goes to its **treatment**. Before a Continuous A/B test starts, all traffic goes to its **reference**.
 
-Choose **Per customer** to keep each customer in the same Variant. Choose **Per display** to assign a Variant each time Content is displayed.
+Choose **Per customer** to keep each customer in the same variant. Choose **Per display** to assign a variant each time Content is displayed.
 
 Choose one **Success metric**: **Unique conversion rate**, **Unique click rate**, **Revenue per customer**, or **Purchases per customer**. With **Per display**, only **Unique click rate** is available.
 
 <Tip>
-  You can attach a **Ready** Experiment to a Workflow before starting it. An Experiment used by no Workflow receives no traffic.
+  You can attach a **Ready** experiment to a Workflow before starting it. An experiment used by no Workflow receives no traffic.
 </Tip>
 
 ## Lifecycle
 
-![Page of a Ready Experiment with its status, configuration, traffic allocation and the Start next step](/images/analytics/experiment-page-en.png)
+![Page of a Ready experiment with its status, configuration, traffic allocation and the Start next step](/images/analytics/experiment-page-en.png)
 
 | Status | What it means |
 |--------|---------------|
-| **Draft** | You can continue editing the Experiment. |
+| **Draft** | You can continue editing the experiment. |
 | **Ready** | The configuration is validated and can be attached to a Workflow. |
-| **Live** | The Experiment is running and allocating traffic. |
-| **Decided** | A Variant was chosen to receive all traffic. **Not statistically validated** shows when the kept Variant is not a validated winner, for example when you keep the Reference. |
-| **Archived** | The Experiment is archived and hidden from the active listing. |
+| **Live** | The experiment is running and allocating traffic. |
+| **Decided** | A variant was chosen to receive all traffic. **Not statistically validated** shows when the kept variant is not a validated winner, for example when you keep the reference. |
+| **Archived** | The experiment is archived and hidden from the active listing. |
 
 ### Validate or return to draft
 
 Select **Validate configuration** to move a draft to Ready.
 
-Select **Back to draft** to return a Ready Experiment to Draft.
+Select **Back to draft** to return a Ready experiment to Draft.
 
-Detach the Experiment from its Workflows before moving it back to Draft.
+Detach the experiment from its Workflows before moving it back to Draft.
 
-While a Draft or Ready Experiment is used by a Workflow, you cannot add or remove Variants. Everything else stays editable until you start it.
+While a Draft or Ready experiment is used by a Workflow, you cannot add or remove variants. Everything else stays editable until you start it.
 
 ### Start
 
-Select **Start** to begin the Experiment manually. Starting locks its Variants, Allocation, Randomization unit, Success metric, and Variant assignment method.
+Select **Start** to begin the experiment manually. Starting locks its variants, allocation, Randomization unit, Success metric, and variant assignment method.
 
-If no Workflow uses the Experiment, a warning appears. The Experiment receives no traffic until a Workflow uses it.
+If no Workflow uses the experiment, a warning appears. The experiment receives no traffic until a Workflow uses it.
 
 ### Conclude
 
 ![Conclude experiment modal with the Variant to keep option](/images/analytics/experiment-conclude-en.png)
 
-The **Conclude experiment** modal offers **Variant to keep** radio options. It preselects a Variant based on the results.
+The **Conclude experiment** modal offers **Variant to keep** radio options. It preselects a variant based on the results.
 
-Choose a Variant, then select **Conclude**. The modal tells you whether your choice will be recorded as statistically validated.
+Choose a variant, then select **Conclude**. The modal tells you whether your choice will be recorded as statistically validated.
 
-All traffic then goes to that Variant, and the Experiment becomes Decided. See [Conclude with results](/product-guide/analytics/experiments/results#conclude-with-results).
+All traffic then goes to that variant, and the experiment becomes Decided. See [Conclude with results](/product-guide/analytics/experiments/results#conclude-with-results).
 
-A **Global holdout** has no automatic end date, but you can conclude it manually. You cannot stop a **Live** Experiment without choosing a Variant to keep.
+A **Global holdout** has no automatic end date, but you can conclude it manually. You cannot stop a **Live** experiment without choosing a variant to keep.
 
 <Warning>
-  Concluding is irreversible. The Experiment stops enrolling new participants and cannot be restarted.
+  Concluding is irreversible. The experiment stops enrolling new participants and cannot be restarted.
 </Warning>
 
 ### Archive
@@ -115,7 +115,7 @@ A **Global holdout** has no automatic end date, but you can conclude it manually
 Select **More actions** > **Archive**, then type the confirmation word.
 
 <Warning>
-  Detach the Experiment from all Workflows first. **Archive** is not available while it is **Live**.
+  Detach the experiment from all Workflows first. **Archive** is not available while it is **Live**.
 </Warning>
 
 ### Clone
@@ -124,20 +124,20 @@ Select **Clone** to create a new draft named with “(copy)”.
 
 ## Read experiment data
 
-Once started, the Experiment page shows its results dashboard: the Uplift of each Treatment, its confidence interval, and whether it is significant. See [Analyse Experiment Results](/product-guide/analytics/experiments/results).
+Once started, the experiment page shows its results dashboard: the Uplift of each treatment, its confidence interval, and whether it is significant. See [Analyse Experiment Results](/product-guide/analytics/experiments/results).
 
-To break results down further, open [Data Exploration](/product-guide/analytics/data-exploration). Your Experiment appears as a tag named after it, with one value for each Variant.
+To break results down further, open [Data Exploration](/product-guide/analytics/data-exploration). Your experiment appears as a tag named after it, with one value for each variant.
 
-Add **Tag: {name}** as a dimension to compare Variants. See [Measures and Dimensions](/product-guide/analytics/measures-and-dimensions) for help choosing fields. These figures are not statistically validated.
+Add **Tag: {name}** as a dimension to compare variants. See [Measures and Dimensions](/product-guide/analytics/measures-and-dimensions) for help choosing fields. These figures are not statistically validated.
 
 ## What's Next?
 
 <CardGroup cols={3}>
   <Card title="Experiment Node" icon="flask" href="/product-guide/workflows/logic-nodes/experiment">
-    Use an Experiment in a Workflow.
+    Use an experiment in a Workflow.
   </Card>
   <Card title="Analyse Experiment Results" icon="chart-line" href="/product-guide/analytics/experiments/results">
-    Analyse the Uplift and significance of your Variants.
+    Analyse the Uplift and significance of your variants.
   </Card>
   <Card title="Data Exploration" icon="chart-pie" href="/product-guide/analytics/data-exploration">
     Explore your analytics data.
