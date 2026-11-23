@@ -1,0 +1,118 @@
+---
+title: 'Expiring Upsert Rows'
+description: 'Delete the rows that an Upsert Datasource keeps after its source stops sending them'
+---
+
+## Before you begin
+
+An Upsert import updates the rows it sends and inserts the new ones. It never deletes a row: a row that disappears from the source stays in the Datasource.
+
+Two options delete these rows after each import. They are available when all of the following conditions are met:
+
+| Requirement | Expected configuration |
+|-------------|------------------------|
+| **Update strategy** | The Datasource uses **Upsert** with a primary key. |
+| **Ingestion mode** | The Datasource uses **Worker** mode. |
+| **Comparison column** | None. With a comparison column, a resent row that is not newer keeps its old receipt time and would expire. |
+| **Account** | Expiry is enabled for your account by Reelevant. |
+
+## Choose an option
+
+| Option | Deleted after each import | Use when |
+|--------|---------------------------|----------|
+| **Retention period** (`retentionDays`) | The rows not received for the set number of days. | Each import sends the complete dataset, or a row should disappear a few days after the source stops sending it. |
+| **Replace by field** (`overwriteBy`) | For each value of the field present in the import, the rows with that value that the import did not send. | Each import recomputes complete groups, such as the orders of the last 8 days. |
+
+A Datasource can use both options.
+
+## Retention period
+
+`retentionDays` is a whole number of days, at least 1. At the end of each import, Reelevant deletes the rows last received before this period.
+
+Each import refreshes the receipt time of every row it sends, even an unchanged one. A row therefore expires only after the source has stopped sending it for the whole period.
+
+<Info>
+  Rows are deleted at the end of an import. If no import runs, expired rows stay until the next one.
+</Info>
+
+### Worked example
+
+A CRM Datasource uses `customer_id` as its primary key and receives a full export of its 660,000 customers every night. Its retention period is 15 days. From 1 November, the source no longer exports `C-2088`. The tables show 2 of these customers.
+
+On 10 November:
+
+| customer_id | segment | Last received |
+|-------------|---------|---------------|
+| C-1042 | loyal_customer | 10 November |
+| C-2088 | new_customer | 31 October |
+
+On 20 November:
+
+| customer_id | segment | Last received |
+|-------------|---------|---------------|
+| C-1042 | loyal_customer | 20 November |
+
+`C-2088` stayed while its last receipt was less than 15 days old. The first import after that deleted it.
+
+## Replace by field
+
+`overwriteBy` names a text, number, or date field. After each import, Reelevant takes the values of this field that the import sent. For each of these values, it deletes the rows that the import did not send.
+
+Replace by field never deletes the rows of a value absent from the import. With a retention period as well, these rows still expire once they are older than that period. Choose a field whose values the source always recomputes in full, such as an order date in a rolling window.
+
+Values are compared exactly. With a date-time field, each distinct time is its own value: use a field that holds the day only to replace rows day by day.
+
+### Worked example
+
+An order Datasource uses `order_id` as its primary key and `order_date` for `overwriteBy`. Each night, the source sends every order of the last 8 days, about 12,000 rows. The tables show 3 of the orders.
+
+Before the import of 23 November:
+
+| order_id | order_date | status |
+|----------|------------|--------|
+| O-501 | 2026-11-14 | delivered |
+| O-502 | 2026-11-20 | paid |
+| O-503 | 2026-11-20 | paid |
+
+Order `O-503` was cancelled and removed from the source. The import of 23 November sends the orders from 15 to 22 November, including `O-502` but not `O-503`.
+
+After the import:
+
+| order_id | order_date | status |
+|----------|------------|--------|
+| O-501 | 2026-11-14 | delivered |
+| O-502 | 2026-11-20 | paid |
+
+The import deletes `O-503` because it sent orders of 20 November without it. `O-501` stays because the import sent no order of 14 November.
+
+<Info>
+  When every row of a value disappears from the source, the import sends no row with that value, so replace by field keeps its old rows. For example, a day whose orders were all cancelled keeps them, unless a retention period expires them.
+</Info>
+
+## Safety limit
+
+When an import would delete more than 30% of the rows in scope, it deletes none of them. The scope is the whole Datasource for a retention period, and the rows of the values sent for replace by field.
+
+The import still succeeds. Each following import checks the limit again and deletes the stale rows once they are 30% of the scope or less, for example after the source sends more rows. Until then, they stay unless the source sends them again or Reelevant deletes them on your request.
+
+## Logs and notifications
+
+Expiry appears in the [Datasource logs](/advanced-guide/datahub/logs) of each import:
+
+| Level | Event |
+|-------|-------|
+| **Info** | Rows were deleted. The log gives their number, the receipt cutoff, and the field for replace by field. |
+| **Warning** | The safety limit kept the rows. The log gives the stale rows and the rows in scope. |
+| **Warning** | The deletion failed. The rows stay until a later import deletes them. |
+
+Both warnings also send the Datasource's error notifications.
+
+<Warning>
+  Deleted rows cannot be restored. To get them back, the source has to send them again.
+</Warning>
+
+## Set up expiry
+
+The Datasource editor does not show these options yet. Ask your Reelevant contact to enable expiry for your account and to set `retentionDays` or `overwriteBy` on the Datasource.
+
+For targeted deletion of individual records, see [Anonymising Customer Records](/advanced-guide/datahub/anonymise-customer-records). For how long Reelevant keeps each type of data, see [Description of Processing](/why-reelevant/data-protection/processing-details).
