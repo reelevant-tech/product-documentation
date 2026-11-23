@@ -37,7 +37,7 @@ Each import refreshes the receipt time of every row it sends, even an unchanged 
 
 ### Worked example
 
-A CRM Datasource uses `customer_id` as its primary key and receives a full export every night. Its retention period is 15 days. From 1 November, the source no longer exports `C-2088`.
+A CRM Datasource uses `customer_id` as its primary key and receives a full export of its 660,000 customers every night. Its retention period is 15 days. From 1 November, the source no longer exports `C-2088`. The tables show 2 of these customers.
 
 On 10 November:
 
@@ -58,13 +58,13 @@ On 20 November:
 
 `overwriteBy` names a text, number, or date field. After each import, Reelevant takes the values of this field that the import sent. For each of these values, it deletes the rows that the import did not send.
 
-A value absent from the import keeps all its rows. Choose a field whose values the source always recomputes in full, such as an order date in a rolling window.
+Replace by field never deletes the rows of a value absent from the import. With a retention period as well, these rows still expire once they are older than that period. Choose a field whose values the source always recomputes in full, such as an order date in a rolling window.
 
 Values are compared exactly. With a date-time field, each distinct time is its own value: use a field that holds the day only to replace rows day by day.
 
 ### Worked example
 
-An order Datasource uses `order_id` as its primary key and `order_date` for `overwriteBy`. Each night, the source sends every order of the last 8 days.
+An order Datasource uses `order_id` as its primary key and `order_date` for `overwriteBy`. Each night, the source sends every order of the last 8 days, about 12,000 rows. The tables show 3 of the orders.
 
 Before the import of 23 November:
 
@@ -86,14 +86,14 @@ After the import:
 The import deletes `O-503` because it sent orders of 20 November without it. `O-501` stays because the import sent no order of 14 November.
 
 <Info>
-  When every row of a value disappears from the source, the import sends no row with that value, so its old rows stay. For example, a day whose orders were all cancelled keeps them.
+  When every row of a value disappears from the source, the import sends no row with that value, so replace by field keeps its old rows. For example, a day whose orders were all cancelled keeps them, unless a retention period expires them.
 </Info>
 
 ## Safety limit
 
 When an import would delete more than 30% of the rows in scope, it deletes none of them. The scope is the whole Datasource for a retention period, and the rows of the values sent for replace by field.
 
-The import still succeeds. The rows stay until the source sends them again or Reelevant deletes them on your request. Each following import checks the limit again.
+The import still succeeds. Each following import checks the limit again and deletes the stale rows once they are 30% of the scope or less, for example after the source sends more rows. Until then, they stay unless the source sends them again or Reelevant deletes them on your request.
 
 ## Logs and notifications
 

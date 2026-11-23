@@ -37,7 +37,7 @@ Chaque import met à jour la date de réception de toutes les lignes qu'il envoi
 
 ### Exemple
 
-Une Datasource CRM utilise `customer_id` comme clé primaire et reçoit un export complet chaque nuit. Sa durée de rétention est de 15 jours. À partir du 1er novembre, la source n'exporte plus `C-2088`.
+Une Datasource CRM utilise `customer_id` comme clé primaire et reçoit chaque nuit un export complet de ses 660 000 clients. Sa durée de rétention est de 15 jours. À partir du 1er novembre, la source n'exporte plus `C-2088`. Les tableaux montrent 2 de ces clients.
 
 Le 10 novembre :
 
@@ -58,13 +58,13 @@ Le 20 novembre :
 
 `overwriteBy` désigne un champ texte, nombre ou date. Après chaque import, Reelevant prend les valeurs de ce champ que l'import a envoyées. Pour chacune de ces valeurs, il supprime les lignes que l'import n'a pas envoyées.
 
-Une valeur absente de l'import conserve toutes ses lignes. Choisissez un champ dont la source recalcule toujours les valeurs en entier, comme une date de commande sur une fenêtre glissante.
+Le remplacement par champ ne supprime jamais les lignes d'une valeur absente de l'import. Avec une durée de rétention en plus, ces lignes expirent tout de même une fois plus anciennes que cette période. Choisissez un champ dont la source recalcule toujours les valeurs en entier, comme une date de commande sur une fenêtre glissante.
 
 Les valeurs sont comparées exactement. Avec un champ date et heure, chaque heure distincte est une valeur à part : utilisez un champ qui ne contient que le jour pour remplacer les lignes jour par jour.
 
 ### Exemple
 
-Une Datasource de commandes utilise `order_id` comme clé primaire et `order_date` pour `overwriteBy`. Chaque nuit, la source envoie toutes les commandes des 8 derniers jours.
+Une Datasource de commandes utilise `order_id` comme clé primaire et `order_date` pour `overwriteBy`. Chaque nuit, la source envoie toutes les commandes des 8 derniers jours, environ 12 000 lignes. Les tableaux montrent 3 de ces commandes.
 
 Avant l'import du 23 novembre :
 
@@ -86,14 +86,14 @@ Après l'import :
 L'import supprime `O-503` car il a envoyé des commandes du 20 novembre sans elle. `O-501` reste car l'import n'a envoyé aucune commande du 14 novembre.
 
 <Info>
-  Quand toutes les lignes d'une valeur disparaissent de la source, l'import n'envoie aucune ligne de cette valeur, et ses anciennes lignes restent. Par exemple, un jour dont toutes les commandes ont été annulées les conserve.
+  Quand toutes les lignes d'une valeur disparaissent de la source, l'import n'envoie aucune ligne de cette valeur, et le remplacement par champ conserve ses anciennes lignes. Par exemple, un jour dont toutes les commandes ont été annulées les conserve, sauf si une durée de rétention les fait expirer.
 </Info>
 
 ## Limite de sécurité
 
 Quand un import supprimerait plus de 30 % des lignes concernées, il n'en supprime aucune. Les lignes concernées sont toute la Datasource pour une durée de rétention, et les lignes des valeurs envoyées pour un remplacement par champ.
 
-L'import réussit quand même. Les lignes restent jusqu'à ce que la source les renvoie ou que Reelevant les supprime à votre demande. Chaque import suivant vérifie de nouveau la limite.
+L'import réussit quand même. Chaque import suivant vérifie de nouveau la limite et supprime les lignes périmées dès qu'elles représentent 30 % ou moins des lignes concernées, par exemple quand la source envoie davantage de lignes. D'ici là, elles restent, sauf si la source les renvoie ou si Reelevant les supprime à votre demande.
 
 ## Logs et notifications
 
