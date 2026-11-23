@@ -7,7 +7,7 @@ description: 'Créez des expérimentations dans Analytics et utilisez-les dans v
 
 Les expérimentations vous aident à comparer des variantes dans plusieurs Workflows et à mesurer leur impact dans Analytics.
 
-Une expérimentation ([Experiment](/fr/glossary)) se crée et se gère dans Analytics, puis se réutilise dans les Workflows avec le Node Expérimentation. Elle comprend un type, des variantes et leur répartition, une **Référence**, une hypothèse métier et une métrique de succès.
+Une expérimentation ([Experiment](/fr/glossary)) se crée et se gère dans Analytics, puis se réutilise dans les Workflows avec le Node Expérimentation. Elle comprend un type, des variantes et leur répartition, une **référence**, une hypothèse métier et une métrique de succès.
 
 ## Disponibilité
 
@@ -19,8 +19,8 @@ Les expérimentations sont activées sur demande : contactez votre interlocuteur
 
 | Type | Objectif | Variantes | **Unité de randomisation** | Fin |
 |------|----------|-----------|------------------------|-----|
-| **Groupe témoin global** | **Mesurer l'impact incrémental** | Exactement deux : **Référence** et [**Traitement**](/fr/glossary) | Toujours **Par client** | Pas de fin automatique ; vous pouvez la conclure manuellement. |
-| **Test A/B continu** | **Comparer des variantes** | Deux à quatre, dont une **Référence** | **Par client** ou **Par affichage** | Vous la concluez quand vous le souhaitez. |
+| **Groupe témoin global** | **Mesurer l'impact incrémental** | Exactement deux : **référence** et [**traitement**](/fr/glossary) | Toujours **Par client** | Pas de fin automatique ; vous pouvez la conclure manuellement. |
+| **Test A/B continu** | **Comparer des variantes** | Deux à quatre, dont une **référence** | **Par client** ou **Par affichage** | Vous la concluez quand vous le souhaitez. |
 
 Un **Groupe témoin global** conserve une partie de votre audience sur l'expérience non personnalisée. Vous pouvez ainsi mesurer la valeur ajoutée par la personnalisation.
 
@@ -54,9 +54,9 @@ Dans **Variantes et répartition**, vous pouvez aussi choisir **Depuis une sourc
 
 Le **Nom** ne doit pas correspondre à un tag existant, car l'expérimentation devient un tag.
 
-Sélectionnez **Répartir équitablement** pour répartir le trafic entre les autres variantes. La répartition de la **Référence** est calculée automatiquement, pour atteindre 100 % au total.
+Sélectionnez **Répartir équitablement** pour répartir le trafic entre les autres variantes. La répartition de la **référence** est calculée automatiquement, pour atteindre 100 % au total.
 
-Avant le démarrage d'un Groupe témoin global, tout le trafic est dirigé vers le **Traitement**. Avant le démarrage d'un Test A/B continu, tout le trafic va vers la **Référence**.
+Avant le démarrage d'un Groupe témoin global, tout le trafic est dirigé vers le **traitement**. Avant le démarrage d'un Test A/B continu, tout le trafic va vers la **référence**.
 
 Choisissez **Par client** pour garder chaque client dans la même variante. Choisissez **Par affichage** pour attribuer une variante à chaque affichage du Content.
 
@@ -75,7 +75,7 @@ Choisissez une **Métrique de succès** : **Taux de conversion unique**, **Taux 
 | **Brouillon** | Vous pouvez continuer à modifier l'expérimentation. |
 | **Prête** | La configuration est validée et l'expérimentation peut être rattachée à un Workflow. |
 | **En cours** | L'expérimentation répartit le trafic. |
-| **Décidée** | Une variante a été choisie pour recevoir tout le trafic. **Non validé statistiquement** s'affiche quand la variante conservée n'est pas une gagnante validée, par exemple si vous conservez la Référence. |
+| **Décidée** | Une variante a été choisie pour recevoir tout le trafic. **Non validé statistiquement** s'affiche quand la variante conservée n'est pas une gagnante validée, par exemple si vous conservez la référence. |
 | **Archivée** | L'expérimentation est archivée et masquée dans la liste active. |
 
 ### Valider ou revenir au brouillon
@@ -124,7 +124,7 @@ Sélectionnez **Dupliquer** pour créer un brouillon dont le nom se termine par 
 
 ## Lire les données d'une expérimentation
 
-Une fois démarrée, la page de l'expérimentation affiche son tableau de bord des résultats. Il montre l'écart de chaque Traitement, son intervalle de confiance et sa significativité. Consultez [Analyser les résultats d'une expérimentation](/fr/product-guide/analytics/experiments/results).
+Une fois démarrée, la page de l'expérimentation affiche son tableau de bord des résultats. Il montre l'écart de chaque traitement, son intervalle de confiance et sa significativité. Consultez [Analyser les résultats d'une expérimentation](/fr/product-guide/analytics/experiments/results).
 
 Pour détailler davantage les résultats, ouvrez [Data Exploration](/fr/product-guide/analytics/data-exploration). Votre expérimentation apparaît comme un tag portant son nom, avec une valeur par variante.
 
