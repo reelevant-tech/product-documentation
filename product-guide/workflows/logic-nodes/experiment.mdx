@@ -1,41 +1,41 @@
 ---
 title: 'Experiment'
-description: 'Use an Analytics Experiment to split traffic across Workflow Branches'
+description: 'Use an Analytics experiment to split traffic across Workflow Branches'
 ---
 
 ![Experiment Node with its experiment and variant Branches in a Workflow](/images/workflows/node-experiment-en.png)
 
-Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics Experiment's Variants into Workflow Branches. Each Variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now.
+Use the Experiment Node (a Logic Node that divides traffic) to turn an Analytics experiment's variants into Workflow Branches. Each variant becomes a **Variant** Node (a Branch) showing the share of traffic it receives right now.
 
-Before the Experiment starts, the Treatment of a Global holdout or the Reference of a Continuous A/B test shows 100%.
+Before the experiment starts, the treatment of a Global holdout or the reference of a Continuous A/B test shows 100%.
 
 ## Add an Experiment Node
 
 ![Experiment drawer with search, available experiments, allocation bars, and selection controls](/images/workflows/node-experiment-configuration-en.png)
 
 1. In the Workflow Node picker, select **Experiment**.
-2. Search for a **Ready** or **Live** Experiment and select its card.
+2. Search for a **Ready** or **Live** experiment and select its card.
 3. Select **Confirm** to add the Experiment Node.
 
-Only **Ready** and **Live** Experiments are listed. If none is available, use **Create an experiment** to open Analytics.
+Only **Ready** and **Live** experiments are listed. If none is available, use **Create an experiment** to open Analytics.
 
 <Tip>
-  If publishing reports a Variant problem on this Node, reopen it and select the Experiment again. Its Branches are rebuilt from the Experiment's Variants.
+  If publishing reports a variant problem on this Node, reopen it and select the experiment again. Its Branches are rebuilt from the experiment's variants.
 </Tip>
 
-## After an Experiment is concluded
+## After an experiment is concluded
 
-The kept Variant shows **Winner**, and the Node routes all traffic to it.
+The kept variant shows **Winner**, and the Node routes all traffic to it.
 
-An Experiment that has ended stays on the Node and keeps routing to its outcome. You cannot pick it for a new Node.
+An experiment that has ended stays on the Node and keeps routing to its outcome. You cannot pick it for a new Node.
 
-If the Experiment is archived or missing, the Node shows **Experiment unavailable**. It sends all traffic to the **Treatment** of a Global holdout or the **Reference** of a Continuous A/B test. If the Experiment had already ended when the Workflow was last published, it sends traffic to the kept Variant instead.
+If the experiment is archived or missing, the Node shows **Experiment unavailable**. It sends all traffic to the **treatment** of a Global holdout or the **reference** of a Continuous A/B test. If the experiment had already ended when the Workflow was last published, it sends traffic to the kept variant instead.
 
 ## What's Next?
 
 <CardGroup cols={3}>
   <Card title="Experiments" icon="flask" href="/product-guide/analytics/experiments">
-    Create and manage Experiments in Analytics.
+    Create and manage experiments in Analytics.
   </Card>
   <Card title="Split" icon="chart-pie" href="/product-guide/workflows/logic-nodes/split">
     Divide traffic between Workflow Branches.
