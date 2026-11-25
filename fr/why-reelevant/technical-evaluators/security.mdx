@@ -111,6 +111,7 @@ Longueur minimale, exigences de complexité, expiration, historique des mots de 
 ### Systèmes de production
 
 - Accès distant restreint au personnel autorisé ; MFA exigée sur toutes les consoles cloud et d'administration ainsi que sur tout accès distant à la production
+- **Accès d'administration uniquement via un bastion dédié** — les serveurs de production n'acceptent aucune connexion SSH depuis Internet
 - **Authentification SSH par clé uniquement** pour l'accès au niveau système — l'authentification par mot de passe et la connexion root sont désactivées, et une protection anti-force brute bloque les tentatives répétées
 - Les serveurs de production communiquent sur un **réseau privé chiffré** non joignable depuis Internet ; aucun accès RDP ou bureau distant n'est exposé
 - Les accès des employés partis sont révoqués dans les 24 heures, comptes et postes via la gestion des identités et des terminaux, accès système via le retrait des clés SSH
@@ -149,7 +150,7 @@ Tous les correctifs système sont obtenus depuis des sources de confiance et dé
 
 ## Sécurité réseau et système
 
-- **Pare-feu hôte en refus par défaut** sur chaque serveur ; seuls les ports SSH et du réseau privé sont joignables depuis Internet
+- **Pare-feu hôte en refus par défaut** sur chaque serveur. Sur le parc de production, seuls les ports clients des passerelles d'entrée, comme HTTPS et les points de dépôt de fichiers FTP/SFTP, sont joignables depuis Internet ; les ports SSH et du réseau privé ne le sont pas
 - **Réseau privé chiffré** entre tous les serveurs, segmenté par environnement (production, staging, outillage) et non routable depuis Internet
 - **Anti-DDoS** assuré au niveau réseau par notre hébergeur sur tous les points d'entrée publics
 - **Gateway développée en interne** en frontal de l'API et du Runner : elle valide et filtre chaque requête entrante (validation de schéma, contrôles d'authentification et d'autorisation, exposition restreinte des routes)

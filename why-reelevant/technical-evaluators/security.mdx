@@ -111,6 +111,7 @@ Minimum length, character requirements, expiry, password history and lockout thr
 ### Production Systems
 
 - Remote access restricted to authorised personnel; MFA required on all cloud and administrative consoles and on any remote access to production
+- **Administrative access through a dedicated bastion host only** — production servers accept no SSH connection from the internet
 - **SSH key-based authentication only** for system-level access — password authentication and root login are disabled, and brute-force protection blocks repeated failed attempts
 - Production servers communicate over an **encrypted private network** that is not reachable from the internet; no RDP or remote desktop access is exposed
 - Terminated employees have access revoked within 24 hours, covering identity and device management as well as system-level SSH keys
@@ -149,7 +150,7 @@ All system patches are obtained from trusted sources and deployed at least month
 
 ## Network & System Security
 
-- **Default-deny host firewalls** on every server; only the SSH and private-network ports are reachable from the internet
+- **Default-deny host firewalls** on every server. On the production fleet, only the client-facing ports of the ingress gateways, such as HTTPS and the FTP/SFTP file upload endpoints, are reachable from the internet; SSH and private-network ports are not
 - **Encrypted private network** between all servers, segmented per environment (production, staging, tooling) and not routable from the internet
 - **Anti-DDoS** protection provided at network level by our hosting provider on all public endpoints
 - **In-house gateway** in front of the API and Runner validates and filters every inbound request (request schema validation, authentication and authorisation checks, restricted route exposure)
