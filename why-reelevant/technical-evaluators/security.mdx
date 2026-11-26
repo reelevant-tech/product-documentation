@@ -39,7 +39,6 @@ No artificial-intelligence feature is part of the service: Reelevant does not tr
 ### Data Residency
 
 - **Primary region:** EU (additional regions planned) — customer data is stored and processed exclusively in the EU, with no transfer outside the EU
-- **No customer data outside the EU:** the only globally-distributed service is public DNS resolution, which processes no personal data
 - **Multi-tenant architecture:** The platform operates a single production environment with strict logical tenant isolation — each customer's data is segregated through application-level access controls and scoping
 
 ### Data Minimisation
@@ -111,7 +110,7 @@ Minimum length, character requirements, expiry, password history and lockout thr
 ### Production Systems
 
 - Remote access restricted to authorised personnel; MFA required on all cloud and administrative consoles and on any remote access to production
-- **Administrative access through a dedicated bastion host only** — production servers accept no SSH connection from the internet
+- **Dedicated bastion host for production access.** Reelevant administrators connect to production servers via SSH exclusively through the bastion. Production servers do not accept direct SSH connections from the internet.
 - **SSH key-based authentication only** for system-level access — password authentication and root login are disabled, and brute-force protection blocks repeated failed attempts
 - Production servers communicate over an **encrypted private network** that is not reachable from the internet; no RDP or remote desktop access is exposed
 - Terminated employees have access revoked within 24 hours, covering identity and device management as well as system-level SSH keys
@@ -197,16 +196,14 @@ Reelevant assesses all vendors for criticality and risk before engagement:
 
 ### Infrastructure Vendors
 
-Reelevant runs on a short, deliberately limited list of infrastructure vendors:
+The following infrastructure vendors host customer data for Reelevant.
 
 | Vendor | Service | Region | Role |
 |--------|---------|--------|------|
 | **OVHcloud** | Bare metal servers | France | Hosts the platform: application services, databases, and event processing |
 | **Google Cloud** | BigQuery | Belgium | Analytics warehouse used for event storage and reporting queries |
-| **AWS** | Route 53 (DNS) | Global (anycast, as DNS requires) | Public DNS resolution for Reelevant domains — no customer data, therefore not a subprocessor |
-| **Vercel** | Static asset hosting | Global CDN | Serves static front-end assets only — no customer data, therefore not a subprocessor |
 
-OVHcloud and Google Cloud are our only subprocessors of personal data. No other party processes customer data in the delivery of the service.
+Reelevant uses full-volume encryption to protect all customer data stored on OVHcloud servers. OVHcloud has no access to customer data in plaintext.
 
 ### Subprocessor Details
 

@@ -66,10 +66,10 @@ Utilisez un identifiant opaque dans l'URL du Content. L'identifiant est visible 
 |--------------|------|--------------|
 | Utilisateurs habilités du responsable de traitement | Configurent les Workflows, consultent les rapports | — |
 | Équipes Reelevant | Support, diagnostic à la demande du responsable de traitement et maintenance — selon le moindre privilège, avec MFA et journalisation | UE |
-| OVH SAS (OVHcloud) | Sous-traitant ultérieur — hébergement de la plateforme sur serveurs dédiés | France |
+| OVH SAS (OVHcloud) | Sous-traitant ultérieur fournissant des serveurs dédiés à la plateforme. Reelevant chiffre intégralement les volumes de stockage. OVHcloud n'a pas accès aux données clients en clair. | France |
 | Google Cloud EMEA Limited | Sous-traitant ultérieur — entrepôt analytics contenant des événements pseudonymisés et des agrégats | Belgique (`europe-west1`) |
 
-Aucune donnée personnelle n'est transférée hors de l'UE. Consultez [Gestion des fournisseurs](/fr/why-reelevant/technical-evaluators/security#gestion-des-fournisseurs) pour la liste complète des fournisseurs.
+Aucune donnée personnelle n'est transférée hors de l'UE. Consultez [Gestion des fournisseurs](/fr/why-reelevant/technical-evaluators/security#gestion-des-fournisseurs) pour le détail des sous-traitants ultérieurs.
 
 ## Mesures de sécurité
 
@@ -80,6 +80,7 @@ Un résumé des mesures techniques et organisationnelles. Le détail est disponi
 | Assurance | Attestation SOC 2 Type 2 (annuelle), test d'intrusion externe annuel |
 | Chiffrement | TLS 1.2+ en transit, AES-256 au repos |
 | Accès | SSO SAML, double authentification TOTP, permissions par rôle et par Team, revues d'accès trimestrielles |
+| Accès aux serveurs de production | Les administrateurs se connectent en SSH exclusivement via un bastion dédié. |
 | Isolation | Isolation logique des tenants ; les données de chaque client sont cloisonnées à son entreprise et à ses Teams |
 | Traçabilité | Journal d'audit dans le produit, logs de sécurité conservés 1 an |
 | Incidents | Notification des violations de données personnelles sous 48 heures après leur détection |
