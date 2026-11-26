@@ -66,10 +66,10 @@ Use an opaque identifier in the Content URL. The identifier is visible in the em
 |-----------|------|----------|
 | Controller's authorised users | Configure Workflows, read reports | — |
 | Reelevant staff | Support, troubleshooting at the controller's request and maintenance — under least privilege, MFA and audit logging | EU |
-| OVH SAS (OVHcloud) | Subprocessor — hosting of the platform on dedicated servers | France |
+| OVH SAS (OVHcloud) | Subprocessor providing dedicated servers for the platform. Reelevant encrypts all storage volumes. OVHcloud has no access to customer data in plaintext. | France |
 | Google Cloud EMEA Limited | Subprocessor — analytics warehouse holding pseudonymous events and aggregates | Belgium (`europe-west1`) |
 
-No personal data is transferred outside the EU. See [Vendor Management](/why-reelevant/technical-evaluators/security#vendor-management) for the full vendor list.
+No personal data is transferred outside the EU. See [Vendor Management](/why-reelevant/technical-evaluators/security#vendor-management) for subprocessor details.
 
 ## Security Measures
 
@@ -80,6 +80,7 @@ A summary of the technical and organisational measures. Full details are on [Sec
 | Assurance | SOC 2 Type 2 attestation (annual), annual external penetration test |
 | Encryption | TLS 1.2+ in transit, AES-256 at rest |
 | Access | SAML SSO, TOTP two-factor authentication, role- and Team-based permissions, quarterly access reviews |
+| Production server access | Administrators connect via SSH exclusively through a dedicated bastion host. |
 | Isolation | Logical tenant isolation; each customer's data scoped to its company and Teams |
 | Traceability | In-product audit log, security logs retained 1 year |
 | Incidents | Personal data breach notification within 48 hours of detection |
