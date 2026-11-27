@@ -49,6 +49,14 @@ LIMIT 5
 
 The statement must reference at least one Datasource table, otherwise the query is rejected.
 
+<Info>
+  Datagraph Object SQL does not allow `SELECT *` or `SELECT alias.*` in any `SELECT`, including common table expressions (CTEs), subqueries and each branch of a `UNION`. `COUNT(*)` is allowed because it counts rows instead of selecting every column.
+
+  Replace `SELECT products.*` with `SELECT products.name, products.price`, for example. Each named output column becomes an Object answer, so listing the columns explicitly keeps the answer list stable when a Datasource gains columns.
+
+  The restriction is checked when you preview the SQL or save a draft. A draft can be saved with a validation error, but it cannot be published until you fix the SQL. For `SELECT *`, the error is: `SELECT * is not allowed in object SQL, list every field explicitly`.
+</Info>
+
 ## Worked Examples
 
 The patterns below come from a property listings model built on five Datasources: users, listings, price-per-square-metre by area, pre-computed recommendations, and editorial content.

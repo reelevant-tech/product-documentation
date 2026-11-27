@@ -51,6 +51,14 @@ LIMIT 5
 
 La requête doit référencer au moins une table Datasource, sinon elle est rejetée.
 
+<Info>
+  Le SQL des Objets Datagraph n'accepte ni `SELECT *` ni `SELECT alias.*`, y compris dans les expressions de table communes (CTE), les sous-requêtes et chaque partie d'un `UNION`. `COUNT(*)` est autorisé, car il compte les lignes sans sélectionner toutes les colonnes.
+
+  Remplacez par exemple `SELECT products.*` par `SELECT products.name, products.price`. Chaque colonne de sortie nommée devient une réponse de l'Objet : en listant les colonnes, vous préservez la liste des réponses même si des colonnes sont ajoutées à une Datasource.
+
+  Cette règle est vérifiée à l'aperçu du SQL et à l'enregistrement du brouillon. Vous pouvez enregistrer un brouillon avec une erreur de validation, mais vous devez corriger le SQL avant de le publier. Pour `SELECT *`, le message d'erreur est : `SELECT * is not allowed in object SQL, list every field explicitly`.
+</Info>
+
 ## Exemples concrets
 
 Les schémas ci-dessous proviennent d'un modèle d'annonces immobilières construit sur cinq Datasources : utilisateurs, annonces, prix au mètre carré par zone, recommandations pré-calculées et contenus éditoriaux.
