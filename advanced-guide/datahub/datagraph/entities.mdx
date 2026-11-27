@@ -73,9 +73,13 @@ These are common supported forms, not a complete function list. Use the [Apache 
 | `DATE_ADD(date, offset)`, `DATE_SUB(date, offset)` | Datagraph functions that take a date, timestamp or date string and an interval or integer number of days. Both return a timestamp. |
 | `JSON_GET_STR(json, key)` | Datagraph function that reads a top-level string field from JSON text. It returns NULL for invalid JSON or when the key is missing or does not contain a string. |
 
-`DATE_DIFF` from DuckDB or BigQuery is not available. To filter to a rolling window, use a timestamp comparison such as `event_time >= NOW() - INTERVAL '30 days'` or `event_time >= DATE_SUB(NOW(), 30)`. These comparisons test a time window; they do not count calendar boundaries.
+<Info>
+  `DATE_DIFF` from DuckDB or BigQuery is not available. To filter to a rolling window, use a timestamp comparison such as `event_time >= NOW() - INTERVAL '30 days'` or `event_time >= DATE_SUB(NOW(), 30)`. These comparisons test a time window; they do not count calendar boundaries.
+</Info>
 
-Use `CAST(event_time AS DATE)` rather than `DATE(event_time)`. Functions that generate rows, such as `generate_series` and `range`, are disabled by default. Use a Datasource with the dates or numbers you need instead.
+<Info>
+  Use `CAST(event_time AS DATE)` rather than `DATE(event_time)`. Functions that generate rows, such as `generate_series` and `range`, are disabled by default. Use a Datasource with the dates or numbers you need instead.
+</Info>
 
 For example, the query below counts product occurrences in events from the last 30 days. Replace the quoted ID with the ID of an events Datasource that has an array column named `product_ids` and a datetime column named `event_time`.
 

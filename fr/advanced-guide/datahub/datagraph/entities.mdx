@@ -75,9 +75,13 @@ Ce tableau présente des formes courantes, sans être exhaustif. La [référence
 | `DATE_ADD(date, offset)`, `DATE_SUB(date, offset)` | Fonctions Datagraph qui acceptent une date, un horodatage ou une chaîne de date, ainsi qu'un intervalle ou un nombre entier de jours. Les deux renvoient un horodatage. |
 | `JSON_GET_STR(json, key)` | Fonction Datagraph qui lit une chaîne à la racine d'un texte JSON. Elle renvoie NULL si le JSON est invalide ou si la clé est absente ou ne contient pas de chaîne. |
 
-`DATE_DIFF`, disponible dans DuckDB et BigQuery, n'est pas pris en charge ici. Pour filtrer sur une fenêtre glissante, comparez des horodatages, par exemple avec `event_time >= NOW() - INTERVAL '30 days'` ou `event_time >= DATE_SUB(NOW(), 30)`. Ces comparaisons vérifient l'appartenance à une fenêtre temporelle sans compter les changements de jour, de mois ou d'année.
+<Info>
+  `DATE_DIFF`, disponible dans DuckDB et BigQuery, n'est pas pris en charge ici. Pour filtrer sur une fenêtre glissante, comparez des horodatages, par exemple avec `event_time >= NOW() - INTERVAL '30 days'` ou `event_time >= DATE_SUB(NOW(), 30)`. Ces comparaisons vérifient l'appartenance à une fenêtre temporelle sans compter les changements de jour, de mois ou d'année.
+</Info>
 
-Utilisez `CAST(event_time AS DATE)` plutôt que `DATE(event_time)`. Les fonctions qui génèrent des lignes, comme `generate_series` et `range`, sont désactivées par défaut. Utilisez plutôt une Datasource qui contient les dates ou les nombres nécessaires.
+<Info>
+  Utilisez `CAST(event_time AS DATE)` plutôt que `DATE(event_time)`. Les fonctions qui génèrent des lignes, comme `generate_series` et `range`, sont désactivées par défaut. Utilisez plutôt une Datasource qui contient les dates ou les nombres nécessaires.
+</Info>
 
 La requête suivante compte les occurrences de produits dans les événements des 30 derniers jours. Remplacez l'identifiant entre guillemets par celui d'une Datasource d'événements dont les colonnes `product_ids` et `event_time` contiennent respectivement un tableau et un horodatage.
 
