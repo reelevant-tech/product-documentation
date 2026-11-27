@@ -49,6 +49,53 @@ LIMIT 5
 
 The statement must reference at least one Datasource table, otherwise the query is rejected.
 
+### SQL dialect and syntax
+
+Datagraph Objects use SQL syntax. Use double quotes for identifiers, such as Datasource IDs, and single quotes for string values, such as `'en-GB'`.
+
+| Syntax | Use it to |
+|--------|-----------|
+| `WITH`, `UNION ALL` | Name intermediate results and combine queries without removing duplicates. |
+| `GROUP BY`, `COUNT`, `SUM`, `MIN`, `MAX` | Summarise rows by key. |
+| `ROW_NUMBER() OVER (...)`, `FIRST_VALUE(...) OVER (...)` | Rank rows or get the first value within an ordered window. |
+| `IN (SELECT ...)` | Test membership in the results of a subquery. |
+| `CASE`, `COALESCE`, `CAST` | Apply conditional logic, choose the first non-null value, or convert a value to another type. |
+| `UNNEST(array_column)` in `SELECT` | Expand an array to one row per item. Alias the selected value to name the output column. |
+
+### Functions and alternatives
+
+The tables list commonly used syntax and functions, not every supported form.
+
+| Function | Behaviour |
+|----------|-----------|
+| `NOW()`, `DATE_TRUNC(unit, timestamp)` | Get the current timestamp or truncate a timestamp to the specified unit. |
+| `LOWER`, `UPPER`, `TRIM`, `CONCAT` | Change case, trim a string, or concatenate strings. |
+| `DATE_ADD(date, offset)`, `DATE_SUB(date, offset)` | Datagraph functions that take a date, timestamp or date string and an interval or integer number of days. Both return a timestamp. |
+| `JSON_GET_STR(json, key)` | Datagraph function that reads a top-level string field from JSON text. It returns NULL for invalid JSON or when the key is missing or does not contain a string. |
+
+<Info>
+  `DATE_DIFF` from DuckDB or BigQuery is not available. To filter to a rolling window, use a timestamp comparison such as `event_time >= NOW() - INTERVAL '30 days'` or `event_time >= DATE_SUB(NOW(), 30)`. These comparisons test a time window; they do not count calendar boundaries.
+</Info>
+
+<Info>
+  Use `CAST(event_time AS DATE)` rather than `DATE(event_time)`. Functions that generate rows, such as `generate_series` and `range`, are disabled by default. Use a Datasource with the dates or numbers you need instead.
+</Info>
+
+For example, the query below counts product occurrences in events from the last 30 days. Replace the quoted ID with the ID of an events Datasource that has an array column named `product_ids` and a datetime column named `event_time`.
+
+```sql
+WITH recent_events AS (
+  SELECT UNNEST(events.product_ids) AS product_id
+  FROM "6a1f9c24e0b84f0f9a2d7c31" AS events
+  WHERE events.event_time >= DATE_SUB(NOW(), 30)
+)
+SELECT recent_events.product_id, COUNT(*) AS event_count
+FROM recent_events
+GROUP BY recent_events.product_id
+ORDER BY event_count DESC, recent_events.product_id
+LIMIT 5
+```
+
 ## Worked Examples
 
 The patterns below come from a property listings model built on five Datasources: users, listings, price-per-square-metre by area, pre-computed recommendations, and editorial content.
