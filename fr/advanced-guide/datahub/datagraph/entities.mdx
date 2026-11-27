@@ -51,6 +51,49 @@ LIMIT 5
 
 La requête doit référencer au moins une table Datasource, sinon elle est rejetée.
 
+### Dialecte et syntaxe SQL
+
+Le SQL des Objets Datagraph s'exécute sur Apache DataFusion et utilise une syntaxe de style PostgreSQL. Utilisez des guillemets doubles pour les identifiants, comme ceux des Datasources, et des guillemets simples pour les chaînes, comme `'fr-FR'`.
+
+| Syntaxe | Utilisation |
+|---------|-------------|
+| `WITH`, `UNION ALL` | Nommer des résultats intermédiaires et combiner des requêtes sans supprimer les doublons. |
+| `GROUP BY`, `COUNT`, `SUM`, `MIN`, `MAX` | Agréger les lignes par clé. |
+| `ROW_NUMBER() OVER (...)`, `FIRST_VALUE(...) OVER (...)` | Classer les lignes ou obtenir la première valeur dans une fenêtre ordonnée. |
+| `IN (SELECT ...)` | Vérifier si une valeur figure dans les résultats d'une sous-requête. |
+| `CASE`, `COALESCE`, `CAST` | Appliquer une condition, choisir la première valeur non NULL ou convertir une valeur vers un autre type. |
+| `UNNEST(array_column)` dans `SELECT` | Développer un tableau en une ligne par valeur. Utilisez un alias pour nommer la colonne de sortie. |
+
+### Fonctions et alternatives
+
+Ce tableau présente des formes courantes, sans être exhaustif. La [référence SQL d'Apache DataFusion](https://datafusion.apache.org/user-guide/sql/index.html) sert de point de départ, mais le SQL des Objets Datagraph n'accepte pas toutes les formes qui y sont décrites.
+
+| Fonction | Comportement |
+|----------|--------------|
+| `NOW()`, `DATE_TRUNC(unit, timestamp)` | Obtenir l'horodatage actuel ou tronquer un horodatage à l'unité indiquée. |
+| `LOWER`, `UPPER`, `TRIM`, `CONCAT` | Modifier la casse, supprimer les espaces en début et fin de chaîne ou concaténer des chaînes. |
+| `DATE_ADD(date, offset)`, `DATE_SUB(date, offset)` | Fonctions Datagraph qui acceptent une date, un horodatage ou une chaîne de date, ainsi qu'un intervalle ou un nombre entier de jours. Les deux renvoient un horodatage. |
+| `JSON_GET_STR(json, key)` | Fonction Datagraph qui lit une chaîne à la racine d'un texte JSON. Elle renvoie NULL si le JSON est invalide ou si la clé est absente ou ne contient pas de chaîne. |
+
+`DATE_DIFF`, disponible dans DuckDB et BigQuery, n'est pas pris en charge ici. Pour filtrer sur une fenêtre glissante, comparez des horodatages, par exemple avec `event_time >= NOW() - INTERVAL '30 days'` ou `event_time >= DATE_SUB(NOW(), 30)`. Ces comparaisons vérifient l'appartenance à une fenêtre temporelle sans compter les changements de jour, de mois ou d'année.
+
+Utilisez `CAST(event_time AS DATE)` plutôt que `DATE(event_time)`. Les fonctions qui génèrent des lignes, comme `generate_series` et `range`, sont désactivées par défaut. Utilisez plutôt une Datasource qui contient les dates ou les nombres nécessaires.
+
+La requête suivante compte les occurrences de produits dans les événements des 30 derniers jours. Remplacez l'identifiant entre guillemets par celui d'une Datasource d'événements dont les colonnes `product_ids` et `event_time` contiennent respectivement un tableau et un horodatage.
+
+```sql
+WITH recent_events AS (
+  SELECT UNNEST(events.product_ids) AS product_id
+  FROM "6a1f9c24e0b84f0f9a2d7c31" AS events
+  WHERE events.event_time >= DATE_SUB(NOW(), 30)
+)
+SELECT recent_events.product_id, COUNT(*) AS event_count
+FROM recent_events
+GROUP BY recent_events.product_id
+ORDER BY event_count DESC, recent_events.product_id
+LIMIT 5
+```
+
 ## Exemples concrets
 
 Les schémas ci-dessous proviennent d'un modèle d'annonces immobilières construit sur cinq Datasources : utilisateurs, annonces, prix au mètre carré par zone, recommandations pré-calculées et contenus éditoriaux.
